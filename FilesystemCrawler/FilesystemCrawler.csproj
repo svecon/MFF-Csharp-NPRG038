@@ -42,12 +42,17 @@
     <Compile Include="DiffStructurePrinterVisitor.cs" />
     <Compile Include="DiffStructure.cs" />
     <Compile Include="Crawler.cs" />
+    <Compile Include="Enums\DiffModeEnum.cs" />
+    <Compile Include="Enums\LocationAllEnum.cs" />
+    <Compile Include="Exceptions\BaseDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\DirectoryNotFoundException.cs" />
     <Compile Include="Interfaces\IDiffStructureVisitor.cs" />
+    <Compile Include="Enums\LocationEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

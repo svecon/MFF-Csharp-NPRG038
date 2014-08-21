@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FilesystemCrawler.Enums
+{
+    /// <summary>
+    /// Modes for diff structure.
+    /// 
+    /// Some features are exclusive for more specific (different) mode.
+    /// </summary>
+    public enum DiffModeEnum
+    {
+        TwoWay, ThreeWay
+    }
+}

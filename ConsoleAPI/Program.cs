@@ -11,9 +11,9 @@ namespace ConsoleAPI
     {
         static void Main(string[] args)
         {
-            //Crawler di = new Crawler(args[0], args[1]);
+            Crawler di = new Crawler(args[0], args[1]);
 
-            //di.TraverseTree().Root.Accept(new DiffStructurePrinterVisitor());
+            di.TraverseTree().Accept(new DiffStructurePrinterVisitor());
         }
     }
 }

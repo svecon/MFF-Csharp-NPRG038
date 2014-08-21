@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using FilesystemCrawler.Enums;
+using FilesystemCrawler.Exceptions;
 
 namespace FilesystemCrawler
 {
@@ -8,40 +10,79 @@ namespace FilesystemCrawler
     public class Crawler
     {
 
+        DirectoryInfo baseDir;
+
         DirectoryInfo leftDir;
 
         DirectoryInfo rightDir;
 
         DiffStructure diff;
 
-        public Crawler(string leftDirPath, string rightDirPath)
+        /// <summary>
+        /// Data structure to hold Info of subfolders to be examined for Files.
+        /// </summary>
+        Stack<DirectoryForIteration> dirs;
+
+        protected Crawler()
         {
+            dirs = new Stack<DirectoryForIteration>(15);
+        }
+
+        public Crawler(string baseDirPath, string leftDirPath, string rightDirPath)
+            : this()
+        {
+            if (baseDirPath == null)
+            {
+                diff = new DiffStructure(DiffModeEnum.TwoWay);
+            } else
+            {
+                diff = new DiffStructure(DiffModeEnum.ThreeWay);
+
+                #region AddingBaseDir
+
+                baseDir = new DirectoryInfo(baseDirPath);
+
+                if (!baseDir.Exists)
+                    throw new BaseDirectoryNotFoundException(baseDir);
+
+                diff.AddDirToRoot(baseDir, LocationEnum.OnBase);
+                dirs.Push(new DirectoryForIteration(baseDir, diff.Root, LocationEnum.OnBase));
+
+                #endregion
+            }
+
+            #region AddingLeftDir
+
             leftDir = new DirectoryInfo(leftDirPath);
 
             if (!leftDir.Exists)
-            {
-                throw new ArgumentException("Left folder doesnt exists.");
-            }
+                throw new LeftDirectoryNotFoundException(leftDir);
+
+            diff.AddDirToRoot(leftDir, LocationEnum.OnLeft);
+            dirs.Push(new DirectoryForIteration(leftDir, diff.Root, LocationEnum.OnLeft));
+
+            #endregion
+
+            #region AddingRightDir
 
             rightDir = new DirectoryInfo(rightDirPath);
 
             if (!rightDir.Exists)
-            {
-                throw new ArgumentException("Right folder doesnt exists.");
-            }
+                throw new RightDirectoryNotFoundException(rightDir);
 
-            diff = new DiffStructure(leftDir);
+            diff.AddDirToRoot(rightDir, LocationEnum.OnRight);
+            dirs.Push(new DirectoryForIteration(rightDir, diff.Root, LocationEnum.OnRight));
+
+            #endregion
+        }
+
+        public Crawler(string leftDirPath, string rightDirPath)
+            : this(null, leftDirPath, rightDirPath)
+        {
         }
 
         public DiffStructure TraverseTree()
         {
-            // Data structure to hold names of subfolders to be 
-            // examined for Files.
-            Stack<DirectoryForIteration> dirs = new Stack<DirectoryForIteration>(20);
-
-            dirs.Push(new DirectoryForIteration(leftDir, diff.Root, DiffStructure.LocationEnum.OnLeft));
-            dirs.Push(new DirectoryForIteration(rightDir, diff.Root, DiffStructure.LocationEnum.OnRight));
-
             while (dirs.Count > 0)
             {
                 DirectoryForIteration currentDir = dirs.Pop();
@@ -63,7 +104,7 @@ namespace FilesystemCrawler
                 {
                     Console.WriteLine(e.Message);
                     continue;
-                } catch (DirectoryNotFoundException e)
+                } catch (System.IO.DirectoryNotFoundException e)
                 {
                     Console.WriteLine(e.Message);
                     continue;
@@ -97,7 +138,7 @@ namespace FilesystemCrawler
 
                     Console.WriteLine(e.Message);
                     continue;
-                } catch (DirectoryNotFoundException e)
+                } catch (System.IO.DirectoryNotFoundException e)
                 {
                     Console.WriteLine(e.Message);
                     continue;
@@ -134,9 +175,9 @@ namespace FilesystemCrawler
         {
             public DirectoryInfo Info;
             public DiffStructure.DirDiffNode ParentDiffNode;
-            public DiffStructure.LocationEnum Location;
+            public LocationEnum Location;
 
-            public DirectoryForIteration(DirectoryInfo info, DiffStructure.DirDiffNode parent, DiffStructure.LocationEnum location)
+            public DirectoryForIteration(DirectoryInfo info, DiffStructure.DirDiffNode parent, LocationEnum location)
             {
                 Info = info;
                 ParentDiffNode = parent;

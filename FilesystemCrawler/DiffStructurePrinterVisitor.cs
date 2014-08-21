@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FilesystemCrawler.Interfaces;
+using FilesystemCrawler.Enums;
 
 namespace FilesystemCrawler
 {
@@ -38,15 +39,19 @@ namespace FilesystemCrawler
 
         public void Visit(DiffStructure.FileDiffNode node)
         {
-            switch (node.Location)
+            switch ((LocationCombinationsEnum)node.Location)
             {
-                case DiffStructure.LocationEnum.OnLeft:
+                case LocationCombinationsEnum.OnBase:
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    break;
+                case LocationCombinationsEnum.OnLeft:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
-                case DiffStructure.LocationEnum.OnRight:
+                case LocationCombinationsEnum.OnRight:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
-                case DiffStructure.LocationEnum.OnAll:
+                case LocationCombinationsEnum.OnAll2:
+                case LocationCombinationsEnum.OnAll3:
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
                 default:

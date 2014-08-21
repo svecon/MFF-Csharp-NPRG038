@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
 using FilesystemCrawler.Interfaces;
+using FilesystemCrawler.Enums;
 
 namespace FilesystemCrawler
 {
@@ -13,32 +14,66 @@ namespace FilesystemCrawler
     public class DiffStructure
     {
 
+        public DiffModeEnum DiffMode { get; protected set; }
+
         public DirDiffNode Root { get; protected set; }
 
-        public enum LocationEnum { OnBase = 1, OnLeft = 2, OnRight = 4, OnAll = 7 };
-
-        public DiffStructure(DirectoryInfo root)
+        public DiffStructure(DiffModeEnum mode)
         {
-            Root = new DirDiffNode(root, LocationEnum.OnAll);
+            DiffMode = mode;
+        }
+
+        public DiffStructure AddDirToRoot(DirectoryInfo root, LocationEnum location)
+        {
+            if (Root == null)
+            {
+                Root = new DirDiffNode(root, location);
+            } else
+            {
+                Root.AddDir(root, location);
+            }
+
+            return this;
+        }
+
+        public void Accept(IDiffStructureVisitor visitor)
+        {
+            visitor.Visit(Root);
         }
 
         public abstract class AbstractDiffNode
         {
-
-            public FileSystemInfo Info { get; protected set; }
-
             public FileSystemInfo InfoBase { get; protected set; }
 
             public FileSystemInfo InfoLeft { get; protected set; }
 
             public FileSystemInfo InfoRight { get; protected set; }
 
+            /// <summary>
+            /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
+            /// </summary>
+            public FileSystemInfo Info
+            {
+                get
+                {
+                    if (InfoBase != null)
+                    {
+                        return InfoBase;
+                    } else if (InfoLeft != null)
+                    {
+                        return InfoLeft;
+                    } else // if (InfoRight != null)
+                    {
+                        return InfoRight;
+                    }
+                }
+            }
+
             public LocationEnum Location { get; protected set; }
 
             public AbstractDiffNode(FileSystemInfo info, LocationEnum location)
             {
-                Info = info;
-                Location = location;
+                AddInfoFromLocation(info, location);
             }
 
             protected void markFound(LocationEnum location)
@@ -46,7 +81,8 @@ namespace FilesystemCrawler
                 Location = (LocationEnum)((int)Location | (int)location);
             }
 
-            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location) {
+            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
+            {
                 markFound(location);
                 switch (location)
                 {
@@ -59,8 +95,6 @@ namespace FilesystemCrawler
                     case LocationEnum.OnRight:
                         InfoRight = info;
                         break;
-                    case LocationEnum.OnAll:
-                        throw new ArgumentException("Cannot add Info from all locations at once.");
                     default:
                         throw new ArgumentException("Cannot add Info from this location.");
                 }

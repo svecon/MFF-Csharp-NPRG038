@@ -48,7 +48,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MergeLibrary\FilesystemCrawler.csproj">
+    <ProjectReference Include="..\FilesystemCrawler\FilesystemCrawler.csproj">
       <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
       <Name>FilesystemCrawler</Name>
     </ProjectReference>
