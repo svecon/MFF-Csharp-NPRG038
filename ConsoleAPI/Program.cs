@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MergeLibrary;
+using FilesystemCrawler;
 
-namespace ConsoleAPI {
-    class Program {
+namespace ConsoleAPI
+{
+    class Program
+    {
         static void Main(string[] args)
         {
-            DirectoryIterator di = new DirectoryIterator(args[0], args[1]);
+            //Crawler di = new Crawler(args[0], args[1]);
 
-            di.TraverseTree().Root.Print();
+            //di.TraverseTree().Root.Accept(new DiffStructurePrinterVisitor());
         }
     }
 }

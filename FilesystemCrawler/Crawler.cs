@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace MergeLibrary {
+namespace FilesystemCrawler
+{
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DirectoryIterator {
+    public class Crawler
+    {
 
         DirectoryInfo leftDir;
 
@@ -15,7 +14,7 @@ namespace MergeLibrary {
 
         DiffStructure diff;
 
-        public DirectoryIterator(string leftDirPath, string rightDirPath)
+        public Crawler(string leftDirPath, string rightDirPath)
         {
             leftDir = new DirectoryInfo(leftDirPath);
 
@@ -37,7 +36,7 @@ namespace MergeLibrary {
         public DiffStructure TraverseTree()
         {
             // Data structure to hold names of subfolders to be 
-            // examined for files.
+            // examined for Files.
             Stack<DirectoryForIteration> dirs = new Stack<DirectoryForIteration>(20);
 
             dirs.Push(new DirectoryForIteration(leftDir, diff.Root, DiffStructure.LocationEnum.OnLeft));
@@ -51,81 +50,73 @@ namespace MergeLibrary {
                 {
                     subDirs = currentDir.Info.GetDirectories();
                 }
-                // An UnauthorizedAccessException exception will be thrown if we do not have 
-                // discovery permission on a folder or file. It may or may not be acceptable  
-                // to ignore the exception and continue enumerating the remaining files and  
-                // folders. It is also possible (but unlikely) that a DirectoryNotFound exception  
-                // will be raised. This will happen if currentDir has been deleted by 
-                // another application or thread after our call to Directory.Exists. The  
-                // choice of which exceptions to catch depends entirely on the specific task  
-                // you are intending to perform and also on how much you know with certainty  
-                // about the systems on which this code will run. 
+                    // An UnauthorizedAccessException exception will be thrown if we do not have 
+                    // discovery permission on a folder or file. It may or may not be acceptable  
+                    // to ignore the exception and continue enumerating the remaining Files and  
+                    // folders. It is also possible (but unlikely) that a DirectoryNotFound exception  
+                    // will be raised. This will happen if currentDir has been deleted by 
+                    // another application or thread after our call to Directory.Exists. The  
+                    // choice of which exceptions to catch depends entirely on the specific task  
+                    // you are intending to perform and also on how much you know with certainty  
+                    // about the systems on which this code will run. 
                 catch (UnauthorizedAccessException e)
                 {
                     Console.WriteLine(e.Message);
                     continue;
-                }
-                catch (DirectoryNotFoundException e)
+                } catch (DirectoryNotFoundException e)
                 {
                     Console.WriteLine(e.Message);
                     continue;
                 }
 
-                // Get first in item (alphabetically) in our structure.
+                // Get first in dir (alphabetically) in our structure.
 
 
                 // Push the subdirectories onto the stack for traversal. 
-                // This could also be done before handing the files.
+                // This could also be done before handing the Files.
                 foreach (DirectoryInfo info in subDirs)
                 {
-                    dirs.Push(new DirectoryForIteration(info, currentDir.ParentDiffNode, currentDir.Location));
-
                     DiffStructure.DirDiffNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
                     if (diffNode == null)
                     {
-                        currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
-                    }
-                    else
+                        diffNode = currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
+                    } else
                     {
-                        diffNode.MarkFound(currentDir.Location);
+                        diffNode.AddInfoFromLocation(info, currentDir.Location);
                     }
+
+                    dirs.Push(new DirectoryForIteration(info, diffNode, currentDir.Location));
                 }
 
                 FileInfo[] files = null;
                 try
                 {
                     files = currentDir.Info.GetFiles();
-                }
-
-                catch (UnauthorizedAccessException e)
+                } catch (UnauthorizedAccessException e)
                 {
 
                     Console.WriteLine(e.Message);
                     continue;
-                }
-
-                catch (DirectoryNotFoundException e)
+                } catch (DirectoryNotFoundException e)
                 {
                     Console.WriteLine(e.Message);
                     continue;
                 }
                 // Perform the required action on each file here. 
                 // Modify this block to perform your required task. 
-                foreach (FileInfo fi in files)
+                foreach (FileInfo info in files)
                 {
                     try
                     {
-                        DiffStructure.FileDiffNode diffNode = currentDir.ParentDiffNode.SearchForFile(fi);
+                        DiffStructure.FileDiffNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
                         if (diffNode == null)
                         {
-                            currentDir.ParentDiffNode.AddFile(fi, currentDir.Location);
-                        }
-                        else
+                            currentDir.ParentDiffNode.AddFile(info, currentDir.Location);
+                        } else
                         {
-                            diffNode.MarkFound(currentDir.Location);
+                            diffNode.AddInfoFromLocation(info, currentDir.Location);
                         }
-                    }
-                    catch (FileNotFoundException e)
+                    } catch (FileNotFoundException e)
                     {
                         // If file was deleted by a separate application 
                         //  or thread since the call to TraverseTree() 
@@ -139,7 +130,8 @@ namespace MergeLibrary {
             return diff;
         }
 
-        struct DirectoryForIteration {
+        struct DirectoryForIteration
+        {
             public DirectoryInfo Info;
             public DiffStructure.DirDiffNode ParentDiffNode;
             public DiffStructure.LocationEnum Location;

@@ -48,9 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MergeLibrary\MergeLibrary.csproj">
+    <ProjectReference Include="..\MergeLibrary\FilesystemCrawler.csproj">
       <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
-      <Name>MergeLibrary</Name>
+      <Name>FilesystemCrawler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
