@@ -11,3 +11,5 @@ http://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
 Adler32 is faster than CRC32
 
 
+TODO:
+- watch out for file deletions everywhere!!!

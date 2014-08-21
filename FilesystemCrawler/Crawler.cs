@@ -16,27 +16,32 @@ namespace FilesystemCrawler
 
         DirectoryInfo rightDir;
 
-        DiffStructure diff;
+        /// <summary>
+        /// FilesystemDiff represents all found files in a tree structure.
+        /// </summary>
+        public FilesystemTree FilesystemDiff { get; protected set; }
 
         /// <summary>
         /// Data structure to hold Info of subfolders to be examined for Files.
         /// </summary>
-        Stack<DirectoryForIteration> dirs;
+        Stack<DirectoryForIteration> dirsToBeSearched;
 
-        protected Crawler()
-        {
-            dirs = new Stack<DirectoryForIteration>(15);
-        }
-
+        /// <summary>
+        /// Create crawler for 3-way diffing.
+        /// </summary>
+        /// <param name="baseDirPath">Base directory (origin)</param>
+        /// <param name="leftDirPath">Path to the left directory</param>
+        /// <param name="rightDirPath">Path to the right directory</param>
         public Crawler(string baseDirPath, string leftDirPath, string rightDirPath)
-            : this()
         {
+            dirsToBeSearched = new Stack<DirectoryForIteration>(15);
+
             if (baseDirPath == null)
             {
-                diff = new DiffStructure(DiffModeEnum.TwoWay);
+                FilesystemDiff = new FilesystemTree(DiffModeEnum.TwoWay);
             } else
             {
-                diff = new DiffStructure(DiffModeEnum.ThreeWay);
+                FilesystemDiff = new FilesystemTree(DiffModeEnum.ThreeWay);
 
                 #region AddingBaseDir
 
@@ -45,8 +50,8 @@ namespace FilesystemCrawler
                 if (!baseDir.Exists)
                     throw new BaseDirectoryNotFoundException(baseDir);
 
-                diff.AddDirToRoot(baseDir, LocationEnum.OnBase);
-                dirs.Push(new DirectoryForIteration(baseDir, diff.Root, LocationEnum.OnBase));
+                FilesystemDiff.AddDirToRoot(baseDir, LocationEnum.OnBase);
+                dirsToBeSearched.Push(new DirectoryForIteration(baseDir, FilesystemDiff.Root, LocationEnum.OnBase));
 
                 #endregion
             }
@@ -58,8 +63,8 @@ namespace FilesystemCrawler
             if (!leftDir.Exists)
                 throw new LeftDirectoryNotFoundException(leftDir);
 
-            diff.AddDirToRoot(leftDir, LocationEnum.OnLeft);
-            dirs.Push(new DirectoryForIteration(leftDir, diff.Root, LocationEnum.OnLeft));
+            FilesystemDiff.AddDirToRoot(leftDir, LocationEnum.OnLeft);
+            dirsToBeSearched.Push(new DirectoryForIteration(leftDir, FilesystemDiff.Root, LocationEnum.OnLeft));
 
             #endregion
 
@@ -70,22 +75,32 @@ namespace FilesystemCrawler
             if (!rightDir.Exists)
                 throw new RightDirectoryNotFoundException(rightDir);
 
-            diff.AddDirToRoot(rightDir, LocationEnum.OnRight);
-            dirs.Push(new DirectoryForIteration(rightDir, diff.Root, LocationEnum.OnRight));
+            FilesystemDiff.AddDirToRoot(rightDir, LocationEnum.OnRight);
+            dirsToBeSearched.Push(new DirectoryForIteration(rightDir, FilesystemDiff.Root, LocationEnum.OnRight));
 
             #endregion
         }
 
+        /// <summary>
+        /// Create crawler for 2-way diffing.
+        /// </summary>
+        /// <param name="leftDirPath">Path to the left directory</param>
+        /// <param name="rightDirPath">Path to the right directory</param>
         public Crawler(string leftDirPath, string rightDirPath)
             : this(null, leftDirPath, rightDirPath)
         {
         }
 
-        public DiffStructure TraverseTree()
+        /// <summary>
+        /// Traverses filesystem directories specified in constructor.
+        /// Creates a filesystem tree with all files from all paths.
+        /// </summary>
+        /// <returns></returns>
+        public FilesystemTree TraverseTree()
         {
-            while (dirs.Count > 0)
+            while (dirsToBeSearched.Count > 0)
             {
-                DirectoryForIteration currentDir = dirs.Pop();
+                DirectoryForIteration currentDir = dirsToBeSearched.Pop();
                 DirectoryInfo[] subDirs;
                 try
                 {
@@ -110,14 +125,10 @@ namespace FilesystemCrawler
                     continue;
                 }
 
-                // Get first in dir (alphabetically) in our structure.
-
-
                 // Push the subdirectories onto the stack for traversal. 
-                // This could also be done before handing the Files.
                 foreach (DirectoryInfo info in subDirs)
                 {
-                    DiffStructure.DirDiffNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
+                    FilesystemTree.DirDiffNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
                     if (diffNode == null)
                     {
                         diffNode = currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
@@ -126,7 +137,7 @@ namespace FilesystemCrawler
                         diffNode.AddInfoFromLocation(info, currentDir.Location);
                     }
 
-                    dirs.Push(new DirectoryForIteration(info, diffNode, currentDir.Location));
+                    dirsToBeSearched.Push(new DirectoryForIteration(info, diffNode, currentDir.Location));
                 }
 
                 FileInfo[] files = null;
@@ -143,13 +154,13 @@ namespace FilesystemCrawler
                     Console.WriteLine(e.Message);
                     continue;
                 }
+
                 // Perform the required action on each file here. 
-                // Modify this block to perform your required task. 
                 foreach (FileInfo info in files)
                 {
                     try
                     {
-                        DiffStructure.FileDiffNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
+                        FilesystemTree.FileDiffNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
                         if (diffNode == null)
                         {
                             currentDir.ParentDiffNode.AddFile(info, currentDir.Location);
@@ -168,16 +179,20 @@ namespace FilesystemCrawler
                 }
             }
 
-            return diff;
+            return FilesystemDiff;
         }
 
+        /// <summary>
+        /// Struct that holds all needed information for filesystem traversal:
+        /// DirectoryInfo, Pointer to a tree node, Path Location.
+        /// </summary>
         struct DirectoryForIteration
         {
             public DirectoryInfo Info;
-            public DiffStructure.DirDiffNode ParentDiffNode;
+            public FilesystemTree.DirDiffNode ParentDiffNode;
             public LocationEnum Location;
 
-            public DirectoryForIteration(DirectoryInfo info, DiffStructure.DirDiffNode parent, LocationEnum location)
+            public DirectoryForIteration(DirectoryInfo info, FilesystemTree.DirDiffNode parent, LocationEnum location)
             {
                 Info = info;
                 ParentDiffNode = parent;

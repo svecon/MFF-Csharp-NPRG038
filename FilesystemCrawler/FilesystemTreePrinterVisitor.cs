@@ -8,12 +8,12 @@ using FilesystemCrawler.Enums;
 
 namespace FilesystemCrawler
 {
-    public class DiffStructurePrinterVisitor : IDiffStructureVisitor
+    public class FilesystemTreePrinterVisitor : IFilesystemTreeVisitor
     {
 
         int currentLevel = 1;
 
-        public void Visit(DiffStructure.DirDiffNode node)
+        public void Visit(FilesystemTree.DirDiffNode node)
         {
             Console.WriteLine();
 
@@ -37,7 +37,7 @@ namespace FilesystemCrawler
             }
         }
 
-        public void Visit(DiffStructure.FileDiffNode node)
+        public void Visit(FilesystemTree.FileDiffNode node)
         {
             switch ((LocationCombinationsEnum)node.Location)
             {

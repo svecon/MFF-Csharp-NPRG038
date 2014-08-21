@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FilesystemCrawler.Enums
 {
     /// <summary>
-    /// Modes for diff structure.
+    /// Modes for FilesystemDiff structure.
     /// 
     /// Some features are exclusive for more specific (different) mode.
     /// </summary>

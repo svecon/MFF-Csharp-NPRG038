@@ -11,19 +11,19 @@ using FilesystemCrawler.Enums;
 namespace FilesystemCrawler
 {
 
-    public class DiffStructure
+    public class FilesystemTree
     {
 
         public DiffModeEnum DiffMode { get; protected set; }
 
         public DirDiffNode Root { get; protected set; }
 
-        public DiffStructure(DiffModeEnum mode)
+        public FilesystemTree(DiffModeEnum mode)
         {
             DiffMode = mode;
         }
 
-        public DiffStructure AddDirToRoot(DirectoryInfo root, LocationEnum location)
+        public FilesystemTree AddDirToRoot(DirectoryInfo root, LocationEnum location)
         {
             if (Root == null)
             {
@@ -36,7 +36,7 @@ namespace FilesystemCrawler
             return this;
         }
 
-        public void Accept(IDiffStructureVisitor visitor)
+        public void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(Root);
         }
@@ -100,7 +100,7 @@ namespace FilesystemCrawler
                 }
             }
 
-            public abstract void Accept(IDiffStructureVisitor visitor);
+            public abstract void Accept(IFilesystemTreeVisitor visitor);
 
         }
 
@@ -118,7 +118,7 @@ namespace FilesystemCrawler
                 Files = new List<FileDiffNode>();
             }
 
-            public override void Accept(IDiffStructureVisitor visitor)
+            public override void Accept(IFilesystemTreeVisitor visitor)
             {
                 visitor.Visit(this);
             }
@@ -183,7 +183,7 @@ namespace FilesystemCrawler
 
             }
 
-            public override void Accept(IDiffStructureVisitor visitor)
+            public override void Accept(IFilesystemTreeVisitor visitor)
             {
                 visitor.Visit(this);
             }

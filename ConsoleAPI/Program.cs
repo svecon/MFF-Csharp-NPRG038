@@ -13,7 +13,7 @@ namespace ConsoleAPI
         {
             Crawler di = new Crawler(args[0], args[1]);
 
-            di.TraverseTree().Accept(new DiffStructurePrinterVisitor());
+            di.TraverseTree().Accept(new FilesystemTreePrinterVisitor());
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FilesystemCrawler.Interfaces
 {
-    public interface IDiffStructureVisitor
+    public interface IFilesystemTreeVisitor
     {
-        void Visit(DiffStructure.DirDiffNode node);
-        void Visit(DiffStructure.FileDiffNode node);
+        void Visit(FilesystemTree.DirDiffNode node);
+        void Visit(FilesystemTree.FileDiffNode node);
     }
 }
