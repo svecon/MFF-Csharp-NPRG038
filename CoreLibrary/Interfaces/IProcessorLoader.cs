@@ -12,16 +12,16 @@ namespace CoreLibrary.Interfaces
     {
         void Load();
 
-        IEnumerable<IProcessor> GetPreProcessors();
+        IEnumerable<IPreProcessor> GetPreProcessors();
 
         IEnumerable<IProcessor> GetProcessors();
 
-        IEnumerable<IProcessor> GetPostProcessors();
+        IEnumerable<IPostProcessor> GetPostProcessors();
 
-        void AddPreProcessor(IProcessor processor);
+        void AddProcessor(IPreProcessor processor);
 
         void AddProcessor(IProcessor processor);
 
-        void AddPostProcessor(IProcessor processor);
+        void AddProcessor(IPostProcessor processor);
     }
 }

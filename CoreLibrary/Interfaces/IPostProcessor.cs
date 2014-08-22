@@ -8,7 +8,7 @@ using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
 {
-    public interface IProcessor : IProcessorAbstract
+    public interface IPostProcessor : IProcessorAbstract
     {
 
     }

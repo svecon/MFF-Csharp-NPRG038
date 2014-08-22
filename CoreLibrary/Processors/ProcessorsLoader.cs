@@ -9,17 +9,17 @@ namespace CoreLibrary.Processors
     class ProcessorsLoader : IProcessorLoader
     {
 
-        SortedList<int, IProcessor> PreProcessors;
+        SortedList<int, IPreProcessor> PreProcessors;
 
         SortedList<int, IProcessor> Processors;
 
-        SortedList<int, IProcessor> PostProcessors;
+        SortedList<int, IPostProcessor> PostProcessors;
 
         public ProcessorsLoader()
         {
-            PreProcessors = new SortedList<int, IProcessor>();
+            PreProcessors = new SortedList<int, IPreProcessor>();
             Processors = new SortedList<int, IProcessor>();
-            PostProcessors = new SortedList<int, IProcessor>();
+            PostProcessors = new SortedList<int, IPostProcessor>();
         }
 
         public void Load()
@@ -27,7 +27,7 @@ namespace CoreLibrary.Processors
 
         }
 
-        public void AddPreProcessor(IProcessor processor)
+        public void AddProcessor(IPreProcessor processor)
         {
             PreProcessors.Add(processor.Priority, processor);
         }
@@ -37,13 +37,13 @@ namespace CoreLibrary.Processors
             Processors.Add(processor.Priority, processor);
         }
 
-        public void AddPostProcessor(IProcessor processor)
+        public void AddProcessor(IPostProcessor processor)
         {
             PostProcessors.Add(processor.Priority, processor);
         }
 
 
-        public IEnumerable<IProcessor> GetPreProcessors()
+        public IEnumerable<IPreProcessor> GetPreProcessors()
         {
             foreach (var processor in PreProcessors)
             {
@@ -59,12 +59,13 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public IEnumerable<IProcessor> GetPostProcessors()
+        public IEnumerable<IPostProcessor> GetPostProcessors()
         {
             foreach (var processor in PostProcessors)
             {
                 yield return processor.Value;
             }
         }
+
     }
 }

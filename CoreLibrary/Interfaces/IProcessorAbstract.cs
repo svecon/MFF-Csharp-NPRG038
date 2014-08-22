@@ -8,8 +8,14 @@ using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
 {
-    public interface IProcessor : IProcessorAbstract
+    public interface IProcessorAbstract
     {
+        bool Process(IFilesystemTreeDirNode info);
 
+        bool Process(IFilesystemTreeFileNode info);
+
+        int Priority { get; }
+
+        DiffModeEnum Mode { get; }
     }
 }

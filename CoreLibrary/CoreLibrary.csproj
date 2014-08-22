@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CoreLibrary</RootNamespace>
-    <AssemblyName>MergeLibrary</AssemblyName>
+    <AssemblyName>CoreLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,11 +50,14 @@
     <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Interfaces\IPostProcessor.cs" />
+    <Compile Include="Interfaces\IProcessor.cs" />
+    <Compile Include="Interfaces\IPreProcessor.cs" />
     <Compile Include="Interfaces\IProcessorLoader.cs" />
     <Compile Include="Interfaces\IFilesystemTreeDirNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeFileNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeAbstractNode.cs" />
-    <Compile Include="Interfaces\IProcessor.cs" />
+    <Compile Include="Interfaces\IProcessorAbstract.cs" />
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
