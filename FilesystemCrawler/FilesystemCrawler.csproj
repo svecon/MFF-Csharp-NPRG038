@@ -39,18 +39,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiffStructurePrinterVisitor.cs" />
-    <Compile Include="DiffStructure.cs" />
+    <Compile Include="Enums\NodeStatus.cs" />
+    <Compile Include="FilesystemTreeExecutionVisitor.cs" />
+    <Compile Include="FilesystemTreePrinterVisitor.cs" />
+    <Compile Include="FilesystemTree.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="Enums\DiffModeEnum.cs" />
-    <Compile Include="Enums\LocationAllEnum.cs" />
+    <Compile Include="Enums\LocationCombinationsEnum.cs" />
     <Compile Include="Exceptions\BaseDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
-    <Compile Include="Exceptions\DirectoryNotFoundException.cs" />
-    <Compile Include="Interfaces\IDiffStructureVisitor.cs" />
+    <Compile Include="Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Interfaces\IProcessorLoader.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeDirNode.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeFileNode.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeAbstractNode.cs" />
+    <Compile Include="Interfaces\IProcessor.cs" />
+    <Compile Include="Interfaces\IFilesystemTree.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProcessorsLoader.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

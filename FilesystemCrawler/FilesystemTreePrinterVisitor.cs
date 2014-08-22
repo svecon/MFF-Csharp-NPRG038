@@ -13,7 +13,7 @@ namespace FilesystemCrawler
 
         int currentLevel = 1;
 
-        public void Visit(FilesystemTree.DirDiffNode node)
+        public void Visit(FilesystemTree.DirNode node)
         {
             Console.WriteLine();
 
@@ -37,7 +37,7 @@ namespace FilesystemCrawler
             }
         }
 
-        public void Visit(FilesystemTree.FileDiffNode node)
+        public void Visit(FilesystemTree.FileNode node)
         {
             switch ((LocationCombinationsEnum)node.Location)
             {

@@ -128,7 +128,7 @@ namespace FilesystemCrawler
                 // Push the subdirectories onto the stack for traversal. 
                 foreach (DirectoryInfo info in subDirs)
                 {
-                    FilesystemTree.DirDiffNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
+                    FilesystemTree.DirNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
                     if (diffNode == null)
                     {
                         diffNode = currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
@@ -160,7 +160,7 @@ namespace FilesystemCrawler
                 {
                     try
                     {
-                        FilesystemTree.FileDiffNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
+                        FilesystemTree.FileNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
                         if (diffNode == null)
                         {
                             currentDir.ParentDiffNode.AddFile(info, currentDir.Location);
@@ -189,10 +189,10 @@ namespace FilesystemCrawler
         struct DirectoryForIteration
         {
             public DirectoryInfo Info;
-            public FilesystemTree.DirDiffNode ParentDiffNode;
+            public FilesystemTree.DirNode ParentDiffNode;
             public LocationEnum Location;
 
-            public DirectoryForIteration(DirectoryInfo info, FilesystemTree.DirDiffNode parent, LocationEnum location)
+            public DirectoryForIteration(DirectoryInfo info, FilesystemTree.DirNode parent, LocationEnum location)
             {
                 Info = info;
                 ParentDiffNode = parent;

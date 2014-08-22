@@ -9,5 +9,21 @@ namespace FilesystemCrawler
 {
     class FilesystemTreeExecutionVisitor : IFilesystemTreeVisitor
     {
+
+        public FilesystemTreeExecutionVisitor() {
+        
+
+        
+        }
+
+        public void Visit(FilesystemTree.DirNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(FilesystemTree.FileNode node)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

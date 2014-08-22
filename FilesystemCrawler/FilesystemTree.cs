@@ -11,12 +11,12 @@ using FilesystemCrawler.Enums;
 namespace FilesystemCrawler
 {
 
-    public class FilesystemTree
+    public class FilesystemTree : IFilesystemTree
     {
 
         public DiffModeEnum DiffMode { get; protected set; }
 
-        public DirDiffNode Root { get; protected set; }
+        public DirNode Root { get; protected set; }
 
         public FilesystemTree(DiffModeEnum mode)
         {
@@ -27,7 +27,7 @@ namespace FilesystemCrawler
         {
             if (Root == null)
             {
-                Root = new DirDiffNode(root, location);
+                Root = new DirNode(root, location);
             } else
             {
                 Root.AddDir(root, location);
@@ -41,13 +41,15 @@ namespace FilesystemCrawler
             visitor.Visit(Root);
         }
 
-        public abstract class AbstractDiffNode
+        public abstract class AbstractNode : IFilesystemTreeAbstractNode
         {
             public FileSystemInfo InfoBase { get; protected set; }
 
             public FileSystemInfo InfoLeft { get; protected set; }
 
             public FileSystemInfo InfoRight { get; protected set; }
+
+            public NodeStatus Status { get; set; }
 
             /// <summary>
             /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
@@ -71,7 +73,7 @@ namespace FilesystemCrawler
 
             public LocationEnum Location { get; protected set; }
 
-            public AbstractDiffNode(FileSystemInfo info, LocationEnum location)
+            public AbstractNode(FileSystemInfo info, LocationEnum location)
             {
                 AddInfoFromLocation(info, location);
             }
@@ -104,18 +106,18 @@ namespace FilesystemCrawler
 
         }
 
-        public class DirDiffNode : AbstractDiffNode
+        public class DirNode : AbstractNode, IFilesystemTreeDirNode
         {
 
-            public List<DirDiffNode> Directories { get; protected set; }
+            public List<DirNode> Directories { get; protected set; }
 
-            public List<FileDiffNode> Files { get; protected set; }
+            public List<FileNode> Files { get; protected set; }
 
-            public DirDiffNode(DirectoryInfo info, LocationEnum location)
+            public DirNode(DirectoryInfo info, LocationEnum location)
                 : base(info, location)
             {
-                Directories = new List<DirDiffNode>();
-                Files = new List<FileDiffNode>();
+                Directories = new List<DirNode>();
+                Files = new List<FileNode>();
             }
 
             public override void Accept(IFilesystemTreeVisitor visitor)
@@ -123,7 +125,7 @@ namespace FilesystemCrawler
                 visitor.Visit(this);
             }
 
-            public DirDiffNode SearchForDir(DirectoryInfo info)
+            public DirNode SearchForDir(DirectoryInfo info)
             {
                 int i = 0;
                 int comparison = -1;
@@ -142,14 +144,14 @@ namespace FilesystemCrawler
 
             }
 
-            public DirDiffNode AddDir(DirectoryInfo info, LocationEnum location)
+            public DirNode AddDir(DirectoryInfo info, LocationEnum location)
             {
-                var dirDiffNode = new DirDiffNode(info, location);
+                var dirDiffNode = new DirNode(info, location);
                 Directories.Add(dirDiffNode);
                 return dirDiffNode;
             }
 
-            public FileDiffNode SearchForFile(FileInfo info)
+            public FileNode SearchForFile(FileInfo info)
             {
                 int i = 0;
                 int comparison = -1;
@@ -170,14 +172,14 @@ namespace FilesystemCrawler
 
             public void AddFile(FileInfo info, LocationEnum location)
             {
-                Files.Add(new FileDiffNode(info, location));
+                Files.Add(new FileNode(info, location));
             }
 
         }
 
-        public class FileDiffNode : AbstractDiffNode
+        public class FileNode : AbstractNode, IFilesystemTreeFileNode
         {
-            public FileDiffNode(FileInfo info, LocationEnum location)
+            public FileNode(FileInfo info, LocationEnum location)
                 : base(info, location)
             {
 

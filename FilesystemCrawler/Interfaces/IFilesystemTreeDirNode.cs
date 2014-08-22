@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace FilesystemCrawler.Interfaces
 {
-    public interface IFilesystemTreeVisitor
+    public interface IFilesystemTreeDirNode : IFilesystemTreeAbstractNode
     {
-        void Visit(FilesystemTree.DirNode node);
-        void Visit(FilesystemTree.FileNode node);
+
     }
 }

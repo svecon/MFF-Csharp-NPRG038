@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace FilesystemCrawler.Interfaces
 {
-    public interface IFilesystemTreeVisitor
+    public interface IFilesystemTree
     {
-        void Visit(FilesystemTree.DirNode node);
-        void Visit(FilesystemTree.FileNode node);
+        void Accept(IFilesystemTreeVisitor visitor);
     }
 }
