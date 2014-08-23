@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F5DB383A-174B-45D4-B9EF-3679EE1FBCB0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleAPI</RootNamespace>
-    <AssemblyName>ConsoleAPI</AssemblyName>
+    <RootNamespace>CoreLibrary</RootNamespace>
+    <AssemblyName>CoreLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,18 +39,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Enums\NodeStatus.cs" />
+    <Compile Include="FilesystemTree\ExecutionVisitor.cs" />
+    <Compile Include="FilesystemTree\PrinterVisitor.cs" />
+    <Compile Include="FilesystemTree\FilesystemTree.cs" />
+    <Compile Include="FilesystemTree\Crawler.cs" />
+    <Compile Include="Enums\DiffModeEnum.cs" />
+    <Compile Include="Enums\LocationCombinationsEnum.cs" />
+    <Compile Include="Exceptions\BaseDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Interfaces\IPostProcessor.cs" />
+    <Compile Include="Interfaces\IProcessor.cs" />
+    <Compile Include="Interfaces\IPreProcessor.cs" />
+    <Compile Include="Interfaces\IProcessorLoader.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeDirNode.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeFileNode.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeAbstractNode.cs" />
+    <Compile Include="Interfaces\IProcessorAbstract.cs" />
+    <Compile Include="Interfaces\IFilesystemTree.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
+    <Compile Include="Enums\LocationEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Processors\ProcessorsLoader.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
-      <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
-      <Name>CoreLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
