@@ -10,6 +10,7 @@ namespace CoreLibrary.Interfaces
 {
     public interface IFilesystemTreeDirNode : IFilesystemTreeAbstractNode
     {
+
         List<IFilesystemTreeDirNode> Directories { get; }
 
         List<IFilesystemTreeFileNode> Files { get; }

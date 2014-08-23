@@ -30,7 +30,7 @@ namespace CoreLibrary.FilesystemTree
                 Root = new DirNode(root, location);
             } else
             {
-                Root.AddDir(root, location);
+                Root.AddInfoFromLocation(root, location);
             }
 
             return this;
@@ -50,6 +50,8 @@ namespace CoreLibrary.FilesystemTree
             public FileSystemInfo InfoRight { get; protected set; }
 
             public NodeStatus Status { get; set; }
+
+            public DifferencesStatus Differences { get; set; }
 
             /// <summary>
             /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
@@ -78,6 +80,11 @@ namespace CoreLibrary.FilesystemTree
                 AddInfoFromLocation(info, location);
             }
 
+            public bool IsInLocation(LocationEnum location)
+            {
+                return (((int)location) & ((int)Location)) > 0;
+            }
+
             protected void markFound(LocationEnum location)
             {
                 Location = (LocationEnum)((int)Location | (int)location);
@@ -86,6 +93,7 @@ namespace CoreLibrary.FilesystemTree
             public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
             {
                 markFound(location);
+
                 switch (location)
                 {
                     case LocationEnum.OnBase:
@@ -127,20 +135,29 @@ namespace CoreLibrary.FilesystemTree
 
             public IFilesystemTreeDirNode SearchForDir(DirectoryInfo info)
             {
-                int i = 0;
-                int comparison = -1;
-                while (i < Directories.Count && (comparison = Directories[i].Info.Name.CompareTo(info.Name)) == -1)
+                foreach (var dir in Directories)
                 {
-                    i++;
+                    if (dir.Info.Name == info.Name)
+                        return dir;
                 }
 
-                if (comparison == 0)
-                {
-                    return Directories[i];
-                } else
-                {
-                    return null;
-                }
+                return null;
+
+                // THIS WAS FOR SORTED DIRECTORIES
+                //int i = 0;
+                //int comparison = -1;
+                //while (i < Directories.Count && (comparison = Directories[i].Info.Name.CompareTo(info.Name)) == -1)
+                //{
+                //    i++;
+                //}
+
+                //if (comparison == 0)
+                //{
+                //    return Directories[i];
+                //} else
+                //{
+                //    return null;
+                //}
 
             }
 
@@ -153,20 +170,30 @@ namespace CoreLibrary.FilesystemTree
 
             public IFilesystemTreeFileNode SearchForFile(FileInfo info)
             {
-                int i = 0;
-                int comparison = -1;
-                while (i < Files.Count && (comparison = Files[i].Info.Name.CompareTo(info.Name)) == -1)
+                foreach (var file in Files)
                 {
-                    i++;
+                    if (file.Info.Name == info.Name)
+                        return file;
                 }
 
-                if (comparison == 0)
-                {
-                    return Files[i];
-                } else
-                {
-                    return null;
-                }
+                return null;
+
+
+                // THIS WAS FOR SORTED FILES
+                //int i = 0;
+                //int comparison = -1;
+                //while (i < Files.Count && (comparison = Files[i].Info.Name.CompareTo(info.Name)) == -1)
+                //{
+                //    i++;
+                //}
+
+                //if (comparison == 0)
+                //{
+                //    return Files[i];
+                //} else
+                //{
+                //    return null;
+                //}
 
             }
 
