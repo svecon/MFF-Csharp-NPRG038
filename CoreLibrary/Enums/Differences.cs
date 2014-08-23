@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Enums
 {
-    public enum NodeStatus
+    public enum DifferencesStatus
     {
-        Initial, HasError, IsIgnored, WasDiffed, WasMerged, WasDiffedWaitingForMerge
+        Initial = -1, AllDifferent = 0, BaseLeftSame = 3, BaseRight = 5, LeftRight = 6, AllSame = 7
     }
 }

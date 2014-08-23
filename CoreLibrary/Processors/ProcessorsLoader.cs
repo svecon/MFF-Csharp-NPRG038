@@ -6,7 +6,7 @@ using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.Processors
 {
-    class ProcessorsLoader : IProcessorLoader
+    public class ProcessorsLoader : IProcessorLoader
     {
 
         SortedList<int, IPreProcessor> PreProcessors;
@@ -24,7 +24,8 @@ namespace CoreLibrary.Processors
 
         public void Load()
         {
-
+            //AddProcessor(new SizeAndTimeDifferProcessor());
+            AddProcessor(new BinaryProcessor());
         }
 
         public void AddProcessor(IPreProcessor processor)

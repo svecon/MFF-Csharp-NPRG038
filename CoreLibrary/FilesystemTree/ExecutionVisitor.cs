@@ -7,7 +7,7 @@ using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree
 {
-    class ExecutionVisitor : IFilesystemTreeVisitor
+    public class ExecutionVisitor : IFilesystemTreeVisitor
     {
 
         IProcessorLoader loader;
