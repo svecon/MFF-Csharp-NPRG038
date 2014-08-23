@@ -39,23 +39,28 @@ namespace CoreLibrary.FilesystemTree
 
         public void Visit(IFilesystemTreeFileNode node)
         {
-            switch ((LocationCombinationsEnum)node.Location)
+            switch (node.Differences)
             {
-                case LocationCombinationsEnum.OnBase:
+                case DifferencesStatus.Initial:
                     Console.ForegroundColor = ConsoleColor.Gray;
                     break;
-                case LocationCombinationsEnum.OnLeft:
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    break;
-                case LocationCombinationsEnum.OnRight:
+                case DifferencesStatus.AllDifferent:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
-                case LocationCombinationsEnum.OnAll2:
-                case LocationCombinationsEnum.OnAll3:
-                    Console.ForegroundColor = ConsoleColor.White;
+                case DifferencesStatus.BaseLeftSame:
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    break;
+                case DifferencesStatus.BaseRight:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case DifferencesStatus.LeftRight:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    break;
+                case DifferencesStatus.AllSame:
+                    Console.ForegroundColor = ConsoleColor.Green;
                     break;
                 default:
-                    break;
+                    throw new NotImplementedException("This difference type was not implemented.");
             }
 
             for (int i = 0; i < currentLevel; i++)
@@ -63,7 +68,7 @@ namespace CoreLibrary.FilesystemTree
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.Name + ": " + node.Location);
+            Console.WriteLine("+- " + node.Info.Name + ": " + node.Location + " # " + node.Differences);
 
             Console.ResetColor();
         }
