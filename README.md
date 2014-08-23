@@ -13,3 +13,5 @@ Adler32 is faster than CRC32
 
 TODO:
 - watch out for file deletions everywhere!!!
+
+- DIFF for two copy pasted text files (in GUI)
