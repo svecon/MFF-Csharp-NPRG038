@@ -11,7 +11,7 @@ using CoreLibrary.FilesystemTree;
 
 namespace CoreLibrary.Processors
 {
-    class BinaryDifferProcessor : IPreProcessor
+    class BinaryDiffProcessor : IPreProcessor
     {
         const int BUFFER_SIZE = 4096;
 

@@ -23,7 +23,7 @@ namespace CoreLibrary.FilesystemTree
             DiffMode = mode;
         }
 
-        public FilesystemTree AddDirToRoot(DirectoryInfo root, LocationEnum location)
+        public void AddDirToRoot(DirectoryInfo root, LocationEnum location)
         {
             if (Root == null)
             {
@@ -32,8 +32,6 @@ namespace CoreLibrary.FilesystemTree
             {
                 Root.AddInfoFromLocation(root, location);
             }
-
-            return this;
         }
 
         public void Accept(IFilesystemTreeVisitor visitor)

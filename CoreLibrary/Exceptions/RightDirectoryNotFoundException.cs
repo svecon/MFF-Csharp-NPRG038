@@ -9,7 +9,8 @@ namespace CoreLibrary.Exceptions
 {
     class RightDirectoryNotFoundException : LocationNotFoundException
     {
-        public RightDirectoryNotFoundException(DirectoryInfo info) : base(info)
+        public RightDirectoryNotFoundException(FileSystemInfo info)
+            : base(info)
         {
         }
     }

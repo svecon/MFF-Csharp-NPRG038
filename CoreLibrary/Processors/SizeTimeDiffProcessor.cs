@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Processors
 {
-    class SizeTimeDifferProcessor : IPreProcessor
+    class SizeTimeDiffProcessor : IPreProcessor
     {
         public void Process(IFilesystemTreeDirNode node)
         {

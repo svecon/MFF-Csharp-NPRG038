@@ -15,9 +15,9 @@ namespace CoreLibrary.Exceptions
     class LocationNotFoundException : DirectoryNotFoundException
     {
 
-        protected DirectoryInfo info;
+        protected FileSystemInfo info;
 
-        public LocationNotFoundException(DirectoryInfo info)
+        public LocationNotFoundException(FileSystemInfo info)
         {
             this.info = info;
         }
