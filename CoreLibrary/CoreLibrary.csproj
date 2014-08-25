@@ -62,8 +62,8 @@
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
+    <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Processors\BinaryProcessor.cs" />
-    <Compile Include="Processors\ConsolePrinterProcessor.cs" />
     <Compile Include="Processors\SizeAndTimeDifferProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorsLoader.cs" />
