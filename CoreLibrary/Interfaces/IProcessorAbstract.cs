@@ -10,9 +10,9 @@ namespace CoreLibrary.Interfaces
 {
     public interface IProcessorAbstract
     {
-        bool Process(IFilesystemTreeDirNode node);
+        void Process(IFilesystemTreeDirNode node);
 
-        bool Process(IFilesystemTreeFileNode node);
+        void Process(IFilesystemTreeFileNode node);
 
         int Priority { get; }
 

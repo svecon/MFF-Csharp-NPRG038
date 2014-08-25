@@ -12,6 +12,8 @@ namespace CoreLibrary.FilesystemTree
 
         IProcessorLoader loader;
 
+        public List<Task> tasks = new List<Task>();
+
         public ExecutionVisitor(IProcessorLoader loader)
         {
             this.loader = loader;
@@ -19,12 +21,14 @@ namespace CoreLibrary.FilesystemTree
 
         public void Visit(IFilesystemTreeDirNode node)
         {
+            Task t = Task.FromResult(false);
+
             foreach (var processor in loader.GetPreProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
             foreach (var processor in loader.GetProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
             foreach (var processor in loader.GetPostProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
 
             foreach (var file in node.Files)
                 file.Accept(this);
@@ -35,12 +39,21 @@ namespace CoreLibrary.FilesystemTree
 
         public void Visit(IFilesystemTreeFileNode node)
         {
+            Task t = Task.FromResult(false);
+
             foreach (var processor in loader.GetPreProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
             foreach (var processor in loader.GetProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
             foreach (var processor in loader.GetPostProcessors())
-                processor.Process(node);
+                t = t.ContinueWith(_ => processor.Process(node));
+
+            tasks.Add(t);
+        }
+
+        public void Wait()
+        {
+            Task.WaitAll(tasks.ToArray());
         }
     }
 }

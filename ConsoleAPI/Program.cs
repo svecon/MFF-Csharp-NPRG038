@@ -39,7 +39,10 @@ namespace ConsoleAPI
             Console.WriteLine(sw.ElapsedMilliseconds);
             sw.Restart();
 
-            tree.Accept(new ExecutionVisitor(loader));
+            var ex = new ExecutionVisitor(loader);
+
+            tree.Accept(ex);
+            ex.Wait();
             tree.Accept(new PrinterVisitor());
 
             Console.WriteLine(sw.ElapsedMilliseconds);
