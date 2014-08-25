@@ -24,8 +24,8 @@ namespace CoreLibrary.Processors
 
         public void Load()
         {
-            //AddProcessor(new SizeAndTimeDifferProcessor());
-            AddProcessor(new BinaryProcessor());
+            AddProcessor(new SizeTimeDifferProcessor());
+            //AddProcessor(new BinaryProcessor());
         }
 
         public void AddProcessor(IPreProcessor processor)
