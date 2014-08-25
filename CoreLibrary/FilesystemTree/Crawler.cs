@@ -92,6 +92,31 @@ namespace CoreLibrary.FilesystemTree
         {
         }
 
+        #region Crawler only for files
+        //public static FilesystemTree ForFiles(string baseFilePath, string leftFilePath, string rightFilePath)
+        //{
+            //IFilesystemTreeFileNode filesNode = new FilesystemTree.FileNode();
+
+            //if (baseFilePath == null)
+            //    filesDiffTree = new FilesystemTree(DiffModeEnum.TwoWay);
+            //else
+            //    filesDiffTree = new FilesystemTree(DiffModeEnum.ThreeWay);
+
+            //FileInfo rightFile = new FileInfo(rightFilePath);
+            //if (!rightFile.Exists)
+            //    throw new RightDirectoryNotFoundException(rightFile);
+
+            //filesDiffTree.AddDirToRoot(rightFile, LocationEnum.OnRight);
+
+            //return filesDiffTree;
+        //}
+
+        //public static FilesystemTree ForFiles(string leftFilePath, string rightFilePath)
+        //{
+        //    return ForFiles(null, leftFilePath, rightFilePath);
+        //}
+        #endregion
+
         /// <summary>
         /// Traverses filesystem directories specified in constructor.
         /// Creates a filesystem tree with all files from all paths.
