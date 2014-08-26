@@ -26,14 +26,19 @@ namespace CoreLibrary.FilesystemTree.Visitors
         public void Visit(IFilesystemTreeDirNode node)
         {
             // create a completed task
-            Task t = Task.FromResult(false);
+            Task task = Task.FromResult(false);
 
             foreach (var processor in loader.GetPreProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
             foreach (var processor in loader.GetProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
             foreach (var processor in loader.GetPostProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
+
+            // add task which runs when there is an error
+            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            // add task with processors
+            tasks.Add(task);
 
             foreach (var file in node.Files)
                 file.Accept(this);
@@ -45,26 +50,53 @@ namespace CoreLibrary.FilesystemTree.Visitors
         public void Visit(IFilesystemTreeFileNode node)
         {
             // create a completed task
-            Task t = Task.FromResult(false);
+            Task task = Task.FromResult(false);
 
             foreach (var processor in loader.GetPreProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
             foreach (var processor in loader.GetProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
             foreach (var processor in loader.GetPostProcessors())
-                t = t.ContinueWith(_ => processor.Process(node), tokenSource.Token);
+                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
-            tasks.Add(t);
+            // add task which runs when there is an error
+            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            // add task with processors
+            tasks.Add(task);
         }
 
+        private void handleError(IFilesystemTreeAbstractNode node, Task task)
+        {
+            node.Status = Enums.NodeStatusEnum.HasError;
+        }
+
+        /// <summary>
+        /// Wait for all processing to finish.
+        /// </summary>
         public void Wait()
         {
             if (tokenSource.IsCancellationRequested)
                 return;
 
-            Task.WaitAll(tasks.ToArray());
+            try
+            {
+                Task.WaitAll(tasks.ToArray());
+            } catch (AggregateException ae)
+            {
+                ae.Handle(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine(x);
+                    //TODO log exception
+                    return true;
+                });
+            }
         }
 
+        /// <summary>
+        /// Cancel all processing.
+        /// 
+        /// All nodes end up in error state!
+        /// </summary>
         public void Cancel()
         {
             tokenSource.Cancel();

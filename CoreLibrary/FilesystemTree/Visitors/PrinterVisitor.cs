@@ -22,7 +22,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.FullName + node.GetSize());
+            Console.WriteLine("+- " + node.Info.FullName + " (" + node.GetSize().ToString("#.00") + ")");
 
             foreach (var file in node.Files)
             {
@@ -39,29 +39,34 @@ namespace CoreLibrary.FilesystemTree.Visitors
 
         public void Visit(IFilesystemTreeFileNode node)
         {
-            switch (node.Differences)
+            if (node.Status == NodeStatusEnum.HasError)
             {
-                case DifferencesStatusEnum.Initial:
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    break;
-                case DifferencesStatusEnum.AllDifferent:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-                case DifferencesStatusEnum.BaseLeftSame:
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    break;
-                case DifferencesStatusEnum.BaseRight:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break;
-                case DifferencesStatusEnum.LeftRight:
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    break;
-                case DifferencesStatusEnum.AllSame:
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    break;
-                default:
-                    throw new NotImplementedException("This difference type was not implemented.");
-            }
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("E ");
+            } else
+                switch (node.Differences)
+                {
+                    case DifferencesStatusEnum.Initial:
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        break;
+                    case DifferencesStatusEnum.AllDifferent:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case DifferencesStatusEnum.BaseLeftSame:
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        break;
+                    case DifferencesStatusEnum.BaseRight:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    case DifferencesStatusEnum.LeftRight:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        break;
+                    case DifferencesStatusEnum.AllSame:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    default:
+                        throw new NotImplementedException("This difference type was not implemented.");
+                }
 
             for (int i = 0; i < currentLevel; i++)
             {
