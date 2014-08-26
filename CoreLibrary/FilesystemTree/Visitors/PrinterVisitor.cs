@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
 
-namespace CoreLibrary.FilesystemTree
+namespace CoreLibrary.FilesystemTree.Visitors
 {
     public class PrinterVisitor : IFilesystemTreeVisitor
     {
@@ -22,7 +22,7 @@ namespace CoreLibrary.FilesystemTree
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.FullName);
+            Console.WriteLine("+- " + node.Info.FullName + node.GetSize());
 
             foreach (var file in node.Files)
             {
@@ -41,22 +41,22 @@ namespace CoreLibrary.FilesystemTree
         {
             switch (node.Differences)
             {
-                case DifferencesStatus.Initial:
+                case DifferencesStatusEnum.Initial:
                     Console.ForegroundColor = ConsoleColor.Gray;
                     break;
-                case DifferencesStatus.AllDifferent:
+                case DifferencesStatusEnum.AllDifferent:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
-                case DifferencesStatus.BaseLeftSame:
+                case DifferencesStatusEnum.BaseLeftSame:
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     break;
-                case DifferencesStatus.BaseRight:
+                case DifferencesStatusEnum.BaseRight:
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
-                case DifferencesStatus.LeftRight:
+                case DifferencesStatusEnum.LeftRight:
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     break;
-                case DifferencesStatus.AllSame:
+                case DifferencesStatusEnum.AllSame:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
                 default:

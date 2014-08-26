@@ -1,26 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using CoreLibrary.Enums;
+using System.IO;
 
 namespace CoreLibrary.Interfaces
 {
+    /// <summary>
+    /// Dir node of FilesystemTree.
+    /// </summary>
     public interface IFilesystemTreeDirNode : IFilesystemTreeAbstractNode
     {
-
+        /// <summary>
+        /// All subdirectories for current directory.
+        /// </summary>
         List<IFilesystemTreeDirNode> Directories { get; }
 
+        /// <summary>
+        /// All files located in current directory.
+        /// </summary>
         List<IFilesystemTreeFileNode> Files { get; }
 
-        IFilesystemTreeDirNode SearchForDir(DirectoryInfo info);
-
+        /// <summary>
+        /// Add new subdirectory.
+        /// </summary>
+        /// <param name="info">DirectoryInfo for subdirectory.</param>
+        /// <param name="location">Where the subdirectory was found.</param>
+        /// <returns>Node for new subdirectory.</returns>
         IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location);
 
+        /// <summary>
+        /// Add new file in current directory.
+        /// </summary>
+        /// <param name="info">FileInfo for new file.</param>
+        /// <param name="location">Where the file was found.</param>
+        /// <returns>Node for new file.</returns>
+        IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location);
+
+        /// <summary>
+        /// Search for existing subdirectory.
+        /// </summary>
+        /// <param name="info">Needle: DirectoryInfo</param>
+        /// <returns>Null or existing DirNode.</returns>
+        IFilesystemTreeDirNode SearchForDir(DirectoryInfo info);
+
+        /// <summary>
+        /// Search for existing file.
+        /// </summary>
+        /// <param name="info">Needle: FileInfo</param>
+        /// <returns>Null or existing FileNode.</returns>
         IFilesystemTreeFileNode SearchForFile(FileInfo info);
 
-        void AddFile(FileInfo info, LocationEnum location);
+        /// <summary>
+        /// Returns a size of directory and all subdirectories in kB.
+        /// </summary>
+        /// <returns>Size in kB</returns>
+        double GetSize();
     }
 }

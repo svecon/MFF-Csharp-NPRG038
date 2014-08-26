@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
 {
-    public interface IProcessorAbstract
+    /// <summary>
+    /// Processor interface that can process nodes from FilesystemTree.
+    /// </summary>
+    public interface IProcessorBase
     {
         void Process(IFilesystemTreeDirNode node);
 
         void Process(IFilesystemTreeFileNode node);
 
+        /// <summary>
+        /// Priority ensures correct order of execution between multiple processors.
+        /// </summary>
         int Priority { get; }
 
         DiffModeEnum Mode { get; }

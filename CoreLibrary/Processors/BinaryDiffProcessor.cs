@@ -21,7 +21,7 @@ namespace CoreLibrary.Processors
 
         public void Process(IFilesystemTreeFileNode node)
         {
-            if (node.Status == NodeStatus.WasDiffed)
+            if (node.Status == NodeStatusEnum.WasDiffed)
                 return;
 
             var threeWay = new ThreeWayDiffHelper();
@@ -98,13 +98,13 @@ namespace CoreLibrary.Processors
                     }
                 }
 
-                node.Differences = (DifferencesStatus)(threeWay.GetSameFiles());
-                node.Status = NodeStatus.WasDiffed;
+                node.Differences = (DifferencesStatusEnum)(threeWay.GetSameFiles());
+                node.Status = NodeStatusEnum.WasDiffed;
 
             } catch (IOException e)
             {
                 Console.WriteLine(e);
-                node.Status = NodeStatus.HasError;
+                node.Status = NodeStatusEnum.HasError;
             }
 
         }

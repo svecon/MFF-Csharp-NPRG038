@@ -9,7 +9,7 @@ namespace CoreLibrary.Enums
     /// <summary>
     /// Modes for FilesystemDiff structure.
     /// 
-    /// Some features are exclusive for more specific (different) mode.
+    /// Some features are exclusive for different mode.
     /// </summary>
     public enum DiffModeEnum
     {

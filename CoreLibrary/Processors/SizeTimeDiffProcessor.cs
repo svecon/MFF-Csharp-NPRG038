@@ -55,13 +55,13 @@ namespace CoreLibrary.Processors
                 if (threeWay.CanCombinationLeftRightBeSame())
                     threeWay.CheckCombinationLeftRight(InfoLeft.LastWriteTime != InfoRight.LastWriteTime);
 
-                node.Differences = (DifferencesStatus)threeWay.GetSameFiles();
-                node.Status = NodeStatus.WasDiffed;
+                node.Differences = (DifferencesStatusEnum)threeWay.GetSameFiles();
+                node.Status = NodeStatusEnum.WasDiffed;
 
             } catch (Exception e)
             {
                 Console.WriteLine(e);
-                node.Status = NodeStatus.HasError;
+                node.Status = NodeStatusEnum.HasError;
             }
 
             return;

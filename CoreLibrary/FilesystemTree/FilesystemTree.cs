@@ -16,7 +16,7 @@ namespace CoreLibrary.FilesystemTree
 
         public DiffModeEnum DiffMode { get; protected set; }
 
-        public DirNode Root { get; protected set; }
+        public IFilesystemTreeDirNode Root { get; protected set; }
 
         public FilesystemTree(DiffModeEnum mode)
         {
@@ -27,7 +27,7 @@ namespace CoreLibrary.FilesystemTree
         {
             if (Root == null)
             {
-                Root = new DirNode(root, location);
+                Root = new DirNode(root, location, DiffMode);
             } else
             {
                 Root.AddInfoFromLocation(root, location);
@@ -47,9 +47,9 @@ namespace CoreLibrary.FilesystemTree
 
             public FileSystemInfo InfoRight { get; protected set; }
 
-            public NodeStatus Status { get; set; }
+            public NodeStatusEnum Status { get; set; }
 
-            public DifferencesStatus Differences { get; set; }
+            public DifferencesStatusEnum Differences { get; set; }
 
             /// <summary>
             /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
@@ -71,10 +71,13 @@ namespace CoreLibrary.FilesystemTree
                 }
             }
 
-            public LocationEnum Location { get; protected set; }
+            public int Location { get; protected set; }
 
-            public AbstractNode(FileSystemInfo info, LocationEnum location)
+            public DiffModeEnum Mode { get; protected set; }
+
+            public AbstractNode(FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
             {
+                Mode = mode;
                 AddInfoFromLocation(info, location);
             }
 
@@ -85,7 +88,7 @@ namespace CoreLibrary.FilesystemTree
 
             protected void markFound(LocationEnum location)
             {
-                Location = (LocationEnum)((int)Location | (int)location);
+                Location = Location | (int)location;
             }
 
             public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
@@ -119,8 +122,8 @@ namespace CoreLibrary.FilesystemTree
 
             public List<IFilesystemTreeFileNode> Files { get; protected set; }
 
-            public DirNode(DirectoryInfo info, LocationEnum location)
-                : base(info, location)
+            public DirNode(DirectoryInfo info, LocationEnum location, DiffModeEnum mode)
+                : base(info, location, mode)
             {
                 Directories = new List<IFilesystemTreeDirNode>();
                 Files = new List<IFilesystemTreeFileNode>();
@@ -161,7 +164,7 @@ namespace CoreLibrary.FilesystemTree
 
             public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
             {
-                var dirDiffNode = new DirNode(info, location);
+                var dirDiffNode = new DirNode(info, location, Mode);
                 Directories.Add(dirDiffNode);
                 return dirDiffNode;
             }
@@ -195,17 +198,24 @@ namespace CoreLibrary.FilesystemTree
 
             }
 
-            public void AddFile(FileInfo info, LocationEnum location)
+            public IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location)
             {
-                Files.Add(new FileNode(info, location));
+                var node = new FileNode(info, location, Mode);
+                Files.Add(node);
+                return node;
+            }
+
+            public double GetSize()
+            {
+                return (double)Files.Sum(f => ((FileInfo)f.Info).Length) / 1024 + Directories.Select(f => f.GetSize()).Sum();
             }
 
         }
 
         public class FileNode : AbstractNode, IFilesystemTreeFileNode
         {
-            public FileNode(FileInfo info, LocationEnum location)
-                : base(info, location)
+            public FileNode(FileInfo info, LocationEnum location, DiffModeEnum mode)
+                : base(info, location, mode)
             {
 
             }

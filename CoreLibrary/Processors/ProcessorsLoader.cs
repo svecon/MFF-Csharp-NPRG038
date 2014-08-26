@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.Processors
@@ -42,7 +43,6 @@ namespace CoreLibrary.Processors
         {
             PostProcessors.Add(processor.Priority, processor);
         }
-
 
         public IEnumerable<IPreProcessor> GetPreProcessors()
         {
