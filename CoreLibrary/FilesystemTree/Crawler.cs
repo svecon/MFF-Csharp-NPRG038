@@ -4,6 +4,7 @@ using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree
 {
@@ -95,20 +96,20 @@ namespace CoreLibrary.FilesystemTree
         #region Crawler only for files
         //public static FilesystemTree ForFiles(string baseFilePath, string leftFilePath, string rightFilePath)
         //{
-            //IFilesystemTreeFileNode filesNode = new FilesystemTree.FileNode();
+        //IFilesystemTreeFileNode filesNode = new FilesystemTree.FileNode();
 
-            //if (baseFilePath == null)
-            //    filesDiffTree = new FilesystemTree(DiffModeEnum.TwoWay);
-            //else
-            //    filesDiffTree = new FilesystemTree(DiffModeEnum.ThreeWay);
+        //if (baseFilePath == null)
+        //    filesDiffTree = new FilesystemTree(DiffModeEnum.TwoWay);
+        //else
+        //    filesDiffTree = new FilesystemTree(DiffModeEnum.ThreeWay);
 
-            //FileInfo rightFile = new FileInfo(rightFilePath);
-            //if (!rightFile.Exists)
-            //    throw new RightDirectoryNotFoundException(rightFile);
+        //FileInfo rightFile = new FileInfo(rightFilePath);
+        //if (!rightFile.Exists)
+        //    throw new RightDirectoryNotFoundException(rightFile);
 
-            //filesDiffTree.AddDirToRoot(rightFile, LocationEnum.OnRight);
+        //filesDiffTree.AddDirToRoot(rightFile, LocationEnum.OnRight);
 
-            //return filesDiffTree;
+        //return filesDiffTree;
         //}
 
         //public static FilesystemTree ForFiles(string leftFilePath, string rightFilePath)
@@ -143,11 +144,11 @@ namespace CoreLibrary.FilesystemTree
                     // about the systems on which this code will run. 
                 catch (UnauthorizedAccessException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
                 } catch (System.IO.DirectoryNotFoundException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
                 }
 
@@ -173,11 +174,11 @@ namespace CoreLibrary.FilesystemTree
                 } catch (UnauthorizedAccessException e)
                 {
 
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
                 } catch (System.IO.DirectoryNotFoundException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
                 }
 
@@ -199,7 +200,7 @@ namespace CoreLibrary.FilesystemTree
                         // If file was deleted by a separate application 
                         //  or thread since the call to TraverseTree() 
                         // then just continue.
-                        Console.WriteLine(e.Message);
+                        System.Diagnostics.Debug.WriteLine(e.Message);
                         continue;
                     }
                 }

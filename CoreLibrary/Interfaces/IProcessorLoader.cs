@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
 {
+    /// <summary>
+    /// ProcessorLoader tries to load all available Processors and can iterate over them.
+    /// </summary>
     public interface IProcessorLoader
     {
+        /// <summary>
+        /// Loads all processors.
+        /// 
+        /// May use Reflection to find new ones.
+        /// </summary>
         void Load();
 
         IEnumerable<IPreProcessor> GetPreProcessors();

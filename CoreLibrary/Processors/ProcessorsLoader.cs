@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.Processors
@@ -25,24 +26,42 @@ namespace CoreLibrary.Processors
         public void Load()
         {
             AddProcessor(new SizeTimeDiffProcessor());
-            //AddProcessor(new BinaryProcessor());
+            AddProcessor(new BinaryDiffProcessor());
+            AddProcessor(new SyncMergeProcessor());
         }
 
         public void AddProcessor(IPreProcessor processor)
         {
-            PreProcessors.Add(processor.Priority, processor);
+            try
+            {
+                PreProcessors.Add(processor.Priority, processor);
+            } catch (ArgumentException e)
+            {
+                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+            }
         }
 
         public void AddProcessor(IProcessor processor)
         {
-            Processors.Add(processor.Priority, processor);
+            try
+            {
+                Processors.Add(processor.Priority, processor);
+            } catch (ArgumentException e)
+            {
+                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+            }
         }
 
         public void AddProcessor(IPostProcessor processor)
         {
-            PostProcessors.Add(processor.Priority, processor);
+            try
+            {
+                PostProcessors.Add(processor.Priority, processor);
+            } catch (ArgumentException e)
+            {
+                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+            }
         }
-
 
         public IEnumerable<IPreProcessor> GetPreProcessors()
         {

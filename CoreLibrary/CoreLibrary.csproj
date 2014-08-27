@@ -39,10 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\Differences.cs" />
-    <Compile Include="Enums\NodeStatus.cs" />
-    <Compile Include="FilesystemTree\ExecutionVisitor.cs" />
-    <Compile Include="FilesystemTree\PrinterVisitor.cs" />
+    <Compile Include="Enums\DifferencesStatusEnum.cs" />
+    <Compile Include="Enums\NodeStatusEnum.cs" />
+    <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
+    <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
     <Compile Include="FilesystemTree\FilesystemTree.cs" />
     <Compile Include="FilesystemTree\Crawler.cs" />
     <Compile Include="Enums\DiffModeEnum.cs" />
@@ -51,6 +51,8 @@
     <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Interfaces\IExecutionVisitor.cs" />
+    <Compile Include="Interfaces\IFilesystemTreeVisitable.cs" />
     <Compile Include="Interfaces\IPostProcessor.cs" />
     <Compile Include="Interfaces\IProcessor.cs" />
     <Compile Include="Interfaces\IPreProcessor.cs" />
@@ -58,10 +60,11 @@
     <Compile Include="Interfaces\IFilesystemTreeDirNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeFileNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeAbstractNode.cs" />
-    <Compile Include="Interfaces\IProcessorAbstract.cs" />
+    <Compile Include="Interfaces\IProcessorBase.cs" />
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
+    <Compile Include="Processors\SyncMergeProcessor.cs" />
     <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Processors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\SizeTimeDiffProcessor.cs" />

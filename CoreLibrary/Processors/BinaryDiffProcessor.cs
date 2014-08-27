@@ -11,8 +11,14 @@ using CoreLibrary.FilesystemTree;
 
 namespace CoreLibrary.Processors
 {
+    /// <summary>
+    /// BinaryDiffProcessors processes any files and checks for differences byte by byte.
+    /// </summary>
     class BinaryDiffProcessor : IPreProcessor
     {
+        /// <summary>
+        /// Size of an array buffer for reading files.
+        /// </summary>
         const int BUFFER_SIZE = 4096;
 
         public void Process(IFilesystemTreeDirNode node)
@@ -21,15 +27,15 @@ namespace CoreLibrary.Processors
 
         public void Process(IFilesystemTreeFileNode node)
         {
-            if (node.Status == NodeStatus.WasDiffed)
+            if (node.Status == NodeStatusEnum.WasDiffed)
                 return;
 
             var threeWay = new ThreeWayDiffHelper();
 
+            StreamReader[] readers = new StreamReader[3];
+
             try
             {
-                StreamReader[] readers = new StreamReader[3];
-
                 char[][] buffers = new char[3][];
 
                 // initialize readers
@@ -61,7 +67,7 @@ namespace CoreLibrary.Processors
                 {
                     int[] bufferLengths = new int[3];
 
-                    // load buffers
+                    // load new buffers
                     if (threeWay.CanBaseFileBeSame(true))
                         bufferLengths[0] = readers[0].Read(buffers[0], 0, buffers[0].Length);
 
@@ -71,7 +77,7 @@ namespace CoreLibrary.Processors
                     if (threeWay.CanRightFileBeSame())
                         bufferLengths[2] = readers[2].Read(buffers[2], 0, buffers[2].Length);
 
-                    // check buffer lengths
+                    // check buffered lengths
                     if (threeWay.CanCombinationBaseLeftBeSame())
                         threeWay.CheckCombinationBaseLeft(bufferLengths[0] != bufferLengths[1]);
                     if (threeWay.CanCombinationBaseRightBeSame())
@@ -81,9 +87,11 @@ namespace CoreLibrary.Processors
 
                     int maxLength = bufferLengths.Max();
 
-                    if (maxLength == 0) // files reached end and are the same
+                    // files reached end and are the same
+                    if (maxLength == 0)
                         break;
 
+                    // check bytes
                     for (int i = 0; i < maxLength; i++)
                     {
                         if (threeWay.CanCombinationBaseLeftBeSame())
@@ -93,23 +101,28 @@ namespace CoreLibrary.Processors
                         if (threeWay.CanCombinationLeftRightBeSame())
                             threeWay.CheckCombinationLeftRight(buffers[1][i] != buffers[2][i]);
 
+                        // all files are different
                         if (threeWay.GetPossibleCombinations() == 0)
                             break;
                     }
                 }
 
-                node.Differences = (DifferencesStatus)(threeWay.GetSameFiles());
-                node.Status = NodeStatus.WasDiffed;
+                node.Differences = (DifferencesStatusEnum)(threeWay.GetSameFiles());
+                node.Status = NodeStatusEnum.WasDiffed;
 
-            } catch (IOException e)
+            } finally
             {
-                Console.WriteLine(e);
-                node.Status = NodeStatus.HasError;
+                // close readers if any
+                foreach (var reader in readers)
+                {
+                    if (reader != null)
+                        reader.Close();
+                }
             }
 
         }
 
-        public int Priority { get { return 10; } }
+        public int Priority { get { return 100; } }
 
         public DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
     }

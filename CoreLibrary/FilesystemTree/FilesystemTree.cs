@@ -16,7 +16,7 @@ namespace CoreLibrary.FilesystemTree
 
         public DiffModeEnum DiffMode { get; protected set; }
 
-        public DirNode Root { get; protected set; }
+        public IFilesystemTreeDirNode Root { get; protected set; }
 
         public FilesystemTree(DiffModeEnum mode)
         {
@@ -27,7 +27,7 @@ namespace CoreLibrary.FilesystemTree
         {
             if (Root == null)
             {
-                Root = new DirNode(root, location);
+                Root = new DirNode(null, null, root, location, DiffMode);
             } else
             {
                 Root.AddInfoFromLocation(root, location);
@@ -47,9 +47,9 @@ namespace CoreLibrary.FilesystemTree
 
             public FileSystemInfo InfoRight { get; protected set; }
 
-            public NodeStatus Status { get; set; }
+            public NodeStatusEnum Status { get; set; }
 
-            public DifferencesStatus Differences { get; set; }
+            public DifferencesStatusEnum Differences { get; set; }
 
             /// <summary>
             /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
@@ -71,26 +71,32 @@ namespace CoreLibrary.FilesystemTree
                 }
             }
 
-            public LocationEnum Location { get; protected set; }
+            public int Location { get; protected set; }
 
-            public AbstractNode(FileSystemInfo info, LocationEnum location)
+            public DiffModeEnum Mode { get; protected set; }
+
+            public abstract string GetAbsolutePath(LocationEnum location);
+
+            public AbstractNode(FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
             {
+                Mode = mode;
                 AddInfoFromLocation(info, location);
             }
 
             public bool IsInLocation(LocationEnum location)
             {
-                return (((int)location) & ((int)Location)) > 0;
+                return ((int)location & Location) > 0;
             }
 
             protected void markFound(LocationEnum location)
             {
-                Location = (LocationEnum)((int)Location | (int)location);
+                Location = Location | (int)location;
             }
 
-            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
+            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true)
             {
-                markFound(location);
+                if (markIsFound)
+                    markFound(location);
 
                 switch (location)
                 {
@@ -119,11 +125,18 @@ namespace CoreLibrary.FilesystemTree
 
             public List<IFilesystemTreeFileNode> Files { get; protected set; }
 
-            public DirNode(DirectoryInfo info, LocationEnum location)
-                : base(info, location)
+            public IFilesystemTreeDirNode RootNode { get; set; }
+
+            public string RelativePath { get; set; }
+
+            public DirNode(IFilesystemTreeDirNode rootNode, string relativePath, DirectoryInfo info, LocationEnum location, DiffModeEnum mode)
+                : base(info, location, mode)
             {
                 Directories = new List<IFilesystemTreeDirNode>();
                 Files = new List<IFilesystemTreeFileNode>();
+
+                RootNode = rootNode == null ? this : rootNode;
+                RelativePath = relativePath == null ? "" : relativePath + @"\" + info.Name;
             }
 
             public override void Accept(IFilesystemTreeVisitor visitor)
@@ -133,6 +146,8 @@ namespace CoreLibrary.FilesystemTree
 
             public IFilesystemTreeDirNode SearchForDir(DirectoryInfo info)
             {
+                //TODO maybe this could be done faster? (now it is N^2)
+
                 foreach (var dir in Directories)
                 {
                     if (dir.Info.Name == info.Name)
@@ -140,34 +155,12 @@ namespace CoreLibrary.FilesystemTree
                 }
 
                 return null;
-
-                // THIS WAS FOR SORTED DIRECTORIES
-                //int i = 0;
-                //int comparison = -1;
-                //while (i < Directories.Count && (comparison = Directories[i].Info.Name.CompareTo(info.Name)) == -1)
-                //{
-                //    i++;
-                //}
-
-                //if (comparison == 0)
-                //{
-                //    return Directories[i];
-                //} else
-                //{
-                //    return null;
-                //}
-
-            }
-
-            public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
-            {
-                var dirDiffNode = new DirNode(info, location);
-                Directories.Add(dirDiffNode);
-                return dirDiffNode;
             }
 
             public IFilesystemTreeFileNode SearchForFile(FileInfo info)
             {
+                //TODO maybe this could be done faster? (now it is N^2)
+
                 foreach (var file in Files)
                 {
                     if (file.Info.Name == info.Name)
@@ -175,44 +168,70 @@ namespace CoreLibrary.FilesystemTree
                 }
 
                 return null;
-
-
-                // THIS WAS FOR SORTED FILES
-                //int i = 0;
-                //int comparison = -1;
-                //while (i < Files.Count && (comparison = Files[i].Info.Name.CompareTo(info.Name)) == -1)
-                //{
-                //    i++;
-                //}
-
-                //if (comparison == 0)
-                //{
-                //    return Files[i];
-                //} else
-                //{
-                //    return null;
-                //}
-
             }
 
-            public void AddFile(FileInfo info, LocationEnum location)
+            public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
             {
-                Files.Add(new FileNode(info, location));
+                var dirDiffNode = new DirNode(RootNode, RelativePath, info, location, Mode);
+                Directories.Add(dirDiffNode);
+                return dirDiffNode;
+            }
+
+            public IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location)
+            {
+                var node = new FileNode(this, info, location, Mode);
+                Files.Add(node);
+                return node;
+            }
+
+            public double GetSize()
+            {
+                return (double)Files.Sum(f => ((FileInfo)f.Info).Length) / 1024 + Directories.Select(f => f.GetSize()).Sum();
+            }
+
+            public override string GetAbsolutePath(LocationEnum location)
+            {
+                FileSystemInfo info = null;
+
+                switch (location)
+                {
+                    case LocationEnum.OnBase:
+                        info = RootNode.InfoBase;
+                        break;
+                    case LocationEnum.OnLeft:
+                        info = RootNode.InfoLeft;
+                        break;
+                    case LocationEnum.OnRight:
+                        info = RootNode.InfoRight;
+                        break;
+                }
+
+                if (info == null)
+                    throw new InvalidOperationException("This path does not exist.");
+
+                return RelativePath == "" ? info.FullName : info.FullName + @"\" + RelativePath;
             }
 
         }
 
         public class FileNode : AbstractNode, IFilesystemTreeFileNode
         {
-            public FileNode(FileInfo info, LocationEnum location)
-                : base(info, location)
-            {
+            public IFilesystemTreeDirNode ParentNode { get; set; }
 
+            public FileNode(IFilesystemTreeDirNode parentNode, FileInfo info, LocationEnum location, DiffModeEnum mode)
+                : base(info, location, mode)
+            {
+                ParentNode = parentNode;
             }
 
             public override void Accept(IFilesystemTreeVisitor visitor)
             {
                 visitor.Visit(this);
+            }
+
+            public override string GetAbsolutePath(LocationEnum location)
+            {
+                return ParentNode.GetAbsolutePath(location) + @"\" + Info.Name;
             }
         }
     }

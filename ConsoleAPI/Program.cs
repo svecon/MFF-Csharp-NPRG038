@@ -7,6 +7,8 @@ using CoreLibrary;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
+using CoreLibrary.FilesystemTree.Visitors;
+using System.IO;
 
 namespace ConsoleAPI
 {
@@ -36,7 +38,7 @@ namespace ConsoleAPI
 
             var tree = di.TraverseTree();
 
-            Console.WriteLine(sw.ElapsedMilliseconds);
+            System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds + "ms for tree bulding");
             sw.Restart();
 
             var ex = new ExecutionVisitor(loader);
@@ -45,7 +47,7 @@ namespace ConsoleAPI
             ex.Wait();
             tree.Accept(new PrinterVisitor());
 
-            Console.WriteLine(sw.ElapsedMilliseconds);
+            System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds + "ms for tree processing");
         }
     }
 }
