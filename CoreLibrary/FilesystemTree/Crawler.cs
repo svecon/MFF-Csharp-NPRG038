@@ -206,8 +206,6 @@ namespace CoreLibrary.FilesystemTree
                 }
             }
 
-            FilesystemDiff.FillMissingPaths();
-
             return FilesystemDiff;
         }
 

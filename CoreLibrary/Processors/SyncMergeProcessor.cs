@@ -1,4 +1,5 @@
-﻿using CoreLibrary.Interfaces;
+﻿using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,23 +17,30 @@ namespace CoreLibrary.Processors
 
         public void Process(IFilesystemTreeDirNode node)
         {
-            //TODO create or delete folders
+            if (node.Mode != Enums.DiffModeEnum.TwoWay)
+                return;
+
+            if (node.Differences == Enums.DifferencesStatusEnum.LeftRightSame)
+                return;
+
+            if (node.Location == (int)Enums.LocationCombinationsEnum.OnLeftRight)
+                return;
+
+            string create;
+
+            if (node.IsInLocation(LocationEnum.OnLeft))
+            {
+                create = node.GetAbsolutePath(LocationEnum.OnRight);
+            } else
+            {
+                create = node.GetAbsolutePath(LocationEnum.OnLeft);
+            }
+
+            Directory.CreateDirectory(create);
         }
 
         public void Process(IFilesystemTreeFileNode node)
         {
-            //switch (node.Mode)
-            //{
-            //    case CoreLibrary.Enums.DiffModeEnum.TwoWay:
-            //        sync2Way(node);
-            //        break;
-            //    case CoreLibrary.Enums.DiffModeEnum.ThreeWay:
-            //        sync3Way(node);
-            //        break;
-            //    default:
-            //        throw new NotImplementedException();
-            //}
-
             if (node.Mode != Enums.DiffModeEnum.TwoWay)
                 return;
 
@@ -45,25 +53,27 @@ namespace CoreLibrary.Processors
             System.Diagnostics.Debug.WriteLine("syncing files ---------");
 
             FileInfo from = null;
-            FileInfo to = null;
+            string to = null;
 
             // one file is missing
             if (node.Location < (int)Enums.LocationCombinationsEnum.OnLeftRight)
             {
-                if (node.IsInLocation(Enums.LocationEnum.OnLeft))
-                {
-                    from = (FileInfo)node.InfoRight;
-                    to = (FileInfo)node.InfoLeft;
-                } else if (node.IsInLocation(Enums.LocationEnum.OnRight))
+                if (node.IsInLocation(LocationEnum.OnLeft))
                 {
                     from = (FileInfo)node.InfoLeft;
-                    to = (FileInfo)node.InfoRight;
+                    to = node.GetAbsolutePath(LocationEnum.OnRight);
+
+                } else if (node.IsInLocation(LocationEnum.OnRight))
+                {
+                    from = (FileInfo)node.InfoRight;
+                    to = node.GetAbsolutePath(LocationEnum.OnLeft);
+
                 } else
                 {
                     throw new InvalidDataException();
                 }
 
-                from.CopyTo(to.FullName);
+                from.CopyTo(to);
                 return;
             }
 
@@ -85,18 +95,18 @@ namespace CoreLibrary.Processors
             {
                 case -1:
                     from = (FileInfo)node.InfoRight;
-                    to = (FileInfo)node.InfoLeft;
+                    to = node.GetAbsolutePath(LocationEnum.OnLeft); ;
                     break;
                 case 0:
                     // files have modification date, skip everything
                     return;
                 case 1:
                     from = (FileInfo)node.InfoLeft;
-                    to = (FileInfo)node.InfoRight;
+                    to = node.GetAbsolutePath(LocationEnum.OnRight); ;
                     break;
             }
 
-            from.CopyTo(to.FullName, true);
+            from.CopyTo(to, true);
         }
 
         protected void sync2Way()

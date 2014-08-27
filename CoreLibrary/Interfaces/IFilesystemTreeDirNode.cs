@@ -21,6 +21,20 @@ namespace CoreLibrary.Interfaces
         List<IFilesystemTreeFileNode> Files { get; }
 
         /// <summary>
+        /// Reference to the RootNode of the entire FilesystemTree
+        /// 
+        /// Root directory references itself.
+        /// </summary>
+        IFilesystemTreeDirNode RootNode { get; }
+
+        /// <summary>
+        /// Relative path to the root of the FilesystemTree root.
+        /// 
+        /// This combined with root path gives absolute path.
+        /// </summary>
+        string RelativePath { get; }
+
+        /// <summary>
         /// Add new subdirectory.
         /// </summary>
         /// <param name="info">DirectoryInfo for subdirectory.</param>
@@ -55,10 +69,5 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <returns>Size in kB</returns>
         double GetSize();
-
-        /// <summary>
-        /// Fills missing paths into all files and subdirectories.
-        /// </summary>
-        void FillMissingPaths(string basePath, string leftPath, string rightPath);
     }
 }

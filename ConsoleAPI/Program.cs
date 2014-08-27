@@ -8,6 +8,7 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.FilesystemTree.Visitors;
+using System.IO;
 
 namespace ConsoleAPI
 {
