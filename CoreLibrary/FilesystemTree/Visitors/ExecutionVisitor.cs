@@ -85,6 +85,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
             {
                 ae.Handle(x =>
                 {
+                    if (x is TaskCanceledException)
+                        return true;
+
                     System.Diagnostics.Debug.WriteLine(x);
                     //TODO log exception
                     return true;
