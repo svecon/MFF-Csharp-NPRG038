@@ -27,6 +27,7 @@ namespace CoreLibrary.Processors
         {
             AddProcessor(new SizeTimeDiffProcessor());
             AddProcessor(new BinaryDiffProcessor());
+            AddProcessor(new SyncMergeProcessor());
         }
 
         public void AddProcessor(IPreProcessor processor)
@@ -34,7 +35,8 @@ namespace CoreLibrary.Processors
             try
             {
                 PreProcessors.Add(processor.Priority, processor);
-            } catch (ArgumentException e) {
+            } catch (ArgumentException e)
+            {
                 throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
             }
         }

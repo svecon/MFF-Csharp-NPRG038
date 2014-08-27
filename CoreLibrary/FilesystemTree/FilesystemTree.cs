@@ -34,6 +34,11 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        public void FillMissingPaths()
+        {
+            Root.FillMissingPaths(Root.InfoBase == null ? null : Root.InfoBase.FullName, Root.InfoLeft.FullName, Root.InfoRight.FullName);
+        }
+
         public void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(Root);
@@ -91,9 +96,10 @@ namespace CoreLibrary.FilesystemTree
                 Location = Location | (int)location;
             }
 
-            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
+            public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true)
             {
-                markFound(location);
+                if (markIsFound)
+                    markFound(location);
 
                 switch (location)
                 {
@@ -208,6 +214,35 @@ namespace CoreLibrary.FilesystemTree
             public double GetSize()
             {
                 return (double)Files.Sum(f => ((FileInfo)f.Info).Length) / 1024 + Directories.Select(f => f.GetSize()).Sum();
+            }
+
+            public void FillMissingPaths(string basePath, string leftPath, string rightPath)
+            {
+                if (InfoBase == null && Mode == DiffModeEnum.ThreeWay)
+                    InfoBase = new FileInfo(basePath + @"\" + Info.Name);
+
+                if (InfoLeft == null)
+                    InfoLeft = new FileInfo(leftPath + @"\" + Info.Name);
+
+                if (InfoRight == null)
+                    InfoRight = new FileInfo(rightPath + @"\" + Info.Name);
+
+                foreach (var file in Files)
+                {
+                    if (file.InfoBase == null && Mode == DiffModeEnum.ThreeWay)
+                        file.AddInfoFromLocation(new FileInfo(InfoBase.FullName + @"\" + file.Info.Name), LocationEnum.OnBase, false);
+
+                    if (file.InfoLeft == null)
+                        file.AddInfoFromLocation(new FileInfo(InfoLeft.FullName + @"\" + file.Info.Name), LocationEnum.OnLeft, false);
+
+                    if (file.InfoRight == null)
+                        file.AddInfoFromLocation(new FileInfo(InfoRight.FullName + @"\" + file.Info.Name), LocationEnum.OnRight, false);
+                }
+
+                foreach (var dir in Directories)
+                {
+                    dir.FillMissingPaths(InfoBase == null ? null : InfoBase.FullName, InfoLeft.FullName, InfoRight.FullName);
+                }
             }
 
         }

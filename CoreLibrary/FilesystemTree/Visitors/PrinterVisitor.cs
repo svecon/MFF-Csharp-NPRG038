@@ -58,7 +58,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     case DifferencesStatusEnum.BaseRight:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         break;
-                    case DifferencesStatusEnum.LeftRight:
+                    case DifferencesStatusEnum.LeftRightSame:
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         break;
                     case DifferencesStatusEnum.AllSame:

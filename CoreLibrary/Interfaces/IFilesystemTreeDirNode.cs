@@ -55,5 +55,10 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <returns>Size in kB</returns>
         double GetSize();
+
+        /// <summary>
+        /// Fills missing paths into all files and subdirectories.
+        /// </summary>
+        void FillMissingPaths(string basePath, string leftPath, string rightPath);
     }
 }

@@ -11,6 +11,6 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum DifferencesStatusEnum
     {
-        Initial = -1, AllDifferent = 0, BaseLeftSame = 3, BaseRight = 5, LeftRight = 6, AllSame = 7
+        Initial = -1, AllDifferent = 0, BaseLeftSame = 3, BaseRight = 5, LeftRightSame = 6, AllSame = 7
     }
 }

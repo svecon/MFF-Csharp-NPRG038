@@ -67,6 +67,7 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <param name="info">Info about the file.</param>
         /// <param name="location">Location of the file.</param>
-        void AddInfoFromLocation(FileSystemInfo info, LocationEnum location);
+        /// <param name="markIsFound">Mark that file has been found.</param>
+        void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true);
     }
 }
