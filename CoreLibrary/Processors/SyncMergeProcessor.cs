@@ -17,26 +17,9 @@ namespace CoreLibrary.Processors
 
         public void Process(IFilesystemTreeDirNode node)
         {
-            if (node.Mode != Enums.DiffModeEnum.TwoWay)
-                return;
+            // create directory only when file is created
 
-            if (node.Differences == Enums.DifferencesStatusEnum.LeftRightSame)
-                return;
-
-            if (node.Location == (int)Enums.LocationCombinationsEnum.OnLeftRight)
-                return;
-
-            string create;
-
-            if (node.IsInLocation(LocationEnum.OnLeft))
-            {
-                create = node.GetAbsolutePath(LocationEnum.OnRight);
-            } else
-            {
-                create = node.GetAbsolutePath(LocationEnum.OnLeft);
-            }
-
-            Directory.CreateDirectory(create);
+            // this means that empty folders will NOT be created
         }
 
         public void Process(IFilesystemTreeFileNode node)
@@ -49,8 +32,6 @@ namespace CoreLibrary.Processors
 
             if (node.Differences == Enums.DifferencesStatusEnum.LeftRightSame)
                 return;
-
-            System.Diagnostics.Debug.WriteLine("syncing files ---------");
 
             FileInfo from = null;
             string to = null;
@@ -73,6 +54,7 @@ namespace CoreLibrary.Processors
                     throw new InvalidDataException();
                 }
 
+                checkAndCreateDirectory(to);
                 from.CopyTo(to);
                 return;
             }
@@ -106,17 +88,15 @@ namespace CoreLibrary.Processors
                     break;
             }
 
+            checkAndCreateDirectory(to);
             from.CopyTo(to, true);
         }
 
-        protected void sync2Way()
+        private void checkAndCreateDirectory(string path)
         {
-
-        }
-
-        protected void sync3Way()
-        {
-
+            var dirPath = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
         }
 
         public int Priority { get { return 10000; } }

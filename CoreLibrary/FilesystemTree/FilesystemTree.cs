@@ -136,7 +136,13 @@ namespace CoreLibrary.FilesystemTree
                 Files = new List<IFilesystemTreeFileNode>();
 
                 RootNode = rootNode == null ? this : rootNode;
-                RelativePath = relativePath == null ? "" : relativePath + @"\" + info.Name;
+
+                if (relativePath == "")
+                    RelativePath = info.Name;
+                else if (relativePath == null)
+                    RelativePath = "";
+                else
+                    RelativePath = relativePath + @"\" + info.Name;
             }
 
             public override void Accept(IFilesystemTreeVisitor visitor)
