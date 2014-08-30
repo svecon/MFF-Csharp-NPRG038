@@ -64,10 +64,15 @@
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
-    <Compile Include="Processors\SyncMergeProcessor.cs" />
+    <Compile Include="Processors\AbstractBaseProcessor.cs" />
+    <Compile Include="Processors\Postprocessors\AbstractPostProcessor.cs" />
+    <Compile Include="Processors\Preprocessors\AbstractPreProcessor.cs" />
+    <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
+    <Compile Include="Processors\Postprocessors\SyncMergeProcessor.cs" />
+    <Compile Include="Processors\Processors\AbstractProcessor.cs" />
     <Compile Include="Processors\ThreeWayDiffHelper.cs" />
-    <Compile Include="Processors\BinaryDiffProcessor.cs" />
-    <Compile Include="Processors\SizeTimeDiffProcessor.cs" />
+    <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />
+    <Compile Include="Processors\Processors\SizeTimeDiffProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorsLoader.cs" />
   </ItemGroup>

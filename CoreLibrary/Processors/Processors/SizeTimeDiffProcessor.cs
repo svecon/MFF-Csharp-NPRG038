@@ -8,19 +8,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Processors.Processors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
-    class SizeTimeDiffProcessor : IPreProcessor
+    class SizeTimeDiffProcessor : AbstractProcessor
     {
-        public void Process(IFilesystemTreeDirNode node)
+        public override int Priority { get { return 1000; } }
+
+        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+
+        public override void Process(IFilesystemTreeDirNode node)
         {
         }
 
-        public void Process(IFilesystemTreeFileNode node)
+        public override void Process(IFilesystemTreeFileNode node)
         {
+            if (!checkModeAndStatus(node))
+                return;
+
             var threeWay = new ThreeWayDiffHelper();
 
             // check for existence
@@ -59,9 +66,5 @@ namespace CoreLibrary.Processors
             node.Differences = (DifferencesStatusEnum)threeWay.GetSameFiles();
             node.Status = NodeStatusEnum.WasDiffed;
         }
-
-        public int Priority { get { return 10; } }
-
-        public DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
     }
 }

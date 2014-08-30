@@ -9,25 +9,30 @@ using CoreLibrary.Enums;
 using System.Threading;
 using CoreLibrary.FilesystemTree;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Processors.Processors
 {
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.
     /// </summary>
-    class BinaryDiffProcessor : IPreProcessor
+    class BinaryDiffProcessor : AbstractProcessor
     {
         /// <summary>
         /// Size of an array buffer for reading files.
         /// </summary>
         const int BUFFER_SIZE = 4096;
 
-        public void Process(IFilesystemTreeDirNode node)
+        public override int Priority { get { return 100000; } }
+
+        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+
+        public override void Process(IFilesystemTreeDirNode node)
         {
+
         }
 
-        public void Process(IFilesystemTreeFileNode node)
+        public override void Process(IFilesystemTreeFileNode node)
         {
-            if (node.Status == NodeStatusEnum.WasDiffed)
+            if (!checkModeAndStatus(node))
                 return;
 
             var threeWay = new ThreeWayDiffHelper();
@@ -121,9 +126,5 @@ namespace CoreLibrary.Processors
             }
 
         }
-
-        public int Priority { get { return 100; } }
-
-        public DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
     }
 }

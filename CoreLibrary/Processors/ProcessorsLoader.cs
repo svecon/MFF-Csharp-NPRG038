@@ -4,6 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors.Postprocessors;
+using CoreLibrary.Processors.Preprocessors;
 
 namespace CoreLibrary.Processors
 {
@@ -25,6 +28,7 @@ namespace CoreLibrary.Processors
 
         public void Load()
         {
+            AddProcessor(new ExtensionFilterProcessor());
             AddProcessor(new SizeTimeDiffProcessor());
             AddProcessor(new BinaryDiffProcessor());
             AddProcessor(new SyncMergeProcessor());

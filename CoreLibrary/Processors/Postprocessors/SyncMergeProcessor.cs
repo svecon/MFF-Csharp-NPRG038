@@ -1,29 +1,33 @@
-﻿using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Processors.Postprocessors
 {
-    class SyncMergeProcessor : IProcessor
+    class SyncMergeProcessor : AbstractPostProcessor
     {
+        public override int Priority { get { return 10000; } }
+
+        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+
         enum CompareOnEnum { Size = 1, Modification = 2 }
 
         CompareOnEnum compareOn = CompareOnEnum.Modification;
 
         bool createEmptyFolders = true;
 
-        public void Process(IFilesystemTreeDirNode node)
+        public override void Process(IFilesystemTreeDirNode node)
         {
             // create directory only when file is created
 
             // this means that empty folders need to be created here
 
-            if (node.Mode != Enums.DiffModeEnum.TwoWay)
+            if (!checkModeAndStatus(node))
                 return;
 
             // processor settings
@@ -42,22 +46,19 @@ namespace CoreLibrary.Processors
                 checkAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLeft));
         }
 
-        public void Process(IFilesystemTreeFileNode node)
+        public override void Process(IFilesystemTreeFileNode node)
         {
-            if (node.Mode != Enums.DiffModeEnum.TwoWay)
+            if (!checkModeAndStatus(node))
                 return;
 
-            if (node.Status != Enums.NodeStatusEnum.WasDiffed)
-                return;
-
-            if (node.Differences == Enums.DifferencesStatusEnum.LeftRightSame)
+            if (node.Differences == DifferencesStatusEnum.LeftRightSame)
                 return;
 
             FileInfo from = null;
             string to = null;
 
             // one file is missing
-            if (node.Location < (int)Enums.LocationCombinationsEnum.OnLeftRight)
+            if (node.Location < (int)LocationCombinationsEnum.OnLeftRight)
             {
                 if (node.IsInLocation(LocationEnum.OnLeft))
                 {
@@ -122,9 +123,5 @@ namespace CoreLibrary.Processors
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
         }
-
-        public int Priority { get { return 10000; } }
-
-        public Enums.DiffModeEnum Mode { get { return Enums.DiffModeEnum.ThreeWay; } }
     }
 }
