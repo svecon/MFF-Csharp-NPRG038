@@ -15,11 +15,31 @@ namespace CoreLibrary.Processors
 
         CompareOnEnum compareOn = CompareOnEnum.Modification;
 
+        bool createEmptyFolders = true;
+
         public void Process(IFilesystemTreeDirNode node)
         {
             // create directory only when file is created
 
-            // this means that empty folders will NOT be created
+            // this means that empty folders need to be created here
+
+            if (node.Mode != Enums.DiffModeEnum.TwoWay)
+                return;
+
+            // processor settings
+            if (!createEmptyFolders)
+                return;
+
+            // if there are any files, folder will be created implicitly
+            if (node.Files.Count > 0)
+                return;
+
+            // otherwise create empty folder
+            if (node.IsInLocation(LocationEnum.OnLeft))
+                checkAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRight));
+
+            if (node.IsInLocation(LocationEnum.OnRight))
+                checkAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLeft));
         }
 
         public void Process(IFilesystemTreeFileNode node)
@@ -54,7 +74,7 @@ namespace CoreLibrary.Processors
                     throw new InvalidDataException();
                 }
 
-                checkAndCreateDirectory(to);
+                checkAndCreateDirectoryFromFilename(to);
                 from.CopyTo(to);
                 return;
             }
@@ -88,15 +108,19 @@ namespace CoreLibrary.Processors
                     break;
             }
 
-            checkAndCreateDirectory(to);
+            checkAndCreateDirectoryFromFilename(to);
             from.CopyTo(to, true);
+        }
+
+        private void checkAndCreateDirectoryFromFilename(string path)
+        {
+            checkAndCreateDirectory(Path.GetDirectoryName(path));
         }
 
         private void checkAndCreateDirectory(string path)
         {
-            var dirPath = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dirPath))
-                Directory.CreateDirectory(dirPath);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
 
         public int Priority { get { return 10000; } }
