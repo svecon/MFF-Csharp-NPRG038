@@ -17,7 +17,7 @@ namespace CoreLibrary.Processors.Processors
     {
         public override int Priority { get { return 1000; } }
 
-        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+        public override int Mode { get { return (int)DiffModeEnum.TwoWay | (int)DiffModeEnum.ThreeWay; } }
 
         public override void Process(IFilesystemTreeDirNode node)
         {

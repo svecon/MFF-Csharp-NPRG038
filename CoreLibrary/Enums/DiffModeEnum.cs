@@ -13,6 +13,6 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum DiffModeEnum
     {
-        TwoWay, ThreeWay
+        TwoWay = 1, ThreeWay = 2
     }
 }

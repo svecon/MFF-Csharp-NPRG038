@@ -1,4 +1,5 @@
-﻿using CoreLibrary.Interfaces;
+﻿using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace CoreLibrary.Processors.Preprocessors
     class ExtensionFilterProcessor : AbstractPreProcessor
     {
 
-        public override Enums.DiffModeEnum Mode { get { return Enums.DiffModeEnum.ThreeWay; } }
+        public override int Mode { get { return (int)DiffModeEnum.TwoWay | (int)DiffModeEnum.ThreeWay; } }
 
         public override int Priority { get { return 100; } }
 

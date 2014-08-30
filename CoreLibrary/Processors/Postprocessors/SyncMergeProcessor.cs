@@ -13,7 +13,7 @@ namespace CoreLibrary.Processors.Postprocessors
     {
         public override int Priority { get { return 10000; } }
 
-        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+        public override int Mode { get { return (int)DiffModeEnum.TwoWay; } }
 
         enum CompareOnEnum { Size = 1, Modification = 2 }
 

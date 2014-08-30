@@ -15,7 +15,10 @@ namespace CoreLibrary.Processors
     /// </summary>
     public abstract class AbstractBaseProcessor : IProcessorBase
     {
-        public abstract DiffModeEnum Mode { get; }
+        /// <summary>
+        /// Mode is a mask for all possible DiffModeEnum values.
+        /// </summary>
+        public abstract int Mode { get; }
 
         public abstract int Priority { get; }
 
@@ -42,7 +45,7 @@ namespace CoreLibrary.Processors
         /// <returns>True if the processor is compatible.</returns>
         protected virtual bool checkMode(IFilesystemTreeAbstractNode node)
         {
-            if (node.Mode != Mode)
+            if (((int)node.Mode & Mode) > 0)
                 return false;
 
             return true;
