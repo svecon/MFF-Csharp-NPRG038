@@ -19,7 +19,7 @@ namespace CoreLibrary.Processors.Postprocessors
 
         CompareOnEnum compareOn = CompareOnEnum.Modification;
 
-        bool createEmptyFolders = true;
+        bool createEmptyFolders = false;
 
         public override void Process(IFilesystemTreeDirNode node)
         {

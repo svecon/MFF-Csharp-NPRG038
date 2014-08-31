@@ -11,12 +11,12 @@ namespace CoreLibrary.Processors
     /// ThreeWayDiffHelper uses binary masks to help you gradually differentiate between three different files
     /// with more and more comparisons.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// In every single moment you only need to compare those files that still might be the same.
-    /// 
+    ///
     /// Those files that had some differences in the very beginning will not be compared any further.
-    /// 
+    ///
     /// After all comparisons were done, you can check whether the files are still the same (based on the previous comparisons).
     /// </remarks>
     public class ThreeWayDiffHelper

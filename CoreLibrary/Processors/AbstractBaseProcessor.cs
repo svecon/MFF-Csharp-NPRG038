@@ -45,7 +45,7 @@ namespace CoreLibrary.Processors
         /// <returns>True if the processor is compatible.</returns>
         protected virtual bool checkMode(IFilesystemTreeAbstractNode node)
         {
-            if (((int)node.Mode & Mode) > 0)
+            if (((int)node.Mode & Mode) == 0)
                 return false;
 
             return true;
