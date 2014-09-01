@@ -13,6 +13,14 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum NodeStatusEnum
     {
-        Initial, HasError, IsIgnored, WasDiffed, WasMerged, WasDiffedWaitingForMerge
+        Initial,
+
+        HasError,
+        IsIgnored,
+        
+        WasDiffed,
+        WasDiffedWaitingForMerge,
+        
+        WasMerged,
     }
 }

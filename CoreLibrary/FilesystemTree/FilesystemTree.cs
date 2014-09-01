@@ -79,6 +79,7 @@ namespace CoreLibrary.FilesystemTree
 
             public AbstractNode(FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
             {
+                Differences = DifferencesStatusEnum.Initial;
                 Mode = mode;
                 AddInfoFromLocation(info, location);
             }

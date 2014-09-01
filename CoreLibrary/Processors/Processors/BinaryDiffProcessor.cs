@@ -23,11 +23,10 @@ namespace CoreLibrary.Processors.Processors
 
         public override int Priority { get { return 100000; } }
 
-        public override int Mode { get { return (int)DiffModeEnum.TwoWay | (int)DiffModeEnum.ThreeWay; } }
+        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
         public override void Process(IFilesystemTreeDirNode node)
         {
-
         }
 
         public override void Process(IFilesystemTreeFileNode node)

@@ -7,6 +7,7 @@ using CoreLibrary;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
+using CoreLibrary.Settings;
 using CoreLibrary.FilesystemTree.Visitors;
 using System.IO;
 
@@ -16,6 +17,12 @@ namespace ConsoleAPI
     {
         static void Main(string[] args)
         {
+            IProcessorLoader loader = new ProcessorsLoader();
+            loader.Load();
+
+            SettingsParser parser = new SettingsParser(loader.GetSettings());
+            args = parser.ParseSettings(args);
+
             Crawler di = null;
 
             if (args.Length == 3)
@@ -28,10 +35,6 @@ namespace ConsoleAPI
             {
                 throw new ArgumentException("please specify 3 or 2 folders");
             }
-
-
-            IProcessorLoader loader = new ProcessorsLoader();
-            loader.Load();
 
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
