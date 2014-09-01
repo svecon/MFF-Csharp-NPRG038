@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CoreLibrary.Enums;
+using CoreLibrary.Settings;
 
 namespace CoreLibrary.Interfaces
 {
@@ -28,5 +29,7 @@ namespace CoreLibrary.Interfaces
         void AddProcessor(IProcessor processor);
 
         void AddProcessor(IPostProcessor processor);
+
+        IEnumerable<SettingsAbstract> GetSettings();
     }
 }

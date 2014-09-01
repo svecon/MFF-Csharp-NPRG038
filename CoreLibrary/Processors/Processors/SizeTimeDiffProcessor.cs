@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLibrary.Settings.Attributes;
 
 namespace CoreLibrary.Processors.Processors
 {
@@ -17,15 +18,22 @@ namespace CoreLibrary.Processors.Processors
     {
         public override int Priority { get { return 1000; } }
 
-        public override int Mode { get { return (int)DiffModeEnum.TwoWay | (int)DiffModeEnum.ThreeWay; } }
+        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
+
+        [SettingsAttribute("Disable fast diff check.", "slow-diff", "D")]
+        public bool IsEnabled = true;
 
         public override void Process(IFilesystemTreeDirNode node)
         {
+
         }
 
         public override void Process(IFilesystemTreeFileNode node)
         {
             if (!checkModeAndStatus(node))
+                return;
+
+            if (!IsEnabled)
                 return;
 
             var threeWay = new ThreeWayDiffHelper();

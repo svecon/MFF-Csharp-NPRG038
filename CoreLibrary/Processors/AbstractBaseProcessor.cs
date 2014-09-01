@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
+using CoreLibrary.Settings;
 
 namespace CoreLibrary.Processors
 {
@@ -18,9 +19,11 @@ namespace CoreLibrary.Processors
         /// <summary>
         /// Mode is a mask for all possible DiffModeEnum values.
         /// </summary>
-        public abstract int Mode { get; }
+        public abstract DiffModeEnum Mode { get; }
 
         public abstract int Priority { get; }
+
+        protected List<SettingsAbstract> settings;
 
         /// <summary>
         /// Checks whether the node still should be processed or not.
@@ -45,7 +48,7 @@ namespace CoreLibrary.Processors
         /// <returns>True if the processor is compatible.</returns>
         protected virtual bool checkMode(IFilesystemTreeAbstractNode node)
         {
-            if (((int)node.Mode & Mode) == 0)
+            if ((node.Mode & Mode) == 0)
                 return false;
 
             return true;
@@ -59,6 +62,14 @@ namespace CoreLibrary.Processors
         protected bool checkModeAndStatus(IFilesystemTreeAbstractNode node)
         {
             return checkMode(node) && checkStatus(node);
+        }
+
+        public IEnumerable<SettingsAbstract> GetSettings()
+        {
+            foreach (var s in settings)
+            {
+                yield return s;
+            }
         }
 
         public abstract void Process(IFilesystemTreeDirNode node);

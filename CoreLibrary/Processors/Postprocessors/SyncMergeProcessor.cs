@@ -13,7 +13,7 @@ namespace CoreLibrary.Processors.Postprocessors
     {
         public override int Priority { get { return 10000; } }
 
-        public override int Mode { get { return (int)DiffModeEnum.TwoWay; } }
+        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
 
         enum CompareOnEnum { Size = 1, Modification = 2 }
 
@@ -30,7 +30,7 @@ namespace CoreLibrary.Processors.Postprocessors
             if (!checkModeAndStatus(node))
                 return;
 
-            // processor settings
+            // processor setting
             if (!createEmptyFolders)
                 return;
 
