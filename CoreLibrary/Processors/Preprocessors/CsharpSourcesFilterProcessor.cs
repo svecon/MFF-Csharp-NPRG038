@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Processors.Preprocessors
 {
-    public class CsharpSourcesFilterProcessor : AbstractPreProcessor
+    public class CsharpSourcesFilterProcessor : PreProcessorAbstract
     {
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 

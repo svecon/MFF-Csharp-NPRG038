@@ -14,7 +14,7 @@ namespace CoreLibrary.Processors.Processors
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
-    class SizeTimeDiffProcessor : AbstractProcessor
+    class SizeTimeDiffProcessor : ProcessorAbstract
     {
         public override int Priority { get { return 1000; } }
 

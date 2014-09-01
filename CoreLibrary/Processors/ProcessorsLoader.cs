@@ -10,6 +10,7 @@ using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Settings.Types;
 
 namespace CoreLibrary.Processors
 {
@@ -22,7 +23,7 @@ namespace CoreLibrary.Processors
 
         SortedList<int, IPostProcessor> PostProcessors;
 
-        List<SettingsAbstract> settings;
+        List<ISettings> settings;
 
         public ProcessorsLoader()
         {
@@ -30,7 +31,7 @@ namespace CoreLibrary.Processors
             Processors = new SortedList<int, IProcessor>();
             PostProcessors = new SortedList<int, IPostProcessor>();
 
-            settings = new List<SettingsAbstract>();
+            settings = new List<ISettings>();
         }
 
         public void Load()
@@ -50,7 +51,7 @@ namespace CoreLibrary.Processors
             {
                 SettingsAttribute annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
 
-                SettingsAbstract setting = null;
+                ISettings setting = null;
 
                 //TODO load all setting classes implicitly (with framework?)
 
@@ -126,7 +127,7 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public IEnumerable<SettingsAbstract> GetSettings()
+        public IEnumerable<ISettings> GetSettings()
         {
             foreach (var option in settings)
             {

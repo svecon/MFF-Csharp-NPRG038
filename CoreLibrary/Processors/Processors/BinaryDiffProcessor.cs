@@ -14,7 +14,7 @@ namespace CoreLibrary.Processors.Processors
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.
     /// </summary>
-    class BinaryDiffProcessor : AbstractProcessor
+    class BinaryDiffProcessor : ProcessorAbstract
     {
         /// <summary>
         /// Size of an array buffer for reading files.

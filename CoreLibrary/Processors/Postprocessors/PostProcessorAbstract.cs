@@ -6,24 +6,21 @@ using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Processors.Postprocessors
 {
     /// <summary>
-    /// AbstractProcessor is a class that all Processors should inherit from.
+    /// AbstractPostProcessor is a class that all PostProcessors should inherit from.
     /// 
     /// Contain some helper methods for given processor.
     /// </summary>
-    public abstract class AbstractProcessor : AbstractBaseProcessor, IProcessor
+    public abstract class PostProcessorAbstract : BaseProcessorAbstract, IPostProcessor
     {
         protected override bool checkStatus(IFilesystemTreeAbstractNode node)
         {
             if (!base.checkStatus(node))
                 return false;
 
-            if (node.Status == NodeStatusEnum.WasDiffed)
-                return false;
-
-            if (node.Status == NodeStatusEnum.WasDiffedWaitingForMerge)
+            if (node.Status == NodeStatusEnum.WasMerged)
                 return false;
 
             return true;

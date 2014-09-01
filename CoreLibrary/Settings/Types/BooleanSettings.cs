@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLibrary.Settings
+namespace CoreLibrary.Settings.Types
 {
     public class BooleanSettings : SettingsAbstract
     {

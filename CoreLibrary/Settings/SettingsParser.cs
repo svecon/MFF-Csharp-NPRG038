@@ -1,4 +1,5 @@
 ﻿using CoreLibrary.Exceptions;
+using CoreLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,14 @@ namespace CoreLibrary.Settings
 {
     public class SettingsParser
     {
-        Dictionary<string, SettingsAbstract> longSettings;
+        Dictionary<string, ISettings> longSettings;
 
-        Dictionary<string, SettingsAbstract> shortSettings;
+        Dictionary<string, ISettings> shortSettings;
 
-        public SettingsParser(IEnumerable<SettingsAbstract> settings)
+        public SettingsParser(IEnumerable<ISettings> settings)
         {
-            longSettings = new Dictionary<string, SettingsAbstract>();
-            shortSettings = new Dictionary<string, SettingsAbstract>();
+            longSettings = new Dictionary<string, ISettings>();
+            shortSettings = new Dictionary<string, ISettings>();
 
             foreach (var option in settings)
             {
@@ -35,23 +36,23 @@ namespace CoreLibrary.Settings
             int i = 0;
             while (i < arguments.Length)
             {
-                SettingsAbstract option;
+                ISettings setting;
 
                 if (arguments[i].StartsWith("--"))
                 {
-                    if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out option))
+                    if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out setting))
                     {
-                        option.SetValue(arguments.Skip(i).Take(option.NumberOfParams).ToArray());
-                        i += 1 + option.NumberOfParams;
+                        setting.SetValue(arguments.Skip(i).Take(setting.NumberOfParams).ToArray());
+                        i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException();
 
                 } else if (arguments[i].StartsWith("-"))
                 {
-                    if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out option))
+                    if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out setting))
                     {
-                        option.SetValue(arguments.Skip(i).Take(option.NumberOfParams).ToArray());
-                        i += 1 + option.NumberOfParams;
+                        setting.SetValue(arguments.Skip(i).Take(setting.NumberOfParams).ToArray());
+                        i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException();
                 } else

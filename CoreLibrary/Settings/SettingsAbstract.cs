@@ -1,4 +1,5 @@
-﻿using CoreLibrary.Settings.Attributes;
+﻿using CoreLibrary.Interfaces;
+using CoreLibrary.Settings.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
-    public abstract class SettingsAbstract
+    public abstract class SettingsAbstract : ISettings
     {
         public string Info { get; protected set; }
 

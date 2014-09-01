@@ -9,7 +9,7 @@ using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.Processors.Postprocessors
 {
-    class SyncMergeProcessor : AbstractPostProcessor
+    class SyncMergeProcessor : PostProcessorAbstract
     {
         public override int Priority { get { return 10000; } }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLibrary.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,13 @@ namespace CoreLibrary.Settings
     public class SettingsPrinter
     {
 
-        List<SettingsAbstract> settings;
+        List<ISettings> settings;
 
         int longestOption = 0;
 
-        public SettingsPrinter(IEnumerable<SettingsAbstract> settings)
+        public SettingsPrinter(IEnumerable<ISettings> settings)
         {
-            this.settings = new List<SettingsAbstract>();
+            this.settings = new List<ISettings>();
 
             foreach (var option in settings)
             {
@@ -61,9 +62,9 @@ namespace CoreLibrary.Settings
             settings.Sort(new SettingsComparer());
         }
 
-        private class SettingsComparer : IComparer<SettingsAbstract>
+        private class SettingsComparer : IComparer<ISettings>
         {
-            public int Compare(SettingsAbstract x, SettingsAbstract y)
+            public int Compare(ISettings x, ISettings y)
             {
                 string left = x.OptionShortcut != null ? x.OptionShortcut : x.Option;
                 string right = y.OptionShortcut != null ? y.OptionShortcut : y.Option;

@@ -30,6 +30,6 @@ namespace CoreLibrary.Interfaces
 
         void AddProcessor(IPostProcessor processor);
 
-        IEnumerable<SettingsAbstract> GetSettings();
+        IEnumerable<ISettings> GetSettings();
     }
 }

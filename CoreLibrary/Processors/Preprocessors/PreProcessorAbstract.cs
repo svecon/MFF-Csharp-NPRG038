@@ -13,7 +13,7 @@ namespace CoreLibrary.Processors.Preprocessors
     /// 
     /// Contain some helper methods for given processor.
     /// </summary>
-    public abstract class AbstractPreProcessor : AbstractBaseProcessor, IPreProcessor
+    public abstract class PreProcessorAbstract : BaseProcessorAbstract, IPreProcessor
     {
 
     }
