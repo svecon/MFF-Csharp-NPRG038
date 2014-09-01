@@ -20,6 +20,13 @@ namespace ConsoleAPI
             IProcessorLoader loader = new ProcessorsLoader();
             loader.Load();
 
+            if (args.Length == 1 && args[0] == "--help")
+            {
+                SettingsPrinter printer = new SettingsPrinter(loader.GetSettings());
+                printer.Print();
+                return;
+            }
+
             SettingsParser parser = new SettingsParser(loader.GetSettings());
             args = parser.ParseSettings(args);
 
