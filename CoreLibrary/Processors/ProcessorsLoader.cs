@@ -7,6 +7,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Processors.Postprocessors;
 using CoreLibrary.Processors.Preprocessors;
+using CoreLibrary.Exceptions;
 
 namespace CoreLibrary.Processors
 {
@@ -41,7 +42,7 @@ namespace CoreLibrary.Processors
                 PreProcessors.Add(processor.Priority, processor);
             } catch (ArgumentException e)
             {
-                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+                throw new ProcessorPriorityColissionException(processor.ToString(), e);
             }
         }
 
@@ -52,7 +53,7 @@ namespace CoreLibrary.Processors
                 Processors.Add(processor.Priority, processor);
             } catch (ArgumentException e)
             {
-                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+                throw new ProcessorPriorityColissionException(processor.ToString(), e);
             }
         }
 
@@ -63,7 +64,7 @@ namespace CoreLibrary.Processors
                 PostProcessors.Add(processor.Priority, processor);
             } catch (ArgumentException e)
             {
-                throw new ArgumentException("Priority collision! Please pick different Priority for " + processor, e);
+                throw new ProcessorPriorityColissionException(processor.ToString(), e);
             }
         }
 
