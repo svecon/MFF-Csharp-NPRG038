@@ -8,20 +8,19 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings.Types
 {
-    public class BooleanSettings : SettingsAbstract
+    public class EnumSettings : SettingsAbstract
     {
-        public override int NumberOfParams { get { return 0; } }
+        public override int NumberOfParams { get { return 1; } }
 
-        public BooleanSettings(object instance, FieldInfo field, SettingsAttribute attribute)
+        public EnumSettings(object instance, FieldInfo field, SettingsAttribute attribute)
             : base(instance, field, attribute)
         {
         }
 
         public override void SetValue(params string[] value)
         {
-            Field.SetValue(Instance, !(bool)Field.GetValue(Instance));
+            Field.SetValue(Instance, Enum.Parse(Field.FieldType, value[0]));
             WasSet = true;
         }
-
     }
 }

@@ -23,6 +23,17 @@ namespace CoreLibrary.Processors.Processors
         [SettingsAttribute("Disable fast diff check.", "slow-diff", "D")]
         public bool IsEnabled = true;
 
+        [Flags]
+        public enum CompareModeEnum
+        {
+            Size                = 1 << 0,
+            Modification        = 1 << 1,
+            SizeModification    = Size | Modification,
+        }
+
+        [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
+        public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
+
         public override void Process(IFilesystemTreeDirNode node)
         {
 

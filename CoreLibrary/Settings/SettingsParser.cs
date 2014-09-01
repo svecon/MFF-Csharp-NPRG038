@@ -42,7 +42,7 @@ namespace CoreLibrary.Settings
                 {
                     if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out setting))
                     {
-                        setting.SetValue(arguments.Skip(i).Take(setting.NumberOfParams).ToArray());
+                        setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
                         i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException();
@@ -51,7 +51,7 @@ namespace CoreLibrary.Settings
                 {
                     if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out setting))
                     {
-                        setting.SetValue(arguments.Skip(i).Take(setting.NumberOfParams).ToArray());
+                        setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
                         i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException();

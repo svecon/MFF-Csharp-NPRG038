@@ -21,14 +21,14 @@ namespace CoreLibrary.Settings
 
         public abstract int NumberOfParams { get; }
 
-        protected object instance;
+        public object Instance { get; protected set; }
 
-        protected FieldInfo field;
+        public FieldInfo Field { get; protected set; }
 
         public SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
         {
-            this.instance = instance;
-            this.field = field;
+            Instance = instance;
+            Field = field;
 
             Info = attribute.Info;
             Option = attribute.Option;

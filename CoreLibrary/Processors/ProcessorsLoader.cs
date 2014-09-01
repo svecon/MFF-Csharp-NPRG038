@@ -58,6 +58,18 @@ namespace CoreLibrary.Processors
                 if (field.FieldType == typeof(bool))
                 {
                     setting = new BooleanSettings(processor, field, annotation);
+                } else if (field.FieldType.BaseType == typeof(Enum))
+                {
+                    setting = new EnumSettings(processor, field, annotation);
+                } else if (field.FieldType == typeof(string))
+                {
+                    setting = new StringSettings(processor, field, annotation);
+                } else if (field.FieldType == typeof(int))
+                {
+                    setting = new IntSettings(processor, field, annotation);
+                } else if (field.FieldType == typeof(string[]))
+                {
+                    setting = new StringArraySettings(processor, field, annotation);
                 }
 
                 if (setting == null)

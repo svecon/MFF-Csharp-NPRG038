@@ -1,4 +1,5 @@
 ﻿using CoreLibrary.Interfaces;
+using CoreLibrary.Settings.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,15 @@ namespace CoreLibrary.Settings
 
                 Console.CursorLeft = 15 + longestOption;
                 Console.Write(option.Info);
+
+                if (option is EnumSettings)
+                {
+                    Console.WriteLine();
+                    Console.CursorLeft = 15 + longestOption;
+                    Console.Write("Possible options: ");
+
+                    Console.Write(String.Join(", ", Enum.GetNames(option.Field.FieldType)));
+                }
 
                 Console.WriteLine();
             }

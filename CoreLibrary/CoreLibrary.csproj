@@ -80,6 +80,10 @@
     <Compile Include="Processors\Processors\SizeTimeDiffProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorsLoader.cs" />
+    <Compile Include="Settings\Types\IntSettings.cs" />
+    <Compile Include="Settings\Types\StringArraySettings.cs" />
+    <Compile Include="Settings\Types\StringSettings.cs" />
+    <Compile Include="Settings\Types\EnumSettings.cs" />
     <Compile Include="Settings\Types\BooleanSettings.cs" />
     <Compile Include="Settings\Attributes\SettingsAttribute.cs" />
     <Compile Include="Settings\SettingsAbstract.cs" />
