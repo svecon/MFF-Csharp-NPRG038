@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLibrary.Settings.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,14 +24,14 @@ namespace CoreLibrary.Settings
 
         protected FieldInfo field;
 
-        public SettingsAbstract(object instance, FieldInfo field, string info, string parameter, string shortcut)
+        public SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
         {
             this.instance = instance;
             this.field = field;
 
-            Info = info;
-            Option = parameter;
-            OptionShortcut = shortcut;
+            Info = attribute.Info;
+            Option = attribute.Option;
+            OptionShortcut = attribute.Shortcut;
 
             WasSet = false;
         }

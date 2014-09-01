@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLibrary.Settings.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,8 +12,8 @@ namespace CoreLibrary.Settings
     {
         public override int NumberOfParams { get { return 0; } }
 
-        public BooleanSettings(object instance, FieldInfo field, string info, string parameter, string shortcut)
-            : base(instance, field, info, parameter, shortcut)
+        public BooleanSettings(object instance, FieldInfo field, SettingsAttribute attribute)
+            : base(instance, field, attribute)
         {
         }
 

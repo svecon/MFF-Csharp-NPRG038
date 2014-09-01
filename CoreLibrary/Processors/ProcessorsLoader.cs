@@ -52,9 +52,11 @@ namespace CoreLibrary.Processors
 
                 SettingsAbstract setting = null;
 
+                //TODO load all setting classes implicitly (with framework?)
+
                 if (field.FieldType == typeof(bool))
                 {
-                    setting = new BooleanSettings(processor, field, annotation.Info, annotation.Option, annotation.Shortcut);
+                    setting = new BooleanSettings(processor, field, annotation);
                 }
 
                 if (setting == null)
