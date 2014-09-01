@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
+    <Compile Include="Exceptions\ProcessorPriorityColissionException.cs" />
     <Compile Include="Exceptions\SettingsNotFoundException.cs" />
     <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
