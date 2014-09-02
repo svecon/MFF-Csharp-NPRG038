@@ -18,7 +18,7 @@ namespace ConsoleAPI
         static void Main(string[] args)
         {
             IProcessorLoader loader = new ProcessorsLoader();
-            loader.Load();
+            loader.LoadAll();
 
             if (args.Length == 1 && args[0] == "--help")
             {

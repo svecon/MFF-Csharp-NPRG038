@@ -9,6 +9,8 @@ namespace CoreLibrary.Interfaces
 {
     public interface ISettings
     {
+        //Type ForType { get; }
+
         string Info { get; }
 
         string Option { get; }

@@ -10,6 +10,8 @@ namespace CoreLibrary.Settings.Types
 {
     public class StringSettings : SettingsAbstract
     {
+        public static Type ForType { get { return typeof(string); } }
+
         public override int NumberOfParams { get { return 1; } }
 
         public StringSettings(object instance, FieldInfo field, SettingsAttribute attribute)

@@ -11,6 +11,8 @@ namespace CoreLibrary.Settings
 {
     public abstract class SettingsAbstract : ISettings
     {
+        //public abstract Type ForType { get; }
+
         public string Info { get; protected set; }
 
         public string Option { get; protected set; }

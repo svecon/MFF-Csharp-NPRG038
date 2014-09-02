@@ -16,7 +16,7 @@ namespace CoreLibrary.Interfaces
         /// 
         /// May use Reflection to find new ones.
         /// </summary>
-        void Load();
+        void LoadAll();
 
         IEnumerable<IPreProcessor> GetPreProcessors();
 

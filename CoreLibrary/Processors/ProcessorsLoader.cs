@@ -11,6 +11,7 @@ using CoreLibrary.Exceptions;
 using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
 using CoreLibrary.Settings.Types;
+using System.Reflection;
 
 namespace CoreLibrary.Processors
 {
@@ -25,55 +26,102 @@ namespace CoreLibrary.Processors
 
         List<ISettings> settings;
 
+        Dictionary<Type, Type> availableSettings;
+
+        private Type[] settingsConstructorSignature = new Type[] { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
+
         public ProcessorsLoader()
+        {
+        }
+
+        public void LoadAll()
+        {
+            loadAllAvailableSettings();
+
+            loadAllAvailableProcessors();
+        }
+
+        protected void loadAllAvailableProcessors()
         {
             PreProcessors = new SortedList<int, IPreProcessor>();
             Processors = new SortedList<int, IProcessor>();
             PostProcessors = new SortedList<int, IPostProcessor>();
 
-            settings = new List<ISettings>();
+            var type = typeof(IProcessorBase);
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => !p.IsAbstract)
+                .Where(p => !p.IsInterface)
+                .Where(p => type.IsAssignableFrom(p));
+
+            foreach (var item in types)
+            {
+                var instance = item
+                    .GetConstructor(new Type[] { })
+                    .Invoke(new object[] { });
+
+                if (typeof(IPreProcessor).IsAssignableFrom(item))
+                {
+                    AddProcessor((IPreProcessor)instance);
+                } else if (typeof(IProcessor).IsAssignableFrom(item))
+                {
+                    AddProcessor((IProcessor)instance);
+                } else if (typeof(IPostProcessor).IsAssignableFrom(item))
+                {
+                    AddProcessor((IPostProcessor)instance);
+                } else
+                {
+                    throw new NotImplementedException("This processor type is not supported.");
+                }
+            }
         }
 
-        public void Load()
+        protected void loadAllAvailableSettings()
         {
-            AddProcessor(new ExtensionFilterProcessor());
-            AddProcessor(new CsharpSourcesFilterProcessor());
-            AddProcessor(new SizeTimeDiffProcessor());
-            AddProcessor(new BinaryDiffProcessor());
-            AddProcessor(new SyncMergeProcessor());
+            availableSettings = new Dictionary<Type, Type>();
+            settings = new List<ISettings>();
+
+            var type = typeof(ISettings);
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => !p.IsAbstract)
+                .Where(p => !p.IsInterface)
+                .Where(p => type.IsAssignableFrom(p));
+
+            foreach (var item in types)
+            {
+                var property = item.GetProperty("ForType", typeof(Type));
+                if (property == null)
+                    throw new NotImplementedException("All Setting types have to implement 'Type ForType' static property.");
+
+                availableSettings.Add((Type)property.GetValue(null), item);
+            }
         }
 
         protected void retrieveSettingsFromProcessor(IProcessorBase processor)
         {
-            var x = processor.GetType();
-            var y = x.GetFields();
             foreach (var field in processor.GetType().GetFields())
             {
                 SettingsAttribute annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
 
                 ISettings setting = null;
 
-                //TODO load all setting classes implicitly (with framework?)
+                Type matchedSettings = null;
 
-                if (field.FieldType == typeof(bool))
+                if (availableSettings.ContainsKey(field.FieldType))
                 {
-                    setting = new BooleanSettings(processor, field, annotation);
-                } else if (field.FieldType.BaseType == typeof(Enum))
+                    matchedSettings = availableSettings[field.FieldType];
+                } else if (availableSettings.ContainsKey(field.FieldType.BaseType))
                 {
-                    setting = new EnumSettings(processor, field, annotation);
-                } else if (field.FieldType == typeof(string))
-                {
-                    setting = new StringSettings(processor, field, annotation);
-                } else if (field.FieldType == typeof(int))
-                {
-                    setting = new IntSettings(processor, field, annotation);
-                } else if (field.FieldType == typeof(string[]))
-                {
-                    setting = new StringArraySettings(processor, field, annotation);
+                    matchedSettings = availableSettings[field.FieldType.BaseType];
                 }
 
-                if (setting == null)
+                if (matchedSettings == null)
                     throw new NotImplementedException("Setting class for this type has not been implemented yet.");
+
+                setting = (ISettings)matchedSettings
+                    .GetConstructor(settingsConstructorSignature)
+                    .Invoke(new object[] { processor, field, annotation });
 
                 settings.Add(setting);
             }

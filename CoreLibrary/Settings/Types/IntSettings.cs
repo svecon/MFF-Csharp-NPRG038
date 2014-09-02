@@ -10,6 +10,8 @@ namespace CoreLibrary.Settings.Types
 {
     public class IntSettings : SettingsAbstract
     {
+        public static Type ForType { get { return typeof(int); } }
+
         public override int NumberOfParams { get { return 1; } }
 
         public IntSettings(object instance, FieldInfo field, SettingsAttribute attribute)
