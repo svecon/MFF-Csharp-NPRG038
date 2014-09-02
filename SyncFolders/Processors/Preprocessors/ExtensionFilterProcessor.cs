@@ -1,12 +1,13 @@
 ﻿using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Processors.Preprocessors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLibrary.Processors.Preprocessors
+namespace SyncFolders.Processors.Preprocessors
 {
     /// <summary>
     /// Filteres files by an extension or by an extension type/group.

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Processors.Processors
 {
     /// <summary>
     /// ProcessorAbstract is a class that all Processors should inherit from.

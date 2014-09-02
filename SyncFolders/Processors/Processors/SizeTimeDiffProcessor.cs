@@ -8,8 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors;
 
-namespace CoreLibrary.Processors.Processors
+namespace SyncFolders.Processors.Processors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.

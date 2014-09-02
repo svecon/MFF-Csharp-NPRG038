@@ -1,4 +1,6 @@
 ﻿using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
+using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Settings.Attributes;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLibrary.Processors.Preprocessors
+namespace SyncFolders.Processors.Preprocessors
 {
     public class CsharpSourcesFilterProcessor : PreProcessorAbstract
     {
@@ -17,11 +19,11 @@ namespace CoreLibrary.Processors.Preprocessors
         [Settings("Filter for only C# source files.", "csharp-source-code", "C#")]
         public bool IsEnabled = false;
 
-        public override void Process(Interfaces.IFilesystemTreeDirNode node)
+        public override void Process(IFilesystemTreeDirNode node)
         {
         }
 
-        public override void Process(Interfaces.IFilesystemTreeFileNode node)
+        public override void Process(IFilesystemTreeFileNode node)
         {
             if (!checkModeAndStatus(node))
                 return;

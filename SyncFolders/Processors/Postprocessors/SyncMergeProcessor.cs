@@ -6,8 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Processors.Postprocessors;
 
-namespace CoreLibrary.Processors.Postprocessors
+namespace SyncFolders.Processors.Postprocessors
 {
     class SyncMergeProcessor : PostProcessorAbstract
     {

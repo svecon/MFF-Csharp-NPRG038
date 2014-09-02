@@ -10,6 +10,7 @@ using CoreLibrary.Processors;
 using CoreLibrary.Settings;
 using CoreLibrary.FilesystemTree.Visitors;
 using System.IO;
+using System.Reflection;
 
 namespace ConsoleAPI
 {

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAPI", "ConsoleAPI\ConsoleAPI.csproj", "{F5DB383A-174B-45D4-B9EF-3679EE1FBCB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncFolders", "ConsoleAPI\SyncFolders.csproj", "{F5DB383A-174B-45D4-B9EF-3679EE1FBCB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollingChecksums", "RollingChecksums\RollingChecksums.csproj", "{C78D56E3-D78C-468E-A520-CE9B703CAB4A}"
 EndProject
