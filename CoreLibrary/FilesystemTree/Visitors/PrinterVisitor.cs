@@ -8,6 +8,13 @@ using CoreLibrary.Enums;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {
+    /// <summary>
+    /// Prints FilesystemTree on the console. 
+    /// 
+    /// Also prints all available information about the node (status, differences, locations).
+    /// 
+    /// Uses colors for different Node states.
+    /// </summary>
     public class PrinterVisitor : IFilesystemTreeVisitor
     {
 
@@ -22,7 +29,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.FullName + " (" + node.GetSize().ToString("#.00") + ")");
+            Console.WriteLine("+- " + node.Info.FullName + " (" + node.GetSize().ToString("#.00") + "kB)");
 
             foreach (var file in node.Files)
             {
@@ -42,7 +49,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
             if (node.Status == NodeStatusEnum.HasError)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write("E ");
+            } else if (node.Status == NodeStatusEnum.IsIgnored)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
             } else
                 switch (node.Differences)
                 {
@@ -73,7 +82,10 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.Name + ": " + node.Location + " # " + node.Differences);
+            Console.WriteLine("+- " + node.Info.Name
+                + ": " + (LocationCombinationsEnum)node.Location
+                + " # " + node.Differences
+                + " # " + node.Status);
 
             Console.ResetColor();
         }

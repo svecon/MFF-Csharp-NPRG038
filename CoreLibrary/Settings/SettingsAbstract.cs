@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CoreLibrary.Interfaces;
+using CoreLibrary.Settings.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,30 +9,41 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
-    public abstract class SettingsAbstract
+    /// <summary>
+    /// Abstract class for Processor's settings.
+    /// 
+    /// This class needs to be extended for needed field types.
+    /// 
+    /// All Settings classes MUST HAVE a static ForType attribute
+    /// which defines what field type the class is for.
+    /// </summary>
+    public abstract class SettingsAbstract : ISettings
     {
+        // MUST HAVE for children
+        //public abstract Type ForType { get; }
+
         public string Info { get; protected set; }
 
-        public string Option { get; protected set; }
+        public string Argument { get; protected set; }
 
-        public string OptionShortcut { get; protected set; }
+        public string ArgumentShortcut { get; protected set; }
 
         public bool WasSet { get; protected set; }
 
         public abstract int NumberOfParams { get; }
 
-        protected object instance;
+        public object Instance { get; protected set; }
 
-        protected FieldInfo field;
+        public FieldInfo Field { get; protected set; }
 
-        public SettingsAbstract(object instance, FieldInfo field, string info, string parameter, string shortcut)
+        public SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
         {
-            this.instance = instance;
-            this.field = field;
+            Instance = instance;
+            Field = field;
 
-            Info = info;
-            Option = parameter;
-            OptionShortcut = shortcut;
+            Info = attribute.Info;
+            Argument = attribute.Argument;
+            ArgumentShortcut = attribute.Shortcut;
 
             WasSet = false;
         }

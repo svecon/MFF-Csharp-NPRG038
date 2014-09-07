@@ -6,6 +6,8 @@ namespace CoreLibrary.Interfaces
 {
     /// <summary>
     /// Processor interface that can process nodes from FilesystemTree.
+    /// 
+    /// This is the base interface for all processor types.
     /// </summary>
     public interface IProcessorBase
     {

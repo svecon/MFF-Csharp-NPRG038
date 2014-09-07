@@ -8,13 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors;
 
-namespace CoreLibrary.Processors.Processors
+namespace SyncFolders.Processors.Processors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
-    class SizeTimeDiffProcessor : AbstractProcessor
+    class SizeTimeDiffProcessor : ProcessorAbstract
     {
         public override int Priority { get { return 1000; } }
 
@@ -22,6 +24,17 @@ namespace CoreLibrary.Processors.Processors
 
         [SettingsAttribute("Disable fast diff check.", "slow-diff", "D")]
         public bool IsEnabled = true;
+
+        [Flags]
+        public enum CompareModeEnum
+        {
+            Size                = 1 << 0,
+            Modification        = 1 << 1,
+            SizeModification    = Size | Modification,
+        }
+
+        [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
+        public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
 
         public override void Process(IFilesystemTreeDirNode node)
         {
