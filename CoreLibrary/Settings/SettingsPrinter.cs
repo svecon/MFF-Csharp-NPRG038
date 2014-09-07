@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
+    /// <summary>
+    /// Prints all available settings on a Console into a well-arranged column layout.
+    /// </summary>
     public class SettingsPrinter
     {
 
@@ -23,11 +26,14 @@ namespace CoreLibrary.Settings
             {
                 this.settings.Add(option);
 
-                if (option.Option != null && longestOption < option.Option.Length)
-                    longestOption = option.Option.Length;
+                if (option.Argument != null && longestOption < option.Argument.Length)
+                    longestOption = option.Argument.Length;
             }
         }
 
+        /// <summary>
+        /// Prints the layout.
+        /// </summary>
         public void Print()
         {
             sortByOptionParameters();
@@ -36,16 +42,16 @@ namespace CoreLibrary.Settings
 
             foreach (var option in settings)
             {
-                if (option.OptionShortcut != null)
+                if (option.ArgumentShortcut != null)
                 {
                     Console.CursorLeft = 2;
-                    Console.Write("-" + option.OptionShortcut);
+                    Console.Write("-" + option.ArgumentShortcut);
                 }
 
-                if (option.Option != null)
+                if (option.Argument != null)
                 {
                     Console.CursorLeft = 6;
-                    Console.Write("--" + option.Option);
+                    Console.Write("--" + option.Argument);
                 }
 
                 Console.CursorLeft = 9 + longestOption;
@@ -72,12 +78,15 @@ namespace CoreLibrary.Settings
             settings.Sort(new SettingsComparer());
         }
 
+        /// <summary>
+        /// Compares the two settings by their ArgumentShortcuts alphabetically.
+        /// </summary>
         private class SettingsComparer : IComparer<ISettings>
         {
             public int Compare(ISettings x, ISettings y)
             {
-                string left = x.OptionShortcut != null ? x.OptionShortcut : x.Option;
-                string right = y.OptionShortcut != null ? y.OptionShortcut : y.Option;
+                string left = x.ArgumentShortcut != null ? x.ArgumentShortcut : x.Argument;
+                string right = y.ArgumentShortcut != null ? y.ArgumentShortcut : y.Argument;
 
                 return left.CompareTo(right);
             }

@@ -8,7 +8,11 @@ using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree
 {
-
+    /// <summary>
+    /// Crawler crawls given directories (2 or 3) and builds a FilesystemTree with files and directories as Nodes.
+    /// 
+    /// //TODO maybe try to parallelize the crawling?
+    /// </summary>
     public class Crawler
     {
 
@@ -173,7 +177,6 @@ namespace CoreLibrary.FilesystemTree
                     files = currentDir.Info.GetFiles();
                 } catch (UnauthorizedAccessException e)
                 {
-
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
                 } catch (System.IO.DirectoryNotFoundException e)

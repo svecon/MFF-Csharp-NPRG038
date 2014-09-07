@@ -12,7 +12,7 @@ namespace CoreLibrary.Exceptions
     /// 
     /// Has more children - one for each Location type.
     /// </summary>
-    class LocationNotFoundException : DirectoryNotFoundException
+    public class LocationNotFoundException : DirectoryNotFoundException
     {
 
         protected FileSystemInfo info;

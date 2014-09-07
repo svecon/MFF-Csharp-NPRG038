@@ -8,12 +8,18 @@ using System.Threading;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {
+    /// <summary>
+    /// This visitor executes all processors in a given order on a FilesystemTree.
+    /// 
+    /// All files and folders are processed in parallel. 
+    /// But one particular file is processed sequentially with all the processors one by one.
+    /// </summary>
     public class ExecutionVisitor : IExecutionVisitor
     {
 
         IProcessorLoader loader;
 
-        public List<Task> tasks = new List<Task>();
+        List<Task> tasks = new List<Task>();
 
         CancellationTokenSource tokenSource;
 

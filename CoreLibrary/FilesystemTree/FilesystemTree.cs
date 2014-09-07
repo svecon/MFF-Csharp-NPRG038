@@ -10,10 +10,15 @@ using CoreLibrary.Enums;
 
 namespace CoreLibrary.FilesystemTree
 {
-
+    /// <summary>
+    /// FilesystemTree that contains information about all processed directories.
+    /// 
+    /// The tree is represented with Nodes that are joined as a one way linked list.
+    /// 
+    /// The nodes contain all information about the files location, status and more.
+    /// </summary>
     public class FilesystemTree : IFilesystemTree
     {
-
         public DiffModeEnum DiffMode { get; protected set; }
 
         public IFilesystemTreeDirNode Root { get; protected set; }

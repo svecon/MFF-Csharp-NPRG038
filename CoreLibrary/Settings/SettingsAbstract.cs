@@ -9,15 +9,24 @@ using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
+    /// <summary>
+    /// Abstract class for Processor's settings.
+    /// 
+    /// This class needs to be extended for needed field types.
+    /// 
+    /// All Settings classes MUST HAVE a static ForType attribute
+    /// which defines what field type the class is for.
+    /// </summary>
     public abstract class SettingsAbstract : ISettings
     {
+        // MUST HAVE for children
         //public abstract Type ForType { get; }
 
         public string Info { get; protected set; }
 
-        public string Option { get; protected set; }
+        public string Argument { get; protected set; }
 
-        public string OptionShortcut { get; protected set; }
+        public string ArgumentShortcut { get; protected set; }
 
         public bool WasSet { get; protected set; }
 
@@ -33,8 +42,8 @@ namespace CoreLibrary.Settings
             Field = field;
 
             Info = attribute.Info;
-            Option = attribute.Option;
-            OptionShortcut = attribute.Shortcut;
+            Argument = attribute.Argument;
+            ArgumentShortcut = attribute.Shortcut;
 
             WasSet = false;
         }

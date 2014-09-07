@@ -15,6 +15,13 @@ using System.Reflection;
 
 namespace CoreLibrary.Processors
 {
+    /// <summary>
+    /// ProcessorLoader is a container for all processors.
+    /// 
+    /// All avaialble assemblies are scanned for Processors and those are then loaded into a correct queue.
+    /// 
+    /// Also all the loaded processors are scanned for their Settings.
+    /// </summary>
     public class ProcessorsLoader : IProcessorLoader
     {
 
@@ -24,8 +31,14 @@ namespace CoreLibrary.Processors
 
         SortedList<int, IPostProcessor> PostProcessors;
 
+        /// <summary>
+        /// List of all settings for loaded processors.
+        /// </summary>
         List<ISettings> settings;
 
+        /// <summary>
+        /// Structure that holds available settings types (for different variable types).
+        /// </summary>
         Dictionary<Type, Type> availableSettings;
 
         private Type[] settingsConstructorSignature = new Type[] { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
