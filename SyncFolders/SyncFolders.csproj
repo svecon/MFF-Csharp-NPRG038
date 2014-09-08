@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Processors\Postprocessors\SyncMergeProcessor.cs" />
+    <Compile Include="Processors\Preprocessors\RegexFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
     <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />

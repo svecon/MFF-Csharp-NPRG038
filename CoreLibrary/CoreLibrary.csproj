@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
+    <Compile Include="Exceptions\SettingsUnknownValue.cs" />
     <Compile Include="Exceptions\ProcessorPriorityColissionException.cs" />
     <Compile Include="Exceptions\SettingsNotFoundException.cs" />
     <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorsLoader.cs" />
+    <Compile Include="Settings\Types\RegexSettings.cs" />
     <Compile Include="Settings\Types\IntSettings.cs" />
     <Compile Include="Settings\Types\StringArraySettings.cs" />
     <Compile Include="Settings\Types\StringSettings.cs" />

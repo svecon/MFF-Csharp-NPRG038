@@ -48,7 +48,7 @@ namespace SyncFolders
                 return;
             } catch (SettingsUnknownValue e)
             {
-                Console.WriteLine("This value for given option has not been found: " + e.Message);
+                Console.WriteLine("This value for given option is invalid: " + e.Message);
                 return;
             }
 
@@ -87,7 +87,7 @@ namespace SyncFolders
             sw.Start();
 
             // traverse a filesystem tree (loads all the files)
-            var tree = di.TraverseTree();
+            IFilesystemTree tree = di.TraverseTree();
 
             System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds + "ms for tree bulding");
             sw.Restart();
