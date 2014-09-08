@@ -46,6 +46,10 @@ namespace SyncFolders
             {
                 Console.WriteLine("This option has not been found: " + e.Message);
                 return;
+            } catch (SettingsUnknownValue e)
+            {
+                Console.WriteLine("This value for given option has not been found: " + e.Message);
+                return;
             }
 
 

@@ -51,20 +51,33 @@ namespace CoreLibrary.Settings
             {
                 ISettings setting;
 
-                if (arguments[i].StartsWith("--"))
+                if (arguments[i].StartsWith("--")) // long settings
                 {
                     if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out setting))
                     {
-                        setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
+                        try
+                        {
+                            setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
+                        } catch (ArgumentException e)
+                        {
+                            throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
+                        }
                         i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException(arguments[i]);
 
-                } else if (arguments[i].StartsWith("-"))
+                } else if (arguments[i].StartsWith("-")) // short settings
                 {
                     if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out setting))
                     {
-                        setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
+                        try
+                        {
+                            setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
+                        } catch (ArgumentException e)
+                        {
+                            throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
+                        }
+
                         i += 1 + setting.NumberOfParams;
                     } else
                         throw new SettingsNotFoundException(arguments[i]);

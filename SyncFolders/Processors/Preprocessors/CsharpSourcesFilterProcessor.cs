@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace SyncFolders.Processors.Preprocessors
 {
+    /// <summary>
+    /// Filter for C# source codes (manually typed ones).
+    /// 
+    /// Leaves out everything else.
+    /// </summary>
     public class CsharpSourcesFilterProcessor : PreProcessorAbstract
     {
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }

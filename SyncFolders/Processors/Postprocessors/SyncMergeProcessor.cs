@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Postprocessors;
+using CoreLibrary.Settings.Attributes;
 
 namespace SyncFolders.Processors.Postprocessors
 {
@@ -16,11 +17,13 @@ namespace SyncFolders.Processors.Postprocessors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
 
-        enum CompareOnEnum { Size = 1, Modification = 2 }
+        public enum CompareOnEnum { Size = 1, Modification = 2 }
 
-        CompareOnEnum compareOn = CompareOnEnum.Modification;
+        [Settings("Choose syncing based on different criteria.", "sync-criteria", "S")]
+        public CompareOnEnum compareOn = CompareOnEnum.Modification;
 
-        bool createEmptyFolders = false;
+        [Settings("Create empty folders.", "empty-folders", "E")]
+        public bool createEmptyFolders = false;
 
         public override void Process(IFilesystemTreeDirNode node)
         {
@@ -78,6 +81,7 @@ namespace SyncFolders.Processors.Postprocessors
 
                 checkAndCreateDirectoryFromFilename(to);
                 from.CopyTo(to);
+                node.Status = NodeStatusEnum.WasMerged;
                 return;
             }
 
@@ -102,7 +106,7 @@ namespace SyncFolders.Processors.Postprocessors
                     to = node.GetAbsolutePath(LocationEnum.OnLeft); ;
                     break;
                 case 0:
-                    // files have modification date, skip everything
+                    // files are same, skip everything
                     return;
                 case 1:
                     from = (FileInfo)node.InfoLeft;
@@ -112,6 +116,7 @@ namespace SyncFolders.Processors.Postprocessors
 
             checkAndCreateDirectoryFromFilename(to);
             from.CopyTo(to, true);
+            node.Status = NodeStatusEnum.WasMerged;
         }
 
         private void checkAndCreateDirectoryFromFilename(string path)
