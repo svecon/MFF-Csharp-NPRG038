@@ -1,10 +1,4 @@
-﻿using CoreLibrary.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace CoreLibrary.Processors
 {
     /// <summary>
@@ -21,18 +15,18 @@ namespace CoreLibrary.Processors
     /// </remarks>
     public class ThreeWayDiffHelper
     {
-        protected int possibleCombinations = 0x0;
-        protected int possibleFiles = 0x0;
+        int possibleCombinations = 0x0;
+        int possibleFiles = 0x0;
 
         #region Constants
 
-        protected const int BASE_LEFT = 0x1;
-        protected const int BASE_RIGHT = 0x2;
-        protected const int LEFT_RIGHT = 0x4;
+        const int BASE_LEFT = 0x1;
+        const int BASE_RIGHT = 0x2;
+        const int LEFT_RIGHT = 0x4;
 
-        protected const int BASE = 0x1;
-        protected const int LEFT = 0x2;
-        protected const int RIGHT = 0x4;
+        const int BASE = 0x1;
+        const int LEFT = 0x2;
+        const int RIGHT = 0x4;
 
         #endregion
 
@@ -54,31 +48,31 @@ namespace CoreLibrary.Processors
 
         #region Adding files as possibilities
 
-        protected void addGivenFileAsPossibility(int file)
+        protected void AddGivenFileAsPossibility(int file)
         {
             possibleFiles |= file;
         }
 
         public void AddBaseFilePossibility()
         {
-            addGivenFileAsPossibility(BASE);
+            AddGivenFileAsPossibility(BASE);
         }
 
         public void AddLeftFilePossibility()
         {
-            addGivenFileAsPossibility(LEFT);
+            AddGivenFileAsPossibility(LEFT);
         }
 
         public void AddRightFilePossibility()
         {
-            addGivenFileAsPossibility(RIGHT);
+            AddGivenFileAsPossibility(RIGHT);
         }
 
         #endregion
 
         #region Checking combinations
 
-        protected void checkGivenCombination(int combination, bool isDifferent)
+        protected void CheckGivenCombination(int combination, bool isDifferent)
         {
             if ((possibleCombinations & combination) > 0 && isDifferent)
                 possibleCombinations &= ~combination;
@@ -86,24 +80,24 @@ namespace CoreLibrary.Processors
 
         public void CheckCombinationBaseLeft(bool isDifferent)
         {
-            checkGivenCombination(BASE_LEFT, isDifferent);
+            CheckGivenCombination(BASE_LEFT, isDifferent);
         }
 
         public void CheckCombinationBaseRight(bool isDifferent)
         {
-            checkGivenCombination(BASE_RIGHT, isDifferent);
+            CheckGivenCombination(BASE_RIGHT, isDifferent);
         }
 
         public void CheckCombinationLeftRight(bool isDifferent)
         {
-            checkGivenCombination(LEFT_RIGHT, isDifferent);
+            CheckGivenCombination(LEFT_RIGHT, isDifferent);
         }
 
         #endregion
 
         #region Files possibility checks
 
-        protected bool canGivenFileBeSame(int file, bool forceRecheck = false)
+        protected bool CanGivenFileBeSame(int file, bool forceRecheck = false)
         {
             if (forceRecheck)
                 RecalculatePossibleFiles();
@@ -113,41 +107,41 @@ namespace CoreLibrary.Processors
 
         public bool CanBaseFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(BASE, forceRecheck);
+            return CanGivenFileBeSame(BASE, forceRecheck);
         }
 
         public bool CanLeftFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(LEFT, forceRecheck);
+            return CanGivenFileBeSame(LEFT, forceRecheck);
         }
 
         public bool CanRightFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(RIGHT, forceRecheck);
+            return CanGivenFileBeSame(RIGHT, forceRecheck);
         }
 
         #endregion
 
         #region Combinations possibility checks
 
-        protected bool canGivenCombinationBeSame(int combination)
+        protected bool CanGivenCombinationBeSame(int combination)
         {
             return (possibleCombinations & combination) > 0;
         }
 
         public bool CanCombinationBaseLeftBeSame()
         {
-            return canGivenCombinationBeSame(BASE_LEFT);
+            return CanGivenCombinationBeSame(BASE_LEFT);
         }
 
         public bool CanCombinationBaseRightBeSame()
         {
-            return canGivenCombinationBeSame(BASE_RIGHT);
+            return CanGivenCombinationBeSame(BASE_RIGHT);
         }
 
         public bool CanCombinationLeftRightBeSame()
         {
-            return canGivenCombinationBeSame(LEFT_RIGHT);
+            return CanGivenCombinationBeSame(LEFT_RIGHT);
         }
 
         #endregion

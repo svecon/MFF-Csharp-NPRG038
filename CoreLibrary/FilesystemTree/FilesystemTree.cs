@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Collections;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
 
@@ -94,7 +91,7 @@ namespace CoreLibrary.FilesystemTree
                 return ((int)location & Location) > 0;
             }
 
-            protected void markFound(LocationEnum location)
+            protected void MarkFound(LocationEnum location)
             {
                 Location = Location | (int)location;
             }
@@ -102,7 +99,7 @@ namespace CoreLibrary.FilesystemTree
             public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true)
             {
                 if (markIsFound)
-                    markFound(location);
+                    MarkFound(location);
 
                 switch (location)
                 {
@@ -160,26 +157,28 @@ namespace CoreLibrary.FilesystemTree
             {
                 //TODO maybe this could be done faster? (now it is N^2)
 
-                foreach (var dir in Directories)
-                {
-                    if (dir.Info.Name == info.Name)
-                        return dir;
-                }
+                //foreach (var dir in Directories)
+                //{
+                //    if (dir.Info.Name == info.Name)
+                //        return dir;
+                //}
+                //return null;
 
-                return null;
+                return Directories.FirstOrDefault(dir => dir.Info.Name == info.Name);
             }
 
             public IFilesystemTreeFileNode SearchForFile(FileInfo info)
             {
                 //TODO maybe this could be done faster? (now it is N^2)
 
-                foreach (var file in Files)
-                {
-                    if (file.Info.Name == info.Name)
-                        return file;
-                }
+                //foreach (var file in Files)
+                //{
+                //    if (file.Info.Name == info.Name)
+                //        return file;
+                //}
+                //return null;
 
-                return null;
+                return Files.FirstOrDefault(file => file.Info.Name == info.Name);
             }
 
             public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)

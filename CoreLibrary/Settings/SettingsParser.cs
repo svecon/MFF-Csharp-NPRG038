@@ -3,8 +3,6 @@ using CoreLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
@@ -18,16 +16,16 @@ namespace CoreLibrary.Settings
     /// </summary>
     public class SettingsParser
     {
-        Dictionary<string, ISettings> longSettings;
+        readonly Dictionary<string, ISettings> longSettings;
 
-        Dictionary<string, ISettings> shortSettings;
+        readonly Dictionary<string, ISettings> shortSettings;
 
         public SettingsParser(IEnumerable<ISettings> settings)
         {
             longSettings = new Dictionary<string, ISettings>();
             shortSettings = new Dictionary<string, ISettings>();
 
-            foreach (var option in settings)
+            foreach (ISettings option in settings)
             {
                 if (option.Argument != null)
                     longSettings.Add(option.Argument, option);
@@ -44,7 +42,7 @@ namespace CoreLibrary.Settings
         /// <returns>Arguments that are not settings.</returns>
         public string[] ParseSettings(params string[] arguments)
         {
-            List<string> leftOvers = new List<string>();
+            var leftOvers = new List<string>();
 
             int i = 0;
             while (i < arguments.Length)

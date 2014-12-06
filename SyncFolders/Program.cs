@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLibrary;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings;
 using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Exceptions;
-using System.IO;
-using System.Reflection;
 
 namespace SyncFolders
 {
@@ -32,13 +25,13 @@ namespace SyncFolders
             // if the help argument is passed - list all the available settings
             if (args.Length == 1 && args[0] == "--help")
             {
-                SettingsPrinter printer = new SettingsPrinter(loader.GetSettings());
+                var printer = new SettingsPrinter(loader.GetSettings());
                 printer.Print();
                 return;
             }
 
             // pass the arguments
-            SettingsParser parser = new SettingsParser(loader.GetSettings());
+            var parser = new SettingsParser(loader.GetSettings());
             try
             {
                 args = parser.ParseSettings(args);

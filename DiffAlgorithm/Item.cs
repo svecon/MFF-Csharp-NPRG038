@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace DiffAlgorithm
 {
@@ -10,10 +6,10 @@ namespace DiffAlgorithm
     {
         public Item(int lineStartA, int lineStartB, int deletedInA, int insertedInB)
         {
-            this.LineStartA = lineStartA;
-            this.LineStartB = lineStartB;
-            this.DeletedInA = deletedInA;
-            this.InsertedInB = insertedInB;
+            LineStartA = lineStartA;
+            LineStartB = lineStartB;
+            DeletedInA = deletedInA;
+            InsertedInB = insertedInB;
         }
 
         public readonly int LineStartA;
@@ -24,7 +20,7 @@ namespace DiffAlgorithm
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(DeletedInA.ToString())
                 .Append(".")
                 .Append(InsertedInB.ToString())

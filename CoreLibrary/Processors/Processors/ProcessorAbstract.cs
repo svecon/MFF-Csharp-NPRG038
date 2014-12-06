@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLibrary.Interfaces;
+﻿using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
 
 namespace CoreLibrary.Processors.Processors
@@ -15,9 +10,9 @@ namespace CoreLibrary.Processors.Processors
     /// </summary>
     public abstract class ProcessorAbstract : BaseProcessorAbstract, IProcessor
     {
-        protected override bool checkStatus(IFilesystemTreeAbstractNode node)
+        protected override bool CheckStatus(IFilesystemTreeAbstractNode node)
         {
-            if (!base.checkStatus(node))
+            if (!base.CheckStatus(node))
                 return false;
 
             if (node.Status == NodeStatusEnum.WasDiffed)

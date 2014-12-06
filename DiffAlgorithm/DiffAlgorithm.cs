@@ -17,13 +17,13 @@ namespace DiffAlgorithm
         private void LCS(int lowerA, int upperA, int lowerB, int upperB)
         {
             // Fast walkthrough equal lines at the start
-            while (lowerA < upperA && lowerB < upperB && dataA.data[lowerA] == dataB.data[lowerB])
+            while (lowerA < upperA && lowerB < upperB && dataA.Data[lowerA] == dataB.Data[lowerB])
             {
                 lowerA++; lowerB++;
             }
 
             // Fast walkthrough equal lines at the end
-            while (lowerA < upperA && lowerB < upperB && dataA.data[upperA - 1] == dataB.data[upperB - 1])
+            while (lowerA < upperA && lowerB < upperB && dataA.Data[upperA - 1] == dataB.Data[upperB - 1])
             {
                 --upperA; --upperB;
             }
@@ -32,13 +32,13 @@ namespace DiffAlgorithm
             {
                 // mark as inserted lines.
                 while (lowerB < upperB)
-                    dataB.modified[lowerB++] = true;
+                    dataB.Modified[lowerB++] = true;
 
             } else if (lowerB == upperB)
             {
                 // mark as deleted lines.
                 while (lowerA < upperA)
-                    dataA.modified[lowerA++] = true;
+                    dataA.Modified[lowerA++] = true;
 
             } else
             {
@@ -98,7 +98,7 @@ namespace DiffAlgorithm
                     y = x - k;
 
                     // find the end of the furthest reaching forward D-path in diagonal k.
-                    while ((x < upperA) && (y < upperB) && (dataA.data[x] == dataB.data[y]))
+                    while ((x < upperA) && (y < upperB) && (dataA.Data[x] == dataB.Data[y]))
                     {
                         x++; y++;
                     }
@@ -127,7 +127,7 @@ namespace DiffAlgorithm
                     }
                     y = x - k;
 
-                    while ((x > lowerA) && (y > lowerB) && (dataA.data[x - 1] == dataB.data[y - 1]))
+                    while ((x > lowerA) && (y > lowerB) && (dataA.Data[x - 1] == dataB.Data[y - 1]))
                     {
                         x--; y--; // diagonal
                     }
@@ -155,8 +155,8 @@ namespace DiffAlgorithm
             int lineB = 0;
             while (lineA < dataA.Length || lineB < dataB.Length)
             {
-                if ((lineA < dataA.Length) && (!dataA.modified[lineA])
-                  && (lineB < dataB.Length) && (!dataB.modified[lineB]))
+                if ((lineA < dataA.Length) && (!dataA.Modified[lineA])
+                  && (lineB < dataB.Length) && (!dataB.Modified[lineB]))
                 {
                     // equal lines
                     lineA++;
@@ -168,10 +168,10 @@ namespace DiffAlgorithm
                     int startA = lineA;
                     int startB = lineB;
 
-                    while (lineA < dataA.Length && (lineB >= dataB.Length || dataA.modified[lineA]))
+                    while (lineA < dataA.Length && (lineB >= dataB.Length || dataA.Modified[lineA]))
                         lineA++;
 
-                    while (lineB < dataB.Length && (lineA >= dataA.Length || dataB.modified[lineB]))
+                    while (lineB < dataB.Length && (lineA >= dataA.Length || dataB.Modified[lineB]))
                         lineB++;
 
                     if ((startA < lineA) || (startB < lineB))

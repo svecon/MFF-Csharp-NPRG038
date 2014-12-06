@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings.Attributes
 {
@@ -11,8 +7,8 @@ namespace CoreLibrary.Settings.Attributes
     /// 
     /// The attribute holds tooltip Info and argument triggers.
     /// </summary>
-    [System.AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class SettingsAttribute : System.Attribute
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    public class SettingsAttribute : Attribute
     {
         public string Info { get; set; }
 

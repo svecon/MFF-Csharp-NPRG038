@@ -13,24 +13,24 @@ namespace DiffAlgorithm
         internal int Length;
 
         /// <summary>Buffer of numbers that will be compared.</summary>
-        internal int[] data;
+        internal int[] Data;
 
         /// <summary>
         /// Array of booleans that flag for modified data.
         /// This is the result of the diff.
         /// This means DeletedInA in the first Data or inserted in the second Data.
         /// </summary>
-        internal bool[] modified;
+        internal bool[] Modified;
 
         /// <summary>
         /// Initialize the Diff-Data buffer.
         /// </summary>
-        /// <param name="data">reference to the buffer</param>
+        /// <param name="initData">reference to the buffer</param>
         internal DiffData(int[] initData)
         {
-            data = initData;
+            Data = initData;
             Length = initData.Length;
-            modified = new bool[Length + 2];
+            Modified = new bool[Length + 2];
         }
 
     }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using System.Threading;
@@ -42,7 +40,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
 
@@ -66,12 +64,12 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
         }
 
-        private void handleError(IFilesystemTreeAbstractNode node, Task task)
+        private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
         {
             node.Status = Enums.NodeStatusEnum.HasError;
         }

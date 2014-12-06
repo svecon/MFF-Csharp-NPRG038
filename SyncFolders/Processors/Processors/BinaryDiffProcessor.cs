@@ -33,7 +33,7 @@ namespace SyncFolders.Processors.Processors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             var threeWay = new ThreeWayDiffHelper();

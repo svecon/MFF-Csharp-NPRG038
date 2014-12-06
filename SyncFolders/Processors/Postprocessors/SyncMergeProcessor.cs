@@ -31,7 +31,7 @@ namespace SyncFolders.Processors.Postprocessors
 
             // this means that empty folders need to be created here
 
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             // processor setting
@@ -52,7 +52,7 @@ namespace SyncFolders.Processors.Postprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             if (node.Differences == DifferencesStatusEnum.LeftRightSame)

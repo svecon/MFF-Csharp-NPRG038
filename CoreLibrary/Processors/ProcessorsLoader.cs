@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
-using CoreLibrary.Processors.Postprocessors;
-using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Exceptions;
-using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
-using CoreLibrary.Settings.Types;
 using System.Reflection;
 
 namespace CoreLibrary.Processors
@@ -25,11 +18,11 @@ namespace CoreLibrary.Processors
     public class ProcessorsLoader : IProcessorLoader
     {
 
-        SortedList<int, IPreProcessor> PreProcessors;
+        SortedList<int, IPreProcessor> preProcessors;
 
-        SortedList<int, IProcessor> Processors;
+        SortedList<int, IProcessor> processors;
 
-        SortedList<int, IPostProcessor> PostProcessors;
+        SortedList<int, IPostProcessor> postProcessors;
 
         /// <summary>
         /// List of all settings for loaded processors.
@@ -41,69 +34,70 @@ namespace CoreLibrary.Processors
         /// </summary>
         Dictionary<Type, Type> availableSettings;
 
-        private Type[] settingsConstructorSignature = new Type[] { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
-
-        public ProcessorsLoader()
-        {
-        }
+        private readonly Type[] settingsConstructorSignature = { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
 
         public void LoadAll()
         {
-            loadAllAvailableSettings();
+            LoadAllAvailableSettings();
 
-            loadAllAvailableProcessors();
+            LoadAllAvailableProcessors();
         }
 
-        protected void loadAllAvailableProcessors()
+        protected void LoadAllAvailableProcessors()
         {
-            PreProcessors = new SortedList<int, IPreProcessor>();
-            Processors = new SortedList<int, IProcessor>();
-            PostProcessors = new SortedList<int, IPostProcessor>();
+            preProcessors = new SortedList<int, IPreProcessor>();
+            processors = new SortedList<int, IProcessor>();
+            postProcessors = new SortedList<int, IPostProcessor>();
 
-            var type = typeof(IProcessorBase);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
+            Type type = typeof(IProcessorBase);
+            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
                 .Where(p => type.IsAssignableFrom(p));
 
-            foreach (var item in types)
+            foreach (Type item in types)
             {
-                var instance = item
-                    .GetConstructor(new Type[] { })
-                    .Invoke(new object[] { });
+                try
+                {
+                    ConstructorInfo constructorInfo = item.GetConstructor(new Type[] { });
 
-                if (typeof(IPreProcessor).IsAssignableFrom(item))
-                {
-                    AddProcessor((IPreProcessor)instance);
-                } else if (typeof(IProcessor).IsAssignableFrom(item))
-                {
-                    AddProcessor((IProcessor)instance);
-                } else if (typeof(IPostProcessor).IsAssignableFrom(item))
-                {
-                    AddProcessor((IPostProcessor)instance);
-                } else
-                {
-                    throw new NotImplementedException("This processor type is not supported.");
-                }
+                    if (constructorInfo == null) continue;
+
+                    object instance = constructorInfo.Invoke(new object[] { });
+
+                    if (typeof(IPreProcessor).IsAssignableFrom(item))
+                    {
+                        AddProcessor((IPreProcessor)instance);
+                    } else if (typeof(IProcessor).IsAssignableFrom(item))
+                    {
+                        AddProcessor((IProcessor)instance);
+                    } else if (typeof(IPostProcessor).IsAssignableFrom(item))
+                    {
+                        AddProcessor((IPostProcessor)instance);
+                    } else
+                    {
+                        throw new NotImplementedException("This processor type is not supported.");
+                    }
+                } catch (NullReferenceException) { }
             }
         }
 
-        protected void loadAllAvailableSettings()
+        protected void LoadAllAvailableSettings()
         {
             availableSettings = new Dictionary<Type, Type>();
             settings = new List<ISettings>();
 
-            var type = typeof(ISettings);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
+            Type type = typeof(ISettings);
+            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
                 .Where(p => type.IsAssignableFrom(p));
 
-            foreach (var item in types)
+            foreach (Type item in types)
             {
-                var property = item.GetProperty("ForType", typeof(Type));
+                PropertyInfo property = item.GetProperty("ForType", typeof(Type));
                 if (property == null)
                     throw new NotImplementedException("All Setting types have to implement 'Type ForType' static property.");
 
@@ -111,20 +105,18 @@ namespace CoreLibrary.Processors
             }
         }
 
-        protected void retrieveSettingsFromProcessor(IProcessorBase processor)
+        protected void RetrieveSettingsFromProcessor(IProcessorBase processor)
         {
-            foreach (var field in processor.GetType().GetFields())
+            foreach (FieldInfo field in processor.GetType().GetFields())
             {
-                SettingsAttribute annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
-
-                ISettings setting = null;
+                var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
 
                 Type matchedSettings = null;
 
                 if (availableSettings.ContainsKey(field.FieldType))
                 {
                     matchedSettings = availableSettings[field.FieldType];
-                } else if (availableSettings.ContainsKey(field.FieldType.BaseType))
+                } else if (field.FieldType.BaseType != null && availableSettings.ContainsKey(field.FieldType.BaseType))
                 {
                     matchedSettings = availableSettings[field.FieldType.BaseType];
                 }
@@ -132,11 +124,10 @@ namespace CoreLibrary.Processors
                 if (matchedSettings == null)
                     throw new NotImplementedException("Setting class for this type has not been implemented yet.");
 
-                setting = (ISettings)matchedSettings
-                    .GetConstructor(settingsConstructorSignature)
-                    .Invoke(new object[] { processor, field, annotation });
+                ConstructorInfo constructorInfo = matchedSettings.GetConstructor(settingsConstructorSignature);
+                if (constructorInfo == null) continue;
 
-                settings.Add(setting);
+                settings.Add((ISettings)constructorInfo.Invoke(new object[] { processor, field, annotation }));
             }
         }
 
@@ -144,8 +135,8 @@ namespace CoreLibrary.Processors
         {
             try
             {
-                PreProcessors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                preProcessors.Add(processor.Priority, processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -156,8 +147,8 @@ namespace CoreLibrary.Processors
         {
             try
             {
-                Processors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                processors.Add(processor.Priority, processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -168,8 +159,8 @@ namespace CoreLibrary.Processors
         {
             try
             {
-                PostProcessors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                postProcessors.Add(processor.Priority, processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -178,35 +169,22 @@ namespace CoreLibrary.Processors
 
         public IEnumerable<IPreProcessor> GetPreProcessors()
         {
-            foreach (var processor in PreProcessors)
-            {
-                yield return processor.Value;
-            }
+            return preProcessors.Select(processor => processor.Value); // LINQ YIELD
         }
 
         public IEnumerable<IProcessor> GetProcessors()
         {
-            foreach (var processor in Processors)
-            {
-                yield return processor.Value;
-            }
+            return processors.Select(processor => processor.Value); // LINQ YIELD
         }
 
         public IEnumerable<IPostProcessor> GetPostProcessors()
         {
-            foreach (var processor in PostProcessors)
-            {
-                yield return processor.Value;
-            }
+            return postProcessors.Select(processor => processor.Value); // LINQ YIELD
         }
 
         public IEnumerable<ISettings> GetSettings()
         {
-            foreach (var option in settings)
-            {
-                yield return option;
-            }
+            return settings; // LINQ YIELD
         }
-
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Interfaces;
-using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree
 {
@@ -30,7 +29,7 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Data structure to hold Info of subfolders to be examined for Files.
         /// </summary>
-        Stack<DirectoryForIteration> dirsToBeSearched;
+        readonly Stack<DirectoryForIteration> dirsToBeSearched;
 
         /// <summary>
         /// Create crawler for 3-way diffing.
@@ -150,7 +149,7 @@ namespace CoreLibrary.FilesystemTree
                 {
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
-                } catch (System.IO.DirectoryNotFoundException e)
+                } catch (DirectoryNotFoundException e)
                 {
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
@@ -171,7 +170,7 @@ namespace CoreLibrary.FilesystemTree
                     dirsToBeSearched.Push(new DirectoryForIteration(info, diffNode, currentDir.Location));
                 }
 
-                FileInfo[] files = null;
+                FileInfo[] files;
                 try
                 {
                     files = currentDir.Info.GetFiles();
@@ -179,7 +178,7 @@ namespace CoreLibrary.FilesystemTree
                 {
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
-                } catch (System.IO.DirectoryNotFoundException e)
+                } catch (DirectoryNotFoundException e)
                 {
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     continue;
@@ -204,7 +203,6 @@ namespace CoreLibrary.FilesystemTree
                         //  or thread since the call to TraverseTree() 
                         // then just continue.
                         System.Diagnostics.Debug.WriteLine(e.Message);
-                        continue;
                     }
                 }
             }

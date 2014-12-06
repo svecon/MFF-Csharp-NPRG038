@@ -1,11 +1,6 @@
 ﻿using CoreLibrary.Interfaces;
 using CoreLibrary.Settings.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
@@ -36,7 +31,7 @@ namespace CoreLibrary.Settings
 
         public FieldInfo Field { get; protected set; }
 
-        public SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
+        protected SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
         {
             Instance = instance;
             Field = field;

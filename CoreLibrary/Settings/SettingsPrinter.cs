@@ -2,9 +2,6 @@
 using CoreLibrary.Settings.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLibrary.Settings
 {
@@ -13,16 +10,15 @@ namespace CoreLibrary.Settings
     /// </summary>
     public class SettingsPrinter
     {
+        readonly List<ISettings> settings;
 
-        List<ISettings> settings;
-
-        int longestOption = 0;
+        readonly int longestOption = 0;
 
         public SettingsPrinter(IEnumerable<ISettings> settings)
         {
             this.settings = new List<ISettings>();
 
-            foreach (var option in settings)
+            foreach (ISettings option in settings)
             {
                 this.settings.Add(option);
 
@@ -36,11 +32,11 @@ namespace CoreLibrary.Settings
         /// </summary>
         public void Print()
         {
-            sortByOptionParameters();
+            SortByOptionParameters();
 
             Console.WriteLine("Listing of all possible options:");
 
-            foreach (var option in settings)
+            foreach (ISettings option in settings)
             {
                 if (option.ArgumentShortcut != null)
                 {
@@ -73,7 +69,7 @@ namespace CoreLibrary.Settings
             }
         }
 
-        protected void sortByOptionParameters()
+        protected void SortByOptionParameters()
         {
             settings.Sort(new SettingsComparer());
         }
@@ -85,10 +81,10 @@ namespace CoreLibrary.Settings
         {
             public int Compare(ISettings x, ISettings y)
             {
-                string left = x.ArgumentShortcut != null ? x.ArgumentShortcut : x.Argument;
-                string right = y.ArgumentShortcut != null ? y.ArgumentShortcut : y.Argument;
+                string left = x.ArgumentShortcut ?? x.Argument;
+                string right = y.ArgumentShortcut ?? y.Argument;
 
-                return left.CompareTo(right);
+                return String.Compare(left, right, StringComparison.InvariantCulture);
             }
         }
 
