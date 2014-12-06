@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
 
@@ -13,48 +9,45 @@ namespace DiffAlgorithm
     {
         Dictionary<string, int> hashedLines;
 
-        public Item[] DiffText(string TextA, string TextB, bool trimSpace, bool ignoreSpace, bool ignoreCase)
+        public Item[] DiffText(string textA, string textB, bool trimSpace, bool ignoreSpace, bool ignoreCase)
         {
-            hashedLines = new Dictionary<string, int>(TextA.Length + TextB.Length);
+            hashedLines = new Dictionary<string, int>(textA.Length + textB.Length);
 
             // The A-Version of the data (original data) to be compared.
-            DiffData DataA = new DiffData(HashStringLines(TextA, trimSpace, ignoreSpace, ignoreCase));
+            var dataA = new DiffData(HashStringLines(textA, trimSpace, ignoreSpace, ignoreCase));
 
             // The B-Version of the data (modified data) to be compared.
-            DiffData DataB = new DiffData(HashStringLines(TextB, trimSpace, ignoreSpace, ignoreCase));
+            var dataB = new DiffData(HashStringLines(textB, trimSpace, ignoreSpace, ignoreCase));
 
             hashedLines.Clear();
 
-            DiffAlgorithm da = new DiffAlgorithm(DataA, DataB);
+            var da = new DiffAlgorithm(dataA, dataB);
             return da.CreateDiffs();
         }
 
-        public Item[] DiffInt(int[] ArrayA, int[] ArrayB)
+        public Item[] DiffInt(int[] arrayA, int[] arrayB)
         {
-            DiffData DataA = new DiffData(ArrayA);
-            DiffData DataB = new DiffData(ArrayB);
+            var dataA = new DiffData(arrayA);
+            var dataB = new DiffData(arrayB);
 
-            DiffAlgorithm da = new DiffAlgorithm(DataA, DataB);
+            var da = new DiffAlgorithm(dataA, dataB);
             return da.CreateDiffs();
         }
 
         private int[] HashStringLines(string aText, bool trimSpace, bool ignoreSpace, bool ignoreCase)
         {
             // get all codes of the text
-            string[] Lines;
-            int[] Codes;
             int lastUsedCode = hashedLines.Count;
-            string s;
 
             // strip off all cr, only use lf as textline separator.
             aText = aText.Replace("\r", "");
-            Lines = aText.Split('\n');
+            var lines = aText.Split('\n');
 
-            Codes = new int[Lines.Length];
+            var codes = new int[lines.Length];
 
-            for (int i = 0; i < Lines.Length; ++i)
+            for (int i = 0; i < lines.Length; ++i)
             {
-                s = Lines[i];
+                var s = lines[i];
                 if (trimSpace)
                     s = s.Trim();
 
@@ -67,14 +60,13 @@ namespace DiffAlgorithm
                     s = s.ToLower();
 
 
-                if (!hashedLines.TryGetValue(s, out Codes[i]))
-                {
-                    lastUsedCode++;
-                    hashedLines[s] = lastUsedCode;
-                    Codes[i] = lastUsedCode;
-                }
+                if (hashedLines.TryGetValue(s, out codes[i])) continue;
+
+                lastUsedCode++;
+                hashedLines[s] = lastUsedCode;
+                codes[i] = lastUsedCode;
             }
-            return Codes;
+            return codes;
         }
 
     }

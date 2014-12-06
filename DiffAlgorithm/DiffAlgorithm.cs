@@ -1,154 +1,143 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiffAlgorithm
 {
     class DiffAlgorithm
     {
-        private DiffData DataA;
-        private DiffData DataB;
+        private readonly DiffData dataA;
+        private readonly DiffData dataB;
 
-        public DiffAlgorithm(DiffData DataA, DiffData DataB)
+        public DiffAlgorithm(DiffData dataA, DiffData dataB)
         {
-            this.DataA = DataA;
-            this.DataB = DataB;
+            this.dataA = dataA;
+            this.dataB = dataB;
         }
 
-        private void LCS(int LowerA, int UpperA, int LowerB, int UpperB)
+        private void LCS(int lowerA, int upperA, int lowerB, int upperB)
         {
             // Fast walkthrough equal lines at the start
-            while (LowerA < UpperA && LowerB < UpperB && DataA.data[LowerA] == DataB.data[LowerB])
+            while (lowerA < upperA && lowerB < upperB && dataA.data[lowerA] == dataB.data[lowerB])
             {
-                LowerA++; LowerB++;
+                lowerA++; lowerB++;
             }
 
             // Fast walkthrough equal lines at the end
-            while (LowerA < UpperA && LowerB < UpperB && DataA.data[UpperA - 1] == DataB.data[UpperB - 1])
+            while (lowerA < upperA && lowerB < upperB && dataA.data[upperA - 1] == dataB.data[upperB - 1])
             {
-                --UpperA; --UpperB;
+                --upperA; --upperB;
             }
 
-            if (LowerA == UpperA)
+            if (lowerA == upperA)
             {
                 // mark as inserted lines.
-                while (LowerB < UpperB)
-                    DataB.modified[LowerB++] = true;
+                while (lowerB < upperB)
+                    dataB.modified[lowerB++] = true;
 
-            } else if (LowerB == UpperB)
+            } else if (lowerB == upperB)
             {
                 // mark as deleted lines.
-                while (LowerA < UpperA)
-                    DataA.modified[LowerA++] = true;
+                while (lowerA < upperA)
+                    dataA.modified[lowerA++] = true;
 
             } else
             {
                 // Find the middle snakea and length of an optimal path for A and B
-                SMSPoint snake = SMS(DataA, LowerA, UpperA, DataB, LowerB, UpperB);
+                SMSPoint snake = SMS(lowerA, upperA, lowerB, upperB);
 
                 // The path is from LowerX to (x,y) and (x,y) ot UpperX
-                LCS(LowerA, snake.x, LowerB, snake.y);
-                LCS(snake.x, UpperA, snake.y, UpperB);
+                LCS(lowerA, snake.x, lowerB, snake.y);
+                LCS(snake.x, upperA, snake.y, upperB);
             }
         }
 
-        private SMSPoint SMS(DiffData DataA, int LowerA, int UpperA, DiffData DataB, int LowerB, int UpperB)
+        private SMSPoint SMS(int lowerA, int upperA, int lowerB, int upperB)
         {
-            int MAX = DataA.Length + DataB.Length + 1;
+            int max = dataA.Length + dataB.Length + 1;
 
-            int DownK = LowerA - LowerB; // the k-line to start the forward search
-            int UpK = UpperA - UpperB; // the k-line to start the reverse search
+            int downK = lowerA - lowerB; // the k-line to start the forward search
+            int upK = upperA - upperB; // the k-line to start the reverse search
 
-            int Delta = (UpperA - LowerA) - (UpperB - LowerB);
-            bool oddDelta = (Delta & 1) != 0;
+            int delta = (upperA - lowerA) - (upperB - lowerB);
+            bool oddDelta = (delta & 1) != 0;
 
-            /// vector for the (0,0) to (x,y) search
-            int[] DownVector = new int[2 * MAX + 2];
+            // vector for the (0,0) to (x,y) search
+            int[] downVector = new int[2 * max + 2];
 
-            /// vector for the (u,v) to (N,M) search
-            int[] UpVector = new int[2 * MAX + 2];
+            // vector for the (u,v) to (N,M) search
+            int[] upVector = new int[2 * max + 2];
 
             // The vectors in the publication accepts negative indexes. the vectors implemented here are 0-based
             // and are access using diffItemsList specific offset: UpOffset UpVector and DownOffset for DownVektor
-            int DownOffset = MAX - DownK;
-            int UpOffset = MAX - UpK;
+            int downOffset = max - downK;
+            int upOffset = max - upK;
 
-            int MaxD = ((UpperA - LowerA + UpperB - LowerB) / 2) + 1;
+            int maxD = ((upperA - lowerA + upperB - lowerB) / 2) + 1;
 
             // init vectors
-            DownVector[DownOffset + DownK + 1] = LowerA;
-            UpVector[UpOffset + UpK - 1] = UpperA;
+            downVector[downOffset + downK + 1] = lowerA;
+            upVector[upOffset + upK - 1] = upperA;
 
-            for (int D = 0; D <= MaxD; D++)
+            for (int d = 0; d <= maxD; d++)
             {
 
                 // Extend the forward path.
-                for (int k = DownK - D; k <= DownK + D; k += 2)
+                for (int k = downK - d; k <= downK + d; k += 2)
                 {
                     // find the only or better starting point
                     int x, y;
-                    if (k == DownK - D)
+                    if (k == downK - d)
                     {
-                        x = DownVector[DownOffset + k + 1]; // down
+                        x = downVector[downOffset + k + 1]; // down
                     } else
                     {
-                        x = DownVector[DownOffset + k - 1] + 1; // diffItemsList step to the right
-                        if ((k < DownK + D) && (DownVector[DownOffset + k + 1] >= x))
-                            x = DownVector[DownOffset + k + 1]; // down
+                        x = downVector[downOffset + k - 1] + 1; // diffItemsList step to the right
+                        if ((k < downK + d) && (downVector[downOffset + k + 1] >= x))
+                            x = downVector[downOffset + k + 1]; // down
                     }
                     y = x - k;
 
                     // find the end of the furthest reaching forward D-path in diagonal k.
-                    while ((x < UpperA) && (y < UpperB) && (DataA.data[x] == DataB.data[y]))
+                    while ((x < upperA) && (y < upperB) && (dataA.data[x] == dataB.data[y]))
                     {
                         x++; y++;
                     }
-                    DownVector[DownOffset + k] = x;
+                    downVector[downOffset + k] = x;
 
                     // overlap ?
-                    if (oddDelta && (UpK - D < k) && (k < UpK + D))
-                    {
-                        if (UpVector[UpOffset + k] <= DownVector[DownOffset + k])
-                        {
-                            return new SMSPoint(DownVector[DownOffset + k], DownVector[DownOffset + k] - k);
-                        }
-                    }
+                    if (!oddDelta || (upK - d >= k) || (k >= upK + d)) continue;
+                    if (upVector[upOffset + k] > downVector[downOffset + k]) continue;
 
+                    return new SMSPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
                 }
 
                 // Extend the reverse path.
-                for (int k = UpK - D; k <= UpK + D; k += 2)
+                for (int k = upK - d; k <= upK + d; k += 2)
                 {
                     // find the only or better starting point
                     int x, y;
-                    if (k == UpK + D)
+                    if (k == upK + d)
                     {
-                        x = UpVector[UpOffset + k - 1]; // up
+                        x = upVector[upOffset + k - 1]; // up
                     } else
                     {
-                        x = UpVector[UpOffset + k + 1] - 1; // left
-                        if ((k > UpK - D) && (UpVector[UpOffset + k - 1] < x))
-                            x = UpVector[UpOffset + k - 1]; // up
+                        x = upVector[upOffset + k + 1] - 1; // left
+                        if ((k > upK - d) && (upVector[upOffset + k - 1] < x))
+                            x = upVector[upOffset + k - 1]; // up
                     }
                     y = x - k;
 
-                    while ((x > LowerA) && (y > LowerB) && (DataA.data[x - 1] == DataB.data[y - 1]))
+                    while ((x > lowerA) && (y > lowerB) && (dataA.data[x - 1] == dataB.data[y - 1]))
                     {
                         x--; y--; // diagonal
                     }
-                    UpVector[UpOffset + k] = x;
+                    upVector[upOffset + k] = x;
 
                     // overlap ?
-                    if (!oddDelta && (DownK - D <= k) && (k <= DownK + D))
-                    {
-                        if (UpVector[UpOffset + k] <= DownVector[DownOffset + k])
-                        {
-                            return new SMSPoint(DownVector[DownOffset + k], DownVector[DownOffset + k] - k);
-                        }
-                    }
+                    if (oddDelta || (downK - d > k) || (k > downK + d)) continue;
+                    if (upVector[upOffset + k] > downVector[downOffset + k]) continue;
 
+                    return new SMSPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
                 }
 
             }
@@ -158,39 +147,37 @@ namespace DiffAlgorithm
 
         public Item[] CreateDiffs()
         {
-            LCS(0, DataA.Length, 0, DataB.Length);
+            LCS(0, dataA.Length, 0, dataB.Length);
 
-            List<Item> diffItemsList = new List<Item>();
-            int StartA, StartB;
-            int LineA, LineB;
+            var diffItemsList = new List<Item>();
 
-            LineA = 0;
-            LineB = 0;
-            while (LineA < DataA.Length || LineB < DataB.Length)
+            int lineA = 0;
+            int lineB = 0;
+            while (lineA < dataA.Length || lineB < dataB.Length)
             {
-                if ((LineA < DataA.Length) && (!DataA.modified[LineA])
-                  && (LineB < DataB.Length) && (!DataB.modified[LineB]))
+                if ((lineA < dataA.Length) && (!dataA.modified[lineA])
+                  && (lineB < dataB.Length) && (!dataB.modified[lineB]))
                 {
                     // equal lines
-                    LineA++;
-                    LineB++;
+                    lineA++;
+                    lineB++;
 
                 } else
                 {
                     // maybe deleted and/or inserted lines
-                    StartA = LineA;
-                    StartB = LineB;
+                    int startA = lineA;
+                    int startB = lineB;
 
-                    while (LineA < DataA.Length && (LineB >= DataB.Length || DataA.modified[LineA]))
-                        LineA++;
+                    while (lineA < dataA.Length && (lineB >= dataB.Length || dataA.modified[lineA]))
+                        lineA++;
 
-                    while (LineB < DataB.Length && (LineA >= DataA.Length || DataB.modified[LineB]))
-                        LineB++;
+                    while (lineB < dataB.Length && (lineA >= dataA.Length || dataB.modified[lineB]))
+                        lineB++;
 
-                    if ((StartA < LineA) || (StartB < LineB))
+                    if ((startA < lineA) || (startB < lineB))
                     {
                         // store diffItemsList new difference-item
-                        diffItemsList.Add(new Item(StartA, StartB, LineA - StartA, LineB - StartB));
+                        diffItemsList.Add(new Item(startA, startB, lineA - startA, lineB - startB));
                     }
                 }
             }
