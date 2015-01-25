@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffAlgorithm", "DiffAlgori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffAlgorithmTests", "DiffAlgorithmTests\DiffAlgorithmTests.csproj", "{4943F90D-F451-471E-8E48-BABC8C22FA00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffIntegration", "DiffIntegration\DiffIntegration.csproj", "{0525DB80-454E-4D32-87AE-4A48972877FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{4943F90D-F451-471E-8E48-BABC8C22FA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4943F90D-F451-471E-8E48-BABC8C22FA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4943F90D-F451-471E-8E48-BABC8C22FA00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0525DB80-454E-4D32-87AE-4A48972877FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0525DB80-454E-4D32-87AE-4A48972877FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0525DB80-454E-4D32-87AE-4A48972877FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0525DB80-454E-4D32-87AE-4A48972877FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
