@@ -14,6 +14,15 @@ namespace DiffAlgorithm
             this.dataB = dataB;
         }
 
+        /// <summary>
+        /// Longest Common Subsequence
+        /// 
+        /// Resursive algorithm for LCS.
+        /// </summary>
+        /// <param name="lowerA">Lower bound for data A</param>
+        /// <param name="upperA">Upper bound for data A</param>
+        /// <param name="lowerB">Lower bound for data A</param>
+        /// <param name="upperB">Upper bound for data B</param>
         private void LCS(int lowerA, int upperA, int lowerB, int upperB)
         {
             // Fast walkthrough equal lines at the start
@@ -145,11 +154,11 @@ namespace DiffAlgorithm
             throw new ApplicationException("The algorithm should never come here.");
         }
 
-        public Item[] CreateDiffs()
+        public DiffItem[] CreateDiffs()
         {
             LCS(0, dataA.Length, 0, dataB.Length);
 
-            var diffItemsList = new List<Item>();
+            var diffItemsList = new List<DiffItem>();
 
             int lineA = 0;
             int lineB = 0;
@@ -177,7 +186,7 @@ namespace DiffAlgorithm
                     if ((startA < lineA) || (startB < lineB))
                     {
                         // store diffItemsList new difference-item
-                        diffItemsList.Add(new Item(startA, startB, lineA - startA, lineB - startB));
+                        diffItemsList.Add(new DiffItem(startA, startB, lineA - startA, lineB - startB));
                     }
                 }
             }

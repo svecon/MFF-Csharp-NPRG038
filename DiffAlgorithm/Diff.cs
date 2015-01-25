@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
@@ -8,15 +9,14 @@ namespace DiffAlgorithm
     public class Diff
     {
         Dictionary<string, int> hashedLines;
+        public int FileANumberOfLines;
+        public int FileBNumberOfLines;
 
-        public Item[] DiffText(string textA, string textB, bool trimSpace, bool ignoreSpace, bool ignoreCase)
+        public DiffItem[] DiffText(string textA, string textB, bool trimSpace, bool ignoreSpace, bool ignoreCase)
         {
             hashedLines = new Dictionary<string, int>(textA.Length + textB.Length);
 
-            // The A-Version of the data (original data) to be compared.
             var dataA = new DiffData(HashStringLines(textA, trimSpace, ignoreSpace, ignoreCase));
-
-            // The B-Version of the data (modified data) to be compared.
             var dataB = new DiffData(HashStringLines(textB, trimSpace, ignoreSpace, ignoreCase));
 
             hashedLines.Clear();
@@ -25,13 +25,35 @@ namespace DiffAlgorithm
             return da.CreateDiffs();
         }
 
-        public Item[] DiffInt(int[] arrayA, int[] arrayB)
+        public DiffItem[] DiffInt(int[] arrayA, int[] arrayB)
         {
             var dataA = new DiffData(arrayA);
             var dataB = new DiffData(arrayB);
 
             var da = new DiffAlgorithm(dataA, dataB);
             return da.CreateDiffs();
+        }
+
+        public DiffItem[] DiffFiles(FileInfo fileA, FileInfo fileB)
+        {
+            using (StreamReader streamA = fileA.OpenText())
+            {
+                using (StreamReader streamB = fileB.OpenText())
+                {
+                    hashedLines = new Dictionary<string, int>();
+
+                    var dataA = new DiffData(HashStringLines(streamA.ReadToEnd(), false, false, false));
+                    var dataB = new DiffData(HashStringLines(streamB.ReadToEnd(), false, false, false));
+
+                    FileANumberOfLines = dataA.Length;
+                    FileBNumberOfLines = dataB.Length;
+
+                    hashedLines.Clear();
+
+                    var da = new DiffAlgorithm(dataA, dataB);
+                    return da.CreateDiffs();
+                }
+            }
         }
 
         private int[] HashStringLines(string aText, bool trimSpace, bool ignoreSpace, bool ignoreCase)

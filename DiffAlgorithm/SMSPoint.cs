@@ -1,6 +1,11 @@
 ﻿
 namespace DiffAlgorithm
 {
+    /// <summary>
+    /// Short Middle Snake point
+    /// 
+    /// Strucure to hold a SMS point in the Diff algorithm.
+    /// </summary>
     internal struct SMSPoint
     {
         internal int x, y;

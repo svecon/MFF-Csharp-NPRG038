@@ -2,9 +2,9 @@
 
 namespace DiffAlgorithm
 {
-    public struct Item
+    public struct DiffItem
     {
-        public Item(int lineStartA, int lineStartB, int deletedInA, int insertedInB)
+        public DiffItem(int lineStartA, int lineStartB, int deletedInA, int insertedInB)
         {
             LineStartA = lineStartA;
             LineStartB = lineStartB;

@@ -8,10 +8,10 @@ namespace DiffAlgorithmTests
     [TestClass]
     public class DiffTests
     {
-        public static string TestHelper(DiffAlgorithm.Item[] diffItems)
+        public static string TestHelper(DiffAlgorithm.DiffItem[] diffDiffItems)
         {
             var ret = new StringBuilder();
-            foreach (Item item in diffItems)
+            foreach (DiffItem item in diffDiffItems)
                 ret.Append(item.ToString());
 
             return ret.ToString();

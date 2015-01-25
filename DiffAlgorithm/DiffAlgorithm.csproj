@@ -48,11 +48,17 @@
     <Compile Include="SMSPoint.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="DiffData.cs" />
-    <Compile Include="Item.cs" />
+    <Compile Include="DiffItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
+      <Project>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</Project>
+      <Name>CoreLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
