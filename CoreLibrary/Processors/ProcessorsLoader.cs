@@ -36,6 +36,13 @@ namespace CoreLibrary.Processors
 
         private readonly Type[] settingsConstructorSignature = { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
 
+        public ProcessorsLoader()
+        {
+            preProcessors = new SortedList<int, IPreProcessor>();
+            processors = new SortedList<int, IProcessor>();
+            postProcessors = new SortedList<int, IPostProcessor>();
+        }
+
         public void LoadAll()
         {
             LoadAllAvailableSettings();
@@ -43,12 +50,8 @@ namespace CoreLibrary.Processors
             LoadAllAvailableProcessors();
         }
 
-        protected void LoadAllAvailableProcessors()
+        public void LoadAllAvailableProcessors()
         {
-            preProcessors = new SortedList<int, IPreProcessor>();
-            processors = new SortedList<int, IProcessor>();
-            postProcessors = new SortedList<int, IPostProcessor>();
-
             Type type = typeof(IProcessorBase);
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
@@ -83,7 +86,7 @@ namespace CoreLibrary.Processors
             }
         }
 
-        protected void LoadAllAvailableSettings()
+        public void LoadAllAvailableSettings()
         {
             availableSettings = new Dictionary<Type, Type>();
             settings = new List<ISettings>();
