@@ -45,6 +45,9 @@
     <Compile Include="Exceptions\SettingsUnknownValue.cs" />
     <Compile Include="Exceptions\ProcessorPriorityColissionException.cs" />
     <Compile Include="Exceptions\SettingsNotFoundException.cs" />
+    <Compile Include="FilesystemTree\AbstractNode.cs" />
+    <Compile Include="FilesystemTree\DirNode.cs" />
+    <Compile Include="FilesystemTree\FileNode.cs" />
     <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
     <Compile Include="FilesystemTree\FilesystemTree.cs" />
