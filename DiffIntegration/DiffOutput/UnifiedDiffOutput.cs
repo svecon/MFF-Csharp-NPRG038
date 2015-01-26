@@ -72,7 +72,7 @@ namespace DiffIntegration.DiffOutput
 
             public bool ChuckOverflows(Chunk b)
             {
-                return (EndsAOnLine() >= b.StartsAOnLine());
+                return (EndsAOnLine() + 1 >= b.StartsAOnLine());
             }
 
             public void JoinChunk(Chunk b)
