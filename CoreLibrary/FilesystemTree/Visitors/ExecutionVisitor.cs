@@ -32,15 +32,15 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (var processor in loader.GetPreProcessors())
+            foreach (IPreProcessor processor in loader.GetPreProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (var processor in loader.GetProcessors())
+            foreach (IProcessor processor in loader.GetProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (var processor in loader.GetPostProcessors())
+            foreach (IPostProcessor processor in loader.GetPostProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
 
@@ -56,20 +56,20 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (var processor in loader.GetPreProcessors())
+            foreach (IPreProcessor processor in loader.GetPreProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (var processor in loader.GetProcessors())
+            foreach (IProcessor processor in loader.GetProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (var processor in loader.GetPostProcessors())
+            foreach (IPostProcessor processor in loader.GetPostProcessors())
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
+            tasks.Add(task.ContinueWith(_ => handleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
         }
 
-        private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
+        private static void handleError(IFilesystemTreeAbstractNode node, Task task)
         {
             node.Status = Enums.NodeStatusEnum.HasError;
         }

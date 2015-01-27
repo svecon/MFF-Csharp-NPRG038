@@ -42,6 +42,7 @@
     <Compile Include="DiffFilesystemTree\DiffFilesystemTree.cs" />
     <Compile Include="DiffFilesystemTree\DiffDirNode.cs" />
     <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />
+    <Compile Include="DiffOutput\EditScript.cs" />
     <Compile Include="DiffOutput\UnifiedDiffOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

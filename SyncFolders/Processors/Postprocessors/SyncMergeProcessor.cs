@@ -20,10 +20,10 @@ namespace SyncFolders.Processors.Postprocessors
         public enum CompareOnEnum { Size = 1, Modification = 2 }
 
         [Settings("Choose syncing based on different criteria.", "sync-criteria", "S")]
-        public CompareOnEnum compareOn = CompareOnEnum.Modification;
+        public CompareOnEnum CompareOn = CompareOnEnum.Modification;
 
         [Settings("Create empty folders.", "empty-folders", "E")]
-        public bool createEmptyFolders = false;
+        public bool CreateEmptyFolders = false;
 
         public override void Process(IFilesystemTreeDirNode node)
         {
@@ -31,11 +31,11 @@ namespace SyncFolders.Processors.Postprocessors
 
             // this means that empty folders need to be created here
 
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
             // processor setting
-            if (!createEmptyFolders)
+            if (!CreateEmptyFolders)
                 return;
 
             // if there are any files, folder will be created implicitly
@@ -52,7 +52,7 @@ namespace SyncFolders.Processors.Postprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
             if (node.Differences == DifferencesStatusEnum.LeftRightSame)
@@ -88,7 +88,7 @@ namespace SyncFolders.Processors.Postprocessors
             // both files are present
 
             int comparison = 0;
-            switch (compareOn)
+            switch (CompareOn)
             {
                 case CompareOnEnum.Size:
                     comparison = node.InfoLeft.LastWriteTime.CompareTo(node.InfoRight.LastWriteTime);

@@ -2,11 +2,6 @@
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Settings.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncFolders.Processors.Preprocessors
 {
@@ -30,13 +25,13 @@ namespace SyncFolders.Processors.Preprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
             if (!IsEnabled)
                 return;
 
-            CheckModeAndStatus(node);
+            checkModeAndStatus(node);
 
             if (node.Info.Extension.ToLowerInvariant() != ".cs")
                 node.Status = NodeStatusEnum.IsIgnored;

@@ -23,7 +23,7 @@ namespace DiffAlgorithm
         /// <param name="upperA">Upper bound for data A</param>
         /// <param name="lowerB">Lower bound for data A</param>
         /// <param name="upperB">Upper bound for data B</param>
-        private void LCS(int lowerA, int upperA, int lowerB, int upperB)
+        private void lcs(int lowerA, int upperA, int lowerB, int upperB)
         {
             // Fast walkthrough equal lines at the start
             while (lowerA < upperA && lowerB < upperB && dataA.Data[lowerA] == dataB.Data[lowerB])
@@ -52,15 +52,15 @@ namespace DiffAlgorithm
             } else
             {
                 // Find the middle snakea and length of an optimal path for A and B
-                SMSPoint snake = SMS(lowerA, upperA, lowerB, upperB);
+                SmsPoint snake = sms(lowerA, upperA, lowerB, upperB);
 
                 // The path is from LowerX to (x,y) and (x,y) ot UpperX
-                LCS(lowerA, snake.x, lowerB, snake.y);
-                LCS(snake.x, upperA, snake.y, upperB);
+                lcs(lowerA, snake.X, lowerB, snake.Y);
+                lcs(snake.X, upperA, snake.Y, upperB);
             }
         }
 
-        private SMSPoint SMS(int lowerA, int upperA, int lowerB, int upperB)
+        private SmsPoint sms(int lowerA, int upperA, int lowerB, int upperB)
         {
             int max = dataA.Length + dataB.Length + 1;
 
@@ -117,7 +117,7 @@ namespace DiffAlgorithm
                     if (!oddDelta || (upK - d >= k) || (k >= upK + d)) continue;
                     if (upVector[upOffset + k] > downVector[downOffset + k]) continue;
 
-                    return new SMSPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
+                    return new SmsPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
                 }
 
                 // Extend the reverse path.
@@ -146,7 +146,7 @@ namespace DiffAlgorithm
                     if (oddDelta || (downK - d > k) || (k > downK + d)) continue;
                     if (upVector[upOffset + k] > downVector[downOffset + k]) continue;
 
-                    return new SMSPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
+                    return new SmsPoint(downVector[downOffset + k], downVector[downOffset + k] - k);
                 }
 
             }
@@ -156,7 +156,7 @@ namespace DiffAlgorithm
 
         public DiffItem[] CreateDiffs()
         {
-            LCS(0, dataA.Length, 0, dataB.Length);
+            lcs(0, dataA.Length, 0, dataB.Length);
 
             var diffItemsList = new List<DiffItem>();
 

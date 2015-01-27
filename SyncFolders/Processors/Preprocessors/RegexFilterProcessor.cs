@@ -23,10 +23,10 @@ namespace SyncFolders.Processors.Preprocessors
         public override int Priority { get { return 150; } }
 
         [Settings("Include only file names that are matching Regex.", "include-regex", "iR")]
-        public Regex includeRegex = null;
+        public Regex IncludeRegex = null;
 
         [Settings("Exclude file name that are matching Regex.", "exclude-regex", "eR")]
-        public Regex excludeRegex = null;
+        public Regex ExcludeRegex = null;
 
         public override void Process(IFilesystemTreeDirNode node)
         {
@@ -34,15 +34,15 @@ namespace SyncFolders.Processors.Preprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
-            if (excludeRegex != null && excludeRegex.IsMatch(node.Info.Name))
+            if (ExcludeRegex != null && ExcludeRegex.IsMatch(node.Info.Name))
             {
                 node.Status = NodeStatusEnum.IsIgnored;
             }
 
-            if (includeRegex != null && !includeRegex.IsMatch(node.Info.Name))
+            if (IncludeRegex != null && !IncludeRegex.IsMatch(node.Info.Name))
             {
                 node.Status = NodeStatusEnum.IsIgnored;
             }

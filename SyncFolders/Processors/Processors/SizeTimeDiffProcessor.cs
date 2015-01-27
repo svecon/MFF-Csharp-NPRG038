@@ -43,7 +43,7 @@ namespace SyncFolders.Processors.Processors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
             if (!IsEnabled)
@@ -64,25 +64,25 @@ namespace SyncFolders.Processors.Processors
             // create combinations
             threeWay.RecalculatePossibleCombinations();
 
-            FileInfo InfoBase = (FileInfo)node.InfoBase;
-            FileInfo InfoLeft = (FileInfo)node.InfoLeft;
-            FileInfo InfoRight = (FileInfo)node.InfoRight;
+            var infoBase = (FileInfo)node.InfoBase;
+            var infoLeft = (FileInfo)node.InfoLeft;
+            var infoRight = (FileInfo)node.InfoRight;
 
             // check for sizes
             if (threeWay.CanCombinationBaseLeftBeSame())
-                threeWay.CheckCombinationBaseLeft(InfoBase.Length != InfoLeft.Length);
+                threeWay.CheckCombinationBaseLeft(infoBase.Length != infoLeft.Length);
             if (threeWay.CanCombinationBaseRightBeSame())
-                threeWay.CheckCombinationBaseRight(InfoBase.Length != InfoRight.Length);
+                threeWay.CheckCombinationBaseRight(infoBase.Length != infoRight.Length);
             if (threeWay.CanCombinationLeftRightBeSame())
-                threeWay.CheckCombinationLeftRight(InfoLeft.Length != InfoRight.Length);
+                threeWay.CheckCombinationLeftRight(infoLeft.Length != infoRight.Length);
 
             // check for modifications
             if (threeWay.CanCombinationBaseLeftBeSame())
-                threeWay.CheckCombinationBaseLeft(InfoBase.LastWriteTime != InfoLeft.LastWriteTime);
+                threeWay.CheckCombinationBaseLeft(infoBase.LastWriteTime != infoLeft.LastWriteTime);
             if (threeWay.CanCombinationBaseRightBeSame())
-                threeWay.CheckCombinationBaseRight(InfoBase.LastWriteTime != InfoRight.LastWriteTime);
+                threeWay.CheckCombinationBaseRight(infoBase.LastWriteTime != infoRight.LastWriteTime);
             if (threeWay.CanCombinationLeftRightBeSame())
-                threeWay.CheckCombinationLeftRight(InfoLeft.LastWriteTime != InfoRight.LastWriteTime);
+                threeWay.CheckCombinationLeftRight(infoLeft.LastWriteTime != infoRight.LastWriteTime);
 
             node.Differences = (DifferencesStatusEnum)threeWay.GetSameFiles();
             node.Status = NodeStatusEnum.WasDiffed;

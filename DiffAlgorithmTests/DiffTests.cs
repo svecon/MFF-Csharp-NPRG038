@@ -21,7 +21,7 @@ namespace DiffAlgorithmTests
         public void DiffAllSame()
         {
             string a = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new Diff();
+            var d = new DiffHelper();
 
             Assert.AreEqual(TestHelper(d.DiffText(
                 a,
@@ -32,7 +32,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffAllChanged()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n'),
                 "0,1,2,3,4,5,6,7,8,9".Replace(',', '\n'),
@@ -42,7 +42,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffTestSnake()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "a,b,c,d,e,f".Replace(',', '\n'),
                 "b,c,d,e,f,x".Replace(',', '\n'),
@@ -52,7 +52,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffSomeChanges()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "a,b,-,c,d,e,f,f".Replace(',', '\n'),
                 "a,b,x,c,e,f".Replace(',', '\n'),
@@ -62,7 +62,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffComplex()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "c1,a,c2,b,c,d,e,g,h,i,j,c3,k,l".Replace(',', '\n'),
                 "C1,a,C2,b,c,d,e,I1,e,g,h,i,j,C3,k,I2,l".Replace(',', '\n'),
@@ -72,7 +72,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffComplex2()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "c1,a,c2,b,c,d,e,g,h,i,j,c3,k,l".Replace(',', '\n'),
                 "C1,a,C2,b,c,d,e,I1,e,g,h,i,j,C3,k,I2,l".Replace(',', '\n'),
@@ -82,7 +82,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffSingleLineVsMultiple()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "F".Replace(',', '\n'),
                 "0,F,1,2,3,4,5,6,7".Replace(',', '\n'),
@@ -92,7 +92,7 @@ namespace DiffAlgorithmTests
         [TestMethod]
         public void DiffHelloWorld()
         {
-            var d = new Diff();
+            var d = new DiffHelper();
             Assert.AreEqual(TestHelper(d.DiffText(
                 "HELLO\nWORLD".Replace(',', '\n'),
                 "\n\nhello\n\n\n\nworld\n".Replace(',', '\n'),

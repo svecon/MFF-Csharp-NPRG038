@@ -8,7 +8,7 @@ namespace DiffIntegration.DiffFilesystemTree
 {
     public class DiffFileNode : FileNode
     {
-        public DiffItem[] Diff { get; private set; }
+        public Diff Diff { get; private set; }
 
         public struct NumberOfLinesStruct
         {
@@ -41,7 +41,7 @@ namespace DiffIntegration.DiffFilesystemTree
 
         public void RecalculateDiff()
         {
-            var diff = new Diff();
+            var diff = new DiffHelper();
             Diff = diff.DiffFiles((FileInfo)InfoLeft, (FileInfo)InfoRight);
 
             NumberOfLines.Left = diff.FileANumberOfLines;

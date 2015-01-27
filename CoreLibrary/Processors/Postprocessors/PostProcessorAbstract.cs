@@ -10,9 +10,9 @@ namespace CoreLibrary.Processors.Postprocessors
     /// </summary>
     public abstract class PostProcessorAbstract : BaseProcessorAbstract, IPostProcessor
     {
-        protected override bool CheckStatus(IFilesystemTreeAbstractNode node)
+        protected override bool checkStatus(IFilesystemTreeAbstractNode node)
         {
-            if (!base.CheckStatus(node))
+            if (!base.checkStatus(node))
                 return false;
 
             if (node.Status == NodeStatusEnum.WasMerged)

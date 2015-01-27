@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.IO;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
-using System.Threading;
-using CoreLibrary.FilesystemTree;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Processors;
 
@@ -33,16 +27,16 @@ namespace SyncFolders.Processors.Processors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
+            if (!checkModeAndStatus(node))
                 return;
 
             var threeWay = new ThreeWayDiffHelper();
 
-            StreamReader[] readers = new StreamReader[3];
+            var readers = new StreamReader[3];
 
             try
             {
-                char[][] buffers = new char[3][];
+                var buffers = new char[3][];
 
                 // initialize readers
                 if (node.IsInLocation(LocationEnum.OnBase))

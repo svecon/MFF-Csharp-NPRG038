@@ -6,14 +6,14 @@ namespace DiffAlgorithm
     /// 
     /// Strucure to hold a SMS point in the Diff algorithm.
     /// </summary>
-    internal struct SMSPoint
+    internal struct SmsPoint
     {
-        internal int x, y;
+        internal int X, Y;
 
-        public SMSPoint(int x, int y)
+        public SmsPoint(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            X = x;
+            Y = y;
         }
     }
 }
