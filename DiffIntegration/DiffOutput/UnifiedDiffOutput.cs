@@ -51,9 +51,14 @@ namespace DiffIntegration.DiffOutput
 
             public int EndsAOnLine()
             {
-                int end = diffs[diffs.Count - 1].LineStartA + diffs[diffs.Count - 1].DeletedInA + padding;
+                int end = diffs.Last().LineStartA + diffs.Last().DeletedInA + padding;
 
-                return (end > fileLines.Left) ? fileLines.Left : end;
+                //Console.WriteLine(diffs.Last().LineStartA + "s");
+                //Console.WriteLine(diffs.Last().DeletedInA + "d");
+                //Console.WriteLine(fileLines.Left + "c");
+                //Console.WriteLine(end + "e");
+
+                return (end > fileLines.Left - 1) ? fileLines.Left - 1 : end;
             }
 
             public int StartsBOnLine()
@@ -65,9 +70,9 @@ namespace DiffIntegration.DiffOutput
 
             public int EndsBOnLine()
             {
-                int end = diffs[diffs.Count - 1].LineStartB + diffs[diffs.Count - 1].InsertedInB + padding;
+                int end = diffs.Last().LineStartB + diffs.Last().InsertedInB + padding;
 
-                return (end > fileLines.Right) ? fileLines.Right : end;
+                return (end > fileLines.Right - 1) ? fileLines.Right - 1  : end;
             }
 
             public bool ChuckOverflows(Chunk b)
@@ -136,8 +141,8 @@ namespace DiffIntegration.DiffOutput
             sb.AppendLine("+++ " + createHeader(dnode.InfoRight.FullName, dnode.InfoRight.CreationTime));
 
             // create and merge ovelapping diffs into chunks
-            var chunks = new List<Chunk>(dnode.Diff.Length);
-            foreach (Chunk newChunk in dnode.Diff.Select(diff => new Chunk(diff, dnode.NumberOfLines, Padding)))
+            var chunks = new List<Chunk>(dnode.Diff.Items.Length);
+            foreach (Chunk newChunk in dnode.Diff.Items.Select(diff => new Chunk(diff, dnode.NumberOfLines, Padding)))
             {
                 if (chunks.Any() && chunks.Last().ChuckOverflows(newChunk))
                     chunks.Last().JoinChunk(newChunk);
