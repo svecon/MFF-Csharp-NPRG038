@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
@@ -30,29 +31,35 @@ namespace DiffIntegration.DiffOutput
             var sb = new StringBuilder();
 
             using (StreamReader streamA = ((FileInfo)dnode.InfoLeft).OpenText())
+            using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
             {
-                using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
+                int n = 0;
+                int m = 0;
+
+                foreach (DiffItem diff in dnode.Diff.Items)
                 {
-                    int n = 0;
-                    int m = 0;
+                    sb.AppendLine(createHeader(diff));
 
-                    foreach (DiffItem diff in dnode.Diff.Items)
-                    {
-                        sb.AppendLine(createHeader(diff));
+                    // skip same
+                    for (; n < diff.OldLineStart; n++) { streamA.ReadLine(); }
+                    for (; m < diff.NewLineStart; m++) { streamB.ReadLine(); }
 
-                        // skip same
-                        for (; n < diff.LineStartA; n++) { streamA.ReadLine(); }
-                        for (; m < diff.LineStartB; m++) { streamB.ReadLine(); }
+                    // deleted
+                    for (int p = 0; p < diff.DeletedInOld; p++) { sb.AppendLine("< " + streamA.ReadLine()); n++; }
 
-                        // deleted
-                        for (int p = 0; p < diff.DeletedInA; p++) { sb.AppendLine("< " + streamA.ReadLine()); n++; }
+                    // missing newline at end of old file
+                    if (n == dnode.Diff.FilesLineCount.Old && !dnode.Diff.FilesEndsWithNewLine.Old)
+                        sb.AppendLine("\\ No newline at end of file");
 
-                        if (diff.DeletedInA > 0 && diff.InsertedInB > 0)
-                            sb.AppendLine("---");
+                    if (diff.DeletedInOld > 0 && diff.InsertedInNew > 0)
+                        sb.AppendLine("---");
 
-                        // inserted
-                        for (int p = 0; p < diff.InsertedInB; p++) { sb.AppendLine("> " + streamB.ReadLine()); m++; }
-                    }
+                    // inserted
+                    for (int p = 0; p < diff.InsertedInNew; p++) { sb.AppendLine("> " + streamB.ReadLine()); m++; }
+
+                    // missing newline at end of old file
+                    if (m == dnode.Diff.FilesLineCount.New && !dnode.Diff.FilesEndsWithNewLine.New)
+                        sb.AppendLine("\\ No newline at end of file");
                 }
             }
 
@@ -68,10 +75,10 @@ namespace DiffIntegration.DiffOutput
 
         private DiffType findDiffType(DiffItem diff)
         {
-            if (diff.DeletedInA > 0 && diff.InsertedInB > 0)
+            if (diff.DeletedInOld > 0 && diff.InsertedInNew > 0)
                 return DiffType.Change;
 
-            if (diff.DeletedInA > 0)
+            if (diff.DeletedInOld > 0)
                 return DiffType.Delete;
 
             return DiffType.Append;
@@ -87,19 +94,19 @@ namespace DiffIntegration.DiffOutput
             switch (findDiffType(diff))
             {
                 case DiffType.Append:
-                    header += createRange(diff.LineStartA, 1)
+                    header += createRange(diff.OldLineStart, 1)
                         + "a"
-                        + createRange(diff.LineStartB + 1, diff.InsertedInB);
+                        + createRange(diff.NewLineStart + 1, diff.InsertedInNew);
                     break;
                 case DiffType.Delete:
-                    header += createRange(diff.LineStartA + 1, diff.DeletedInA)
+                    header += createRange(diff.OldLineStart + 1, diff.DeletedInOld)
                         + "d"
-                        + createRange(diff.LineStartB, 1);
+                        + createRange(diff.NewLineStart, 1);
                     break;
                 case DiffType.Change:
-                    header += createRange(diff.LineStartA + 1, diff.DeletedInA)
+                    header += createRange(diff.OldLineStart + 1, diff.DeletedInOld)
                         + "c"
-                        + createRange(diff.LineStartB + 1, diff.InsertedInB);
+                        + createRange(diff.NewLineStart + 1, diff.InsertedInNew);
                     break;
             }
 

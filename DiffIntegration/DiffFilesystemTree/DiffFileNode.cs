@@ -43,9 +43,7 @@ namespace DiffIntegration.DiffFilesystemTree
         {
             var diff = new DiffHelper();
             Diff = diff.DiffFiles((FileInfo)InfoLeft, (FileInfo)InfoRight);
-
-            NumberOfLines.Left = diff.FileANumberOfLines;
-            NumberOfLines.Right = diff.FileBNumberOfLines;
+            //TODO: load plugin from somewhere --- because of settings
         }
     }
 }

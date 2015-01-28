@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
@@ -8,9 +9,61 @@ namespace DiffAlgorithm
 {
     public class DiffHelper
     {
+        private class SmartLineReader
+        {
+            private readonly FileInfo file;
+            private char[] buffer;
+            private int bufferCount;
+            private bool endedWithNewline = true;
+
+            public SmartLineReader(FileInfo fileInfo)
+            {
+                file = fileInfo;
+
+                buffer = new char[2 * 1024];
+                bufferCount = 0;
+            }
+
+            public bool EndedWithNewLine()
+            {
+                return endedWithNewline;
+            }
+
+            public IEnumerable<string> IterateLines()
+            {
+                StreamReader fileReader = file.OpenText();
+                var sb = new StringBuilder();
+                while (!fileReader.EndOfStream)
+                {
+                    bufferCount = fileReader.ReadBlock(buffer, 0, buffer.Length);
+
+                    for (int i = 0; i < bufferCount; i++)
+                    {
+                        if (buffer[i] == '\r')
+                        {
+                            continue;
+                        } else if (buffer[i] == '\n')
+                        {
+                            yield return sb.Append('\n').ToString();
+                            sb.Clear();
+                        } else
+                        {
+                            sb.Append(buffer[i]);
+                        }
+                    }
+                }
+
+                if (sb.Length > 0)
+                {
+                    endedWithNewline = false;
+                    yield return sb.ToString();
+                }
+
+                fileReader.Close();
+            }
+        }
+
         Dictionary<string, int> hashedLines;
-        public int FileANumberOfLines;
-        public int FileBNumberOfLines;
 
         private readonly bool trimSpace;
         private readonly bool ignoreSpace;
@@ -23,75 +76,98 @@ namespace DiffAlgorithm
             this.ignoreSpace = ignoreSpace;
         }
 
-        public DiffItem[] DiffText(string textA, string textB)
+        public DiffItem[] DiffText(string oldText, string newText)
         {
-            hashedLines = new Dictionary<string, int>(textA.Length + textB.Length);
+            hashedLines = new Dictionary<string, int>(oldText.Length + newText.Length);
 
-            var dataA = new DiffData(hashStringLines(textA));
-            var dataB = new DiffData(hashStringLines(textB));
+            var oldData = new DiffData(hashStringLines(oldText));
+            var newData = new DiffData(hashStringLines(newText));
 
             hashedLines.Clear();
 
+            var da = new DiffAlgorithm(oldData, newData);
+            return da.CreateDiffs();
+        }
+
+        public DiffItem[] DiffInt(int[] oldArray, int[] newArray)
+        {
+            var dataA = new DiffData(oldArray);
+            var dataB = new DiffData(newArray);
+
             var da = new DiffAlgorithm(dataA, dataB);
             return da.CreateDiffs();
         }
 
-        public DiffItem[] DiffInt(int[] arrayA, int[] arrayB)
+        public Diff DiffFiles(FileInfo oldFile, FileInfo newFile)
         {
-            var dataA = new DiffData(arrayA);
-            var dataB = new DiffData(arrayB);
+            var diff = new Diff(oldFile, newFile);
 
-            var da = new DiffAlgorithm(dataA, dataB);
-            return da.CreateDiffs();
+            hashedLines = new Dictionary<string, int>();
+
+            var oldFileReader = new SmartLineReader(oldFile);
+            var newFileReader = new SmartLineReader(newFile);
+
+            var oldData = new DiffData(hashStringLines(oldFileReader));
+            var newData = new DiffData(hashStringLines(newFileReader));
+            hashedLines.Clear();
+
+            diff.FilesLineCount.Old = oldData.Length;
+            diff.FilesLineCount.New = newData.Length;
+
+            diff.FilesEndsWithNewLine.Old = oldFileReader.EndedWithNewLine();
+            diff.FilesEndsWithNewLine.New = newFileReader.EndedWithNewLine();
+
+            var da = new DiffAlgorithm(oldData, newData);
+            diff.SetDiffItems(da.CreateDiffs());
+
+            return diff;
         }
 
-        public Diff DiffFiles(FileInfo fileA, FileInfo fileB)
-        {
-            using (StreamReader streamA = fileA.OpenText())
-            {
-                using (StreamReader streamB = fileB.OpenText())
-                {
-                    hashedLines = new Dictionary<string, int>();
-
-                    var diff = new Diff(fileA, fileB);
-
-
-                    var dataA = new DiffData(hashStringLines(streamA.ReadToEnd()));
-                    var dataB = new DiffData(hashStringLines(streamB.ReadToEnd()));
-
-                    FileANumberOfLines = dataA.Length;
-                    FileBNumberOfLines = dataB.Length;
-
-                    hashedLines.Clear();
-
-                    var da = new DiffAlgorithm(dataA, dataB);
-                    diff.SetDiffItems(da.CreateDiffs());
-
-                    return diff;
-                }
-            }
-        }
-
-        private int[] hashStringLines(string aText)
+        private int[] hashStringLines(string text)
         {
             // get all codes of the text
             int lastUsedCode = hashedLines.Count;
 
             // strip off all cr, only use lf as textline separator.
-            aText = aText.Replace("\r", "");
-            var lines = aText.Split('\n');
+            text = text.Replace("\r", "");
+            string[] lines = text.Split('\n');
 
             var codes = new int[lines.Length];
 
             for (int i = 0; i < lines.Length; ++i)
             {
-                var s = applyOptions(lines[i], trimSpace, ignoreSpace, ignoreCase);
+                string s = applyOptions(lines[i], trimSpace, ignoreSpace, ignoreCase);
 
                 if (hashedLines.TryGetValue(s, out codes[i])) continue;
 
                 codes[i] = hashedLines[s] = ++lastUsedCode;
             }
             return codes;
+        }
+
+
+
+        private int[] hashStringLines(SmartLineReader fileReader)
+        {
+            int lastUsedCode = hashedLines.Count;
+            var codes = new List<int>();
+
+            foreach (string line in fileReader.IterateLines())
+            {
+                string mline = applyOptions(line, trimSpace, ignoreSpace, ignoreCase);
+
+                int x;
+                if (hashedLines.TryGetValue(mline, out x))
+                {
+                    codes.Add(x);
+                    continue;
+                }
+
+                hashedLines[line] = ++lastUsedCode;
+                codes.Add(lastUsedCode);
+            }
+
+            return codes.ToArray();
         }
 
         private string applyOptions(string line, bool trimSpace, bool ignoreSpace, bool ignoreCase)

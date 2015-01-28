@@ -4,30 +4,30 @@ namespace DiffAlgorithm
 {
     public struct DiffItem
     {
-        public DiffItem(int lineStartA, int lineStartB, int deletedInA, int insertedInB)
+        public readonly int OldLineStart;
+        public readonly int NewLineStart;
+
+        public readonly int DeletedInOld;
+        public readonly int InsertedInNew;
+
+        public DiffItem(int oldLineStart, int newLineStart, int deletedInOld, int insertedInNew)
         {
-            LineStartA = lineStartA;
-            LineStartB = lineStartB;
-            DeletedInA = deletedInA;
-            InsertedInB = insertedInB;
+            OldLineStart = oldLineStart;
+            NewLineStart = newLineStart;
+            DeletedInOld = deletedInOld;
+            InsertedInNew = insertedInNew;
         }
-
-        public readonly int LineStartA;
-        public readonly int LineStartB;
-
-        public readonly int DeletedInA;
-        public readonly int InsertedInB;
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(DeletedInA.ToString())
+            sb.Append(DeletedInOld.ToString())
                 .Append(".")
-                .Append(InsertedInB.ToString())
+                .Append(InsertedInNew.ToString())
                 .Append(".")
-                .Append(LineStartA.ToString())
+                .Append(OldLineStart.ToString())
                 .Append(".")
-                .Append(LineStartB.ToString())
+                .Append(NewLineStart.ToString())
                 .Append("*")
                 ;
 

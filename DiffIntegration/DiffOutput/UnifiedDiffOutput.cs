@@ -7,7 +7,6 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Settings.Attributes;
-using DiffAlgorithm;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput
@@ -26,109 +25,6 @@ namespace DiffIntegration.DiffOutput
             // empty
         }
 
-        struct Chunk
-        {
-            private readonly List<DiffItem> diffs;
-            private int currentDiff;
-            private DiffFileNode.NumberOfLinesStruct fileLines;
-            private readonly int padding;
-
-            public Chunk(DiffItem diff, DiffFileNode.NumberOfLinesStruct numberOfLines, int padding)
-            {
-                fileLines = numberOfLines;
-                diffs = new List<DiffItem> { diff };
-
-                this.padding = padding;
-                currentDiff = 0;
-            }
-
-            public int StartsAOnLine()
-            {
-                int start = diffs[0].LineStartA - padding;
-
-                return (start < 0) ? 0 : start;
-            }
-
-            public int EndsAOnLine()
-            {
-                int end = diffs.Last().LineStartA + diffs.Last().DeletedInA + padding;
-
-                //Console.WriteLine(diffs.Last().LineStartA + "s");
-                //Console.WriteLine(diffs.Last().DeletedInA + "d");
-                //Console.WriteLine(fileLines.Left + "c");
-                //Console.WriteLine(end + "e");
-
-                return (end > fileLines.Left - 1) ? fileLines.Left - 1 : end;
-            }
-
-            public int StartsBOnLine()
-            {
-                int start = diffs[0].LineStartB - padding;
-
-                return (start < 0) ? 0 : start;
-            }
-
-            public int EndsBOnLine()
-            {
-                int end = diffs.Last().LineStartB + diffs.Last().InsertedInB + padding;
-
-                return (end > fileLines.Right - 1) ? fileLines.Right - 1  : end;
-            }
-
-            public bool ChuckOverflows(Chunk b)
-            {
-                return (EndsAOnLine() + 1 >= b.StartsAOnLine());
-            }
-
-            public void JoinChunk(Chunk b)
-            {
-                diffs.AddRange(b.GetDiffsList());
-            }
-
-            public DiffItem CurrentDiff()
-            {
-                return diffs[currentDiff];
-            }
-
-            public bool HasNextDiff()
-            {
-                return currentDiff + 1 < diffs.Count;
-            }
-
-            public DiffItem NextDiff()
-            {
-                return diffs[currentDiff + 1];
-            }
-
-            public bool MoveNextDiff()
-            {
-                if (HasNextDiff())
-                    currentDiff++;
-
-                return true;
-            }
-
-
-            private IEnumerable<DiffItem> GetDiffsList()
-            {
-                return diffs;
-            }
-
-            public string Header()
-            {
-                return "@@ -"
-                    + (StartsAOnLine() + 1)
-                    + ","
-                    + (EndsAOnLine() - StartsAOnLine())
-                    + " +"
-                    + (StartsBOnLine() + 1)
-                    + ","
-                    + (EndsBOnLine() - StartsBOnLine())
-                    + " @@";
-            }
-
-        }
-
         public override void Process(IFilesystemTreeFileNode node)
         {
             var dnode = node as DiffFileNode;
@@ -136,13 +32,16 @@ namespace DiffIntegration.DiffOutput
             if (dnode == null)
                 return;
 
+            if (!dnode.Diff.Items.Any())
+                return;
+
             var sb = new StringBuilder();
             sb.AppendLine("--- " + createHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.CreationTime));
             sb.AppendLine("+++ " + createHeader(dnode.InfoRight.FullName, dnode.InfoRight.CreationTime));
 
             // create and merge ovelapping diffs into chunks
-            var chunks = new List<Chunk>(dnode.Diff.Items.Length);
-            foreach (Chunk newChunk in dnode.Diff.Items.Select(diff => new Chunk(diff, dnode.NumberOfLines, Padding)))
+            var chunks = new List<DiffChunk>(dnode.Diff.Items.Length);
+            foreach (DiffChunk newChunk in dnode.Diff.Items.Select(diff => new DiffChunk(diff, dnode.Diff.FilesLineCount, Padding)))
             {
                 if (chunks.Any() && chunks.Last().ChuckOverflows(newChunk))
                     chunks.Last().JoinChunk(newChunk);
@@ -151,49 +50,56 @@ namespace DiffIntegration.DiffOutput
             }
 
             using (StreamReader streamA = ((FileInfo)dnode.InfoLeft).OpenText())
+            using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
             {
-                using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
+                int n = 0;
+                int m = 0;
+
+                foreach (DiffChunk chunk in chunks)
                 {
-                    int n = 0;
-                    int m = 0;
+                    sb.AppendLine(chunk.Header());
 
-                    foreach (Chunk chunk in chunks)
+                    // skip same
+                    for (; n < chunk.LeftLineStart(); n++) { streamA.ReadLine(); }
+                    for (; m < chunk.RightLineStart(); m++) { streamB.ReadLine(); }
+
+                    do
                     {
-                        sb.AppendLine(chunk.Header());
-
-                        // skip same
-                        for (; n < chunk.StartsAOnLine(); n++) { streamA.ReadLine(); }
-                        for (; m < chunk.StartsBOnLine(); m++) { streamB.ReadLine(); }
-
-                        do
+                        // context between diffs
+                        while (chunk.CurrentDiff().OldLineStart > n)
                         {
-                            // context between diffs
-                            while (chunk.CurrentDiff().LineStartA > n)
-                            {
-                                sb.AppendLine(" " + streamA.ReadLine());
-                                streamB.ReadLine();
-                                n++;
-                                m++;
-                            }
-                            // deleted
-                            for (int p = 0; p < chunk.CurrentDiff().DeletedInA; p++) { sb.AppendLine("-" + streamA.ReadLine()); n++; }
-                            // inserted
-                            for (int p = 0; p < chunk.CurrentDiff().InsertedInB; p++) { sb.AppendLine("+" + streamB.ReadLine()); m++; }
+                            sb.AppendLine(" " + streamA.ReadLine());
+                            streamB.ReadLine();
+                            n++;
+                            m++;
+                        }
+                        // deleted
+                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { sb.AppendLine("-" + streamA.ReadLine()); n++; }
 
-                            // context between diffs
-                            while (chunk.HasNextDiff() && chunk.NextDiff().LineStartA > n)
-                            {
-                                sb.AppendLine(" " + streamA.ReadLine());
-                                streamB.ReadLine();
-                                n++;
-                                m++;
-                            }
+                        // missing newline at end of old file
+                        if (n == dnode.Diff.FilesLineCount.Old && !dnode.Diff.FilesEndsWithNewLine.Old)
+                            sb.AppendLine("\\ No newline at end of file");
 
-                        } while (chunk.HasNextDiff() && chunk.MoveNextDiff());
+                        // inserted
+                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { sb.AppendLine("+" + streamB.ReadLine()); m++; }
 
-                        // context after all diffs
-                        for (; n < chunk.EndsAOnLine(); n++) { sb.AppendLine(" " + streamA.ReadLine()); }
-                    }
+                        // missing newline at end of new file
+                        if (m == dnode.Diff.FilesLineCount.New && !dnode.Diff.FilesEndsWithNewLine.New)
+                            sb.AppendLine("\\ No newline at end of file");
+
+                        // context between diffs
+                        while (chunk.HasNextDiff() && chunk.NextDiff().OldLineStart > n)
+                        {
+                            sb.AppendLine(" " + streamA.ReadLine());
+                            streamB.ReadLine();
+                            n++;
+                            m++;
+                        }
+                         
+                    } while (chunk.HasNextDiff() && chunk.MoveNextDiff());
+
+                    // context after all diffs
+                    for (; n <= chunk.LeftLineEnd(); n++) { sb.AppendLine(" " + streamA.ReadLine()); }
                 }
             }
 

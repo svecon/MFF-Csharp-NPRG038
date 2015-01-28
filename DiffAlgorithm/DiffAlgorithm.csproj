@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Diff.cs" />
     <Compile Include="DiffAlgorithm.cs" />
-    <Compile Include="SMSPoint.cs" />
+    <Compile Include="SmsPoint.cs" />
     <Compile Include="DiffHelper.cs" />
     <Compile Include="DiffData.cs" />
     <Compile Include="DiffItem.cs" />

@@ -1,23 +1,42 @@
 ﻿
 using System;
+using System.IO;
+using CoreLibrary.Exceptions;
 
 namespace DiffAlgorithm
 {
     public class Diff
     {
+        public struct FilesLineCountStruct
+        {
+            public int Old;
+            public int New;
+        }
+
+        public struct FilesEndsWithNewLineStruct
+        {
+            public bool Old;
+            public bool New;
+        }
+
         public DiffItem[] Items { get; protected set; }
 
         private DateTime diffedTime;
 
-        private System.IO.FileInfo fileA;
-        private System.IO.FileInfo fileB;
+        private FileInfo oldFile;
+        private FileInfo newFile;
 
-        public Diff(System.IO.FileInfo fileA, System.IO.FileInfo fileB)
+        public FilesLineCountStruct FilesLineCount;
+        public FilesEndsWithNewLineStruct FilesEndsWithNewLine;
+
+        public Diff(FileInfo oldFile, FileInfo newFile)
         {
-            this.fileA = fileA;
-            this.fileB = fileB;
+            this.oldFile = oldFile;
+            this.newFile = newFile;
 
             diffedTime = new DateTime();
+            FilesLineCount = new FilesLineCountStruct();
+            FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }
 
         public void SetDiffItems(DiffItem[] diffItems)
