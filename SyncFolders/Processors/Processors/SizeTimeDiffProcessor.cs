@@ -1,12 +1,7 @@
 ﻿using CoreLibrary.Enums;
-using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoreLibrary.Settings.Attributes;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Processors;

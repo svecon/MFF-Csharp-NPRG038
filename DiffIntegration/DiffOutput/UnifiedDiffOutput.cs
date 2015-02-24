@@ -36,8 +36,8 @@ namespace DiffIntegration.DiffOutput
                 return;
 
             var sb = new StringBuilder();
-            sb.AppendLine("--- " + createHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.CreationTime));
-            sb.AppendLine("+++ " + createHeader(dnode.InfoRight.FullName, dnode.InfoRight.CreationTime));
+            sb.AppendLine("--- " + createHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.LastWriteTime));
+            sb.AppendLine("+++ " + createHeader(dnode.InfoRight.FullName, dnode.InfoRight.LastWriteTime));
 
             // create and merge ovelapping diffs into chunks
             var chunks = new List<DiffChunk>(dnode.Diff.Items.Length);

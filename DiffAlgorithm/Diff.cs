@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
-using CoreLibrary.Exceptions;
 
 namespace DiffAlgorithm
 {
