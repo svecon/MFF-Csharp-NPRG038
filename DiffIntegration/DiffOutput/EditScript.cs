@@ -38,7 +38,7 @@ namespace DiffIntegration.DiffOutput
 
                 foreach (DiffItem diff in dnode.Diff.Items)
                 {
-                    sb.AppendLine(createHeader(diff));
+                    sb.AppendLine(CreateHeader(diff));
 
                     // skip same
                     for (; n < diff.OldLineStart; n++) { streamA.ReadLine(); }
@@ -73,7 +73,7 @@ namespace DiffIntegration.DiffOutput
             Change
         }
 
-        private DiffType findDiffType(DiffItem diff)
+        private DiffType FindDiffType(DiffItem diff)
         {
             if (diff.DeletedInOld > 0 && diff.InsertedInNew > 0)
                 return DiffType.Change;
@@ -84,36 +84,36 @@ namespace DiffIntegration.DiffOutput
             return DiffType.Append;
         }
 
-        private string createHeader(DiffItem diff)
+        private string CreateHeader(DiffItem diff)
         {
             int moveFirst = 0;
             int moveSecond = 0;
 
             string header = "";
 
-            switch (findDiffType(diff))
+            switch (FindDiffType(diff))
             {
                 case DiffType.Append:
-                    header += createRange(diff.OldLineStart, 1)
+                    header += CreateRange(diff.OldLineStart, 1)
                         + "a"
-                        + createRange(diff.NewLineStart + 1, diff.InsertedInNew);
+                        + CreateRange(diff.NewLineStart + 1, diff.InsertedInNew);
                     break;
                 case DiffType.Delete:
-                    header += createRange(diff.OldLineStart + 1, diff.DeletedInOld)
+                    header += CreateRange(diff.OldLineStart + 1, diff.DeletedInOld)
                         + "d"
-                        + createRange(diff.NewLineStart, 1);
+                        + CreateRange(diff.NewLineStart, 1);
                     break;
                 case DiffType.Change:
-                    header += createRange(diff.OldLineStart + 1, diff.DeletedInOld)
+                    header += CreateRange(diff.OldLineStart + 1, diff.DeletedInOld)
                         + "c"
-                        + createRange(diff.NewLineStart + 1, diff.InsertedInNew);
+                        + CreateRange(diff.NewLineStart + 1, diff.InsertedInNew);
                     break;
             }
 
             return header;
         }
 
-        private string createRange(int startingLine, int numberOfLines)
+        private string CreateRange(int startingLine, int numberOfLines)
         {
             return numberOfLines > 1
                 ? startingLine + "," + (startingLine + numberOfLines - 1)

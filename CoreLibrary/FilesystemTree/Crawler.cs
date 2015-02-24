@@ -14,13 +14,6 @@ namespace CoreLibrary.FilesystemTree
     /// </summary>
     public class Crawler
     {
-
-        DirectoryInfo baseDir;
-
-        DirectoryInfo leftDir;
-
-        DirectoryInfo rightDir;
-
         /// <summary>
         /// FilesystemDiff represents all found files in a tree structure.
         /// </summary>
@@ -50,7 +43,7 @@ namespace CoreLibrary.FilesystemTree
 
                 #region AddingBaseDir
 
-                baseDir = new DirectoryInfo(baseDirPath);
+                var baseDir = new DirectoryInfo(baseDirPath);
 
                 if (!baseDir.Exists)
                     throw new BaseDirectoryNotFoundException(baseDir);
@@ -63,7 +56,7 @@ namespace CoreLibrary.FilesystemTree
 
             #region AddingLeftDir
 
-            leftDir = new DirectoryInfo(leftDirPath);
+            var leftDir = new DirectoryInfo(leftDirPath);
 
             if (!leftDir.Exists)
                 throw new LeftDirectoryNotFoundException(leftDir);
@@ -75,7 +68,7 @@ namespace CoreLibrary.FilesystemTree
 
             #region AddingRightDir
 
-            rightDir = new DirectoryInfo(rightDirPath);
+            var rightDir = new DirectoryInfo(rightDirPath);
 
             if (!rightDir.Exists)
                 throw new RightDirectoryNotFoundException(rightDir);
@@ -216,9 +209,9 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         struct DirectoryForIteration
         {
-            public DirectoryInfo Info;
-            public IFilesystemTreeDirNode ParentDiffNode;
-            public LocationEnum Location;
+            public readonly DirectoryInfo Info;
+            public readonly IFilesystemTreeDirNode ParentDiffNode;
+            public readonly LocationEnum Location;
 
             public DirectoryForIteration(DirectoryInfo info, IFilesystemTreeDirNode parent, LocationEnum location)
             {

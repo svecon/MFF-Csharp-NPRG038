@@ -25,13 +25,13 @@ namespace SyncFolders.Processors.Preprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             if (!IsEnabled)
                 return;
 
-            checkModeAndStatus(node);
+            CheckModeAndStatus(node);
 
             if (node.Info.Extension.ToLowerInvariant() != ".cs")
                 node.Status = NodeStatusEnum.IsIgnored;

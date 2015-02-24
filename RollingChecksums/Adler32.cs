@@ -56,10 +56,10 @@ namespace RollingChecksums
                 buffer[bufferptr++] = data[i];
                 bufferptr %= buffer.Length;
             }
-            composeChecksum(a, b);
+            ComposeChecksum(a, b);
 
             wasFilled = true;
-            resetWindowCountdown();
+            ResetWindowCountdown();
 
             return Checksum;
         }
@@ -74,7 +74,7 @@ namespace RollingChecksums
                 
                 if (nextChecksumCountdown == 0)
                 {
-                    resetWindowCountdown();
+                    ResetWindowCountdown();
                     yield return Checksum;
                 }
             }
@@ -88,12 +88,12 @@ namespace RollingChecksums
             uint a = Checksum & 0xFFFF;
             uint b = (Checksum >> 16) & 0xFFFF;
 
-            int oldest = getOldestValue();
+            int oldest = GetOldestValue();
 
             a = (uint)(a + PRIME - oldest + data) % PRIME;
             b = (uint)(b + PRIME - (oldest * Window) % PRIME + a - 1) % PRIME;
 
-            composeChecksum(a, b);
+            ComposeChecksum(a, b);
 
             buffer[bufferptr++] = data;
             bufferptr %= buffer.Length;
@@ -103,12 +103,12 @@ namespace RollingChecksums
             return Checksum;
         }
 
-        private int getOldestValue()
+        private int GetOldestValue()
         {
             return buffer[(bufferptr + Window) % Window];
         }
 
-        private void resetWindowCountdown(){
+        private void ResetWindowCountdown(){
             nextChecksumCountdown = ChecksumWindowSize;
         }
 
@@ -118,7 +118,7 @@ namespace RollingChecksums
         /// <param name="a">Value for the lower 16 bits of the checksum.</param>
         /// <param name="b">Value for the higer 16 bits of the checksum.</param>
         /// <returns>Composed checksum.</returns>
-        private uint composeChecksum(uint a, uint b) {
+        private uint ComposeChecksum(uint a, uint b) {
             return Checksum = (b * 65536) | a;
         }
     }

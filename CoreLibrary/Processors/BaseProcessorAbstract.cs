@@ -22,7 +22,7 @@ namespace CoreLibrary.Processors
         /// </summary>
         /// <param name="node">FilesystemTreeAbstractNode</param>
         /// <returns>True if the node should be processed.</returns>
-        protected virtual bool checkStatus(IFilesystemTreeAbstractNode node)
+        protected virtual bool CheckStatus(IFilesystemTreeAbstractNode node)
         {
             if (node.Status == NodeStatusEnum.HasError)
                 return false;
@@ -38,7 +38,7 @@ namespace CoreLibrary.Processors
         /// </summary>
         /// <param name="node">FilesystemTreeAbstractNode</param>
         /// <returns>True if the processor is compatible.</returns>
-        protected virtual bool checkMode(IFilesystemTreeAbstractNode node)
+        protected virtual bool CheckMode(IFilesystemTreeAbstractNode node)
         {
             if ((node.Mode & Mode) == 0)
                 return false;
@@ -51,9 +51,9 @@ namespace CoreLibrary.Processors
         /// </summary>
         /// <param name="node">FilesystemTreeAbstractNode</param>
         /// <returns>True if the node should be processed.</returns>
-        protected bool checkModeAndStatus(IFilesystemTreeAbstractNode node)
+        protected bool CheckModeAndStatus(IFilesystemTreeAbstractNode node)
         {
-            return checkMode(node) && checkStatus(node);
+            return CheckMode(node) && CheckStatus(node);
         }
 
         public abstract void Process(IFilesystemTreeDirNode node);

@@ -46,13 +46,13 @@ namespace SyncFolders.Processors.Preprocessors
 
         public override void Process(IFilesystemTreeDirNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
         }
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             string ext = node.Info.Extension.ToLowerInvariant();

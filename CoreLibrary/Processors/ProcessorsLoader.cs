@@ -108,7 +108,7 @@ namespace CoreLibrary.Processors
             }
         }
 
-        protected void retrieveSettingsFromProcessor(IProcessorBase processor)
+        protected void RetrieveSettingsFromProcessor(IProcessorBase processor)
         {
             foreach (FieldInfo field in processor.GetType().GetFields())
             {
@@ -139,7 +139,7 @@ namespace CoreLibrary.Processors
             try
             {
                 preProcessors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -151,7 +151,7 @@ namespace CoreLibrary.Processors
             try
             {
                 processors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -163,7 +163,7 @@ namespace CoreLibrary.Processors
             try
             {
                 postProcessors.Add(processor.Priority, processor);
-                retrieveSettingsFromProcessor(processor);
+                RetrieveSettingsFromProcessor(processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);

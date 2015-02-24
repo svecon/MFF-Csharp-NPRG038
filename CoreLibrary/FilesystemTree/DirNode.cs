@@ -69,24 +69,24 @@ namespace CoreLibrary.FilesystemTree
 
         public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
         {
-            var dirDiffNode = createDirNode(info, location);
+            var dirDiffNode = CreateDirNode(info, location);
             Directories.Add(dirDiffNode);
             return dirDiffNode;
         }
 
-        protected virtual IFilesystemTreeDirNode createDirNode(DirectoryInfo info, LocationEnum location)
+        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
         {
             return new DirNode(RootNode, RelativePath, info, location, Mode);
         }
 
         public IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location)
         {
-            var node = createFileNode(info, location);
+            var node = CreateFileNode(info, location);
             Files.Add(node);
             return node;
         }
 
-        protected virtual IFilesystemTreeFileNode createFileNode(FileInfo info, LocationEnum location)
+        protected virtual IFilesystemTreeFileNode CreateFileNode(FileInfo info, LocationEnum location)
         {
             return new FileNode(this, info, location, Mode);
         }

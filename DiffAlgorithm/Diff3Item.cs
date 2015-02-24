@@ -13,7 +13,7 @@ namespace DiffAlgorithm
         public readonly int NewAffectedLines;
         public readonly int HisAffectedLines;
 
-        private DifferencesStatusEnum Differeces;
+        private DifferencesStatusEnum differeces;
 
         public Diff3Item(int oldLineStart, int newLineStart, int hisLineStart, int oldAffectedLines,
             int newAffectedLines, int hisAffectedLines, DifferencesStatusEnum diff)
@@ -26,7 +26,7 @@ namespace DiffAlgorithm
             NewAffectedLines = newAffectedLines;
             HisAffectedLines = hisAffectedLines;
 
-            Differeces = diff;
+            differeces = diff;
         }
 
 

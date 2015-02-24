@@ -48,31 +48,31 @@ namespace CoreLibrary.Processors
 
         #region Adding files as possibilities
 
-        protected void addGivenFileAsPossibility(int file)
+        protected void AddGivenFileAsPossibility(int file)
         {
             possibleFiles |= file;
         }
 
         public void AddBaseFilePossibility()
         {
-            addGivenFileAsPossibility(BASE);
+            AddGivenFileAsPossibility(BASE);
         }
 
         public void AddLeftFilePossibility()
         {
-            addGivenFileAsPossibility(LEFT);
+            AddGivenFileAsPossibility(LEFT);
         }
 
         public void AddRightFilePossibility()
         {
-            addGivenFileAsPossibility(RIGHT);
+            AddGivenFileAsPossibility(RIGHT);
         }
 
         #endregion
 
         #region Checking combinations
 
-        protected void checkGivenCombination(int combination, bool isDifferent)
+        protected void CheckGivenCombination(int combination, bool isDifferent)
         {
             if ((possibleCombinations & combination) > 0 && isDifferent)
                 possibleCombinations &= ~combination;
@@ -80,24 +80,24 @@ namespace CoreLibrary.Processors
 
         public void CheckCombinationBaseLeft(bool isDifferent)
         {
-            checkGivenCombination(BASE_LEFT, isDifferent);
+            CheckGivenCombination(BASE_LEFT, isDifferent);
         }
 
         public void CheckCombinationBaseRight(bool isDifferent)
         {
-            checkGivenCombination(BASE_RIGHT, isDifferent);
+            CheckGivenCombination(BASE_RIGHT, isDifferent);
         }
 
         public void CheckCombinationLeftRight(bool isDifferent)
         {
-            checkGivenCombination(LEFT_RIGHT, isDifferent);
+            CheckGivenCombination(LEFT_RIGHT, isDifferent);
         }
 
         #endregion
 
         #region Files possibility checks
 
-        protected bool canGivenFileBeSame(int file, bool forceRecheck = false)
+        protected bool CanGivenFileBeSame(int file, bool forceRecheck = false)
         {
             if (forceRecheck)
                 RecalculatePossibleFiles();
@@ -107,41 +107,41 @@ namespace CoreLibrary.Processors
 
         public bool CanBaseFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(BASE, forceRecheck);
+            return CanGivenFileBeSame(BASE, forceRecheck);
         }
 
         public bool CanLeftFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(LEFT, forceRecheck);
+            return CanGivenFileBeSame(LEFT, forceRecheck);
         }
 
         public bool CanRightFileBeSame(bool forceRecheck = false)
         {
-            return canGivenFileBeSame(RIGHT, forceRecheck);
+            return CanGivenFileBeSame(RIGHT, forceRecheck);
         }
 
         #endregion
 
         #region Combinations possibility checks
 
-        protected bool canGivenCombinationBeSame(int combination)
+        protected bool CanGivenCombinationBeSame(int combination)
         {
             return (possibleCombinations & combination) > 0;
         }
 
         public bool CanCombinationBaseLeftBeSame()
         {
-            return canGivenCombinationBeSame(BASE_LEFT);
+            return CanGivenCombinationBeSame(BASE_LEFT);
         }
 
         public bool CanCombinationBaseRightBeSame()
         {
-            return canGivenCombinationBeSame(BASE_RIGHT);
+            return CanGivenCombinationBeSame(BASE_RIGHT);
         }
 
         public bool CanCombinationLeftRightBeSame()
         {
-            return canGivenCombinationBeSame(LEFT_RIGHT);
+            return CanGivenCombinationBeSame(LEFT_RIGHT);
         }
 
         #endregion

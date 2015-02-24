@@ -23,7 +23,7 @@ namespace DiffAlgorithm
         /// <param name="upperA">Upper bound for data A</param>
         /// <param name="lowerB">Lower bound for data A</param>
         /// <param name="upperB">Upper bound for data B</param>
-        private void lcs(int lowerA, int upperA, int lowerB, int upperB)
+        private void Lcs(int lowerA, int upperA, int lowerB, int upperB)
         {
             // Fast walkthrough equal lines at the start
             while (lowerA < upperA && lowerB < upperB && dataA.Data[lowerA] == dataB.Data[lowerB])
@@ -52,15 +52,15 @@ namespace DiffAlgorithm
             } else
             {
                 // Find the middle snakea and length of an optimal path for A and B
-                SmsPoint snake = sms(lowerA, upperA, lowerB, upperB);
+                SmsPoint snake = Sms(lowerA, upperA, lowerB, upperB);
 
                 // The path is from LowerX to (x,y) and (x,y) ot UpperX
-                lcs(lowerA, snake.X, lowerB, snake.Y);
-                lcs(snake.X, upperA, snake.Y, upperB);
+                Lcs(lowerA, snake.X, lowerB, snake.Y);
+                Lcs(snake.X, upperA, snake.Y, upperB);
             }
         }
 
-        private SmsPoint sms(int lowerA, int upperA, int lowerB, int upperB)
+        private SmsPoint Sms(int lowerA, int upperA, int lowerB, int upperB)
         {
             int max = dataA.Length + dataB.Length + 1;
 
@@ -156,7 +156,7 @@ namespace DiffAlgorithm
 
         public DiffItem[] CreateDiffs()
         {
-            lcs(0, dataA.Length, 0, dataB.Length);
+            Lcs(0, dataA.Length, 0, dataB.Length);
 
             var diffItemsList = new List<DiffItem>();
 

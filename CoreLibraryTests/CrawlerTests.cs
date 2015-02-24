@@ -12,22 +12,22 @@ namespace CoreLibraryTests
         [ClassInitialize]
         public static void CreateFileStructures(TestContext context)
         {
-            createRandomFile("2way/l/different.txt");
-            createRandomFile("2way/r/different.txt");
+            CreateRandomFile("2way/l/different.txt");
+            CreateRandomFile("2way/r/different.txt");
 
-            createRandomFile("2way/l/only_left.txt");
-            createRandomFile("2way/r/only_right.txt");
+            CreateRandomFile("2way/l/only_left.txt");
+            CreateRandomFile("2way/r/only_right.txt");
 
-            FileInfo same = createRandomFile("2way/l/same.txt");
-            same.CopyTo(getTempPath() + "2way/r/same.txt", true);
+            FileInfo same = CreateRandomFile("2way/l/same.txt");
+            same.CopyTo(GetTempPath() + "2way/r/same.txt", true);
 
-            Directory.CreateDirectory(getTempPath() + "2way/l/empty_dir");
-            Directory.CreateDirectory(getTempPath() + "2way/r/empty_dir");
+            Directory.CreateDirectory(GetTempPath() + "2way/l/empty_dir");
+            Directory.CreateDirectory(GetTempPath() + "2way/r/empty_dir");
 
-            createRandomFile("2way/r/dir_different/different_file_in_different_folder.txt");
+            CreateRandomFile("2way/r/dir_different/different_file_in_different_folder.txt");
 
-            createRandomFile("2way/l/dir/different_size.txt", 256);
-            createRandomFile("2way/r/dir/different_size.txt", 128);
+            CreateRandomFile("2way/l/dir/different_size.txt", 256);
+            CreateRandomFile("2way/r/dir/different_size.txt", 128);
         }
 
         [ClassCleanup]
@@ -36,12 +36,12 @@ namespace CoreLibraryTests
             //Directory.Delete(getTempPath(), true);
         }
 
-        private static string getTempPath()
+        private static string GetTempPath()
         {
             return Path.GetTempPath() + "crawlerTests\\";
         }
 
-        private static FileInfo createRandomFile(string fileName, int sizeInKb = 128)
+        private static FileInfo CreateRandomFile(string fileName, int sizeInKb = 128)
         {
             // Note: block size must be a factor of 1MB to avoid rounding errors :)
             const int blockSize = 256;
@@ -49,7 +49,7 @@ namespace CoreLibraryTests
             var data = new byte[blockSize];
             var rng = new Random();
 
-            fileName = getTempPath() + fileName;
+            fileName = GetTempPath() + fileName;
 
             Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 
@@ -68,7 +68,7 @@ namespace CoreLibraryTests
         [TestMethod]
         public void CrawlerTestsBasic()
         {
-            var crawler = new Crawler(getTempPath() + "2way/l", getTempPath() + "2way/r");
+            var crawler = new Crawler(GetTempPath() + "2way/l", GetTempPath() + "2way/r");
 
             Assert.AreEqual(CoreLibrary.Enums.DiffModeEnum.TwoWay, crawler.FilesystemDiff.DiffMode);
 

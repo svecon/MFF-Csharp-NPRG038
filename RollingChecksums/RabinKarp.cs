@@ -46,7 +46,7 @@ namespace RollingChecksums
             Checksum = 0;
         }
 
-        private void preCalculatePower()
+        private void PreCalculatePower()
         {
             pow = 1;
             for (int i = 1; i < Window; i++)
@@ -68,7 +68,7 @@ namespace RollingChecksums
                 bufferPtr %= buffer.Length;
             }
 
-            preCalculatePower();
+            PreCalculatePower();
             wasFilled = true;
 
             return Checksum;
@@ -84,7 +84,7 @@ namespace RollingChecksums
 
                 if (nextChecksumCountdown == 0)
                 {
-                    resetWindowCountdown();
+                    ResetWindowCountdown();
                     yield return Checksum;
                 }
             }
@@ -96,7 +96,7 @@ namespace RollingChecksums
                 throw new InvalidOperationException("Please use Fill method before Rolling checksum any further");
 
             // add PRIME to be sure that the value is not negative 
-            Checksum = (uint)(Checksum + PRIME - pow * getOldestValue() % PRIME) % PRIME;
+            Checksum = (uint)(Checksum + PRIME - pow * GetOldestValue() % PRIME) % PRIME;
             Checksum = (uint)(Checksum * Window + data) % PRIME;
 
             buffer[bufferPtr++] = data;
@@ -107,12 +107,12 @@ namespace RollingChecksums
             return Checksum;
         }
 
-        private void resetWindowCountdown()
+        private void ResetWindowCountdown()
         {
             nextChecksumCountdown = Window * 10 / 7;
         }
 
-        private int getOldestValue()
+        private int GetOldestValue()
         {
             return buffer[(bufferPtr + Window) % Window];
         }

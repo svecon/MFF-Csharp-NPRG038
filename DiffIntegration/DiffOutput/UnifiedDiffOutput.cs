@@ -36,8 +36,8 @@ namespace DiffIntegration.DiffOutput
                 return;
 
             var sb = new StringBuilder();
-            sb.AppendLine("--- " + createHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.LastWriteTime));
-            sb.AppendLine("+++ " + createHeader(dnode.InfoRight.FullName, dnode.InfoRight.LastWriteTime));
+            sb.AppendLine("--- " + CreateHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.LastWriteTime));
+            sb.AppendLine("+++ " + CreateHeader(dnode.InfoRight.FullName, dnode.InfoRight.LastWriteTime));
 
             // create and merge ovelapping diffs into chunks
             var chunks = new List<DiffChunk>(dnode.Diff.Items.Length);
@@ -106,7 +106,7 @@ namespace DiffIntegration.DiffOutput
             Console.WriteLine(sb.ToString());
         }
 
-        private string createHeader(string filename, DateTime date)
+        private string CreateHeader(string filename, DateTime date)
         {
             return filename + "\t" + date.ToString("ddd MMM d H:mm:ss yyyy");
         }

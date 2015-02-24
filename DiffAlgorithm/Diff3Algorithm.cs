@@ -15,8 +15,8 @@ namespace DiffAlgorithm
 
         int leftI = 0;
         int rightI = 0;
-        private DiffItem? curLeft { get { if (leftI < leftBase.Length) return leftBase[leftI]; return null; } }
-        private DiffItem? curRight { get { if (rightI < rightBase.Length) return rightBase[rightI]; return null; } }
+        private DiffItem? CurLeft { get { if (leftI < leftBase.Length) return leftBase[leftI]; return null; } }
+        private DiffItem? CurRight { get { if (rightI < rightBase.Length) return rightBase[rightI]; return null; } }
 
         public Diff3Algorithm(DiffItem[] leftBase, DiffItem[] rightBase, int[] leftFile, int[] rightFile)
         {
@@ -31,34 +31,34 @@ namespace DiffAlgorithm
         {
             var diff3Items = new List<Diff3Item>();
 
-            while (curLeft != null || curRight != null)
+            while (CurLeft != null || CurRight != null)
             {
-                if (curLeft == null)
+                if (CurLeft == null)
                 {
-                    diff3Items.Add(createFromRight());
+                    diff3Items.Add(CreateFromRight());
                     rightI++;
-                } else if (curRight == null)
+                } else if (CurRight == null)
                 {
-                    diff3Items.Add(createFromLeft());
+                    diff3Items.Add(CreateFromLeft());
                     leftI++;
-                } else if (curLeft.Value.OldLineStart <= curRight.Value.OldLineStart)
+                } else if (CurLeft.Value.OldLineStart <= CurRight.Value.OldLineStart)
                 {
-                    if (curLeft.Value.OldLineStart + curLeft.Value.DeletedInOld + 1 <= curRight.Value.OldLineStart)
+                    if (CurLeft.Value.OldLineStart + CurLeft.Value.DeletedInOld + 1 <= CurRight.Value.OldLineStart)
                     {
                         // diff3
                     } else
                     {
-                        diff3Items.Add(createFromLeft());
+                        diff3Items.Add(CreateFromLeft());
                         leftI++;
                     }
                 } else
                 {
-                    if (curRight.Value.OldLineStart + curRight.Value.DeletedInOld + 1 <= curLeft.Value.OldLineStart)
+                    if (CurRight.Value.OldLineStart + CurRight.Value.DeletedInOld + 1 <= CurLeft.Value.OldLineStart)
                     {
                         // diff3
                     } else
                     {
-                        diff3Items.Add(createFromRight());
+                        diff3Items.Add(CreateFromRight());
                         rightI++;
                     }
                 }
@@ -68,28 +68,28 @@ namespace DiffAlgorithm
             return diff3Items.ToArray();
         }
 
-        private Diff3Item createFromLeft()
+        private Diff3Item CreateFromLeft()
         {
             return new Diff3Item(
-                curLeft.Value.OldLineStart,
+                CurLeft.Value.OldLineStart,
                 -1,
-                curLeft.Value.NewLineStart,
-                curLeft.Value.DeletedInOld,
+                CurLeft.Value.NewLineStart,
+                CurLeft.Value.DeletedInOld,
                 0,
-                curLeft.Value.InsertedInNew,
+                CurLeft.Value.InsertedInNew,
                 DifferencesStatusEnum.BaseRightSame
             );
         }
 
-        private Diff3Item createFromRight()
+        private Diff3Item CreateFromRight()
         {
             return new Diff3Item(
-                curRight.Value.OldLineStart,
+                CurRight.Value.OldLineStart,
                 -1,
-                curRight.Value.NewLineStart,
-                curRight.Value.DeletedInOld,
+                CurRight.Value.NewLineStart,
+                CurRight.Value.DeletedInOld,
                 0,
-                curRight.Value.InsertedInNew,
+                CurRight.Value.InsertedInNew,
                 DifferencesStatusEnum.BaseLeftSame
             );
         }

@@ -34,7 +34,7 @@ namespace SyncFolders.Processors.Preprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             if (ExcludeRegex != null && ExcludeRegex.IsMatch(node.Info.Name))

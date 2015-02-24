@@ -55,7 +55,7 @@ namespace CoreLibrary.FilesystemTree
             return ((int)location & Location) > 0;
         }
 
-        protected void markFound(LocationEnum location)
+        protected void MarkFound(LocationEnum location)
         {
             Location = Location | (int)location;
         }
@@ -63,7 +63,7 @@ namespace CoreLibrary.FilesystemTree
         public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true)
         {
             if (markIsFound)
-                markFound(location);
+                MarkFound(location);
 
             switch (location)
             {

@@ -149,9 +149,9 @@ namespace DiffAlgorithm
             var da = new DiffAlgorithm(oldData, newData);
             var da2 = new DiffAlgorithm(oldData, hisData);
 
-            var d3a = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(), newData.Data, hisData.Data);
+            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(), newData.Data, hisData.Data);
 
-            var x = d3a.Parse();
+            var x = d3A.Parse();
 
             return diff;
         }
@@ -169,7 +169,7 @@ namespace DiffAlgorithm
 
             for (int i = 0; i < lines.Length; ++i)
             {
-                string s = applyOptions(lines[i], trimSpace, ignoreSpace, ignoreCase);
+                string s = ApplyOptions(lines[i], trimSpace, ignoreSpace, ignoreCase);
 
                 if (hashedLines.TryGetValue(s, out codes[i])) continue;
 
@@ -187,7 +187,7 @@ namespace DiffAlgorithm
 
             foreach (string line in fileReader.IterateLines())
             {
-                string mline = applyOptions(line, trimSpace, ignoreSpace, ignoreCase);
+                string mline = ApplyOptions(line, trimSpace, ignoreSpace, ignoreCase);
 
                 int x;
                 if (hashedLines.TryGetValue(mline, out x))
@@ -203,13 +203,13 @@ namespace DiffAlgorithm
             return codes.ToArray();
         }
 
-        private string applyOptions(string line, bool trimSpace, bool ignoreSpace, bool ignoreCase)
+        private string ApplyOptions(string line, bool trimSpace, bool ignoreSpace, bool ignoreCase)
         {
             if (trimSpace)
                 line = line.Trim();
 
             if (ignoreSpace)
-                line = removeAllBlanks(line);
+                line = RemoveAllBlanks(line);
 
             if (ignoreCase)
                 line = line.ToLower();
@@ -217,7 +217,7 @@ namespace DiffAlgorithm
             return line;
         }
 
-        private string removeAllBlanks(string line)
+        private string RemoveAllBlanks(string line)
         {
             // TODO: optimization: faster blank removal.
             return Regex.Replace(line, "\\s+", " ");

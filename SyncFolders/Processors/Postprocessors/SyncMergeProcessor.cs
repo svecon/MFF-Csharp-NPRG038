@@ -31,7 +31,7 @@ namespace SyncFolders.Processors.Postprocessors
 
             // this means that empty folders need to be created here
 
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             // processor setting
@@ -44,15 +44,15 @@ namespace SyncFolders.Processors.Postprocessors
 
             // otherwise create empty folder
             if (node.IsInLocation(LocationEnum.OnLeft))
-                checkAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRight));
+                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRight));
 
             if (node.IsInLocation(LocationEnum.OnRight))
-                checkAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLeft));
+                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLeft));
         }
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!checkModeAndStatus(node))
+            if (!CheckModeAndStatus(node))
                 return;
 
             if (node.Differences == DifferencesStatusEnum.LeftRightSame)
@@ -79,7 +79,7 @@ namespace SyncFolders.Processors.Postprocessors
                     throw new InvalidDataException();
                 }
 
-                checkAndCreateDirectoryFromFilename(to);
+                CheckAndCreateDirectoryFromFilename(to);
                 from.CopyTo(to);
                 node.Status = NodeStatusEnum.WasMerged;
                 return;
@@ -114,17 +114,17 @@ namespace SyncFolders.Processors.Postprocessors
                     break;
             }
 
-            checkAndCreateDirectoryFromFilename(to);
+            CheckAndCreateDirectoryFromFilename(to);
             from.CopyTo(to, true);
             node.Status = NodeStatusEnum.WasMerged;
         }
 
-        private void checkAndCreateDirectoryFromFilename(string path)
+        private void CheckAndCreateDirectoryFromFilename(string path)
         {
-            checkAndCreateDirectory(Path.GetDirectoryName(path));
+            CheckAndCreateDirectory(Path.GetDirectoryName(path));
         }
 
-        private void checkAndCreateDirectory(string path)
+        private void CheckAndCreateDirectory(string path)
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);

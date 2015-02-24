@@ -13,12 +13,12 @@ namespace DiffIntegration.DiffFilesystemTree
         {
         }
 
-        protected override IFilesystemTreeDirNode createDirNode(DirectoryInfo info, LocationEnum location)
+        protected override IFilesystemTreeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
         {
             return new DiffDirNode(RootNode, RelativePath, info, location, Mode);
         }
 
-        protected override IFilesystemTreeFileNode createFileNode(FileInfo info, LocationEnum location)
+        protected override IFilesystemTreeFileNode CreateFileNode(FileInfo info, LocationEnum location)
         {
             return new DiffFileNode(this, info, location, Mode);
         }

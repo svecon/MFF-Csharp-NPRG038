@@ -26,7 +26,7 @@ namespace CoreLibrary.FilesystemTree
         {
             if (Root == null)
             {
-                Root = createDirNode(root, location);
+                Root = CreateDirNode(root, location);
             } else
             {
                 Root.AddInfoFromLocation(root, location);
@@ -38,7 +38,7 @@ namespace CoreLibrary.FilesystemTree
             visitor.Visit(Root);
         }
 
-        protected virtual IFilesystemTreeDirNode createDirNode(DirectoryInfo root, LocationEnum location)
+        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo root, LocationEnum location)
         {
             return new DirNode(null, null, root, location, DiffMode);
         }

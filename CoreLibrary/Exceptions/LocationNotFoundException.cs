@@ -10,16 +10,16 @@ namespace CoreLibrary.Exceptions
     public class LocationNotFoundException : DirectoryNotFoundException
     {
 
-        protected FileSystemInfo info;
+        protected FileSystemInfo Info;
 
         public LocationNotFoundException(FileSystemInfo info)
         {
-            this.info = info;
+            this.Info = info;
         }
 
         public override string ToString()
         {
-            return "Directory: " + info.FullName + "not found or not readable.";
+            return "Directory: " + Info.FullName + "not found or not readable.";
         }
     }
 }

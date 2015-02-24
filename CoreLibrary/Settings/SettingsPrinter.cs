@@ -32,7 +32,7 @@ namespace CoreLibrary.Settings
         /// </summary>
         public void Print()
         {
-            sortByOptionParameters();
+            SortByOptionParameters();
 
             Console.WriteLine("Listing of all possible options:");
 
@@ -69,7 +69,7 @@ namespace CoreLibrary.Settings
             }
         }
 
-        protected void sortByOptionParameters()
+        protected void SortByOptionParameters()
         {
             settings.Sort(new SettingsComparer());
         }
