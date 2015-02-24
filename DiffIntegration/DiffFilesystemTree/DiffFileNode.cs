@@ -32,7 +32,7 @@ namespace DiffIntegration.DiffFilesystemTree
         }
 
         public DiffFileNode(FileInfo infoBase, FileInfo infoLeft, FileInfo infoRight)
-            : base(null, null, (LocationEnum)LocationCombinationsEnum.OnAll3, DiffModeEnum.TwoWay)
+            : base(null, null, (LocationEnum)LocationCombinationsEnum.OnAll3, DiffModeEnum.ThreeWay)
         {
             InfoBase = infoBase;
             InfoLeft = infoLeft;
@@ -42,8 +42,17 @@ namespace DiffIntegration.DiffFilesystemTree
         public void RecalculateDiff()
         {
             var diff = new DiffHelper();
-            Diff = diff.DiffFiles((FileInfo)InfoLeft, (FileInfo)InfoRight);
-            //TODO: load plugin from somewhere --- because of settings
+
+            if (Mode == DiffModeEnum.TwoWay)
+            {
+                Diff = diff.DiffFiles((FileInfo)InfoLeft, (FileInfo)InfoRight);
+                //TODO: load plugin from somewhere --- because of settings    
+            } else if (Mode == DiffModeEnum.ThreeWay)
+            {
+                var x = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLeft, (FileInfo)InfoRight);
+            }
+
+            
         }
     }
 }

@@ -44,7 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diff3.cs" />
     <Compile Include="Diff.cs" />
+    <Compile Include="Diff3Algorithm.cs" />
+    <Compile Include="Diff3Item.cs" />
     <Compile Include="DiffAlgorithm.cs" />
     <Compile Include="SmsPoint.cs" />
     <Compile Include="DiffHelper.cs" />

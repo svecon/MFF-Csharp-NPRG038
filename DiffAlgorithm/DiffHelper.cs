@@ -123,6 +123,39 @@ namespace DiffAlgorithm
             return diff;
         }
 
+        public Diff3 DiffFiles(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
+        {
+            var diff = new Diff3(oldFile, newFile, hisFile);
+
+            hashedLines = new Dictionary<string, int>();
+
+            var oldFileReader = new SmartLineReader(oldFile);
+            var newFileReader = new SmartLineReader(newFile);
+            var hisFileReader = new SmartLineReader(hisFile);
+
+            var oldData = new DiffData(hashStringLines(oldFileReader));
+            var newData = new DiffData(hashStringLines(newFileReader));
+            var hisData = new DiffData(hashStringLines(hisFileReader));
+            hashedLines.Clear();
+
+            diff.FilesLineCount.Old = oldData.Length;
+            diff.FilesLineCount.New = newData.Length;
+            diff.FilesLineCount.His = hisData.Length;
+
+            diff.FilesEndsWithNewLine.Old = oldFileReader.EndedWithNewLine();
+            diff.FilesEndsWithNewLine.New = newFileReader.EndedWithNewLine();
+            diff.FilesEndsWithNewLine.His = hisFileReader.EndedWithNewLine();
+
+            var da = new DiffAlgorithm(oldData, newData);
+            var da2 = new DiffAlgorithm(oldData, hisData);
+
+            var d3a = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(), newData.Data, hisData.Data);
+
+            var x = d3a.Parse();
+
+            return diff;
+        }
+
         private int[] hashStringLines(string text)
         {
             // get all codes of the text
