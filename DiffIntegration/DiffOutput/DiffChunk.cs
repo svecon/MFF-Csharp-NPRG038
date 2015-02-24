@@ -4,13 +4,37 @@ using DiffAlgorithm;
 
 namespace DiffIntegration.DiffOutput
 {
+    /// <summary>
+    /// DiffChunk is a container for diff changes that are very near to each other (in terms of line numbers).
+    /// </summary>
     internal struct DiffChunk
     {
+        /// <summary>
+        /// All diffs close to each other
+        /// </summary>
         private readonly List<DiffItem> diffs;
+
+        /// <summary>
+        /// Simple iterator number
+        /// </summary>
         private int currentDiff;
+
+        /// <summary>
+        /// Structure holding number of lines in each file.
+        /// </summary>
         private Diff.FilesLineCountStruct lineCounts;
+
+        /// <summary>
+        /// Maximum padding between diffs to be considered "close".
+        /// </summary>
         private readonly int padding;
 
+        /// <summary>
+        /// Constructor for a DiffChunk container.
+        /// </summary>
+        /// <param name="diff">First Diff that the chunk is based on.</param>
+        /// <param name="filesLineCount">Line numbers of all diffed files.</param>
+        /// <param name="padding">Padding around diffs determining how close the diffs are.</param>
         public DiffChunk(DiffItem diff, Diff.FilesLineCountStruct filesLineCount, int padding)
         {
             lineCounts = filesLineCount;
@@ -45,13 +69,14 @@ namespace DiffIntegration.DiffOutput
 
         public int RightLineEnd()
         {
-            int end = diffs.Last().NewLineStart + diffs.Last().InsertedInNew -1 + padding;
+            int end = diffs.Last().NewLineStart + diffs.Last().InsertedInNew - 1 + padding;
 
             return (end > lineCounts.New - 1) ? lineCounts.New - 1 : end;
         }
 
         #endregion
 
+        #region Joining close chunks
         public bool ChuckOverflows(DiffChunk b)
         {
             return (LeftLineEnd() + 1 >= b.LeftLineStart());
@@ -61,6 +86,7 @@ namespace DiffIntegration.DiffOutput
         {
             diffs.AddRange(b.diffs);
         }
+        #endregion
 
         #region Ultra-simple iterator
 
@@ -91,11 +117,11 @@ namespace DiffIntegration.DiffOutput
 
         public string Header()
         {
-            var x = LeftLineEnd();
-            var y = LeftLineStart();
+            int x = LeftLineEnd();
+            int y = LeftLineStart();
 
-            var c = RightLineEnd();
-            var d = RightLineStart();
+            int c = RightLineEnd();
+            int d = RightLineStart();
 
             return "@@ -"
                    + (LeftLineStart() + 1)

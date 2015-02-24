@@ -3,8 +3,14 @@ using System.IO;
 
 namespace DiffAlgorithm
 {
+    /// <summary>
+    /// Container for holding all information about a three-way diff.
+    /// </summary>
     public class Diff3
     {
+        /// <summary>
+        /// Number of lines for three diffed files.
+        /// </summary>
         public struct FilesLineCountStruct
         {
             public int Old;
@@ -12,6 +18,10 @@ namespace DiffAlgorithm
             public int His;
         }
 
+        /// <summary>
+        /// Do the files have an empty line at the end?
+        /// (Standard in Unix files)
+        /// </summary>
         public struct FilesEndsWithNewLineStruct
         {
             public bool Old;
@@ -19,6 +29,9 @@ namespace DiffAlgorithm
             public bool His;
         }
 
+        /// <summary>
+        /// All DiffItems.
+        /// </summary>
         public DiffItem[] Items { get; protected set; }
 
         private DateTime diffedTime;
@@ -30,6 +43,12 @@ namespace DiffAlgorithm
         public FilesLineCountStruct FilesLineCount;
         public FilesEndsWithNewLineStruct FilesEndsWithNewLine;
 
+        /// <summary>
+        /// Constructor for Diff3.
+        /// </summary>
+        /// <param name="oldFile">Old file diffed.</param>
+        /// <param name="newFile">New file diffed.</param>
+        /// <param name="hisFile">His new file diffed.</param>
         public Diff3(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
         {
             this.oldFile = oldFile;
@@ -41,6 +60,10 @@ namespace DiffAlgorithm
             FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }
 
+        /// <summary>
+        /// Insert calculated diff items into the container.
+        /// </summary>
+        /// <param name="diffItems">Diff item changes between the files.</param>
         public void SetDiffItems(DiffItem[] diffItems)
         {
             Items = diffItems;

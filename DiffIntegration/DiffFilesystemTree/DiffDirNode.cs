@@ -5,9 +5,20 @@ using CoreLibrary.Interfaces;
 
 namespace DiffIntegration.DiffFilesystemTree
 {
+    /// <summary>
+    /// DiffDirNode enhances DirNode for some features needed in diffing between files.
+    /// </summary>
     public class DiffDirNode : DirNode
     {
 
+        /// <summary>
+        /// Constructor for creating DiffDirNode.
+        /// </summary>
+        /// <param name="rootNode">Root directory for this node.</param>
+        /// <param name="relativePath">Relative path from top root directory.</param>
+        /// <param name="info">Directory info for this node.</param>
+        /// <param name="location">Location where this node has been found from.</param>
+        /// <param name="mode">Default diff mode.</param>
         public DiffDirNode(IFilesystemTreeDirNode rootNode, string relativePath, DirectoryInfo info, LocationEnum location, DiffModeEnum mode)
             : base(rootNode, relativePath, info, location, mode)
         {

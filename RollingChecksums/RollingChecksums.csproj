@@ -7,7 +7,7 @@
     <ProjectGuid>{C78D56E3-D78C-468E-A520-CE9B703CAB4A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Libraries</RootNamespace>
+    <RootNamespace>RollingChecksums</RootNamespace>
     <AssemblyName>RollingChecksums</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

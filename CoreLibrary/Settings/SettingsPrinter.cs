@@ -14,6 +14,10 @@ namespace CoreLibrary.Settings
 
         readonly int longestOption = 0;
 
+        /// <summary>
+        /// Constructor for SettingsPrinter.
+        /// </summary>
+        /// <param name="settings">Setting to be printed.</param>
         public SettingsPrinter(IEnumerable<ISettings> settings)
         {
             this.settings = new List<ISettings>();

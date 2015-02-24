@@ -65,7 +65,7 @@ namespace SyncFolders.Processors.Processors
 
                 while (threeWay.GetPossibleCombinations() > 0)
                 {
-                    int[] bufferLengths = new int[3];
+                    var bufferLengths = new int[3];
 
                     // load new buffers
                     if (threeWay.CanBaseFileBeSame(true))
@@ -113,10 +113,9 @@ namespace SyncFolders.Processors.Processors
             } finally
             {
                 // close readers if any
-                foreach (var reader in readers)
+                foreach (StreamReader reader in readers.Where(reader => reader != null))
                 {
-                    if (reader != null)
-                        reader.Close();
+                    reader.Close();
                 }
             }
 

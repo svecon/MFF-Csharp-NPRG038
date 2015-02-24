@@ -17,12 +17,11 @@ namespace CoreLibrary.Processors
     /// </summary>
     public class ProcessorsLoader : IProcessorLoader
     {
+        readonly SortedList<int, IPreProcessor> preProcessors;
 
-        SortedList<int, IPreProcessor> preProcessors;
+        readonly SortedList<int, IProcessor> processors;
 
-        SortedList<int, IProcessor> processors;
-
-        SortedList<int, IPostProcessor> postProcessors;
+        readonly SortedList<int, IPostProcessor> postProcessors;
 
         /// <summary>
         /// List of all settings for loaded processors.
@@ -50,6 +49,9 @@ namespace CoreLibrary.Processors
             LoadAllAvailableProcessors();
         }
 
+        /// <summary>
+        /// Traverses currently loaded assemblies and loads all classes with Processor interfaces.
+        /// </summary>
         public void LoadAllAvailableProcessors()
         {
             Type type = typeof(IProcessorBase);
@@ -86,6 +88,10 @@ namespace CoreLibrary.Processors
             }
         }
 
+        /// <summary>
+        /// Traverses currently loaded assemblies and load all classes with ISettings interface,
+        /// which are used as a base for every settings that processor can have.
+        /// </summary>
         public void LoadAllAvailableSettings()
         {
             availableSettings = new Dictionary<Type, Type>();
@@ -108,6 +114,10 @@ namespace CoreLibrary.Processors
             }
         }
 
+        /// <summary>
+        /// Traverses through found processors and creates instances of annotated fields with ISettings annotation.
+        /// </summary>
+        /// <param name="processor"></param>
         protected void RetrieveSettingsFromProcessor(IProcessorBase processor)
         {
             foreach (FieldInfo field in processor.GetType().GetFields())

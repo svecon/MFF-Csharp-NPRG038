@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
@@ -10,6 +9,9 @@ using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput
 {
+    /// <summary>
+    /// Processor for printing out edit script between two files.
+    /// </summary>
     public class EditScript : ProcessorAbstract
     {
         public override int Priority { get { return 125010; } }
@@ -66,6 +68,9 @@ namespace DiffIntegration.DiffOutput
             Console.WriteLine(sb.ToString());
         }
 
+        /// <summary>
+        /// Type of a diff chunk. Action that was performed on an old file to get new file.
+        /// </summary>
         private enum DiffType
         {
             Delete,
@@ -73,6 +78,11 @@ namespace DiffIntegration.DiffOutput
             Change
         }
 
+        /// <summary>
+        /// Calculate type of diff depending on number of rows changed.
+        /// </summary>
+        /// <param name="diff">Diff Item for given lines change.</param>
+        /// <returns>DiffType of the change between two files.</returns>
         private DiffType FindDiffType(DiffItem diff)
         {
             if (diff.DeletedInOld > 0 && diff.InsertedInNew > 0)
@@ -84,11 +94,13 @@ namespace DiffIntegration.DiffOutput
             return DiffType.Append;
         }
 
+        /// <summary>
+        /// Print header of a diff change.
+        /// </summary>
+        /// <param name="diff">DiffItem chunk.</param>
+        /// <returns>String header for a diff chunk.</returns>
         private string CreateHeader(DiffItem diff)
         {
-            int moveFirst = 0;
-            int moveSecond = 0;
-
             string header = "";
 
             switch (FindDiffType(diff))
@@ -113,6 +125,12 @@ namespace DiffIntegration.DiffOutput
             return header;
         }
 
+        /// <summary>
+        /// Print range of how many lines were affected by the change.
+        /// </summary>
+        /// <param name="startingLine">Starting line in a file.</param>
+        /// <param name="numberOfLines">Number of lines affected in a file.</param>
+        /// <returns></returns>
         private string CreateRange(int startingLine, int numberOfLines)
         {
             return numberOfLines > 1

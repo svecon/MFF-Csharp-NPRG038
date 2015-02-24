@@ -14,13 +14,16 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// </summary>
     public class ExecutionVisitor : IExecutionVisitor
     {
-
-        IProcessorLoader loader;
+        readonly IProcessorLoader loader;
 
         List<Task> tasks = new List<Task>();
 
         CancellationTokenSource tokenSource;
 
+        /// <summary>
+        /// Constructor for ExecutionVisitor.
+        /// </summary>
+        /// <param name="loader">Loader for all Processors.</param>
         public ExecutionVisitor(IProcessorLoader loader)
         {
             this.loader = loader;

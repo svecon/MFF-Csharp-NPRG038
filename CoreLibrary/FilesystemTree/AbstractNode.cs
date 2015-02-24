@@ -43,6 +43,12 @@ namespace CoreLibrary.FilesystemTree
 
         public abstract string GetAbsolutePath(LocationEnum location);
 
+        /// <summary>
+        /// Constructor for AbstractNode.
+        /// </summary>
+        /// <param name="info">FileSystemInfo for the node.</param>
+        /// <param name="location">Where the node came from.</param>
+        /// <param name="mode">Default mode.</param>
         protected AbstractNode(FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
         {
             Differences = DifferencesStatusEnum.Initial;
@@ -55,6 +61,10 @@ namespace CoreLibrary.FilesystemTree
             return ((int)location & Location) > 0;
         }
 
+        /// <summary>
+        /// Marks that the node has been found in another location.
+        /// </summary>
+        /// <param name="location">New location where node has been found.</param>
         protected void MarkFound(LocationEnum location)
         {
             Location = Location | (int)location;

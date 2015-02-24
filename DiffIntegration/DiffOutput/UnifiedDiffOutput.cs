@@ -11,6 +11,9 @@ using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput
 {
+    /// <summary>
+    /// Processor for printing out unified diff output between two files.
+    /// </summary>
     public class UnifiedDiffOutput : ProcessorAbstract
     {
         [Settings("Context padding in unified diff output.", "context-padding-output", "PO")]
@@ -36,6 +39,8 @@ namespace DiffIntegration.DiffOutput
                 return;
 
             var sb = new StringBuilder();
+
+            // print headers
             sb.AppendLine("--- " + CreateHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.LastWriteTime));
             sb.AppendLine("+++ " + CreateHeader(dnode.InfoRight.FullName, dnode.InfoRight.LastWriteTime));
 
@@ -49,6 +54,7 @@ namespace DiffIntegration.DiffOutput
                     chunks.Add(newChunk);
             }
 
+            // print chunks
             using (StreamReader streamA = ((FileInfo)dnode.InfoLeft).OpenText())
             using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
             {

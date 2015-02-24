@@ -1,8 +1,11 @@
 ﻿namespace DiffAlgorithm
 {
+    /// <summary>
+    /// Container for holding which lines have been changed in a file.
+    /// Used in the main diff algorithm.
+    /// </summary>
     internal class DiffData
     {
-
         /// <summary>Number of elements (lines).</summary>
         internal int Length;
 

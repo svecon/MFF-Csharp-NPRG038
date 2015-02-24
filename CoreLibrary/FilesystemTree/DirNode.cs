@@ -7,6 +7,9 @@ using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree
 {
+    /// <summary>
+    /// Directory node representing a directory in multiple locations.
+    /// </summary>
     public class DirNode : AbstractNode, IFilesystemTreeDirNode
     {
 
@@ -18,6 +21,14 @@ namespace CoreLibrary.FilesystemTree
 
         public string RelativePath { get; set; }
 
+        /// <summary>
+        /// Constructor for creating DirNode.
+        /// </summary>
+        /// <param name="rootNode">Root directory for this node.</param>
+        /// <param name="relativePath">Relative path from top root directory.</param>
+        /// <param name="info">Directory info for this node.</param>
+        /// <param name="location">Location where this node has been found from.</param>
+        /// <param name="mode">Default diff mode.</param>
         public DirNode(IFilesystemTreeDirNode rootNode, string relativePath, DirectoryInfo info, LocationEnum location, DiffModeEnum mode)
             : base(info, location, mode)
         {
@@ -34,6 +45,28 @@ namespace CoreLibrary.FilesystemTree
                 RelativePath = relativePath + @"\" + info.Name;
         }
 
+        /// <summary>
+        /// Helper method for constructing new DirNode, which allows more flexibility (for children classes).
+        /// </summary>
+        /// <param name="info">Directory info for the new directory node.</param>
+        /// <param name="location">Location from where the dir has been found from.</param>
+        /// <returns>new IFilesystemTreeDirNode</returns>
+        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
+        {
+            return new DirNode(RootNode, RelativePath, info, location, Mode);
+        }
+
+        /// <summary>
+        /// Helper method for constructing new FileNode, which allows more flexibility (for children classes).
+        /// </summary>
+        /// <param name="info">Directory info for the new directory node.</param>
+        /// <param name="location">Location from where the dir has been found from.</param>
+        /// <returns>new IFilesystemTreeFileNode</returns>
+        protected virtual IFilesystemTreeFileNode CreateFileNode(FileInfo info, LocationEnum location)
+        {
+            return new FileNode(this, info, location, Mode);
+        }
+
         public override void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(this);
@@ -43,13 +76,6 @@ namespace CoreLibrary.FilesystemTree
         {
             //TODO maybe this could be done faster? (now it is N^2)
 
-            //foreach (var dir in Directories)
-            //{
-            //    if (dir.Info.Name == info.Name)
-            //        return dir;
-            //}
-            //return null;
-
             return Directories.FirstOrDefault(dir => dir.Info.Name == info.Name);
         }
 
@@ -57,38 +83,21 @@ namespace CoreLibrary.FilesystemTree
         {
             //TODO maybe this could be done faster? (now it is N^2)
 
-            //foreach (var file in Files)
-            //{
-            //    if (file.Info.Name == info.Name)
-            //        return file;
-            //}
-            //return null;
-
             return Files.FirstOrDefault(file => file.Info.Name == info.Name);
         }
 
         public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
         {
-            var dirDiffNode = CreateDirNode(info, location);
+            IFilesystemTreeDirNode dirDiffNode = CreateDirNode(info, location);
             Directories.Add(dirDiffNode);
             return dirDiffNode;
         }
 
-        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
-        {
-            return new DirNode(RootNode, RelativePath, info, location, Mode);
-        }
-
         public IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location)
         {
-            var node = CreateFileNode(info, location);
+            IFilesystemTreeFileNode node = CreateFileNode(info, location);
             Files.Add(node);
             return node;
-        }
-
-        protected virtual IFilesystemTreeFileNode CreateFileNode(FileInfo info, LocationEnum location)
-        {
-            return new FileNode(this, info, location, Mode);
         }
 
         public double GetSize()
