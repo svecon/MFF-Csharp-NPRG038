@@ -39,7 +39,7 @@ namespace DiffAlgorithm
             /// Did the file end with a new s character?
             /// </summary>
             /// <returns></returns>
-            public bool EndedWithNewLine()
+            public bool DoesFileEndWithNewLine()
             {
                 return endedWithNewline;
             }
@@ -183,12 +183,9 @@ namespace DiffAlgorithm
             var newData = new DiffData(HashStringLines(newFileReader));
             hashedLines.Clear();
 
-            diff.FilesLineCount.Old = oldData.Length;
-            diff.FilesLineCount.New = newData.Length;
-
-            diff.FilesEndsWithNewLine.Old = oldFileReader.EndedWithNewLine();
-            diff.FilesEndsWithNewLine.New = newFileReader.EndedWithNewLine();
-
+            diff.SetStatistics(oldData.Length, newData.Length,
+                oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine());
+            
             var da = new DiffAlgorithm(oldData, newData);
             diff.SetDiffItems(da.CreateDiffs());
 
@@ -217,13 +214,8 @@ namespace DiffAlgorithm
             var hisData = new DiffData(HashStringLines(hisFileReader));
             hashedLines.Clear();
 
-            diff.FilesLineCount.Old = oldData.Length;
-            diff.FilesLineCount.New = newData.Length;
-            diff.FilesLineCount.His = hisData.Length;
-
-            diff.FilesEndsWithNewLine.Old = oldFileReader.EndedWithNewLine();
-            diff.FilesEndsWithNewLine.New = newFileReader.EndedWithNewLine();
-            diff.FilesEndsWithNewLine.His = hisFileReader.EndedWithNewLine();
+            diff.SetStatistics(oldData.Length, newData.Length, hisData.Length,
+                oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine(), hisFileReader.DoesFileEndWithNewLine());
 
             var da = new DiffAlgorithm(oldData, newData);
             var da2 = new DiffAlgorithm(oldData, hisData);
@@ -299,6 +291,7 @@ namespace DiffAlgorithm
         /// <returns>Modified string</returns>
         private string ApplyOptions(string s, bool trimSpace, bool ignoreSpace, bool ignoreCase)
         {
+            // TODO: GLOBAL CONFIG???????
             if (trimSpace)
                 s = s.Trim();
 

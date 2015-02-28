@@ -69,5 +69,28 @@ namespace DiffAlgorithm
             Items = diffItems;
         }
 
+        /// <summary>
+        /// Sets statistics useful during diffing.
+        /// 
+        /// Number of lines.
+        /// Does file end with new line?
+        /// </summary>
+        /// <param name="oldLineCount">Number of lines in the old file.</param>
+        /// <param name="newLineCount">Number of files in the new file.</param>
+        /// <param name="hisLineCount">Number of files in his file.</param>
+        /// <param name="oldEndsNewLine">Does old file end with new line?</param>
+        /// <param name="newEndsNewLine">Does new file end with new line?</param>
+        /// <param name="hisEndsNewLine">Does his file end with new line?</param>
+        public void SetStatistics(int oldLineCount, int newLineCount, int hisLineCount, bool oldEndsNewLine, bool newEndsNewLine, bool hisEndsNewLine)
+        {
+            FilesLineCount.Old = oldLineCount;
+            FilesLineCount.New = newLineCount;
+            FilesLineCount.His = hisLineCount;
+
+            FilesEndsWithNewLine.Old = oldEndsNewLine;
+            FilesEndsWithNewLine.New = newEndsNewLine;
+            FilesEndsWithNewLine.His = hisEndsNewLine;
+        }
+
     }
 }

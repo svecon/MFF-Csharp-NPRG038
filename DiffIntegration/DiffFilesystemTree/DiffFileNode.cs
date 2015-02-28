@@ -11,16 +11,15 @@ namespace DiffIntegration.DiffFilesystemTree
     /// </summary>
     public class DiffFileNode : FileNode
     {
+        /// <summary>
+        /// Diff contains all information about a 2-way diff.
+        /// </summary>
         public Diff Diff { get; private set; }
 
-        public struct NumberOfLinesStruct
-        {
-            public int Base;
-            public int Left;
-            public int Right;
-        }
-
-        public NumberOfLinesStruct NumberOfLines;
+        /// <summary>
+        /// Diff3 contains all information about a 3-way diff.
+        /// </summary>
+        public Diff3 Diff3 { get; private set; }
 
         /// <summary>
         /// Default construtor for DiffFileNode (used in the FilesystemTree).
