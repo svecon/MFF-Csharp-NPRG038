@@ -161,7 +161,7 @@ namespace DiffAlgorithm
 
             var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
 
-            return d3A.Parse();
+            return d3A.MergeIntoDiff3Chunks();
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace DiffAlgorithm
             var da2 = new DiffAlgorithm(oldData, hisData);
 
             var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
-            diff.SetDiffItems(d3A.Parse());
+            diff.SetDiffItems(d3A.MergeIntoDiff3Chunks());
 
             return diff;
         }
