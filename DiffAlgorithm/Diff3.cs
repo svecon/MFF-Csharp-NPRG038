@@ -32,7 +32,7 @@ namespace DiffAlgorithm
         /// <summary>
         /// All DiffItems.
         /// </summary>
-        public DiffItem[] Items { get; protected set; }
+        public Diff3Item[] Items { get; protected set; }
 
         private DateTime diffedTime;
 
@@ -64,7 +64,7 @@ namespace DiffAlgorithm
         /// Insert calculated diff items into the container.
         /// </summary>
         /// <param name="diffItems">Diff item changes between the files.</param>
-        public void SetDiffItems(DiffItem[] diffItems)
+        public void SetDiffItems(Diff3Item[] diffItems)
         {
             Items = diffItems;
         }

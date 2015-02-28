@@ -27,6 +27,11 @@
         {
             Data = initData;
             Length = initData.Length;
+            RecreateModified();
+        }
+
+        public void RecreateModified()
+        {
             Modified = new bool[Length + 2];
         }
 

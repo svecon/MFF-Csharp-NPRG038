@@ -245,9 +245,14 @@ namespace DiffAlgorithm
         /// This work is licensed under a Creative Commons Attribution 2.0 Germany License.
         /// see http://creativecommons.org/licenses/by/2.0/de/
         /// </summary>
+        /// <param name="forceClean">Cleans diff bool[] to allow reusability.</param>
         /// <returns>DiffItems array.</returns>
-        public DiffItem[] CreateDiffs()
+        public DiffItem[] CreateDiffs(bool forceClean = false)
         {
+            // needed when dataA is shared for two instances in Diff3 algorithm
+            if (forceClean)
+                dataA.RecreateModified();
+
             Lcs(0, dataA.Length, 0, dataB.Length);
 
             var diffItemsList = new List<DiffItem>();

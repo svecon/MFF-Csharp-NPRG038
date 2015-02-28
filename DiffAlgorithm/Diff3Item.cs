@@ -1,4 +1,5 @@
 ﻿
+using System.Text;
 using CoreLibrary.Enums;
 
 namespace DiffAlgorithm
@@ -6,7 +7,7 @@ namespace DiffAlgorithm
     /// <summary>
     /// Container for representing one diff change between three files.
     /// </summary>
-    internal class Diff3Item
+    public class Diff3Item
     {
         /// <summary>
         /// Line number of old file where change starts.
@@ -38,22 +39,48 @@ namespace DiffAlgorithm
         /// </summary>
         public readonly int HisAffectedLines;
 
-        private DifferencesStatusEnum differeces;
+        /// <summary>
+        /// Type of the diff chunk - which files differ.
+        /// </summary>
+        public DifferencesStatusEnum Differeces;
 
         public Diff3Item(int oldLineStart, int newLineStart, int hisLineStart, int oldAffectedLines,
             int newAffectedLines, int hisAffectedLines, DifferencesStatusEnum diff)
         {
             OldLineStart = oldLineStart;
             NewLineStart = newLineStart;
-            HisLineStart = HisLineStart;
+            HisLineStart = hisLineStart;
 
             OldAffectedLines = oldAffectedLines;
             NewAffectedLines = newAffectedLines;
             HisAffectedLines = hisAffectedLines;
 
-            differeces = diff;
+            Differeces = diff;
         }
 
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append(OldLineStart)
+                .Append(".")
+                .Append(NewLineStart)
+                .Append(".")
+                .Append(HisLineStart)
+                .Append("^")
+                .Append(OldAffectedLines)
+                .Append(".")
+                .Append(NewAffectedLines)
+                .Append(".")
+                .Append(HisAffectedLines)
+                ;
+
+            if (Differeces == DifferencesStatusEnum.AllDifferent)
+            {
+                sb.Append("!!");
+            }
+
+            return sb.ToString();
+        }
 
     }
 }

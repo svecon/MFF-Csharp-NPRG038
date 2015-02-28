@@ -141,6 +141,30 @@ namespace DiffAlgorithm
         }
 
         /// <summary>
+        /// Diffs three texts.
+        /// </summary>
+        /// <param name="oldText">Old text.</param>
+        /// <param name="newText">My new text.</param>
+        /// <param name="hisText">His new text.</param>
+        /// <returns>Diff3Item[] showing the differences between three texts.</returns>
+        public Diff3Item[] DiffText(string oldText, string newText, string hisText)
+        {
+            hashedLines = new Dictionary<string, int>();
+
+            var oldData = new DiffData(HashStringLines(oldText));
+            var newData = new DiffData(HashStringLines(newText));
+            var hisData = new DiffData(HashStringLines(hisText));
+            hashedLines.Clear();
+
+            var da = new DiffAlgorithm(oldData, newData);
+            var da2 = new DiffAlgorithm(oldData, hisData);
+
+            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
+
+            return d3A.Parse();
+        }
+
+        /// <summary>
         /// Diffs two files.
         /// </summary>
         /// <param name="oldFile">Old file to be diffed.</param>
@@ -177,7 +201,7 @@ namespace DiffAlgorithm
         /// <param name="oldFile">Old file.</param>
         /// <param name="newFile">My new file.</param>
         /// <param name="hisFile">His new file.</param>
-        /// <returns></returns>
+        /// <returns>Diff3 container with all changes between three files.</returns>
         public Diff3 DiffFiles(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
         {
             var diff = new Diff3(oldFile, newFile, hisFile);
@@ -204,9 +228,8 @@ namespace DiffAlgorithm
             var da = new DiffAlgorithm(oldData, newData);
             var da2 = new DiffAlgorithm(oldData, hisData);
 
-            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(), newData.Data, hisData.Data);
-
-            var x = d3A.Parse();
+            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
+            diff.SetDiffItems(d3A.Parse());
 
             return diff;
         }
