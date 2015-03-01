@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Remoting;
 using System.Text;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
@@ -11,7 +10,7 @@ using DiffIntegration.DiffFilesystemTree;
 namespace DiffIntegration.DiffOutput
 {
     /// <summary>
-    /// Processor for printing out edit script between two files.
+    /// Processor for printing out 3-way diff between three files.
     /// </summary>
     public class Diff3NormalOutput : ProcessorAbstract
     {

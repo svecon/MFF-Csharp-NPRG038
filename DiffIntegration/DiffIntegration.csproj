@@ -42,6 +42,7 @@
     <Compile Include="DiffFilesystemTree\DiffFilesystemTree.cs" />
     <Compile Include="DiffFilesystemTree\DiffDirNode.cs" />
     <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />
+    <Compile Include="DiffOutput\Diff3Merge.cs" />
     <Compile Include="DiffOutput\DiffChunk.cs" />
     <Compile Include="DiffOutput\Diff3NormalOutput.cs" />
     <Compile Include="DiffOutput\EditScript.cs" />
