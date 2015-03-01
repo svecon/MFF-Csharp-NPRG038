@@ -35,7 +35,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 l,
-                o)), "3.3.-1^0.2.0");
+                o)), "3.3.3^0.2.0");
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 o,
-                l)), "3.-1.3^0.0.2");
+                l)), "3.3.3^0.0.2");
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 l,
-                r)), "3.3.-1^0.2.0#6.-1.6^0.0.2#10.12.-1^0.1.0");
+                r)), "3.3.3^0.2.0#6.8.6^0.0.2#10.12.12^0.1.0");
         }
 
         [TestMethod]
@@ -75,7 +75,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 l,
-                o)), "2.2.-1^2.2.0");
+                o)), "2.2.2^2.2.0");
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 o,
-                l)), "2.-1.2^2.0.2");
+                l)), "2.2.2^2.0.2");
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 l,
-                r)), "1.1.1^1.1.1#3.3.3^2.0.0#6.4.-1^0.2.0#8.8.6^0.1.1!!#10.11.-1^0.1.0#12.-1.11^0.0.2");
+                r)), "1.1.1^1.1.1#3.3.3^2.0.0#6.4.4^0.2.0#8.8.6^0.1.1!!#10.11.9^0.1.0#12.14.11^0.0.2");
         }
 
         [TestMethod]

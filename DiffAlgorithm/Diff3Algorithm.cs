@@ -14,32 +14,67 @@ namespace DiffAlgorithm
     /// </summary>
     class Diff3Algorithm
     {
-        private readonly DiffItem[] leftBase;
-        private readonly DiffItem[] rightBase;
+        /// <summary>
+        /// 2-way diff between new and old files.
+        /// </summary>
+        private readonly DiffItem[] diffOldNew;
 
+        /// <summary>
+        /// 2-way diff between new and his files.
+        /// </summary>
+        private readonly DiffItem[] diffOldHis;
+
+        /// <summary>
+        /// Hashed new file.
+        /// 
+        /// Used in checking conflicts.
+        /// </summary>
         private readonly int[] leftFile;
+
+        /// <summary>
+        /// Hashed his file.
+        /// 
+        /// Used in checking conflicts.
+        /// </summary>
         private readonly int[] rightFile;
 
+        /// <summary>
+        /// Temporary container for Diff3Items
+        /// </summary>
         private List<Diff3Item> diff3Items;
+
+        /// <summary>
+        /// How many lines ahead/back is old file compared to new file.
+        /// 
+        /// Always in regard to start of the diff chunk.
+        /// </summary>
+        private int deltaToNew;
+
+        /// <summary>
+        /// How many lines ahead/back is old file compared to his file.
+        /// 
+        /// Always in regard to start of the diff chunk.
+        /// </summary>
+        private int deltaToHis;
 
         #region very simple iterators over the two-way diffs
         int newIterator = 0;
         int hisIterator = 0;
-        private DiffItem? CurrentNew { get { if (newIterator < leftBase.Length) return leftBase[newIterator]; return null; } }
-        private DiffItem? CurrentHis { get { if (hisIterator < rightBase.Length) return rightBase[hisIterator]; return null; } }
+        private DiffItem? CurrentNew { get { if (newIterator < diffOldNew.Length) return diffOldNew[newIterator]; return null; } }
+        private DiffItem? CurrentHis { get { if (hisIterator < diffOldHis.Length) return diffOldHis[hisIterator]; return null; } }
         #endregion
 
         /// <summary>
         /// Constructor for Diff3Algorithm.
         /// </summary>
-        /// <param name="leftBase">Two-way diff between old and new file.</param>
-        /// <param name="rightBase">Two-way diff between old and his file.</param>
+        /// <param name="diffOldNew">Two-way diff between old and new file.</param>
+        /// <param name="diffOldHis">Two-way diff between old and his file.</param>
         /// <param name="leftFile">Hashed new file.</param>
         /// <param name="rightFile">Hashed his file.</param>
-        public Diff3Algorithm(DiffItem[] leftBase, DiffItem[] rightBase, int[] leftFile, int[] rightFile)
+        public Diff3Algorithm(DiffItem[] diffOldNew, DiffItem[] diffOldHis, int[] leftFile, int[] rightFile)
         {
-            this.leftBase = leftBase;
-            this.rightBase = rightBase;
+            this.diffOldNew = diffOldNew;
+            this.diffOldHis = diffOldHis;
 
             this.leftFile = leftFile;
             this.rightFile = rightFile;
@@ -60,7 +95,7 @@ namespace DiffAlgorithm
             {
                 #region Solve partially overlapping diffs by extending them
 
-                bool wasHis; 
+                bool wasHis;
                 DiffItem lowerDiff;
                 Diff3Item old;
 
@@ -71,7 +106,7 @@ namespace DiffAlgorithm
                 // are they overlapping?
                 {
                     // remove last diff item -- alias "old"
-                    diff3Items.RemoveAt(diff3Items.Count - 1);
+                    RemoveLastDiff3();
 
                     if (wasHis)
                         hisIterator++;
@@ -79,7 +114,7 @@ namespace DiffAlgorithm
                         newIterator++;
 
                     // create extended chunk
-                    diff3Items.Add(new Diff3Item(
+                    AddNewDiff3(new Diff3Item(
                             old.OldLineStart,
                             old.NewLineStart,
                             old.HisLineStart,
@@ -100,17 +135,21 @@ namespace DiffAlgorithm
             return diff3Items.ToArray();
         }
 
+        /// <summary>
+        /// Iterates over 2-way diffs and merge them into Diff3Items
+        /// depending on their overlapping
+        /// </summary>
         private void JoinDiffsIntoOne()
         {
             if (CurrentNew == null)
             // there are only a changes on his side remaining
             {
-                diff3Items.Add(CreateFromHis());
+                AddNewDiff3(CreateFromHis());
                 hisIterator++;
             } else if (CurrentHis == null)
             // there are only a changes on my side remaining
             {
-                diff3Items.Add(CreateFromNew());
+                AddNewDiff3(CreateFromNew());
                 newIterator++;
 
             } else if (CurrentNew.Value.OldLineStart == CurrentHis.Value.OldLineStart)
@@ -131,7 +170,7 @@ namespace DiffAlgorithm
                         break;
                     }
 
-                    diff3Items.Add(areSame
+                    AddNewDiff3(areSame
                         ? CreateFullChunk(DifferencesStatusEnum.LeftRightSame)
                         : CreateFullChunk(DifferencesStatusEnum.AllDifferent));
 
@@ -140,23 +179,23 @@ namespace DiffAlgorithm
                 } else
                 // adding different number of lines => conflicting
                 {
-                    diff3Items.Add(CreateAllDifferent());
+                    AddNewDiff3(CreateAllDifferent());
                     newIterator++; hisIterator++;
                 }
             } else if (AreOverlapping(CurrentNew, CurrentHis) || AreOverlapping(CurrentHis, CurrentNew))
             // check if they are overlapping
             {
-                diff3Items.Add(CreateAllDifferent());
+                AddNewDiff3(CreateAllDifferent());
                 newIterator++; hisIterator++;
             } else if (CurrentNew.Value.OldLineStart < CurrentHis.Value.OldLineStart)
             // take CurrentNew as it starts lower 
             {
-                diff3Items.Add(CreateFromNew());
+                AddNewDiff3(CreateFromNew());
                 newIterator++;
             } else if (CurrentNew.Value.OldLineStart > CurrentHis.Value.OldLineStart)
             // take CurrentHis as it starts lower
             {
-                diff3Items.Add(CreateFromHis());
+                AddNewDiff3(CreateFromHis());
                 hisIterator++;
             } else
             {
@@ -194,6 +233,34 @@ namespace DiffAlgorithm
         }
 
         /// <summary>
+        /// Interface method for adding new Diff3Item.
+        /// 
+        /// Recalculates deltas for line numbers with regards to old file.
+        /// </summary>
+        /// <param name="item">Diff3Item to be added.</param>
+        private void AddNewDiff3(Diff3Item item)
+        {
+            deltaToHis += item.HisAffectedLines - item.OldAffectedLines;
+            deltaToNew += item.NewAffectedLines - item.OldAffectedLines;
+
+            diff3Items.Add(item);
+        }
+
+        /// <summary>
+        /// Interface method for removing Diff3Item.
+        /// 
+        /// Realculates deltas for line numbers with regards to old file.
+        /// </summary>
+        private void RemoveLastDiff3()
+        {
+            Diff3Item item = diff3Items.Last();
+            deltaToHis -= item.HisAffectedLines - item.OldAffectedLines;
+            deltaToNew -= item.NewAffectedLines - item.OldAffectedLines;
+
+            diff3Items.RemoveAt(diff3Items.Count - 1);
+        }
+
+        /// <summary>
         /// Checks if two 2-way diffs are overlapping.
         /// </summary>
         /// <param name="bottom">Bottom 2-way diff.</param>
@@ -214,10 +281,11 @@ namespace DiffAlgorithm
         private Diff3Item CreateFromNew()
         {
             Debug.Assert(CurrentNew != null, "CurrentNew != null");
+
             return new Diff3Item(
                 CurrentNew.Value.OldLineStart,
                 CurrentNew.Value.NewLineStart,
-                -1, // todo: not needed, but can be calculated for a check
+                CurrentNew.Value.OldLineStart + deltaToHis,
                 CurrentNew.Value.DeletedInOld,
                 CurrentNew.Value.InsertedInNew,
                 0,
@@ -232,9 +300,10 @@ namespace DiffAlgorithm
         private Diff3Item CreateFromHis()
         {
             Debug.Assert(CurrentHis != null, "CurrentHis != null");
+
             return new Diff3Item(
                 CurrentHis.Value.OldLineStart,
-                -1, // todo: not needed, but can be calculated for a check
+                CurrentHis.Value.OldLineStart + deltaToNew,
                 CurrentHis.Value.NewLineStart,
                 CurrentHis.Value.DeletedInOld,
                 0,
@@ -251,6 +320,7 @@ namespace DiffAlgorithm
         {
             Debug.Assert(CurrentHis != null, "CurrentHis != null");
             Debug.Assert(CurrentNew != null, "CurrentNew != null");
+
             return new Diff3Item(
                 CurrentHis.Value.OldLineStart,
                 CurrentNew.Value.NewLineStart,
