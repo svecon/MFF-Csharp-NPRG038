@@ -180,24 +180,49 @@ namespace CoreLibrary.Processors
             }
         }
 
+        public void PrintLoadedProcessors()
+        {
+            Console.WriteLine("PreProcessors ---");
+            foreach (IPreProcessor processor in GetPreProcessors())
+            {
+                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+            }
+
+            Console.WriteLine("Processors ---");
+            foreach (IProcessor processor in GetProcessors())
+            {
+                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+            }
+
+            Console.WriteLine("PostProcessors ---");
+            foreach (IPostProcessor processor in GetPostProcessors())
+            {
+                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+            }
+        }
+
         public IEnumerable<IPreProcessor> GetPreProcessors()
         {
-            return preProcessors.Select(processor => processor.Value); // LINQ YIELD
+            return preProcessors.Select(processor => processor.Value);
+            // LINQ YIELD
         }
 
         public IEnumerable<IProcessor> GetProcessors()
         {
-            return processors.Select(processor => processor.Value); // LINQ YIELD
+            return processors.Select(processor => processor.Value);
+            // LINQ YIELD
         }
 
         public IEnumerable<IPostProcessor> GetPostProcessors()
         {
-            return postProcessors.Select(processor => processor.Value); // LINQ YIELD
+            return postProcessors.Select(processor => processor.Value);
+            // LINQ YIELD
         }
 
         public IEnumerable<ISettings> GetSettings()
         {
-            return settings; // LINQ YIELD
+            return settings;
+            // LINQ YIELD
         }
     }
 }

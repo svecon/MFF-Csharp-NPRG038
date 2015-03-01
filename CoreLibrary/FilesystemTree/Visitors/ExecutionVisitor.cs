@@ -16,9 +16,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
     {
         readonly IProcessorLoader loader;
 
-        List<Task> tasks = new List<Task>();
+        readonly List<Task> tasks = new List<Task>();
 
-        CancellationTokenSource tokenSource;
+        readonly CancellationTokenSource tokenSource;
 
         /// <summary>
         /// Constructor for ExecutionVisitor.
@@ -47,10 +47,10 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // add task with processors
             tasks.Add(task);
 
-            foreach (var file in node.Files)
+            foreach (IFilesystemTreeFileNode file in node.Files)
                 file.Accept(this);
 
-            foreach (var dir in node.Directories)
+            foreach (IFilesystemTreeDirNode dir in node.Directories)
                 dir.Accept(this);
         }
 
