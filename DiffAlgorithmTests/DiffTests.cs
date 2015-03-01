@@ -55,7 +55,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(TestHelper(d.DiffText(
                 "a,b,-,c,d,e,f,f".Replace(',', '\n'),
                 "a,b,x,c,e,f".Replace(',', '\n'))),
-                "1.1.2.2*1.0.4.4*1.0.6.5*");
+                "1.1.2.2*1.0.4.4*1.0.7.6*");
         }
 
         [TestMethod]
@@ -66,6 +66,16 @@ namespace DiffAlgorithmTests
                 "c1,a,c2,b,c,d,e,g,h,i,j,c3,k,l".Replace(',', '\n'),
                 "C1,a,C2,b,c,d,e,I1,e,g,h,i,j,C3,k,I2,l".Replace(',', '\n'))),
                 "1.1.0.0*1.1.2.2*0.2.7.7*1.1.11.13*0.1.13.15*");
+        }
+
+        [TestMethod]
+        public void DiffLongChainOfRepeats()
+        {
+            var d = new DiffHelper();
+            Assert.AreEqual(TestHelper(d.DiffText(
+                "a,a,a,a,a,a,a,a,a,a".Replace(',', '\n'),
+                "a,a,a,a,-,a,a,a,a,a".Replace(',', '\n'))),
+                "0.1.4.4*1.0.9.10*");
         }
 
         [TestMethod]

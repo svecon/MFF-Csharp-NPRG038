@@ -122,7 +122,7 @@ namespace DiffAlgorithm
             hashedLines.Clear();
 
             var da = new DiffAlgorithm(oldData, newData);
-            return da.CreateDiffs();
+            return da.RunAndCreateDiffs();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace DiffAlgorithm
             var dataB = new DiffData(newArray);
 
             var da = new DiffAlgorithm(dataA, dataB);
-            return da.CreateDiffs();
+            return da.RunAndCreateDiffs();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace DiffAlgorithm
             var da = new DiffAlgorithm(oldData, newData);
             var da2 = new DiffAlgorithm(oldData, hisData);
 
-            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
+            var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
 
             return d3A.MergeIntoDiff3Chunks();
         }
@@ -187,7 +187,7 @@ namespace DiffAlgorithm
                 oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine());
             
             var da = new DiffAlgorithm(oldData, newData);
-            diff.SetDiffItems(da.CreateDiffs());
+            diff.SetDiffItems(da.RunAndCreateDiffs());
 
             return diff;
         }
@@ -220,7 +220,7 @@ namespace DiffAlgorithm
             var da = new DiffAlgorithm(oldData, newData);
             var da2 = new DiffAlgorithm(oldData, hisData);
 
-            var d3A = new Diff3Algorithm(da.CreateDiffs(), da2.CreateDiffs(true), newData.Data, hisData.Data);
+            var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
             diff.SetDiffItems(d3A.MergeIntoDiff3Chunks());
 
             return diff;

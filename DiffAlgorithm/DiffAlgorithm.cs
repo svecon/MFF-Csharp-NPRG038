@@ -45,16 +45,15 @@ namespace DiffAlgorithm
     /// See TODO: hints.
     /// 
     /// diff.cs: A port of the algorythm to C#
-    /// Created by Matthias Hertel, see http://www.mathertel.de
-    /// This work is licensed under a Creative Commons Attribution 2.0 Germany License.
-    /// see http://creativecommons.org/licenses/by/2.0/de/
+    /// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+    /// This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
     /// 
     /// Changes:
     /// 2002.09.20 There was a "hang" in some situations.
     /// Now I undestand a little bit more of the SMS algorithm. 
     /// There have been overlapping boxes; that where analyzed partial differently.
     /// One return-point is enough.
-    /// A assertion was added in CreateDiffs when in debug-mode, that counts the number of equal (no modified) lines in both arrays.
+    /// A assertion was added in RunAndCreateDiffs when in debug-mode, that counts the number of equal (no modified) lines in both arrays.
     /// They must be identical.
     /// 
     /// 2003.02.07 Out of bounds error in the Up/Down vector arrays in some situations.
@@ -66,6 +65,11 @@ namespace DiffAlgorithm
     /// 2006.03.08 Refactored the API to static methods on the Diff class to make usage simpler.
     /// 2006.03.10 using the standard Debug class for self-test now.
     ///            compile with: csc /target:exe /out:diffTest.exe /d:DEBUG /d:TRACE /d:SELFTEST Diff.cs
+    /// 2007.01.06 license agreement changed to a BSD style license.
+    /// 2007.06.03 added the Optimize method.
+    /// 2007.09.23 UpVector and DownVector optimization by Jan Stoklasa ().
+    /// 2008.05.31 Adjusted the testing code that failed because of the Optimize method (not a bug in the diff algorithm).
+    /// 2008.10.08 Fixing a test case and adding a new test case.
     /// </summary>
     class DiffAlgorithm
     {
@@ -86,15 +90,16 @@ namespace DiffAlgorithm
         /// The published algorithm passes recursively parts of the A and B sequences.
         /// To avoid copying these arrays the lower and upper bounds are passed while the sequences stay constant.
         /// 
-        /// Created by Matthias Hertel, see http://www.mathertel.de
-        /// This work is licensed under a Creative Commons Attribution 2.0 Germany License.
-        /// see http://creativecommons.org/licenses/by/2.0/de/
+        /// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+        /// This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
         /// </summary>
         /// <param name="lowerA">Lower bound for data A</param>
         /// <param name="upperA">Upper bound for data A</param>
         /// <param name="lowerB">Lower bound for data A</param>
         /// <param name="upperB">Upper bound for data B</param>
-        private void Lcs(int lowerA, int upperA, int lowerB, int upperB)
+        /// <param name="downVector">a vector for the (0,0) to (x,y) search. Passed as a parameter for speed reasons.</param>
+        /// <param name="upVector">a vector for the (u,v) to (N,M) search. Passed as a parameter for speed reasons.</param>
+        private void Lcs(int lowerA, int upperA, int lowerB, int upperB, int[] downVector, int[] upVector)
         {
             // Fast walkthrough equal lines at the start
             while (lowerA < upperA && lowerB < upperB && dataA.Data[lowerA] == dataB.Data[lowerB])
@@ -123,27 +128,28 @@ namespace DiffAlgorithm
             } else
             {
                 // Find the middle snakea and length of an optimal path for A and B
-                SmsPoint snake = Sms(lowerA, upperA, lowerB, upperB);
+                SmsPoint snake = Sms(lowerA, upperA, lowerB, upperB, downVector, upVector);
 
                 // The path is from LowerX to (x,y) and (x,y) ot UpperX
-                Lcs(lowerA, snake.X, lowerB, snake.Y);
-                Lcs(snake.X, upperA, snake.Y, upperB);
+                Lcs(lowerA, snake.X, lowerB, snake.Y, downVector, upVector);
+                Lcs(snake.X, upperA, snake.Y, upperB, downVector, upVector);
             }
         }
 
         /// <summary>
         /// This is the algorithm to find the Shortest Middle Snake (SMS).
         ///
-        /// Created by Matthias Hertel, see http://www.mathertel.de
-        /// This work is licensed under a Creative Commons Attribution 2.0 Germany License.
-        /// see http://creativecommons.org/licenses/by/2.0/de/
+        /// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+        /// This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
         /// </summary>
         /// <param name="lowerA">Lower bound for data A.</param>
         /// <param name="upperA">Upper bound for data A.</param>
         /// <param name="lowerB">Lower bound for data B.</param>
         /// <param name="upperB">Upper bound for data B.</param>
+        /// <param name="downVector">a vector for the (0,0) to (x,y) search. Passed as a parameter for speed reasons.</param>
+        /// <param name="upVector">a vector for the (u,v) to (N,M) search. Passed as a parameter for speed reasons.</param>
         /// <returns></returns>
-        private SmsPoint Sms(int lowerA, int upperA, int lowerB, int upperB)
+        private SmsPoint Sms(int lowerA, int upperA, int lowerB, int upperB, int[] downVector, int[] upVector)
         {
             int max = dataA.Length + dataB.Length + 1;
 
@@ -152,12 +158,6 @@ namespace DiffAlgorithm
 
             int delta = (upperA - lowerA) - (upperB - lowerB);
             bool oddDelta = (delta & 1) != 0;
-
-            // vector for the (0,0) to (x,y) search
-            var downVector = new int[2 * max + 2];
-
-            // vector for the (u,v) to (N,M) search
-            var upVector = new int[2 * max + 2];
 
             // The vectors in the publication accepts negative indexes. the vectors implemented here are 0-based
             // and are access using diffItemsList specific offset: UpOffset UpVector and DownOffset for DownVektor
@@ -238,23 +238,49 @@ namespace DiffAlgorithm
         }
 
         /// <summary>
-        /// Scan the tables of which lines are inserted and deleted,
-        /// producing an edit script in forward order.
-        /// 
-        /// Created by Matthias Hertel, see http://www.mathertel.de
-        /// This work is licensed under a Creative Commons Attribution 2.0 Germany License.
-        /// see http://creativecommons.org/licenses/by/2.0/de/
+        /// Run the algorithm.
         /// </summary>
         /// <param name="forceClean">Cleans diff bool[] to allow reusability.</param>
-        /// <returns>DiffItems array.</returns>
-        public DiffItem[] CreateDiffs(bool forceClean = false)
+        public void Run(bool forceClean = false)
         {
             // needed when dataA is shared for two instances in Diff3 algorithm
             if (forceClean)
                 dataA.RecreateModified();
 
-            Lcs(0, dataA.Length, 0, dataB.Length);
+            int max = dataA.Length + dataB.Length + 1;
+            // vector for the (0,0) to (x,y) search
+            var downVector = new int[2 * max + 2];
+            // vector for the (u,v) to (N,M) search
+            var upVector = new int[2 * max + 2];
 
+            Lcs(0, dataA.Length, 0, dataB.Length, downVector, upVector);
+
+            Optimize(dataA);
+            Optimize(dataB);
+        }
+
+        /// <summary>
+        /// Run the algorithm, create and return 2-way diffs.
+        /// </summary>
+        /// <param name="forceClean">Cleans diff bool[] to allow reusability.</param>
+        /// <returns>DiffItems array.</returns>
+        public DiffItem[] RunAndCreateDiffs(bool forceClean = false)
+        {
+            Run(forceClean);
+
+            return CreateDiffs();
+        }
+
+        /// <summary>
+        /// Scan the tables of which lines are inserted and deleted,
+        /// producing an edit script in forward order.
+        /// 
+        /// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+        /// This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
+        /// </summary>
+        /// <returns>DiffItems array.</returns>
+        protected DiffItem[] CreateDiffs()
+        {
             var diffItemsList = new List<DiffItem>();
 
             int lineA = 0;
@@ -289,6 +315,39 @@ namespace DiffAlgorithm
             }
 
             return diffItemsList.ToArray();
+        }
+
+        /// <summary>
+        /// If a sequence of modified lines starts with a line that contains the same content
+        /// as the line that appends the changes, the difference sequence is modified so that the
+        /// appended line and not the starting line is marked as modified.
+        /// This leads to more readable diff sequences when comparing text files.
+        /// 
+        /// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+        /// This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
+        /// </summary>
+        /// <param name="data">A Diff data buffer containing the identified changes.</param>
+        private static void Optimize(DiffData data)
+        {
+            int startPos = 0;
+            while (startPos < data.Length)
+            {
+                while ((startPos < data.Length) && (data.Modified[startPos] == false))
+                    startPos++;
+                
+                int endPos = startPos;
+                while ((endPos < data.Length) && data.Modified[endPos])
+                    endPos++;
+
+                if ((endPos < data.Length) && (data.Data[startPos] == data.Data[endPos]))
+                {
+                    data.Modified[startPos] = false;
+                    data.Modified[endPos] = true;
+                } else
+                {
+                    startPos = endPos;
+                }
+            }
         }
     }
 }
