@@ -75,7 +75,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 l,
-                o)), "2.2.2^2.2.0");
+                o)), "2.2.2^2.2.2");
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace DiffAlgorithmTests
             Assert.AreEqual(J(d.DiffText(
                 o,
                 o,
-                l)), "2.2.2^2.0.2");
+                l)), "2.2.2^2.2.2");
         }
 
         [TestMethod]

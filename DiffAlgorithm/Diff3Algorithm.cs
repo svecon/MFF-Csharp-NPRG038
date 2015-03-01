@@ -288,7 +288,7 @@ namespace DiffAlgorithm
                 CurrentNew.Value.OldLineStart + deltaToHis,
                 CurrentNew.Value.DeletedInOld,
                 CurrentNew.Value.InsertedInNew,
-                0,
+                CurrentNew.Value.DeletedInOld,
                 DifferencesStatusEnum.BaseRightSame
             );
         }
@@ -306,7 +306,7 @@ namespace DiffAlgorithm
                 CurrentHis.Value.OldLineStart + deltaToNew,
                 CurrentHis.Value.NewLineStart,
                 CurrentHis.Value.DeletedInOld,
-                0,
+                CurrentHis.Value.DeletedInOld,
                 CurrentHis.Value.InsertedInNew,
                 DifferencesStatusEnum.BaseLeftSame
             );
