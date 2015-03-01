@@ -1,0 +1,156 @@
+﻿using System;
+using System.IO;
+using System.Runtime.Remoting;
+using System.Text;
+using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
+using CoreLibrary.Processors.Processors;
+using DiffAlgorithm;
+using DiffIntegration.DiffFilesystemTree;
+
+namespace DiffIntegration.DiffOutput
+{
+    /// <summary>
+    /// Processor for printing out edit script between two files.
+    /// </summary>
+    public class Diff3NormalOutput : ProcessorAbstract
+    {
+        public override int Priority { get { return 125035; } }
+
+        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
+
+        public override void Process(IFilesystemTreeDirNode node)
+        {
+            // empty
+        }
+
+        public override void Process(IFilesystemTreeFileNode node)
+        {
+            var dnode = node as DiffFileNode;
+
+            if (dnode == null)
+                return;
+
+            var sb = new StringBuilder();
+
+            using (StreamReader streamL = ((FileInfo)dnode.InfoLeft).OpenText())
+            using (StreamReader streamR = ((FileInfo)dnode.InfoRight).OpenText())
+            using (StreamReader streamO = ((FileInfo)dnode.InfoBase).OpenText())
+            {
+                int m = 0;
+                int n = 0;
+                int o = 0;
+
+                foreach (Diff3Item diff in dnode.Diff3.Items)
+                {
+                    sb.AppendLine(HunkHeader(diff.Differeces));
+
+                    // skip same
+                    for (; o < diff.OldLineStart; o++) { streamO.ReadLine(); }
+                    for (; m < diff.NewLineStart; m++) { streamL.ReadLine(); }
+                    for (; n < diff.HisLineStart; n++) { streamR.ReadLine(); }
+
+                    // DifferencesStatusEnum.LeftRightSame has a different order of blocks
+                    if (diff.Differeces == DifferencesStatusEnum.LeftRightSame)
+                    {
+                        sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
+                            ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New, false));
+
+                        sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
+                            ref n, streamR, dnode.Diff3.FilesLineCount.His, dnode.Diff3.FilesEndsWithNewLine.His));
+
+                        sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
+                            ref o, streamO, dnode.Diff3.FilesLineCount.Old, dnode.Diff3.FilesEndsWithNewLine.Old));
+                    } else
+                    {
+                        sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
+                            ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New,
+                                diff.Differeces != DifferencesStatusEnum.BaseLeftSame));
+
+                        sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
+                            ref o, streamO, dnode.Diff3.FilesLineCount.Old, dnode.Diff3.FilesEndsWithNewLine.Old,
+                                diff.Differeces != DifferencesStatusEnum.BaseRightSame));
+
+                        sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
+                            ref n, streamR, dnode.Diff3.FilesLineCount.His, dnode.Diff3.FilesEndsWithNewLine.His));
+                    }
+
+                    Console.Write(sb.ToString());
+                    sb.Clear();
+                }
+            }
+        }
+
+        private string PrintSection(string fileMark, int lineStart, int affectedLines,
+            ref int c, TextReader stream,
+            int fileLinesCount, bool endsNewLine, bool printLines = true)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(FileHeader(fileMark, lineStart, affectedLines));
+
+            if (printLines)
+                for (int p = 0; p < affectedLines; p++)
+                {
+                    sb.AppendLine("  " + stream.ReadLine());
+                    c++;
+                }
+
+            if (c == fileLinesCount && !endsNewLine)
+                sb.AppendLine("\\ No newline at end of file");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns diff chunk header with a number of file that is different
+        /// </summary>
+        /// <param name="diffStatus">Which files are same.</param>
+        /// <returns>String header of the diff chunk.</returns>
+        private string HunkHeader(DifferencesStatusEnum diffStatus)
+        {
+            switch (diffStatus)
+            {
+                case DifferencesStatusEnum.BaseLeftSame:
+                    return "===3";
+                case DifferencesStatusEnum.BaseRightSame:
+                    return "===1";
+                case DifferencesStatusEnum.LeftRightSame:
+                    return "===2";
+                case DifferencesStatusEnum.AllDifferent:
+                    return "===";
+                default:
+                    throw new ApplicationException("Diff3 chunk cannot have this DifferenceStatusEnum.");
+            }
+        }
+
+        /// <summary>
+        /// String header of file diff section
+        /// </summary>
+        /// <param name="fileMark">String representation of file.</param>
+        /// <param name="lineStart">Where does the diff start.</param>
+        /// <param name="linesAffected">How many lines does diff affect.</param>
+        /// <returns>String header of file diff section.</returns>
+        private string FileHeader(string fileMark, int lineStart, int linesAffected)
+        {
+            return fileMark + ":" + CreateRange(lineStart, linesAffected);
+        }
+
+        /// <summary>
+        /// Print range of how many lines were affected by the change.
+        /// </summary>
+        /// <param name="startingLine">Starting line in a file.</param>
+        /// <param name="numberOfLines">Number of lines affected in a file.</param>
+        /// <returns></returns>
+        private string CreateRange(int startingLine, int numberOfLines)
+        {
+            if (numberOfLines == 0)
+            {
+                return startingLine + "a";
+            }
+
+            return numberOfLines > 1
+                ? (startingLine + 1) + "," + ((startingLine + 1) + numberOfLines - 1) + "c"
+                : (startingLine + 1) + "c";
+        }
+    }
+}
