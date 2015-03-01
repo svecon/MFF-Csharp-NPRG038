@@ -73,7 +73,7 @@ namespace DiffIntegration.DiffFilesystemTree
                     break;
                 //TODO: load plugin from somewhere --- because of settings    
                 case DiffModeEnum.ThreeWay:
-                    Diff3 x = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLeft, (FileInfo)InfoRight);
+                    Diff3 = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLeft, (FileInfo)InfoRight);
                     break;
             }
         }
