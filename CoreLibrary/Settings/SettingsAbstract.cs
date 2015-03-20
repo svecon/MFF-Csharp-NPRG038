@@ -1,6 +1,9 @@
-﻿using CoreLibrary.Interfaces;
+﻿using System;
+using CoreLibrary.Interfaces;
 using CoreLibrary.Settings.Attributes;
 using System.Reflection;
+using System.Text;
+using CoreLibrary.Settings.Types;
 
 namespace CoreLibrary.Settings
 {
@@ -44,5 +47,30 @@ namespace CoreLibrary.Settings
         }
 
         public abstract void SetValue(params string[] value);
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            if (ArgumentShortcut != null)
+            {
+                sb.AppendFormat("  -{0, -2}", ArgumentShortcut);
+            }
+            else
+            {
+                sb.AppendFormat("{0,5}", "");
+            }
+
+            if (Argument != null)
+            {
+                sb.AppendFormat(" --{0}", Argument);
+            }
+
+            sb.AppendFormat(" [{0}] ", NumberOfParams);
+
+            sb.Append(Info);
+
+            return sb.ToString();
+        }
     }
 }

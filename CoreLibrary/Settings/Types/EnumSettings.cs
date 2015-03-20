@@ -20,5 +20,10 @@ namespace CoreLibrary.Settings.Types
             Field.SetValue(Instance, Enum.Parse(Field.FieldType, value[0]));
             WasSet = true;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + String.Format(" Enum[{0}]", String.Join("/", Enum.GetNames(Field.FieldType)));
+        }
     }
 }

@@ -23,7 +23,9 @@ namespace CoreLibrary.Processors
 
         readonly SortedList<int, IPostProcessor> postProcessors;
 
-        /// <summary>
+        private readonly Dictionary<string, List<ISettings>> settingsByProcessor;
+
+            /// <summary>
         /// List of all settings for loaded processors.
         /// </summary>
         List<ISettings> settings;
@@ -40,6 +42,7 @@ namespace CoreLibrary.Processors
             preProcessors = new SortedList<int, IPreProcessor>();
             processors = new SortedList<int, IProcessor>();
             postProcessors = new SortedList<int, IPostProcessor>();
+            settingsByProcessor = new Dictionary<string, List<ISettings>>();
         }
 
         public void LoadAll()
@@ -120,6 +123,8 @@ namespace CoreLibrary.Processors
         /// <param name="processor"></param>
         protected void RetrieveSettingsFromProcessor(IProcessorBase processor)
         {
+            var settingsByProcessorList = new List<ISettings>();
+
             foreach (FieldInfo field in processor.GetType().GetFields())
             {
                 var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
@@ -140,8 +145,13 @@ namespace CoreLibrary.Processors
                 ConstructorInfo constructorInfo = matchedSettings.GetConstructor(settingsConstructorSignature);
                 if (constructorInfo == null) continue;
 
-                settings.Add((ISettings)constructorInfo.Invoke(new object[] { processor, field, annotation }));
+                var instance = (ISettings) constructorInfo.Invoke(new object[] {processor, field, annotation});
+
+                settings.Add(instance);
+                settingsByProcessorList.Add(instance);
             }
+
+            settingsByProcessor.Add(processor.GetType().ToString(), settingsByProcessorList);
         }
 
         public void AddProcessor(IPreProcessor processor)
@@ -180,49 +190,53 @@ namespace CoreLibrary.Processors
             }
         }
 
+        private void PrintProcessorInfo(IProcessorBase processor)
+        {
+            Console.WriteLine("\n{0,10} {1} in {2}", processor.Priority, processor.GetType().Name, processor.GetType().Namespace);
+
+            foreach (ISettings procSettings in settingsByProcessor[processor.GetType().ToString()])
+                Console.WriteLine("{0,10} {1}", "", procSettings.ToString());
+        }
+
         public void PrintLoadedProcessors()
         {
-            Console.WriteLine("PreProcessors ---");
+            Console.Write("PreProcessors ---");
             foreach (IPreProcessor processor in GetPreProcessors())
             {
-                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+                PrintProcessorInfo(processor);
             }
 
-            Console.WriteLine("Processors ---");
+            Console.Write("\nProcessors ---");
             foreach (IProcessor processor in GetProcessors())
             {
-                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+                PrintProcessorInfo(processor);
             }
 
-            Console.WriteLine("PostProcessors ---");
+            Console.Write("\nPostProcessors ---");
             foreach (IPostProcessor processor in GetPostProcessors())
             {
-                Console.WriteLine("{0,10} {1}", processor.Priority, processor.GetType());
+                PrintProcessorInfo(processor);
             }
         }
 
         public IEnumerable<IPreProcessor> GetPreProcessors()
         {
             return preProcessors.Select(processor => processor.Value);
-            // LINQ YIELD
         }
 
         public IEnumerable<IProcessor> GetProcessors()
         {
             return processors.Select(processor => processor.Value);
-            // LINQ YIELD
         }
 
         public IEnumerable<IPostProcessor> GetPostProcessors()
         {
             return postProcessors.Select(processor => processor.Value);
-            // LINQ YIELD
         }
 
         public IEnumerable<ISettings> GetSettings()
         {
             return settings;
-            // LINQ YIELD
         }
     }
 }
