@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiffAlgorithm
+namespace DiffAlgorithm.Diff
 {
     /// <summary>
     /// This Class implements the Difference Algorithm published in

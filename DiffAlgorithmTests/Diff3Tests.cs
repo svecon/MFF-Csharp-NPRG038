@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DiffAlgorithm;
+using DiffAlgorithm.Diff;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiffAlgorithmTests

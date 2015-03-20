@@ -3,6 +3,8 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using DiffAlgorithm;
+using DiffAlgorithm.Diff;
+using DiffAlgorithm.Diff3;
 
 namespace DiffIntegration.DiffFilesystemTree
 {

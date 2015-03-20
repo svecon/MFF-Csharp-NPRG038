@@ -5,6 +5,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Processors;
 using DiffAlgorithm;
+using DiffAlgorithm.Diff;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput

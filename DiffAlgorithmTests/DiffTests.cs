@@ -2,13 +2,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using DiffAlgorithm;
+using DiffAlgorithm.Diff;
 
 namespace DiffAlgorithmTests
 {
     [TestClass]
     public class DiffTests
     {
-        public static string TestHelper(DiffAlgorithm.DiffItem[] diffDiffItems)
+        public static string TestHelper(DiffItem[] diffDiffItems)
         {
             var ret = new StringBuilder();
             foreach (DiffItem item in diffDiffItems)

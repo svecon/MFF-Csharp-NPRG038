@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
 
-namespace DiffAlgorithm
+namespace DiffAlgorithm.Diff
 {
     /// <summary>
     /// DiffHelper class makes it easier to diff whole files.
@@ -199,9 +199,9 @@ namespace DiffAlgorithm
         /// <param name="newFile">My new file.</param>
         /// <param name="hisFile">His new file.</param>
         /// <returns>Diff3 container with all changes between three files.</returns>
-        public Diff3 DiffFiles(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
+        public Diff3.Diff3 DiffFiles(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
         {
-            var diff = new Diff3(oldFile, newFile, hisFile);
+            var diff = new Diff3.Diff3(oldFile, newFile, hisFile);
 
             hashedLines = new Dictionary<string, int>();
 

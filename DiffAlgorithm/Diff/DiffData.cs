@@ -1,4 +1,4 @@
-﻿namespace DiffAlgorithm
+﻿namespace DiffAlgorithm.Diff
 {
     /// <summary>
     /// Container for holding which lines have been changed in a file.

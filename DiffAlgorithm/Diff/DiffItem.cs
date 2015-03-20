@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DiffAlgorithm
+namespace DiffAlgorithm.Diff
 {
     /// <summary>
     /// Container for representing one diff change between two files.
