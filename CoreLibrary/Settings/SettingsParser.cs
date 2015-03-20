@@ -16,22 +16,41 @@ namespace CoreLibrary.Settings
     /// </summary>
     public class SettingsParser
     {
-        readonly Dictionary<string, ISettings> longSettings;
+        readonly Dictionary<string, List<ISettings>> longSettings;
 
-        readonly Dictionary<string, ISettings> shortSettings;
+        readonly Dictionary<string, List<ISettings>> shortSettings;
 
         public SettingsParser(IEnumerable<ISettings> settings)
         {
-            longSettings = new Dictionary<string, ISettings>();
-            shortSettings = new Dictionary<string, ISettings>();
+            longSettings = new Dictionary<string, List<ISettings>>();
+            shortSettings = new Dictionary<string, List<ISettings>>();
 
             foreach (ISettings option in settings)
             {
+                List<ISettings> settingsList;
                 if (option.Argument != null)
-                    longSettings.Add(option.Argument, option);
+                {
+                    if (longSettings.TryGetValue(option.Argument, out settingsList))
+                    {
+                        settingsList.Add(option);
+                    } else
+                    {
+                        longSettings.Add(option.Argument, new List<ISettings>(new[] { option }));
+                    }
+
+                }
 
                 if (option.ArgumentShortcut != null)
-                    shortSettings.Add(option.ArgumentShortcut, option);
+                {
+                    if (shortSettings.TryGetValue(option.ArgumentShortcut, out settingsList))
+                    {
+                        settingsList.Add(option);
+                    } else
+                    {
+                        shortSettings.Add(option.ArgumentShortcut, new List<ISettings>(new[] { option }));
+                    }
+
+                }
             }
         }
 
@@ -47,36 +66,21 @@ namespace CoreLibrary.Settings
             int i = 0;
             while (i < arguments.Length)
             {
-                ISettings setting;
+                List<ISettings> settingsList;
 
                 if (arguments[i].StartsWith("--")) // long settings
                 {
-                    if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out setting))
+                    if (longSettings.TryGetValue(arguments[i].Remove(0, 2), out settingsList))
                     {
-                        try
-                        {
-                            setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
-                        } catch (ArgumentException e)
-                        {
-                            throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
-                        }
-                        i += 1 + setting.NumberOfParams;
+                        ApplySettings(settingsList, ref arguments, ref i);
                     } else
                         throw new SettingsNotFoundException(arguments[i]);
 
                 } else if (arguments[i].StartsWith("-")) // short settings
                 {
-                    if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out setting))
+                    if (shortSettings.TryGetValue(arguments[i].Remove(0, 1), out settingsList))
                     {
-                        try
-                        {
-                            setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
-                        } catch (ArgumentException e)
-                        {
-                            throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
-                        }
-
-                        i += 1 + setting.NumberOfParams;
+                        ApplySettings(settingsList, ref arguments, ref i);
                     } else
                         throw new SettingsNotFoundException(arguments[i]);
                 } else
@@ -87,6 +91,22 @@ namespace CoreLibrary.Settings
             }
 
             return leftOvers.ToArray();
+        }
+
+        private void ApplySettings(IEnumerable<ISettings> settingsList, ref string[] arguments, ref int i)
+        {
+            foreach (ISettings setting in settingsList)
+            {
+                try
+                {
+                    i += 1 + setting.NumberOfParams;
+                    setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
+
+                } catch (ArgumentException e)
+                {
+                    throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
+                }
+            }
         }
 
     }

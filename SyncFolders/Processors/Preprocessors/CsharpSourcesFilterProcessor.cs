@@ -39,6 +39,12 @@ namespace SyncFolders.Processors.Preprocessors
             if (node.Info.Name == "AssemblyInfo.cs")
                 node.Status = NodeStatusEnum.IsIgnored;
 
+            if (node.Info.Name.EndsWith(".g.cs"))
+                node.Status = NodeStatusEnum.IsIgnored;
+
+            if (node.Info.Name.EndsWith(".g.i.cs"))
+                node.Status = NodeStatusEnum.IsIgnored;
+
             if (node.Info.Name.StartsWith("TemporaryGeneratedFile_"))
                 node.Status = NodeStatusEnum.IsIgnored;
         }
