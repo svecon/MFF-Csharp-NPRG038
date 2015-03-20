@@ -17,7 +17,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
     {
         readonly IProcessorLoader loader;
 
-        private bool cancelled = false;
+        private bool isCancelled = false;
 
         /// <summary>
         /// Constructor for ExecutionVisitorInSerial.
@@ -32,21 +32,22 @@ namespace CoreLibrary.FilesystemTree.Visitors
         {
             try
             {
-                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !cancelled))
+                // run processors unless this Visitor isCancelled
+                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !cancelled))
+                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !cancelled))
+                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
             } catch (Exception e)
             {
                 HandleError(node);
             }
 
-            foreach (IFilesystemTreeFileNode file in node.Files.Where(processor => !cancelled))
+            foreach (IFilesystemTreeFileNode file in node.Files.Where(processor => !isCancelled))
                 file.Accept(this);
 
-            foreach (IFilesystemTreeDirNode dir in node.Directories.Where(processor => !cancelled))
+            foreach (IFilesystemTreeDirNode dir in node.Directories.Where(processor => !isCancelled))
                 dir.Accept(this);
         }
 
@@ -54,11 +55,11 @@ namespace CoreLibrary.FilesystemTree.Visitors
         {
             try
             {
-                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !cancelled))
+                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !cancelled))
+                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !cancelled))
+                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
                     processor.Process(node);
             } catch (Exception e)
             {
@@ -78,7 +79,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
 
         public void Cancel()
         {
-            cancelled = true;
+            isCancelled = true;
         }
     }
 }
