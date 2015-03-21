@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Sverge
 {
@@ -15,7 +16,7 @@ namespace Sverge
     /// </summary>
     public partial class App : Application
     {
-        void App_Startup(object sender, StartupEventArgs e)
+        private void App_OnStartup(object sender, StartupEventArgs e)
         {
             string[] args = Environment.GetCommandLineArgs();
 
@@ -29,9 +30,21 @@ namespace Sverge
                 tw.WriteLine(">>>");
                 tw.WriteLine(Environment.CurrentDirectory);
             }
-
-
         }
 
+        private void App_OnActivated(object sender, EventArgs e)
+        {
+            
+        }
+        
+        private void App_OnDeactivated(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
+        {
+            //((Sverge.MainWindow)MainWindow).Hello();
+        }
     }
 }

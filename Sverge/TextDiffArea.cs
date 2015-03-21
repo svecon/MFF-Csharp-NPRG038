@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,46 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace Sverge
 {
     class TextDiffArea : FrameworkElement, IScrollInfo
     {
+        private FileInfo info;
+        private string[] lines;
+        private int longestLine;
+        private const int CHAR_PADDING_RIGHT = 5;
+        private FormattedText sample;
+        private MouseEventArgs mouse;
+
+        public TextDiffArea()
+        {
+            info = new FileInfo("C:/csharp/Merge/Sverge/TextDiffArea.cs");
+
+            sample = createFormattedText("M");
+            lineSize = sample.Height;
+
+            var linesList = new List<string>();
+            using (StreamReader reader = info.OpenText())
+            {
+                string line;
+                while((line = reader.ReadLine()) != null)
+                {
+                    linesList.Add(line);
+
+                    if (line.Length > longestLine)
+                    {
+                        longestLine = line.Length;
+                    }
+                }
+            }
+            lines = linesList.ToArray();
+        }
+
         #region IScrollInfo
 
-        private double lineSize = 16;
+        private readonly double lineSize;
         private double WheelSize { get { return 3 * lineSize; } }
 
         private Vector offset;
@@ -134,12 +167,21 @@ namespace Sverge
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var newExtent = new Size(createFormattedText(DateTime.Now.ToString("ss MMM ddd d HH:mm yyyy")).Width, 400);
+            var newExtent = new Size(sample.Width * (longestLine + CHAR_PADDING_RIGHT), lines.Length * sample.Height);
 
             if (extent != newExtent)
             {
                 extent = newExtent;
                 TryInvalidateScrollInfo();
+            }
+
+            if (double.IsPositiveInfinity(availableSize.Width))
+            {
+                availableSize.Width = extent.Width;
+            }
+            if (double.IsPositiveInfinity(availableSize.Height))
+            {
+                availableSize.Height = extent.Height;
             }
 
             if (availableSize != viewport)
@@ -174,25 +216,48 @@ namespace Sverge
 
         protected override void OnRender(DrawingContext dc)
         {
-            //UpdateLayout();
-            //InvalidateArrange();
-            //InvalidateMeasure();
-            //InvalidateVisual();
+            int startsOnLine = (int) (offset.Y/sample.Height);
+            int endsOnLine = startsOnLine + (int) (viewport.Height / sample.Height) + 1;
 
-            base.OnRender(dc);
+            if (startsOnLine < 0)
+            {
+                startsOnLine = 0;
+            }
 
-            dc.DrawLine(new Pen(Brushes.Blue, 2.0),
-            new Point(0.0 - offset.X, 0.0 - offset.Y),
-            new Point(ActualWidth - offset.X, ActualHeight - offset.Y));
-            dc.DrawLine(new Pen(Brushes.Green, 2.0),
-                new Point(ActualWidth, 0.0),
-                new Point(0.0, ActualHeight));
+            if (endsOnLine > lines.Length)
+            {
+                endsOnLine = lines.Length;
+            }
 
-            dc.DrawText(createFormattedText("Hello world"), new Point(0 - offset.X, 0 - offset.Y));
-            dc.DrawText(createFormattedText(",m,m,m,m,m,"), new Point(0 - offset.X, 32 - offset.Y));
+            double paddingTop = 1.0;
+            double paddingLeft = 1.0;
 
-            string format = "ss MMM ddd d HH:mm yyyy";
-            dc.DrawText(createFormattedText(DateTime.Now.ToString(format)), new Point(0 - offset.X, 2*32 - offset.Y));
+            // background
+            dc.DrawRectangle(Brushes.Gray, null, new Rect(new Point(0.0, 0.0), new Size(extent.Width, extent.Height)));
+            dc.DrawRectangle(Brushes.White, null, new Rect(new Point(paddingTop, paddingLeft), new Size(extent.Width, extent.Height)));
+
+            for (int i = startsOnLine; i < endsOnLine; i++)
+            {
+                paddingTop = 1.0;
+                paddingLeft = 1.0;
+
+                if (mouse != null && mouse.GetPosition(this).Y > i * sample.Height - offset.Y
+                    && mouse.GetPosition(this).Y < (i+1) * sample.Height - offset.Y)
+                {
+                    dc.DrawRectangle(Brushes.SeaShell, null, new Rect(new Point(0 - offset.X + paddingLeft, i * sample.Height - offset.Y + paddingTop), new Size(extent.Width, sample.Height)));
+                }
+
+                paddingLeft = 1 + (1) * sample.Width;
+
+                // print line numbers
+                dc.DrawText(createFormattedText((i + 1).ToString()), new Point(0 - offset.X + paddingLeft, i * sample.Height - offset.Y + paddingTop));
+
+                paddingLeft = (1 + lines.Length.ToString().Length + 1)*sample.Width;
+
+                // print text
+                FormattedText oneLine = createFormattedText(lines[i]);
+                dc.DrawText(oneLine, new Point(0 - offset.X + paddingLeft, i * oneLine.Height - offset.Y + paddingTop));
+            }
         }
 
         private FormattedText createFormattedText(string text)
@@ -201,11 +266,26 @@ namespace Sverge
                 text,
                 CultureInfo.CurrentUICulture,
                 FlowDirection.LeftToRight,
-                new Typeface("Courier New"),
-                32,
+                new Typeface("Consolas"),
+                13,
                 Brushes.Black
             );
         }
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            mouse = e;
+            InvalidateVisual();
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            mouse = null;
+            InvalidateVisual();
+        }
     }
 }

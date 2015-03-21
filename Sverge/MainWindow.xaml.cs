@@ -23,6 +23,11 @@ namespace Sverge
         public MainWindow()
         {
             InitializeComponent();
+
+        }
+
+        public void Hello()
+        {
         }
     }
 
