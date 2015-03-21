@@ -29,7 +29,7 @@ namespace CoreLibrary.Processors
 
         private void PrintProcessorInfo(IProcessorBase processor, bool printSettings)
         {
-            Console.WriteLine("\n{0,10} {1} in {2}", processor.Priority, processor.GetType().Name,
+            Console.WriteLine("{0,10} {1} in {2}", processor.Priority, processor.GetType().Name,
                 processor.GetType().Namespace);
 
             if (!printSettings)
@@ -51,19 +51,19 @@ namespace CoreLibrary.Processors
             var settingsPrinter = new SettingsPrinter(loader.GetSettingsByProcessor(typeof(Object).ToString()), 11);
             settingsPrinter.Print();
 
-            Console.Write("\n=== PreProcessors");
+            Console.WriteLine("\n=== PreProcessors");
             foreach (IPreProcessor processor in loader.GetPreProcessors())
             {
                 PrintProcessorInfo(processor, printSettings);
             }
 
-            Console.Write("\n=== Processors");
+            Console.WriteLine("\n=== Processors");
             foreach (IProcessor processor in loader.GetProcessors())
             {
                 PrintProcessorInfo(processor, printSettings);
             }
 
-            Console.Write("\n=== PostProcessors");
+            Console.WriteLine("\n=== PostProcessors");
             foreach (IPostProcessor processor in loader.GetPostProcessors())
             {
                 PrintProcessorInfo(processor, printSettings);

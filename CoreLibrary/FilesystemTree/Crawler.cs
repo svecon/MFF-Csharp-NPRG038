@@ -45,10 +45,10 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Create crawler for 3-way diffing.
         /// </summary>
-        /// <param name="baseDirPath">Base directory (origin)</param>
         /// <param name="leftDirPath">Path to the left directory</param>
+        /// <param name="baseDirPath">Base directory (origin)</param>
         /// <param name="rightDirPath">Path to the right directory</param>
-        public Crawler(string baseDirPath, string leftDirPath, string rightDirPath)
+        public Crawler(string leftDirPath, string baseDirPath, string rightDirPath)
         {
             dirsToBeSearched = new Stack<DirectoryForIteration>(15);
 
