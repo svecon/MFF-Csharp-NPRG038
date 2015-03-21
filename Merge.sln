@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffIntegration", "DiffInte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sverge", "Sverge\Sverge.csproj", "{3AEAF529-ED34-4E1A-903F-750BB2B72636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvergeConsole", "SvergeConsole\SvergeConsole.csproj", "{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{3AEAF529-ED34-4E1A-903F-750BB2B72636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AEAF529-ED34-4E1A-903F-750BB2B72636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AEAF529-ED34-4E1A-903F-750BB2B72636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
