@@ -41,7 +41,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     processor.Process(node);
             } catch (Exception e)
             {
-                HandleError(node);
+                HandleError(node, e);
             }
 
             foreach (IFilesystemTreeFileNode file in node.Files.Where(processor => !isCancelled))
@@ -63,11 +63,11 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     processor.Process(node);
             } catch (Exception e)
             {
-                HandleError(node);
+                HandleError(node, e);
             }
         }
 
-        private static void HandleError(IFilesystemTreeAbstractNode node)
+        private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
         {
             node.Status = Enums.NodeStatusEnum.HasError;
         }

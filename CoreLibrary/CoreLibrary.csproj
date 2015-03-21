@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
+    <Compile Include="Exceptions\SettingsNumberOfParamsMismatchException.cs" />
     <Compile Include="Exceptions\SettingsUnknownValue.cs" />
     <Compile Include="Exceptions\ProcessorPriorityColissionException.cs" />
     <Compile Include="Exceptions\SettingsNotFoundException.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Exceptions\LocationNotFoundException.cs" />
     <Compile Include="Interfaces\IExecutionVisitor.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitable.cs" />
+    <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="Interfaces\ISettings.cs" />
     <Compile Include="Interfaces\IPostProcessor.cs" />
     <Compile Include="Interfaces\IProcessor.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Processors\BaseProcessorAbstract.cs" />
     <Compile Include="Processors\Postprocessors\PostProcessorAbstract.cs" />
     <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />
+    <Compile Include="Processors\ProcessorsPrinter.cs" />
     <Compile Include="Processors\Processors\ProcessorAbstract.cs" />
     <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -32,6 +32,12 @@ namespace CoreLibrary.Settings
                 {
                     if (longSettings.TryGetValue(option.Argument, out settingsList))
                     {
+                        if (settingsList.First().NumberOfParams != option.NumberOfParams)
+                        { // different number of params in the same argument
+                            throw new SettingsNumberOfParamsMismatchException
+                                (settingsList.First().Field.DeclaringType, option.Field.DeclaringType, "--" + option.Argument);
+                        }
+
                         settingsList.Add(option);
                     } else
                     {
@@ -44,6 +50,12 @@ namespace CoreLibrary.Settings
                 {
                     if (shortSettings.TryGetValue(option.ArgumentShortcut, out settingsList))
                     {
+                        if (settingsList.First().NumberOfParams != option.NumberOfParams)
+                        { // different number of params in the same argument
+                            throw new SettingsNumberOfParamsMismatchException
+                                (settingsList.First().Field.DeclaringType, option.Field.DeclaringType, "-" + option.ArgumentShortcut);
+                        }
+
                         settingsList.Add(option);
                     } else
                     {
