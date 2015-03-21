@@ -40,7 +40,8 @@ namespace CoreLibrary.Interfaces
         /// Traverses through instance of an object and creates instances of annotated fields with ISettings annotation.
         /// </summary>
         /// <param name="instance">Instance to be searched for ISettings.</param>
-        void RetrieveSettings(object instance);
+        /// <param name="isStatic">If isStatic is true then instance must be type of Type.</param>
+        void RetrieveSettings(object instance, bool isStatic = false);
 
         /// <summary>
         /// Add IProcessorBase into a correct Processor type.

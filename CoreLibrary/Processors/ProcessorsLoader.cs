@@ -103,11 +103,14 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public void RetrieveSettings(object instance)
+        public void RetrieveSettings(object instance, bool isStatic = false)
         {
             var settingsByProcessorList = new List<ISettings>();
 
-            foreach (FieldInfo field in instance.GetType().GetFields())
+            if (isStatic && !(instance is Type))
+                throw new ArgumentException("Instance must be type of Type when isStatic");
+
+            foreach (FieldInfo field in isStatic ? ((Type)instance).GetFields() : instance.GetType().GetFields())
             {
                 var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
 
@@ -127,12 +130,12 @@ namespace CoreLibrary.Processors
                 ConstructorInfo constructorInfo = matchedSettings.GetConstructor(settingsConstructorSignature);
                 if (constructorInfo == null) continue;
 
-                var settingsInstance = (ISettings) constructorInfo.Invoke(new object[] {instance, field, annotation});
+                var settingsInstance = (ISettings) constructorInfo.Invoke(new object[] { isStatic ? null : instance, field, annotation});
 
                 settingsByProcessorList.Add(settingsInstance);
             }
 
-            string instanceType = instance is IProcessorBase ? instance.GetType().ToString() : typeof (Object).ToString();
+            string instanceType = instance is IProcessorBase && !isStatic ? instance.GetType().ToString() : typeof (Object).ToString();
             SettingsByProcessor.Add(instanceType, settingsByProcessorList);
         }
 
