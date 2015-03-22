@@ -24,7 +24,7 @@
                         <TextBlock Text="Nejaky obrazek pridat!" Foreground="Blue" />
                     </StackPanel>
                 </TabItem.Header>
-                <local:UserControl1 ></local:UserControl1>
+                <local:Diff2Way></local:Diff2Way>
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid Background="#FFE5E5E5"/>
