@@ -194,11 +194,11 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public IProcessorLoader SplitLoaderUsing(params string[] processors)
+        public IProcessorLoader SplitLoaderUsing(params Type[] processors)
         {
             var newLoader = new ProcessorLoader();
 
-            foreach (string processorName in processors)
+            foreach (string processorName in processors.Select(x => x.ToString()))
             {
                 IProcessorBase processor;
                 if (!ProcessorByName.TryGetValue(processorName, out processor))

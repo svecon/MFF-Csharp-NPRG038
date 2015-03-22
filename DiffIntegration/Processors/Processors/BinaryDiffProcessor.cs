@@ -1,23 +1,23 @@
-﻿using System.Linq;
-using System.IO;
-using CoreLibrary.Interfaces;
+﻿using System.IO;
+using System.Linq;
 using CoreLibrary.Enums;
-using CoreLibrary.Processors.Processors;
+using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
+using CoreLibrary.Processors.Processors;
 
-namespace SyncFolders.Processors.Processors
+namespace DiffIntegration.Processors.Processors
 {
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.
     /// </summary>
-    class BinaryDiffProcessor : ProcessorAbstract
+    public class BinaryDiffProcessor : ProcessorAbstract
     {
         /// <summary>
         /// Size of an array buffer for reading files.
         /// </summary>
         const int BUFFER_SIZE = 4096;
 
-        public override int Priority { get { return 100000; } }
+        public override int Priority { get { return 200; } }
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 

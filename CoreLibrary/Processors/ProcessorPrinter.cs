@@ -27,7 +27,7 @@ namespace CoreLibrary.Processors
             this.printSettings = printSettings;
         }
 
-        private void PrintProcessorInfo(IProcessorBase processor, bool printSettings)
+        private void PrintProcessorInfo(IProcessorBase processor)
         {
             Console.WriteLine("{0,10} {1} in {2}", processor.Priority, processor.GetType().Name,
                 processor.GetType().Namespace);
@@ -54,19 +54,19 @@ namespace CoreLibrary.Processors
             Console.WriteLine("\n=== PreProcessors");
             foreach (IPreProcessor processor in loader.GetPreProcessors())
             {
-                PrintProcessorInfo(processor, printSettings);
+                PrintProcessorInfo(processor);
             }
 
             Console.WriteLine("\n=== Processors");
             foreach (IProcessor processor in loader.GetProcessors())
             {
-                PrintProcessorInfo(processor, printSettings);
+                PrintProcessorInfo(processor);
             }
 
             Console.WriteLine("\n=== PostProcessors");
             foreach (IPostProcessor processor in loader.GetPostProcessors())
             {
-                PrintProcessorInfo(processor, printSettings);
+                PrintProcessorInfo(processor);
             }
         }
 

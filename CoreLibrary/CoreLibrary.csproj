@@ -83,11 +83,11 @@
     <Compile Include="Processors\BaseProcessorAbstract.cs" />
     <Compile Include="Processors\Postprocessors\PostProcessorAbstract.cs" />
     <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />
-    <Compile Include="Processors\ProcessorsPrinter.cs" />
+    <Compile Include="Processors\ProcessorPrinter.cs" />
     <Compile Include="Processors\Processors\ProcessorAbstract.cs" />
     <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Processors\ProcessorsLoader.cs" />
+    <Compile Include="Processors\ProcessorLoader.cs" />
     <Compile Include="Settings\Types\RegexSettings.cs" />
     <Compile Include="Settings\Types\IntSettings.cs" />
     <Compile Include="Settings\Types\StringArraySettings.cs" />

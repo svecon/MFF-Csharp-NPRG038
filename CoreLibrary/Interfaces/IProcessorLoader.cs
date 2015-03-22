@@ -86,6 +86,6 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <param name="processors">Processors to be in the new Loader</param>
         /// <returns>New ProcessorLoader</returns>
-        IProcessorLoader SplitLoaderUsing(params string[] processors);
+        IProcessorLoader SplitLoaderUsing(params Type[] processors);
     }
 }

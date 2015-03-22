@@ -16,6 +16,9 @@ using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.DiffOutput;
+using DiffIntegration.Processors.Postprocessors;
+using DiffIntegration.Processors.Preprocessors;
+using DiffIntegration.Processors.Processors;
 
 namespace SvergeConsole
 {
@@ -67,7 +70,7 @@ namespace SvergeConsole
                 Console.WriteLine("Usage: [OPTION]... <LOCAL> [BASE] <REMOTE>");
 
                 Console.WriteLine("\nListing all found Processors and their parameters:");
-                var processorPrinter = new ProcessorPrinter(_loader);
+                var processorPrinter = new ProcessorPrinter(_loader, true);
                 processorPrinter.Print();
                 return;
             }
@@ -155,7 +158,16 @@ namespace SvergeConsole
 
             #region Run Processors
             // execution visitor for filesystem tree processes the files and folders with loaded processors
-            var ex = new ExecutionVisitor(_loader);
+            var ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
+                typeof(ExtensionFilterProcessor),
+                typeof(RegexFilterProcessor),
+                typeof(CsharpSourcesFilterProcessor),
+                
+                typeof(BinaryDiffProcessor),
+                typeof(SizeTimeDiffProcessor),
+                
+                typeof(SyncMergeProcessor)
+            ));
             diffTree.Accept(ex);
 
             // wait until the filesystem tree is finished with processing

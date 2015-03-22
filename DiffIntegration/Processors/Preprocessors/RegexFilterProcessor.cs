@@ -1,15 +1,10 @@
-﻿using CoreLibrary.Enums;
+﻿using System.Text.RegularExpressions;
+using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Settings.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace SyncFolders.Processors.Preprocessors
+namespace DiffIntegration.Processors.Preprocessors
 {
     /// <summary>
     /// Filter for C# source codes (manually typed ones).

@@ -1,14 +1,11 @@
-﻿using CoreLibrary.Enums;
+﻿using System;
+using System.Linq;
+using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Preprocessors;
 using CoreLibrary.Settings.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SyncFolders.Processors.Preprocessors
+namespace DiffIntegration.Processors.Preprocessors
 {
     /// <summary>
     /// Filteres files by an extension or by an extension type/group.
@@ -21,7 +18,7 @@ namespace SyncFolders.Processors.Preprocessors
     ///
     /// List of file signatures: http://www.filesignatures.net/index.php?page=all
     /// </summary>
-    class ExtensionFilterProcessor : PreProcessorAbstract
+    public class ExtensionFilterProcessor : PreProcessorAbstract
     {
         public enum FileTypesEnum { All, Images, Text, Developer }
 

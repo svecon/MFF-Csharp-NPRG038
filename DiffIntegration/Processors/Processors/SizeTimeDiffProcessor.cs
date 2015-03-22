@@ -1,23 +1,23 @@
-﻿using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using System;
+﻿using System;
 using System.IO;
-using CoreLibrary.Settings.Attributes;
-using CoreLibrary.Processors.Processors;
+using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
+using CoreLibrary.Processors.Processors;
+using CoreLibrary.Settings.Attributes;
 
-namespace SyncFolders.Processors.Processors
+namespace DiffIntegration.Processors.Processors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
-    class SizeTimeDiffProcessor : ProcessorAbstract
+    public class SizeTimeDiffProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 1000; } }
+        public override int Priority { get { return 50; } }
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
-        [SettingsAttribute("Disable fast diff check.", "slow-diff", "D")]
+        [Settings("Disable fast diff check.", "slow-diff", "D")]
         public bool IsEnabled = true;
 
         [Flags]

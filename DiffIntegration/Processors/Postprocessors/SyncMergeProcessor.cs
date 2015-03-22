@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Postprocessors;
 using CoreLibrary.Settings.Attributes;
 
-namespace SyncFolders.Processors.Postprocessors
+namespace DiffIntegration.Processors.Postprocessors
 {
-    class SyncMergeProcessor : PostProcessorAbstract
+    public class SyncMergeProcessor : PostProcessorAbstract
     {
-        public override int Priority { get { return 10000; } }
+        public override int Priority { get { return 500; } }
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
 
