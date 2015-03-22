@@ -16,6 +16,11 @@ namespace CoreLibrary.Interfaces
         IFilesystemTreeDirNode Root { get; }
 
         /// <summary>
+        /// Diff mode for constructed tree.
+        /// </summary>
+        DiffModeEnum DiffMode { get; }
+
+        /// <summary>
         /// Adds new Directory path to Root.
         /// </summary>
         /// <param name="root">DirectoryInfo for given directory.</param>

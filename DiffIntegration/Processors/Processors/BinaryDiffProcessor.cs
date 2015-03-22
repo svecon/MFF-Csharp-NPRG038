@@ -46,16 +46,16 @@ namespace SyncFolders.Processors.Processors
                     threeWay.AddBaseFilePossibility();
                 }
 
-                if (node.IsInLocation(LocationEnum.OnLeft))
+                if (node.IsInLocation(LocationEnum.OnLocal))
                 {
-                    readers[1] = new StreamReader(node.InfoLeft.FullName);
+                    readers[1] = new StreamReader(node.InfoLocal.FullName);
                     buffers[1] = new char[BUFFER_SIZE];
                     threeWay.AddLeftFilePossibility();
                 }
 
-                if (node.IsInLocation(LocationEnum.OnRight))
+                if (node.IsInLocation(LocationEnum.OnRemote))
                 {
-                    readers[2] = new StreamReader(node.InfoRight.FullName);
+                    readers[2] = new StreamReader(node.InfoRemote.FullName);
                     buffers[2] = new char[BUFFER_SIZE];
                     threeWay.AddRightFilePossibility();
                 }

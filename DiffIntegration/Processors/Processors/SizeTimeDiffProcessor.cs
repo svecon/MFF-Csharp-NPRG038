@@ -50,18 +50,18 @@ namespace SyncFolders.Processors.Processors
             if (node.IsInLocation(LocationEnum.OnBase))
                 threeWay.AddBaseFilePossibility();
 
-            if (node.IsInLocation(LocationEnum.OnLeft))
+            if (node.IsInLocation(LocationEnum.OnLocal))
                 threeWay.AddLeftFilePossibility();
 
-            if (node.IsInLocation(LocationEnum.OnRight))
+            if (node.IsInLocation(LocationEnum.OnRemote))
                 threeWay.AddRightFilePossibility();
 
             // create combinations
             threeWay.RecalculatePossibleCombinations();
 
             var infoBase = (FileInfo)node.InfoBase;
-            var infoLeft = (FileInfo)node.InfoLeft;
-            var infoRight = (FileInfo)node.InfoRight;
+            var infoLeft = (FileInfo)node.InfoLocal;
+            var infoRight = (FileInfo)node.InfoRemote;
 
             // check for sizes
             if (threeWay.CanCombinationBaseLeftBeSame())

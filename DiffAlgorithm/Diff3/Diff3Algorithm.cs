@@ -5,7 +5,7 @@ using System.Linq;
 using CoreLibrary.Enums;
 using DiffAlgorithm.Diff;
 
-namespace DiffAlgorithm
+namespace DiffAlgorithm.Diff3
 {
     /// <summary>
     /// This class implements Diff3 algorithm.
@@ -18,26 +18,26 @@ namespace DiffAlgorithm
         /// <summary>
         /// 2-way diff between new and old files.
         /// </summary>
-        private readonly DiffItem[] diffOldNew;
+        private readonly DiffItem[] diffBaseLocal;
 
         /// <summary>
         /// 2-way diff between new and his files.
         /// </summary>
-        private readonly DiffItem[] diffOldHis;
+        private readonly DiffItem[] diffBaseRemote;
 
         /// <summary>
         /// Hashed new file.
         /// 
         /// Used in checking conflicts.
         /// </summary>
-        private readonly int[] leftFile;
+        private readonly int[] localFile;
 
         /// <summary>
         /// Hashed his file.
         /// 
         /// Used in checking conflicts.
         /// </summary>
-        private readonly int[] rightFile;
+        private readonly int[] remoteFile;
 
         /// <summary>
         /// Temporary container for Diff3Items
@@ -61,24 +61,24 @@ namespace DiffAlgorithm
         #region very simple iterators over the two-way diffs
         int newIterator = 0;
         int hisIterator = 0;
-        private DiffItem? CurrentNew { get { if (newIterator < diffOldNew.Length) return diffOldNew[newIterator]; return null; } }
-        private DiffItem? CurrentHis { get { if (hisIterator < diffOldHis.Length) return diffOldHis[hisIterator]; return null; } }
+        private DiffItem? CurrentNew { get { if (newIterator < diffBaseLocal.Length) return diffBaseLocal[newIterator]; return null; } }
+        private DiffItem? CurrentHis { get { if (hisIterator < diffBaseRemote.Length) return diffBaseRemote[hisIterator]; return null; } }
         #endregion
 
         /// <summary>
         /// Constructor for Diff3Algorithm.
         /// </summary>
-        /// <param name="diffOldNew">Two-way diff between old and new file.</param>
-        /// <param name="diffOldHis">Two-way diff between old and his file.</param>
-        /// <param name="leftFile">Hashed new file.</param>
-        /// <param name="rightFile">Hashed his file.</param>
-        public Diff3Algorithm(DiffItem[] diffOldNew, DiffItem[] diffOldHis, int[] leftFile, int[] rightFile)
+        /// <param name="diffBaseLocal">Two-way diff between old and new file.</param>
+        /// <param name="diffBaseRemote">Two-way diff between old and his file.</param>
+        /// <param name="localFile">Hashed new file.</param>
+        /// <param name="remoteFile">Hashed his file.</param>
+        public Diff3Algorithm(DiffItem[] diffBaseLocal, DiffItem[] diffBaseRemote, int[] localFile, int[] remoteFile)
         {
-            this.diffOldNew = diffOldNew;
-            this.diffOldHis = diffOldHis;
+            this.diffBaseLocal = diffBaseLocal;
+            this.diffBaseRemote = diffBaseRemote;
 
-            this.leftFile = leftFile;
-            this.rightFile = rightFile;
+            this.localFile = localFile;
+            this.remoteFile = remoteFile;
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace DiffAlgorithm
                     bool areSame = true;
                     for (int i = 0; i < CurrentNew.Value.InsertedInNew; i++)
                     {
-                        if (leftFile[CurrentNew.Value.NewLineStart + i] == rightFile[CurrentHis.Value.NewLineStart + i])
+                        if (localFile[CurrentNew.Value.NewLineStart + i] == remoteFile[CurrentHis.Value.NewLineStart + i])
                             continue;
 
                         areSame = false;
@@ -172,7 +172,7 @@ namespace DiffAlgorithm
                     }
 
                     AddNewDiff3(areSame
-                        ? CreateFullChunk(DifferencesStatusEnum.LeftRightSame)
+                        ? CreateFullChunk(DifferencesStatusEnum.LocalRemoteSame)
                         : CreateFullChunk(DifferencesStatusEnum.AllDifferent));
 
                     newIterator++; hisIterator++;
@@ -290,7 +290,7 @@ namespace DiffAlgorithm
                 CurrentNew.Value.DeletedInOld,
                 CurrentNew.Value.InsertedInNew,
                 CurrentNew.Value.DeletedInOld,
-                DifferencesStatusEnum.BaseRightSame
+                DifferencesStatusEnum.BaseRemoteSame
             );
         }
 
@@ -309,7 +309,7 @@ namespace DiffAlgorithm
                 CurrentHis.Value.DeletedInOld,
                 CurrentHis.Value.DeletedInOld,
                 CurrentHis.Value.InsertedInNew,
-                DifferencesStatusEnum.BaseLeftSame
+                DifferencesStatusEnum.BaseLocalSame
             );
         }
 

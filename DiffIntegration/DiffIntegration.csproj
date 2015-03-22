@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiffFilesystemTree\DiffCrawler.cs" />
     <Compile Include="DiffFilesystemTree\DiffFilesystemTree.cs" />
     <Compile Include="DiffFilesystemTree\DiffDirNode.cs" />
     <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />

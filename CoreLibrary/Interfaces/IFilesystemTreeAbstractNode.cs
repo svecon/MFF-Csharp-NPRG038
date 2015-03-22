@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
@@ -8,23 +9,6 @@ namespace CoreLibrary.Interfaces
     /// </summary>
     public interface IFilesystemTreeAbstractNode : IFilesystemTreeVisitable
     {
-        /// <summary>
-        /// What has already been done with this node.
-        /// </summary>
-        NodeStatusEnum Status { get; set; }
-
-        /// <summary>
-        /// Mode for given filesystem tree.
-        /// 
-        /// Processors can act differently for each mode.
-        /// </summary>
-        DiffModeEnum Mode { get; }
-
-        /// <summary>
-        /// Which files are different from each other.
-        /// </summary>
-        DifferencesStatusEnum Differences { get; set; }
-
         /// <summary>
         /// Info from any of matched files that is not null.
         /// </summary>
@@ -38,12 +22,34 @@ namespace CoreLibrary.Interfaces
         /// <summary>
         /// Info from Left directory.
         /// </summary>
-        FileSystemInfo InfoLeft { get; }
+        FileSystemInfo InfoLocal { get; }
 
         /// <summary>
         /// Info from Right directory.
         /// </summary>
-        FileSystemInfo InfoRight { get; }
+        FileSystemInfo InfoRemote { get; }
+
+        /// <summary>
+        /// What has already been done with this node.
+        /// </summary>
+        NodeStatusEnum Status { get; set; }
+
+        /// <summary>
+        /// Raised exceptions during the processing 
+        /// </summary>
+        Exception Exception { get; set; }
+
+        /// <summary>
+        /// Mode for given filesystem tree.
+        /// 
+        /// Processors can act differently for each mode.
+        /// </summary>
+        DiffModeEnum Mode { get; }
+
+        /// <summary>
+        /// Which files are different from each other.
+        /// </summary>
+        DifferencesStatusEnum Differences { get; set; }
 
         /// <summary>
         /// Binary mask that hold information where the file (or directory) has been found.

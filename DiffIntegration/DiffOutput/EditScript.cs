@@ -33,8 +33,8 @@ namespace DiffIntegration.DiffOutput
 
             var sb = new StringBuilder();
 
-            using (StreamReader streamA = ((FileInfo)dnode.InfoLeft).OpenText())
-            using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
+            using (StreamReader streamA = ((FileInfo)dnode.InfoLocal).OpenText())
+            using (StreamReader streamB = ((FileInfo)dnode.InfoRemote).OpenText())
             {
                 int n = 0;
                 int m = 0;

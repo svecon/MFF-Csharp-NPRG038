@@ -9,7 +9,7 @@ namespace CoreLibrary.Enums
     public enum LocationEnum
     {
         OnBase      = 1 << 0,
-        OnLeft      = 1 << 1,
-        OnRight     = 1 << 2,
+        OnLocal      = 1 << 1,
+        OnRemote     = 1 << 2,
     };
 }

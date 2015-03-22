@@ -70,6 +70,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
         private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
         {
             node.Status = Enums.NodeStatusEnum.HasError;
+            node.Exception = e;
         }
 
         public void Wait()

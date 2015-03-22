@@ -32,8 +32,8 @@ namespace DiffIntegration.DiffOutput
 
             var sb = new StringBuilder();
 
-            using (StreamReader streamL = ((FileInfo)dnode.InfoLeft).OpenText())
-            using (StreamReader streamR = ((FileInfo)dnode.InfoRight).OpenText())
+            using (StreamReader streamL = ((FileInfo)dnode.InfoLocal).OpenText())
+            using (StreamReader streamR = ((FileInfo)dnode.InfoRemote).OpenText())
             using (StreamReader streamO = ((FileInfo)dnode.InfoBase).OpenText())
             {
                 int m = 0;
@@ -49,8 +49,8 @@ namespace DiffIntegration.DiffOutput
                     for (; m < diff.NewLineStart; m++) { streamL.ReadLine(); }
                     for (; n < diff.HisLineStart; n++) { streamR.ReadLine(); }
 
-                    // DifferencesStatusEnum.LeftRightSame has a different order of blocks
-                    if (diff.Differeces == DifferencesStatusEnum.LeftRightSame)
+                    // DifferencesStatusEnum.LocalRemoteSame has a different order of blocks
+                    if (diff.Differeces == DifferencesStatusEnum.LocalRemoteSame)
                     {
                         sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
                             ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New, false));
@@ -64,11 +64,11 @@ namespace DiffIntegration.DiffOutput
                     {
                         sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
                             ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New,
-                                diff.Differeces != DifferencesStatusEnum.BaseLeftSame));
+                                diff.Differeces != DifferencesStatusEnum.BaseLocalSame));
 
                         sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
                             ref o, streamO, dnode.Diff3.FilesLineCount.Old, dnode.Diff3.FilesEndsWithNewLine.Old,
-                                diff.Differeces != DifferencesStatusEnum.BaseRightSame));
+                                diff.Differeces != DifferencesStatusEnum.BaseRemoteSame));
 
                         sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
                             ref n, streamR, dnode.Diff3.FilesLineCount.His, dnode.Diff3.FilesEndsWithNewLine.His));
@@ -109,11 +109,11 @@ namespace DiffIntegration.DiffOutput
         {
             switch (diffStatus)
             {
-                case DifferencesStatusEnum.BaseLeftSame:
+                case DifferencesStatusEnum.BaseLocalSame:
                     return "===3";
-                case DifferencesStatusEnum.BaseRightSame:
+                case DifferencesStatusEnum.BaseRemoteSame:
                     return "===1";
-                case DifferencesStatusEnum.LeftRightSame:
+                case DifferencesStatusEnum.LocalRemoteSame:
                     return "===2";
                 case DifferencesStatusEnum.AllDifferent:
                     return "===";

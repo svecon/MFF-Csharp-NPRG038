@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.Interfaces;
 
 namespace CoreLibraryTests
 {
@@ -68,21 +69,16 @@ namespace CoreLibraryTests
         [TestMethod]
         public void CrawlerTestsBasic()
         {
-            var crawler = new Crawler(GetTempPath() + "2way/l", GetTempPath() + "2way/r");
+            var crawler = new Crawler().InitializeCrawler(GetTempPath() + "2way/l", GetTempPath() + "2way/r");
 
-            Assert.AreEqual(CoreLibrary.Enums.DiffModeEnum.TwoWay, crawler.FilesystemDiff.DiffMode);
+            IFilesystemTree filesystemTree = crawler.TraverseTree();
 
-            FilesystemTree filesystem = crawler.FilesystemDiff;
+            Assert.AreEqual(CoreLibrary.Enums.DiffModeEnum.TwoWay, filesystemTree.DiffMode);
 
-            Assert.AreEqual(0, filesystem.Root.Files.Count);
-            Assert.AreEqual(0, filesystem.Root.Directories.Count);
+            Assert.AreEqual((int)CoreLibrary.Enums.LocationCombinationsEnum.OnLocalRemote, filesystemTree.Root.Location);
 
-            Assert.AreEqual((int)CoreLibrary.Enums.LocationCombinationsEnum.OnLeftRight, filesystem.Root.Location);
-
-            crawler.TraverseTree();
-
-            Assert.AreEqual(3, filesystem.Root.Directories.Count);
-            Assert.AreEqual(4, filesystem.Root.Files.Count);
+            Assert.AreEqual(3, filesystemTree.Root.Directories.Count);
+            Assert.AreEqual(4, filesystemTree.Root.Files.Count);
         }
     }
 }

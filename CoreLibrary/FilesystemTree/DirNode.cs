@@ -74,14 +74,14 @@ namespace CoreLibrary.FilesystemTree
 
         public IFilesystemTreeDirNode SearchForDir(DirectoryInfo info)
         {
-            //TODO maybe this could be done faster? (now it is N^2)
+            //TODO maybe this could be done faster?
 
             return Directories.FirstOrDefault(dir => dir.Info.Name == info.Name);
         }
 
         public IFilesystemTreeFileNode SearchForFile(FileInfo info)
         {
-            //TODO maybe this could be done faster? (now it is N^2)
+            //TODO maybe this could be done faster?
 
             return Files.FirstOrDefault(file => file.Info.Name == info.Name);
         }
@@ -102,7 +102,8 @@ namespace CoreLibrary.FilesystemTree
 
         public double GetSize()
         {
-            return (double)Files.Sum(f => ((FileInfo)f.Info).Length) / 1024 + Directories.Select(f => f.GetSize()).Sum();
+            return (double)Files.Sum(f => ((FileInfo)f.Info).Length) 
+                / 1024 + Directories.Select(f => f.GetSize()).Sum();
         }
 
         public override string GetAbsolutePath(LocationEnum location)
@@ -114,16 +115,15 @@ namespace CoreLibrary.FilesystemTree
                 case LocationEnum.OnBase:
                     info = RootNode.InfoBase;
                     break;
-                case LocationEnum.OnLeft:
-                    info = RootNode.InfoLeft;
+                case LocationEnum.OnLocal:
+                    info = RootNode.InfoLocal;
                     break;
-                case LocationEnum.OnRight:
-                    info = RootNode.InfoRight;
+                case LocationEnum.OnRemote:
+                    info = RootNode.InfoRemote;
                     break;
+                default:
+                    throw new InvalidOperationException("This path does not exist.");
             }
-
-            if (info == null)
-                throw new InvalidOperationException("This path does not exist.");
 
             return RelativePath == "" ? info.FullName : info.FullName + @"\" + RelativePath;
         }

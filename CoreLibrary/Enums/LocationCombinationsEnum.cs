@@ -7,5 +7,5 @@ namespace CoreLibrary.Enums
     /// Behaves like an extension for <see cref="LocationEnum"/>
     /// </summary>
     public enum LocationCombinationsEnum
-    { OnBase = 1, OnLeft = 2, OnRight = 4, OnBaseLeft = 3, OnBaseRight = 5, OnLeftRight = 6, OnAll3 = 7 };
+    { OnBase = 1, OnLocal = 2, OnRemote = 4, OnBaseLocal = 3, OnBaseRemote = 5, OnLocalRemote = 6, OnAll3 = 7 };
 }

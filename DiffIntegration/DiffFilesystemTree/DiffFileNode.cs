@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
+using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using DiffAlgorithm;
@@ -38,27 +39,39 @@ namespace DiffIntegration.DiffFilesystemTree
         /// <summary>
         /// Construtor for creating diff between two files (used separately).
         /// </summary>
-        /// <param name="infoOld">FileInfo for old file.</param>
-        /// <param name="infoNew">FileInfo for new file.</param>
-        public DiffFileNode(FileInfo infoOld, FileInfo infoNew)
-            : base(null, null, (LocationEnum)LocationCombinationsEnum.OnLeftRight, DiffModeEnum.TwoWay)
+        /// <param name="fileLocal">Path to the local file.</param>
+        /// <param name="fileRemote">Path to the remote file.</param>
+        public DiffFileNode(string fileLocal, string fileRemote)
+            : base(null, null, (LocationEnum)LocationCombinationsEnum.OnLocalRemote, DiffModeEnum.TwoWay)
         {
-            InfoLeft = infoOld;
-            InfoRight = infoNew;
+            InfoLocal = new FileInfo(fileLocal);
+            InfoRemote = new FileInfo(fileRemote);
+
+            if (!InfoLocal.Exists)
+                throw new LocalFileNotFoundException(InfoLocal);
+            if (!InfoRemote.Exists)
+                throw new RemoteFileNotFoundException(InfoRemote);
         }
         
         /// <summary>
         /// Construtor for creating diff between three files (used separately).
         /// </summary>
-        /// <param name="infoOld">FileInfo for old file.</param>
-        /// <param name="infoMyNew">FileInfo for my new file.</param>
-        /// <param name="infoHisNew">FileInfo for his new file.</param>
-        public DiffFileNode(FileInfo infoOld, FileInfo infoMyNew, FileInfo infoHisNew)
+        /// <param name="fileLocal">Path to the local file.</param>
+        /// <param name="fileBase">Path to the base file.</param>
+        /// <param name="fileRemote">Path to the remote file.</param>
+        public DiffFileNode(string fileLocal, string fileBase, string fileRemote)
             : base(null, null, (LocationEnum)LocationCombinationsEnum.OnAll3, DiffModeEnum.ThreeWay)
         {
-            InfoBase = infoOld;
-            InfoLeft = infoMyNew;
-            InfoRight = infoHisNew;
+            InfoBase = new FileInfo(fileBase);
+            InfoLocal = new FileInfo(fileLocal);
+            InfoRemote = new FileInfo(fileRemote);
+
+            if (!InfoLocal.Exists)
+                throw new LocalFileNotFoundException(InfoLocal);
+            if (!InfoBase.Exists)
+                throw new BaseFileNotFoundException(InfoBase);
+            if (!InfoRemote.Exists)
+                throw new RemoteFileNotFoundException(InfoRemote);
         }
 
         /// <summary>
@@ -71,11 +84,11 @@ namespace DiffIntegration.DiffFilesystemTree
             switch (Mode)
             {
                 case DiffModeEnum.TwoWay:
-                    Diff = diff.DiffFiles((FileInfo)InfoLeft, (FileInfo)InfoRight);
+                    Diff = diff.DiffFiles((FileInfo)InfoLocal, (FileInfo)InfoRemote);
                     break;
                 //TODO: load plugin from somewhere --- because of settings    
                 case DiffModeEnum.ThreeWay:
-                    Diff3 = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLeft, (FileInfo)InfoRight);
+                    Diff3 = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLocal, (FileInfo)InfoRemote);
                     break;
             }
         }

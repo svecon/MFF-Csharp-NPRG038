@@ -75,6 +75,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
         private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
         {
             node.Status = Enums.NodeStatusEnum.HasError;
+            node.Exception = task.Exception;
         }
 
         /// <summary>
@@ -96,8 +97,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                         return true;
 
                     System.Diagnostics.Debug.WriteLine(x);
-                    //TODO log exception
-                    return true;
+                    return false;
                 });
             }
         }

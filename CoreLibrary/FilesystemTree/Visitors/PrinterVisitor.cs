@@ -57,13 +57,13 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     case DifferencesStatusEnum.AllDifferent:
                         Console.ForegroundColor = ConsoleColor.Red;
                         break;
-                    case DifferencesStatusEnum.BaseLeftSame:
+                    case DifferencesStatusEnum.BaseLocalSame:
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         break;
-                    case DifferencesStatusEnum.BaseRightSame:
+                    case DifferencesStatusEnum.BaseRemoteSame:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         break;
-                    case DifferencesStatusEnum.LeftRightSame:
+                    case DifferencesStatusEnum.LocalRemoteSame:
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         break;
                     case DifferencesStatusEnum.AllSame:

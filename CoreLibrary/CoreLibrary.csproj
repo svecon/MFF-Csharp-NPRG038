@@ -42,6 +42,10 @@
   <ItemGroup>
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
+    <Compile Include="Exceptions\NotFound\BaseFileNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\LocalFileNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\LocationDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\RemoteFileNotFoundException.cs" />
     <Compile Include="Exceptions\SettingsNumberOfParamsMismatchException.cs" />
     <Compile Include="Exceptions\SettingsUnknownValue.cs" />
     <Compile Include="Exceptions\ProcessorPriorityColissionException.cs" />
@@ -56,10 +60,11 @@
     <Compile Include="FilesystemTree\Crawler.cs" />
     <Compile Include="Enums\DiffModeEnum.cs" />
     <Compile Include="Enums\LocationCombinationsEnum.cs" />
-    <Compile Include="Exceptions\BaseDirectoryNotFoundException.cs" />
-    <Compile Include="Exceptions\RightDirectoryNotFoundException.cs" />
-    <Compile Include="Exceptions\LeftDirectoryNotFoundException.cs" />
-    <Compile Include="Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\BaseDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\RemoteDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\LocalDirectoryNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFound\LocationFileNotFoundException.cs" />
+    <Compile Include="Interfaces\ICrawler.cs" />
     <Compile Include="Interfaces\IExecutionVisitor.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitable.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />

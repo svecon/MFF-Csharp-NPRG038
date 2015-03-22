@@ -9,13 +9,15 @@ namespace CoreLibrary.FilesystemTree
     {
         public FileSystemInfo InfoBase { get; protected set; }
 
-        public FileSystemInfo InfoLeft { get; protected set; }
+        public FileSystemInfo InfoLocal { get; protected set; }
 
-        public FileSystemInfo InfoRight { get; protected set; }
+        public FileSystemInfo InfoRemote { get; protected set; }
 
         public NodeStatusEnum Status { get; set; }
 
         public DifferencesStatusEnum Differences { get; set; }
+
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// Returns first (out of Base, Left or RightInfo) FileSystemInfo that is not null.
@@ -27,13 +29,17 @@ namespace CoreLibrary.FilesystemTree
                 if (InfoBase != null)
                 {
                     return InfoBase;
-                } else if (InfoLeft != null)
-                {
-                    return InfoLeft;
-                } else // if (InfoRight != null)
-                {
-                    return InfoRight;
                 }
+                if (InfoLocal != null)
+                {
+                    return InfoLocal;
+                }
+                if (InfoRemote != null)
+                {
+                    return InfoRemote;
+                }
+                
+                throw new InvalidDataException("At least one FileSystemInfo can not be null.");
             }
         }
 
@@ -80,15 +86,15 @@ namespace CoreLibrary.FilesystemTree
                 case LocationEnum.OnBase:
                     InfoBase = info;
                     break;
-                case LocationEnum.OnLeft:
-                    InfoLeft = info;
+                case LocationEnum.OnLocal:
+                    InfoLocal = info;
                     break;
-                case LocationEnum.OnRight:
-                    InfoRight = info;
+                case LocationEnum.OnRemote:
+                    InfoRemote = info;
                     break;
                 default:
                     if (((LocationCombinationsEnum)location == LocationCombinationsEnum.OnAll3)
-                        || ((LocationCombinationsEnum)location == LocationCombinationsEnum.OnLeftRight))
+                        || ((LocationCombinationsEnum)location == LocationCombinationsEnum.OnLocalRemote))
                     {
                         // ok ... manual insert
                         break;

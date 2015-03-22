@@ -43,11 +43,11 @@ namespace SyncFolders.Processors.Postprocessors
                 return;
 
             // otherwise create empty folder
-            if (node.IsInLocation(LocationEnum.OnLeft))
-                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRight));
+            if (node.IsInLocation(LocationEnum.OnLocal))
+                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRemote));
 
-            if (node.IsInLocation(LocationEnum.OnRight))
-                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLeft));
+            if (node.IsInLocation(LocationEnum.OnRemote))
+                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLocal));
         }
 
         public override void Process(IFilesystemTreeFileNode node)
@@ -55,24 +55,24 @@ namespace SyncFolders.Processors.Postprocessors
             if (!CheckModeAndStatus(node))
                 return;
 
-            if (node.Differences == DifferencesStatusEnum.LeftRightSame)
+            if (node.Differences == DifferencesStatusEnum.LocalRemoteSame)
                 return;
 
             FileInfo from = null;
             string to = null;
 
             // one file is missing
-            if (node.Location < (int)LocationCombinationsEnum.OnLeftRight)
+            if (node.Location < (int)LocationCombinationsEnum.OnLocalRemote)
             {
-                if (node.IsInLocation(LocationEnum.OnLeft))
+                if (node.IsInLocation(LocationEnum.OnLocal))
                 {
-                    from = (FileInfo)node.InfoLeft;
-                    to = node.GetAbsolutePath(LocationEnum.OnRight);
+                    from = (FileInfo)node.InfoLocal;
+                    to = node.GetAbsolutePath(LocationEnum.OnRemote);
 
-                } else if (node.IsInLocation(LocationEnum.OnRight))
+                } else if (node.IsInLocation(LocationEnum.OnRemote))
                 {
-                    from = (FileInfo)node.InfoRight;
-                    to = node.GetAbsolutePath(LocationEnum.OnLeft);
+                    from = (FileInfo)node.InfoRemote;
+                    to = node.GetAbsolutePath(LocationEnum.OnLocal);
 
                 } else
                 {
@@ -91,26 +91,26 @@ namespace SyncFolders.Processors.Postprocessors
             switch (CompareOn)
             {
                 case CompareOnEnum.Size:
-                    comparison = node.InfoLeft.LastWriteTime.CompareTo(node.InfoRight.LastWriteTime);
+                    comparison = node.InfoLocal.LastWriteTime.CompareTo(node.InfoRemote.LastWriteTime);
                     break;
 
                 case CompareOnEnum.Modification:
-                    comparison = node.InfoLeft.LastWriteTime.CompareTo(node.InfoRight.LastWriteTime);
+                    comparison = node.InfoLocal.LastWriteTime.CompareTo(node.InfoRemote.LastWriteTime);
                     break;
             }
 
             switch (comparison)
             {
                 case -1:
-                    from = (FileInfo)node.InfoRight;
-                    to = node.GetAbsolutePath(LocationEnum.OnLeft); ;
+                    from = (FileInfo)node.InfoRemote;
+                    to = node.GetAbsolutePath(LocationEnum.OnLocal); ;
                     break;
                 case 0:
                     // files are same, skip everything
                     return;
                 case 1:
-                    from = (FileInfo)node.InfoLeft;
-                    to = node.GetAbsolutePath(LocationEnum.OnRight); ;
+                    from = (FileInfo)node.InfoLocal;
+                    to = node.GetAbsolutePath(LocationEnum.OnRemote); ;
                     break;
             }
 

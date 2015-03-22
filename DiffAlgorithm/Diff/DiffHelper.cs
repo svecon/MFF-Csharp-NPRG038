@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using DiffAlgorithm.Diff3;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
 

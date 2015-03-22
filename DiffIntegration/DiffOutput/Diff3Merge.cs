@@ -32,8 +32,8 @@ namespace DiffIntegration.DiffOutput
 
             var sb = new StringBuilder();
 
-            using (StreamReader streamL = ((FileInfo)dnode.InfoLeft).OpenText())
-            using (StreamReader streamR = ((FileInfo)dnode.InfoRight).OpenText())
+            using (StreamReader streamL = ((FileInfo)dnode.InfoLocal).OpenText())
+            using (StreamReader streamR = ((FileInfo)dnode.InfoRemote).OpenText())
             using (StreamReader streamO = ((FileInfo)dnode.InfoBase).OpenText())
             {
                 int m = 0;
@@ -50,29 +50,29 @@ namespace DiffIntegration.DiffOutput
                     // print diffs
                     switch (diff.Differeces)
                     {
-                        case DifferencesStatusEnum.BaseLeftSame:
+                        case DifferencesStatusEnum.BaseLocalSame:
                             for (int p = 0; p < diff.NewAffectedLines; p++) { streamL.ReadLine(); m++; }
                             for (int p = 0; p < diff.OldAffectedLines; p++) { streamO.ReadLine(); o++; }
                             for (int p = 0; p < diff.HisAffectedLines; p++) { sb.AppendLine(streamR.ReadLine()); n++; }
                             break;
-                        case DifferencesStatusEnum.BaseRightSame:
+                        case DifferencesStatusEnum.BaseRemoteSame:
                             for (int p = 0; p < diff.NewAffectedLines; p++) { sb.AppendLine(streamL.ReadLine()); m++; }
                             for (int p = 0; p < diff.OldAffectedLines; p++) { streamO.ReadLine(); o++; }
                             for (int p = 0; p < diff.HisAffectedLines; p++) { streamR.ReadLine(); n++; }
                             break;
-                        case DifferencesStatusEnum.LeftRightSame:
+                        case DifferencesStatusEnum.LocalRemoteSame:
                             for (int p = 0; p < diff.NewAffectedLines; p++) { sb.AppendLine(streamL.ReadLine()); m++; }
                             for (int p = 0; p < diff.OldAffectedLines; p++) { streamO.ReadLine(); o++; }
                             for (int p = 0; p < diff.HisAffectedLines; p++) { streamR.ReadLine(); n++; }
                             break;
                         case DifferencesStatusEnum.AllDifferent:
-                            sb.AppendLine("<<<<<<< " + dnode.InfoLeft.Name);
+                            sb.AppendLine("<<<<<<< " + dnode.InfoLocal.Name);
                             for (int p = 0; p < diff.NewAffectedLines; p++) { sb.AppendLine(streamL.ReadLine()); m++; }
                             sb.AppendLine("||||||| " + dnode.InfoBase.Name);
                             for (int p = 0; p < diff.OldAffectedLines; p++) { sb.AppendLine(streamO.ReadLine()); o++; }
                             sb.AppendLine("=======");
                             for (int p = 0; p < diff.HisAffectedLines; p++) { sb.AppendLine(streamR.ReadLine()); n++; }
-                            sb.AppendLine(">>>>>>> " + dnode.InfoRight.Name);
+                            sb.AppendLine(">>>>>>> " + dnode.InfoRemote.Name);
                             break;
                     }
 

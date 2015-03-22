@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using CoreLibrary.Enums;
-using CoreLibrary.Exceptions;
+using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Crawler crawls given directories (2 or 3) and builds a FilesystemTree with files and directories as Nodes.
+    /// Crawler traverses given directories (2 or 3) 
+    /// and builds a IFilesystemTree with files and directories as Nodes.
     /// 
     /// //TODO maybe try to parallelize the crawling?
     /// </summary>
-    public class Crawler
+    public class Crawler : ICrawler
     {
         /// <summary>
         /// Struct that holds all needed information for filesystem traversal:
@@ -33,9 +34,9 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// FilesystemDiff represents all found files in a tree structure.
+        /// FilesystemTree represents all found files in a tree structure.
         /// </summary>
-        public FilesystemTree FilesystemDiff { get; protected set; }
+        protected IFilesystemTree FilesystemTree;
 
         /// <summary>
         /// Data structure to hold Info of subfolders to be examined for Files.
@@ -43,101 +44,73 @@ namespace CoreLibrary.FilesystemTree
         readonly Stack<DirectoryForIteration> dirsToBeSearched;
 
         /// <summary>
-        /// Create crawler for 3-way diffing.
+        /// Create crawler that can traverse directories.
         /// </summary>
-        /// <param name="leftDirPath">Path to the left directory</param>
-        /// <param name="baseDirPath">Base directory (origin)</param>
-        /// <param name="rightDirPath">Path to the right directory</param>
-        public Crawler(string leftDirPath, string baseDirPath, string rightDirPath)
+        public Crawler()
         {
             dirsToBeSearched = new Stack<DirectoryForIteration>(15);
-
-            if (baseDirPath == null)
-            {
-                FilesystemDiff = new FilesystemTree(DiffModeEnum.TwoWay);
-            } else
-            {
-                FilesystemDiff = new FilesystemTree(DiffModeEnum.ThreeWay);
-
-                #region AddingBaseDir
-
-                var baseDir = new DirectoryInfo(baseDirPath);
-
-                if (!baseDir.Exists)
-                    throw new BaseDirectoryNotFoundException(baseDir);
-
-                FilesystemDiff.AddDirToRoot(baseDir, LocationEnum.OnBase);
-                dirsToBeSearched.Push(new DirectoryForIteration(baseDir, FilesystemDiff.Root, LocationEnum.OnBase));
-
-                #endregion
-            }
-
-            #region AddingLeftDir
-
-            var leftDir = new DirectoryInfo(leftDirPath);
-
-            if (!leftDir.Exists)
-                throw new LeftDirectoryNotFoundException(leftDir);
-
-            FilesystemDiff.AddDirToRoot(leftDir, LocationEnum.OnLeft);
-            dirsToBeSearched.Push(new DirectoryForIteration(leftDir, FilesystemDiff.Root, LocationEnum.OnLeft));
-
-            #endregion
-
-            #region AddingRightDir
-
-            var rightDir = new DirectoryInfo(rightDirPath);
-
-            if (!rightDir.Exists)
-                throw new RightDirectoryNotFoundException(rightDir);
-
-            FilesystemDiff.AddDirToRoot(rightDir, LocationEnum.OnRight);
-            dirsToBeSearched.Push(new DirectoryForIteration(rightDir, FilesystemDiff.Root, LocationEnum.OnRight));
-
-            #endregion
         }
 
-        /// <summary>
-        /// Create crawler for 2-way diffing.
-        /// </summary>
-        /// <param name="leftDirPath">Path to the left directory</param>
-        /// <param name="rightDirPath">Path to the right directory</param>
-        public Crawler(string leftDirPath, string rightDirPath)
-            : this(null, leftDirPath, rightDirPath)
+        public ICrawler InitializeCrawler(string localDirPath, string remoteDirPath)
         {
+            dirsToBeSearched.Clear();
+
+            FilesystemTree = CreateFilesystemTree(DiffModeEnum.TwoWay);
+
+            AddDirToRoot(localDirPath, LocationEnum.OnLocal);
+            AddDirToRoot(remoteDirPath, LocationEnum.OnRemote);
+
+            return this;
         }
 
-        #region Crawler only for files
-        //public static FilesystemTree ForFiles(string baseFilePath, string leftFilePath, string rightFilePath)
-        //{
-        //IFilesystemTreeFileNode filesNode = new FilesystemTree.FileNode();
+        public ICrawler InitializeCrawler(string localDirPath, string baseDirPath, string remoteDirPath)
+        {
+            dirsToBeSearched.Clear();
 
-        //if (baseFilePath == null)
-        //    filesDiffTree = new FilesystemTree(DiffModeEnum.TwoWay);
-        //else
-        //    filesDiffTree = new FilesystemTree(DiffModeEnum.ThreeWay);
+            FilesystemTree = CreateFilesystemTree(DiffModeEnum.ThreeWay);
 
-        //FileInfo rightFile = new FileInfo(rightFilePath);
-        //if (!rightFile.Exists)
-        //    throw new RightDirectoryNotFoundException(rightFile);
+            AddDirToRoot(localDirPath, LocationEnum.OnLocal);
+            AddDirToRoot(baseDirPath, LocationEnum.OnBase);
+            AddDirToRoot(remoteDirPath, LocationEnum.OnRemote);
 
-        //filesDiffTree.AddDirToRoot(rightFile, LocationEnum.OnRight);
-
-        //return filesDiffTree;
-        //}
-
-        //public static FilesystemTree ForFiles(string leftFilePath, string rightFilePath)
-        //{
-        //    return ForFiles(null, leftFilePath, rightFilePath);
-        //}
-        #endregion
+            return this;
+        }
 
         /// <summary>
-        /// Traverses filesystem directories specified in constructor.
-        /// Creates a filesystem tree with all files from all paths.
+        /// Virtual creating of FilesystemTree to allow instantiation of different type of trees.
         /// </summary>
-        /// <returns></returns>
-        public FilesystemTree TraverseTree()
+        /// <param name="mode">Mode to instantiate the tree with</param>
+        /// <returns>Empty FilesystemTree container</returns>
+        protected virtual IFilesystemTree CreateFilesystemTree(DiffModeEnum mode)
+        {
+            return new FilesystemTree(mode);
+        }
+
+        /// <summary>
+        /// Helper method that initializes crawler and adds root directories to be searched further
+        /// </summary>
+        /// <param name="dirPath">Path to root directory</param>
+        /// <param name="location">Location of the directory</param>
+        private void AddDirToRoot(string dirPath, LocationEnum location)
+        {
+            var dir = new DirectoryInfo(dirPath);
+
+            if (!dir.Exists)
+                switch (location)
+                {
+                    case LocationEnum.OnBase:
+                        throw new BaseDirectoryNotFoundException(dir);
+                    case LocationEnum.OnLocal:
+                        throw new LocalDirectoryNotFoundException(dir);
+                    case LocationEnum.OnRemote:
+                        throw new RemoteDirectoryNotFoundException(dir);
+                }
+
+            FilesystemTree.AddDirToRoot(dir, location);
+            dirsToBeSearched.Push(new DirectoryForIteration(dir, FilesystemTree.Root, location));
+        }
+
+        public IFilesystemTree TraverseTree()
         {
             while (dirsToBeSearched.Count > 0)
             {
@@ -191,7 +164,7 @@ namespace CoreLibrary.FilesystemTree
                     continue;
                 }
 
-                // Perform the required action on each file here. 
+                // Processing files
                 foreach (FileInfo info in files)
                 {
                     try
@@ -214,7 +187,7 @@ namespace CoreLibrary.FilesystemTree
                 }
             }
 
-            return FilesystemDiff;
+            return FilesystemTree;
         }
     }
 }

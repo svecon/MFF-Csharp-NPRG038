@@ -41,8 +41,8 @@ namespace DiffIntegration.DiffOutput
             var sb = new StringBuilder();
 
             // print headers
-            sb.AppendLine("--- " + CreateHeader(dnode.InfoLeft.FullName, dnode.InfoLeft.LastWriteTime));
-            sb.AppendLine("+++ " + CreateHeader(dnode.InfoRight.FullName, dnode.InfoRight.LastWriteTime));
+            sb.AppendLine("--- " + CreateHeader(dnode.InfoLocal.FullName, dnode.InfoLocal.LastWriteTime));
+            sb.AppendLine("+++ " + CreateHeader(dnode.InfoRemote.FullName, dnode.InfoRemote.LastWriteTime));
 
             // create and merge ovelapping diffs into chunks
             var chunks = new List<DiffChunk>(dnode.Diff.Items.Length);
@@ -55,8 +55,8 @@ namespace DiffIntegration.DiffOutput
             }
 
             // print chunks
-            using (StreamReader streamA = ((FileInfo)dnode.InfoLeft).OpenText())
-            using (StreamReader streamB = ((FileInfo)dnode.InfoRight).OpenText())
+            using (StreamReader streamA = ((FileInfo)dnode.InfoLocal).OpenText())
+            using (StreamReader streamB = ((FileInfo)dnode.InfoRemote).OpenText())
             {
                 int n = 0;
                 int m = 0;
