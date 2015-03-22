@@ -80,5 +80,12 @@ namespace CoreLibrary.Interfaces
         /// <param name="processorName"></param>
         /// <returns>IEnumerable</returns>
         IEnumerable<ISettings> GetSettingsByProcessor(string processorName);
+
+        /// <summary>
+        /// Creates new ProcessorLoader using only selected processors.
+        /// </summary>
+        /// <param name="processors">Processors to be in the new Loader</param>
+        /// <returns>New ProcessorLoader</returns>
+        IProcessorLoader SplitLoaderUsing(params string[] processors);
     }
 }

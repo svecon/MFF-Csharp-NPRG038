@@ -15,7 +15,7 @@ namespace CoreLibrary.Processors
     /// 
     /// Also all the loaded processors are scanned for their Settings.
     /// </summary>
-    public class ProcessorsLoader : IProcessorLoader
+    public class ProcessorLoader : IProcessorLoader
     {
         protected readonly SortedList<int, IPreProcessor> PreProcessors;
 
@@ -34,7 +34,7 @@ namespace CoreLibrary.Processors
 
         private readonly Type[] settingsConstructorSignature = { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
 
-        public ProcessorsLoader()
+        public ProcessorLoader()
         {
             PreProcessors = new SortedList<int, IPreProcessor>();
             Processors = new SortedList<int, IProcessor>();
@@ -194,9 +194,9 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public ProcessorsLoader SplitLoaderUsing(params string[] processors)
+        public IProcessorLoader SplitLoaderUsing(params string[] processors)
         {
-            var newLoader = new ProcessorsLoader();
+            var newLoader = new ProcessorLoader();
 
             foreach (string processorName in processors)
             {

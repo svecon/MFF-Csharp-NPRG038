@@ -31,7 +31,7 @@ namespace SvergeConsole
             #region Load all available processors and their settings
             try
             {
-                _loader = new ProcessorsLoader();
+                _loader = new ProcessorLoader();
                 // Load available processors and their settings
                 _loader.LoadAll();
                 // Add special settings from this Program
@@ -67,7 +67,7 @@ namespace SvergeConsole
                 Console.WriteLine("Usage: [OPTION]... <LOCAL> [BASE] <REMOTE>");
 
                 Console.WriteLine("\nListing all found Processors and their parameters:");
-                var processorPrinter = new ProcessorsPrinter(_loader);
+                var processorPrinter = new ProcessorPrinter(_loader);
                 processorPrinter.Print();
                 return;
             }

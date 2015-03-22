@@ -11,7 +11,7 @@ namespace CoreLibrary.Processors
     /// <summary>
     /// Class for printing loaded processors and their corresponding settings.
     /// </summary>
-    public class ProcessorsPrinter : IPrinter
+    public class ProcessorPrinter : IPrinter
     {
         private readonly IProcessorLoader loader;
         private readonly bool printSettings;
@@ -21,7 +21,7 @@ namespace CoreLibrary.Processors
         /// </summary>
         /// <param name="processorLoader">ProcessorLoader that will have the processors print out.</param>
         /// <param name="printSettings">True for printing out corresponding settings.</param>
-        public ProcessorsPrinter(IProcessorLoader processorLoader, bool printSettings = false)
+        public ProcessorPrinter(IProcessorLoader processorLoader, bool printSettings = false)
         {
             loader = processorLoader;
             this.printSettings = printSettings;
