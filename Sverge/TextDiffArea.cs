@@ -250,14 +250,20 @@ namespace Sverge
                 paddingLeft = 1 + (1) * sample.Width;
 
                 // print line numbers
-                dc.DrawText(createFormattedText((i + 1).ToString()), new Point(0 - offset.X + paddingLeft, i * sample.Height - offset.Y + paddingTop));
+                var lineNumber = createFormattedText((i + 1).ToString());
+                dc.DrawText(lineNumber, new Point(alightRight(lineNumber.Width, lines.Length.ToString().Length * sample.Width, 0 - offset.X + paddingLeft), i * sample.Height - offset.Y + paddingTop));
 
-                paddingLeft = (1 + lines.Length.ToString().Length + 1)*sample.Width;
+                paddingLeft = (1 + lines.Length.ToString().Length + 1) * sample.Width;
 
                 // print text
                 FormattedText oneLine = createFormattedText(lines[i]);
                 dc.DrawText(oneLine, new Point(0 - offset.X + paddingLeft, i * oneLine.Height - offset.Y + paddingTop));
             }
+        }
+
+        private double alightRight(double size, double maxSize, double paddingLeft)
+        {
+            return paddingLeft + maxSize - size;
         }
 
         private FormattedText createFormattedText(string text)
