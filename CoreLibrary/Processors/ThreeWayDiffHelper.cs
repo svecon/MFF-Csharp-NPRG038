@@ -20,13 +20,13 @@ namespace CoreLibrary.Processors
 
         #region Constants
 
-        const int BASE_LEFT = 0x1;
-        const int BASE_RIGHT = 0x2;
-        const int LEFT_RIGHT = 0x4;
+        const int BASE_LOCAL = 0x1;
+        const int BASE_REMOTE = 0x2;
+        const int LOCAL_REMOTE = 0x4;
 
         const int BASE = 0x1;
-        const int LEFT = 0x2;
-        const int RIGHT = 0x4;
+        const int LOCAL = 0x2;
+        const int REMOTE = 0x4;
 
         #endregion
 
@@ -58,14 +58,14 @@ namespace CoreLibrary.Processors
             AddGivenFileAsPossibility(BASE);
         }
 
-        public void AddLeftFilePossibility()
+        public void AddLocalFilePossibility()
         {
-            AddGivenFileAsPossibility(LEFT);
+            AddGivenFileAsPossibility(LOCAL);
         }
 
-        public void AddRightFilePossibility()
+        public void AddRemoteFilePossibility()
         {
-            AddGivenFileAsPossibility(RIGHT);
+            AddGivenFileAsPossibility(REMOTE);
         }
 
         #endregion
@@ -80,17 +80,17 @@ namespace CoreLibrary.Processors
 
         public void CheckCombinationBaseLeft(bool isDifferent)
         {
-            CheckGivenCombination(BASE_LEFT, isDifferent);
+            CheckGivenCombination(BASE_LOCAL, isDifferent);
         }
 
         public void CheckCombinationBaseRight(bool isDifferent)
         {
-            CheckGivenCombination(BASE_RIGHT, isDifferent);
+            CheckGivenCombination(BASE_REMOTE, isDifferent);
         }
 
         public void CheckCombinationLeftRight(bool isDifferent)
         {
-            CheckGivenCombination(LEFT_RIGHT, isDifferent);
+            CheckGivenCombination(LOCAL_REMOTE, isDifferent);
         }
 
         #endregion
@@ -112,12 +112,12 @@ namespace CoreLibrary.Processors
 
         public bool CanLeftFileBeSame(bool forceRecheck = false)
         {
-            return CanGivenFileBeSame(LEFT, forceRecheck);
+            return CanGivenFileBeSame(LOCAL, forceRecheck);
         }
 
         public bool CanRightFileBeSame(bool forceRecheck = false)
         {
-            return CanGivenFileBeSame(RIGHT, forceRecheck);
+            return CanGivenFileBeSame(REMOTE, forceRecheck);
         }
 
         #endregion
@@ -131,17 +131,17 @@ namespace CoreLibrary.Processors
 
         public bool CanCombinationBaseLeftBeSame()
         {
-            return CanGivenCombinationBeSame(BASE_LEFT);
+            return CanGivenCombinationBeSame(BASE_LOCAL);
         }
 
         public bool CanCombinationBaseRightBeSame()
         {
-            return CanGivenCombinationBeSame(BASE_RIGHT);
+            return CanGivenCombinationBeSame(BASE_REMOTE);
         }
 
         public bool CanCombinationLeftRightBeSame()
         {
-            return CanGivenCombinationBeSame(LEFT_RIGHT);
+            return CanGivenCombinationBeSame(LOCAL_REMOTE);
         }
 
         #endregion
@@ -150,26 +150,26 @@ namespace CoreLibrary.Processors
 
         public void RecalculatePossibleCombinations()
         {
-            if ((possibleFiles & (BASE | LEFT)) == (BASE | LEFT))
-                possibleCombinations |= BASE_LEFT;
+            if ((possibleFiles & (BASE | LOCAL)) == (BASE | LOCAL))
+                possibleCombinations |= BASE_LOCAL;
 
-            if ((possibleFiles & (BASE | RIGHT)) == (BASE | RIGHT))
-                possibleCombinations |= BASE_RIGHT;
+            if ((possibleFiles & (BASE | REMOTE)) == (BASE | REMOTE))
+                possibleCombinations |= BASE_REMOTE;
 
-            if ((possibleFiles & (LEFT | RIGHT)) == (LEFT | RIGHT))
-                possibleCombinations |= LEFT_RIGHT;
+            if ((possibleFiles & (LOCAL | REMOTE)) == (LOCAL | REMOTE))
+                possibleCombinations |= LOCAL_REMOTE;
         }
 
         public void RecalculatePossibleFiles()
         {
-            if ((possibleCombinations & (BASE_LEFT | BASE_RIGHT)) == 0)
+            if ((possibleCombinations & (BASE_LOCAL | BASE_REMOTE)) == 0)
                 possibleFiles &= ~BASE;
 
-            if ((possibleCombinations & (BASE_LEFT | LEFT_RIGHT)) == 0)
-                possibleFiles &= ~LEFT;
+            if ((possibleCombinations & (BASE_LOCAL | LOCAL_REMOTE)) == 0)
+                possibleFiles &= ~LOCAL;
 
-            if ((possibleCombinations & (BASE_RIGHT | LEFT_RIGHT)) == 0)
-                possibleFiles &= ~RIGHT;
+            if ((possibleCombinations & (BASE_REMOTE | LOCAL_REMOTE)) == 0)
+                possibleFiles &= ~REMOTE;
         }
 
         #endregion

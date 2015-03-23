@@ -51,10 +51,10 @@ namespace DiffIntegration.Processors.Processors
                 threeWay.AddBaseFilePossibility();
 
             if (node.IsInLocation(LocationEnum.OnLocal))
-                threeWay.AddLeftFilePossibility();
+                threeWay.AddLocalFilePossibility();
 
             if (node.IsInLocation(LocationEnum.OnRemote))
-                threeWay.AddRightFilePossibility();
+                threeWay.AddRemoteFilePossibility();
 
             // create combinations
             threeWay.RecalculatePossibleCombinations();

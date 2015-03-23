@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
@@ -31,7 +33,20 @@ namespace CoreLibrary.FilesystemTree
 
         public override string GetAbsolutePath(LocationEnum location)
         {
-            return ParentNode.GetAbsolutePath(location) + @"\" + Info.Name;
+            if (ParentNode != null)
+                return ParentNode.GetAbsolutePath(location) + @"\" + Info.Name;
+            
+            switch (location)
+            {
+                case LocationEnum.OnBase:
+                    return InfoBase.FullName;
+                case LocationEnum.OnLocal:
+                    return InfoLocal.FullName;
+                case LocationEnum.OnRemote:
+                    return InfoRemote.FullName;
+            }
+
+            throw new ArgumentException("There is no path for given location");
         }
     }
 }

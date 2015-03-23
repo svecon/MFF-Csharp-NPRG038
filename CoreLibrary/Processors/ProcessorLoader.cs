@@ -166,6 +166,7 @@ namespace CoreLibrary.Processors
             try
             {
                 PreProcessors.Add(processor.Priority, processor);
+                ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -177,6 +178,7 @@ namespace CoreLibrary.Processors
             try
             {
                 Processors.Add(processor.Priority, processor);
+                ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
@@ -188,6 +190,7 @@ namespace CoreLibrary.Processors
             try
             {
                 PostProcessors.Add(processor.Priority, processor);
+                ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);

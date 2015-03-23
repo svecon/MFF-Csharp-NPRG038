@@ -53,6 +53,7 @@
     <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\RegexFilterProcessor.cs" />
     <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />
+    <Compile Include="Processors\Processors\ChecksumDiffProcessor.cs" />
     <Compile Include="Processors\Processors\SizeTimeDiffProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\DiffAlgorithm\DiffAlgorithm.csproj">
       <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
       <Name>DiffAlgorithm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RollingChecksums\RollingChecksums.csproj">
+      <Project>{C78D56E3-D78C-468E-A520-CE9B703CAB4A}</Project>
+      <Name>RollingChecksums</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

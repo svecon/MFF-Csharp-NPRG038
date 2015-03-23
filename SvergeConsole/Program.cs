@@ -159,14 +159,16 @@ namespace SvergeConsole
             #region Run Processors
             // execution visitor for filesystem tree processes the files and folders with loaded processors
             var ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
-                typeof(ExtensionFilterProcessor),
-                typeof(RegexFilterProcessor),
-                typeof(CsharpSourcesFilterProcessor),
-                
-                typeof(BinaryDiffProcessor),
-                typeof(SizeTimeDiffProcessor),
-                
-                typeof(SyncMergeProcessor)
+                typeof(ExtensionFilterProcessor)
+                , typeof(RegexFilterProcessor)
+                , typeof(CsharpSourcesFilterProcessor)
+
+                , typeof(SizeTimeDiffProcessor)
+                , typeof(ChecksumDiffProcessor)
+                , typeof(BinaryDiffProcessor)
+
+
+                //, typeof(SyncMergeProcessor)
             ));
             diffTree.Accept(ex);
 

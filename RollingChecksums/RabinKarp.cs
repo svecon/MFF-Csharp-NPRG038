@@ -54,14 +54,14 @@ namespace RollingChecksums
 
         public uint Fill(byte[] data, int windowSize = -1)
         {
-            Window = windowSize > 0 ? windowSize : data.Length;
+            ChecksumWindowSize = Window = windowSize > 0 ? windowSize : data.Length;
             buffer = new int[Window];
 
-            for (int i = 0; i < data.Length; i++)
+            foreach (byte b in data)
             {
-                Checksum = (uint)(Checksum * Window + data[i]) % PRIME;
+                Checksum = (uint)(Checksum * Window + b) % PRIME;
 
-                buffer[bufferPtr++] = data[i];
+                buffer[bufferPtr++] = b;
                 bufferPtr %= buffer.Length;
             }
 
@@ -75,15 +75,14 @@ namespace RollingChecksums
         {
             ChecksumWindowSize = checksumWindowSize > 0 ? checksumWindowSize : Window;
 
-            for (int i = 0; i < data.Length; i++)
+            foreach (byte b in data)
             {
-                Roll(data[i]);
+                Roll(b);
 
-                if (nextChecksumCountdown == 0)
-                {
-                    ResetWindowCountdown();
-                    yield return Checksum;
-                }
+                if (nextChecksumCountdown != 0) continue;
+
+                ResetWindowCountdown();
+                yield return Checksum;
             }
         }
 

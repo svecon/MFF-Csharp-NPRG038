@@ -50,14 +50,14 @@ namespace DiffIntegration.Processors.Processors
                 {
                     readers[1] = new StreamReader(node.InfoLocal.FullName);
                     buffers[1] = new char[BUFFER_SIZE];
-                    threeWay.AddLeftFilePossibility();
+                    threeWay.AddLocalFilePossibility();
                 }
 
                 if (node.IsInLocation(LocationEnum.OnRemote))
                 {
                     readers[2] = new StreamReader(node.InfoRemote.FullName);
                     buffers[2] = new char[BUFFER_SIZE];
-                    threeWay.AddRightFilePossibility();
+                    threeWay.AddRemoteFilePossibility();
                 }
 
                 // create combinations
