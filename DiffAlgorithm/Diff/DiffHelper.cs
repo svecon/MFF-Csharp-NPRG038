@@ -97,9 +97,9 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// todo settings somewhere global
         /// </summary>
-        /// <param name="trimSpace"></param>
-        /// <param name="ignoreSpace"></param>
-        /// <param name="ignoreCase"></param>
+        /// <param name="trimSpace">Trim white-space?</param>
+        /// <param name="ignoreSpace">Ignore all white-space?</param>
+        /// <param name="ignoreCase">Case-insensitive?</param>
         public DiffHelper(bool trimSpace = false, bool ignoreSpace = false, bool ignoreCase = false)
         {
             this.trimSpace = trimSpace;
@@ -245,7 +245,7 @@ namespace DiffAlgorithm.Diff
 
             for (int i = 0; i < lines.Length; ++i)
             {
-                string s = ApplyOptions(lines[i], trimSpace, ignoreSpace, ignoreCase);
+                string s = ApplyTransformations(lines[i]);
 
                 if (hashedLines.TryGetValue(s, out codes[i])) continue;
 
@@ -266,7 +266,7 @@ namespace DiffAlgorithm.Diff
 
             foreach (string line in fileReader.IterateLines())
             {
-                string mline = ApplyOptions(line, trimSpace, ignoreSpace, ignoreCase);
+                string mline = ApplyTransformations(line);
 
                 int x;
                 if (hashedLines.TryGetValue(mline, out x))
@@ -275,7 +275,7 @@ namespace DiffAlgorithm.Diff
                     continue;
                 }
 
-                hashedLines[line] = ++lastUsedCode;
+                hashedLines[mline] = ++lastUsedCode;
                 codes.Add(lastUsedCode);
             }
 
@@ -290,7 +290,7 @@ namespace DiffAlgorithm.Diff
         /// <param name="ignoreSpace">Ignore all white-space?</param>
         /// <param name="ignoreCase">Case-insensitive?</param>
         /// <returns>Modified string</returns>
-        private string ApplyOptions(string s, bool trimSpace, bool ignoreSpace, bool ignoreCase)
+        private string ApplyTransformations(string s)
         {
             // TODO: GLOBAL CONFIG???????
             if (trimSpace)

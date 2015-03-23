@@ -21,6 +21,15 @@ namespace DiffIntegration.Processors.Processors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
+        [Settings("Diff algorithm will ignore leading and trailing whitespace", "trim-space", "ts")]
+        public bool TrimSpace = false;
+
+        [Settings("Diff algorithm will ignore all white space", "ignore-whitespace", "iw")]
+        public bool IgnoreWhitespace = false;
+
+        [Settings("Diff algorithm will ignore case senstivity", "ignore-case", "ic")]
+        public bool IgnoreCase = false;
+
         public override void Process(IFilesystemTreeDirNode node)
         {
         }
@@ -38,15 +47,23 @@ namespace DiffIntegration.Processors.Processors
             if (dnode == null)
                 return;
 
-            var diff = new DiffHelper();
+            var diff = new DiffHelper(TrimSpace, IgnoreWhitespace, IgnoreCase);
 
             switch (node.Mode)
             {
                 case DiffModeEnum.TwoWay:
                     dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+
+                    if (dnode.Diff.Items.Length == 0)
+                        dnode.Differences = DifferencesStatusEnum.AllSame;
+
                     break;
                 case DiffModeEnum.ThreeWay:
                     dnode.Diff3 = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+
+                    if (dnode.Diff3.Items.Length == 0)
+                        dnode.Differences = DifferencesStatusEnum.AllSame;
+
                     break;
             }
         }
