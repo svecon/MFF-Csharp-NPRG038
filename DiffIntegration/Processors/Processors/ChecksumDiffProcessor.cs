@@ -22,7 +22,7 @@ namespace DiffIntegration.Processors.Processors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
-        [Settings("Enable checksum diff check.", "check-sum", "CS")]
+        [Settings("Force checksum diff check.", "check-sum", "CS")]
         public bool IsEnabled = false;
 
         /// <summary>

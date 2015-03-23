@@ -4,6 +4,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Processors.Processors;
+using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Processors
 {
@@ -21,6 +22,9 @@ namespace DiffIntegration.Processors.Processors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
+        [Settings("Force binary diff check.", "binary-check", "BC")]
+        public bool IsEnabled = false;
+
         public override void Process(IFilesystemTreeDirNode node)
         {
         }
@@ -30,32 +34,35 @@ namespace DiffIntegration.Processors.Processors
             if (!CheckModeAndStatus(node))
                 return;
 
+            if (!IsEnabled)
+                return;
+
             var threeWay = new ThreeWayDiffHelper();
-            var readers = new StreamReader[3];
+            var readers = new BinaryReader[3];
 
             try
             {
-                var buffers = new char[3][];
+                var buffers = new byte[3][];
 
                 // initialize readers
                 if (node.IsInLocation(LocationEnum.OnBase))
                 {
-                    readers[0] = new StreamReader(node.InfoBase.FullName);
-                    buffers[0] = new char[BUFFER_SIZE];
+                    readers[0] = new BinaryReader(File.OpenRead(node.InfoBase.FullName));
+                    buffers[0] = new byte[BUFFER_SIZE];
                     threeWay.AddBaseFilePossibility();
                 }
 
                 if (node.IsInLocation(LocationEnum.OnLocal))
                 {
-                    readers[1] = new StreamReader(node.InfoLocal.FullName);
-                    buffers[1] = new char[BUFFER_SIZE];
+                    readers[1] = new BinaryReader(File.OpenRead(node.InfoLocal.FullName));
+                    buffers[1] = new byte[BUFFER_SIZE];
                     threeWay.AddLocalFilePossibility();
                 }
 
                 if (node.IsInLocation(LocationEnum.OnRemote))
                 {
-                    readers[2] = new StreamReader(node.InfoRemote.FullName);
-                    buffers[2] = new char[BUFFER_SIZE];
+                    readers[2] = new BinaryReader(File.OpenRead(node.InfoRemote.FullName));
+                    buffers[2] = new byte[BUFFER_SIZE];
                     threeWay.AddRemoteFilePossibility();
                 }
 
@@ -112,7 +119,7 @@ namespace DiffIntegration.Processors.Processors
             } finally
             {
                 // close readers if any
-                foreach (StreamReader reader in readers.Where(reader => reader != null))
+                foreach (BinaryReader reader in readers.Where(reader => reader != null))
                 {
                     reader.Close();
                 }
