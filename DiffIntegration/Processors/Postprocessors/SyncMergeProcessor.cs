@@ -14,10 +14,13 @@ namespace DiffIntegration.Processors.Postprocessors
 
         public enum CompareOnEnum { Size = 1, Modification = 2 }
 
+        [Settings("Sync 2 folders with the newer version of the files.", "sync", "s")]
+        public bool IsEnabled = false;
+
         [Settings("Choose syncing based on different criteria.", "sync-criteria", "S")]
         public CompareOnEnum CompareOn = CompareOnEnum.Modification;
 
-        [Settings("Create empty folders.", "empty-folders", "E")]
+        [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
         public override void Process(IFilesystemTreeDirNode node)
@@ -27,6 +30,9 @@ namespace DiffIntegration.Processors.Postprocessors
             // this means that empty folders need to be created here
 
             if (!CheckModeAndStatus(node))
+                return;
+
+            if (!IsEnabled)
                 return;
 
             // processor setting
@@ -50,7 +56,10 @@ namespace DiffIntegration.Processors.Postprocessors
             if (!CheckModeAndStatus(node))
                 return;
 
-            if (node.Differences == DifferencesStatusEnum.LocalRemoteSame)
+            if (!IsEnabled)
+                return;
+
+            if (node.Differences == DifferencesStatusEnum.AllSame)
                 return;
 
             FileInfo from = null;
