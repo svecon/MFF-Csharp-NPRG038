@@ -24,11 +24,13 @@ namespace CoreLibrary.Processors
         /// <returns>True if the node should be processed.</returns>
         protected virtual bool CheckStatus(IFilesystemTreeAbstractNode node)
         {
-            if (node.Status == NodeStatusEnum.HasError)
-                return false;
-
-            if (node.Status == NodeStatusEnum.IsIgnored)
-                return false;
+            switch (node.Status)
+            {
+                case NodeStatusEnum.HasError:
+                    return false;
+                case NodeStatusEnum.IsIgnored:
+                    return false;
+            }
 
             return true;
         }
@@ -40,10 +42,7 @@ namespace CoreLibrary.Processors
         /// <returns>True if the processor is compatible.</returns>
         protected virtual bool CheckMode(IFilesystemTreeAbstractNode node)
         {
-            if ((node.Mode & Mode) == 0)
-                return false;
-
-            return true;
+            return (node.Mode & Mode) != 0;
         }
 
         /// <summary>

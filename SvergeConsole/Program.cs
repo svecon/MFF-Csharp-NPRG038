@@ -96,9 +96,9 @@ namespace SvergeConsole
                     areArgsFiles <<= 1;
                     areArgsFiles |= IsFile(s);
                 }
-            } catch (FileNotFoundException e)
+            } catch (FileNotFoundException)
             { // do nothing, we will catch it later
-            } catch (DirectoryNotFoundException e)
+            } catch (DirectoryNotFoundException)
             { // do nothing, we will catch it later
             }
             #endregion

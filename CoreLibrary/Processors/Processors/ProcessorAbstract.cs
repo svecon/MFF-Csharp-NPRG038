@@ -15,11 +15,11 @@ namespace CoreLibrary.Processors.Processors
             if (!base.CheckStatus(node))
                 return false;
 
-            if (node.Status == NodeStatusEnum.WasDiffed)
-                return false;
-
-            if (node.Status == NodeStatusEnum.WasDiffedWaitingForMerge)
-                return false;
+            switch (node.Status)
+            {
+                case NodeStatusEnum.WasDiffed:
+                    return false;
+            }
 
             return true;
         }

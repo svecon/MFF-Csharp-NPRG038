@@ -31,7 +31,6 @@ namespace DiffIntegration.Processors.Processors
                 return;
 
             var threeWay = new ThreeWayDiffHelper();
-
             var readers = new StreamReader[3];
 
             try

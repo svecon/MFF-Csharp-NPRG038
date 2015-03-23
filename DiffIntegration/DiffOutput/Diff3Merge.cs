@@ -30,6 +30,9 @@ namespace DiffIntegration.DiffOutput
             if (dnode == null)
                 return;
 
+            if (dnode.Diff3 == null || dnode.Diff3.Items == null)
+                return;
+
             var sb = new StringBuilder();
 
             using (StreamReader streamL = ((FileInfo)dnode.InfoLocal).OpenText())

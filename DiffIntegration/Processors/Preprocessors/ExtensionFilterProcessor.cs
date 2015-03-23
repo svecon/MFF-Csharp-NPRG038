@@ -52,14 +52,16 @@ namespace DiffIntegration.Processors.Preprocessors
             if (!CheckModeAndStatus(node))
                 return;
 
+            // default settings -- all pass
+            if (FileType == FileTypesEnum.All && ExcludeFilter == null && IncludeFilter == null)
+                return;
+
             string ext = node.Info.Extension.ToLowerInvariant();
 
-            // does the file have extension?
+            // some settings were specified and this files does not have extension => exclude it
             if (ext == "")
-            {
-                if (FileType != FileTypesEnum.All || ExcludeFilter != null || IncludeFilter != null)
-                    node.Status = NodeStatusEnum.IsIgnored;
-
+            {   
+                node.Status = NodeStatusEnum.IsIgnored;
                 return;
             }
 
