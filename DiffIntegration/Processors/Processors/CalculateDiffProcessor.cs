@@ -52,6 +52,10 @@ namespace DiffIntegration.Processors.Processors
             switch (node.Mode)
             {
                 case DiffModeEnum.TwoWay:
+
+                    if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote)
+                        return;
+
                     dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
 
                     if (dnode.Diff.Items.Length == 0)
@@ -59,6 +63,9 @@ namespace DiffIntegration.Processors.Processors
 
                     break;
                 case DiffModeEnum.ThreeWay:
+
+                    // TODO: WHAT IF FILES ARE MISSING!!!!!
+
                     dnode.Diff3 = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
 
                     if (dnode.Diff3.Items.Length == 0)
