@@ -55,7 +55,7 @@ namespace DiffAlgorithm.Diff3
             this.newFile = newFile;
             this.hisFile = hisFile;
 
-            diffedTime = new DateTime();
+            diffedTime = DateTime.Now;
             FilesLineCount = new FilesLineCountStruct();
             FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }

@@ -17,12 +17,12 @@ namespace DiffIntegration.DiffFilesystemTree
         /// <summary>
         /// Diff contains all information about a 2-way diff.
         /// </summary>
-        public Diff Diff { get; private set; }
+        public Diff Diff { get; set; }
 
         /// <summary>
         /// Diff3 contains all information about a 3-way diff.
         /// </summary>
-        public Diff3 Diff3 { get; private set; }
+        public Diff3 Diff3 { get; set; }
 
         /// <summary>
         /// Default construtor for DiffFileNode (used in the FilesystemTree).
@@ -72,25 +72,6 @@ namespace DiffIntegration.DiffFilesystemTree
                 throw new BaseFileNotFoundException(InfoBase);
             if (!InfoRemote.Exists)
                 throw new RemoteFileNotFoundException(InfoRemote);
-        }
-
-        /// <summary>
-        /// Recalculates diff between files currently in the node.
-        /// </summary>
-        public void RecalculateDiff()
-        {
-            var diff = new DiffHelper();
-
-            switch (Mode)
-            {
-                case DiffModeEnum.TwoWay:
-                    Diff = diff.DiffFiles((FileInfo)InfoLocal, (FileInfo)InfoRemote);
-                    break;
-                //TODO: load plugin from somewhere --- because of settings    
-                case DiffModeEnum.ThreeWay:
-                    Diff3 = diff.DiffFiles((FileInfo)InfoBase, (FileInfo)InfoLocal, (FileInfo)InfoRemote);
-                    break;
-            }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace DiffAlgorithm.Diff
             this.oldFile = oldFile;
             this.newFile = newFile;
 
-            diffedTime = new DateTime();
+            diffedTime = DateTime.Now;
             FilesLineCount = new FilesLineCountStruct();
             FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }

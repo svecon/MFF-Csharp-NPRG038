@@ -15,7 +15,26 @@ namespace CoreLibrary.FilesystemTree
 
         public NodeStatusEnum Status { get; set; }
 
-        public DifferencesStatusEnum Differences { get; set; }
+        private DifferencesStatusEnum diff;
+        public DifferencesStatusEnum Differences
+        {
+            get
+            {
+                return diff;
+            }
+            set
+            {
+                // normalize Differences for 2-way mode
+                if (Mode == DiffModeEnum.TwoWay && value == DifferencesStatusEnum.LocalRemoteSame)
+                {
+                    diff = DifferencesStatusEnum.AllSame;
+                }
+                else
+                {
+                    diff = value;
+                }
+            }
+        }
 
         public Exception Exception { get; set; }
 
@@ -38,7 +57,7 @@ namespace CoreLibrary.FilesystemTree
                 {
                     return InfoRemote;
                 }
-                
+
                 throw new InvalidDataException("At least one FileSystemInfo can not be null.");
             }
         }
