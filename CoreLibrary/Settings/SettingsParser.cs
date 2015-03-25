@@ -111,13 +111,14 @@ namespace CoreLibrary.Settings
             {
                 try
                 {
-                    i += 1 + setting.NumberOfParams;
                     setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
 
                 } catch (ArgumentException e)
                 {
                     throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
                 }
+                
+                i += 1 + setting.NumberOfParams;
             }
         }
 
