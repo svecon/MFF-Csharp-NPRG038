@@ -7,6 +7,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Settings.Attributes;
+using DiffAlgorithm.Diff;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput
@@ -14,39 +15,50 @@ namespace DiffIntegration.DiffOutput
     /// <summary>
     /// Processor for printing out unified diff output between two files.
     /// </summary>
-    public class UnifiedDiffOutput : ProcessorAbstract
+    public class UnifiedDiffOutput
     {
-        [Settings("Context padding in unified diff output.", "context-padding-output", "PO")]
-        public int Padding = 3;
+        //[Settings("Context ContextLinesCount in unified diff output.", "context-ContextLinesCount-output", "PO")]
+        public int ContextLinesCount;// = 3;
 
-        public override int Priority { get { return 125005; } }
+        private readonly FileInfo infoLocal;
+        private readonly FileInfo infoRemote;
+        private readonly Diff diff;
 
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
 
-        public override void Process(IFilesystemTreeDirNode node)
+        private bool diffHasEnded;
+
+        public bool DiffHasEnded
         {
-            // empty
+            get
+            {
+                bool temp = diffHasEnded;
+                diffHasEnded = false;
+                return temp;
+            }
+            private set { diffHasEnded = value; }
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        public DiffItem CurrentDiffItem { get; private set; }
+
+        public UnifiedDiffOutput(FileInfo infoLocal, FileInfo infoRemote, Diff diff, int contextLinesCount = 3)
         {
-            var dnode = node as DiffFileNode;
+            this.infoLocal = infoLocal;
+            this.diff = diff;
+            this.infoRemote = infoRemote;
+            ContextLinesCount = contextLinesCount;
+        }
 
-            if (dnode == null)
-                return;
-
-            if (!dnode.Diff.Items.Any())
-                return;
-
-            var sb = new StringBuilder();
-
+        public IEnumerable<string> Print()
+        {
             // print headers
-            sb.AppendLine("--- " + CreateHeader(dnode.InfoLocal.FullName, dnode.InfoLocal.LastWriteTime));
-            sb.AppendLine("+++ " + CreateHeader(dnode.InfoRemote.FullName, dnode.InfoRemote.LastWriteTime));
+            Console.ForegroundColor = ConsoleColor.White;
+            yield return "--- " + CreateHeader(infoLocal.FullName, infoLocal.LastWriteTime);
+            yield return "+++ " + CreateHeader(infoRemote.FullName, infoRemote.LastWriteTime);
+            Console.ResetColor();
 
             // create and merge ovelapping diffs into chunks
-            var chunks = new List<DiffChunk>(dnode.Diff.Items.Length);
-            foreach (DiffChunk newChunk in dnode.Diff.Items.Select(diff => new DiffChunk(diff, dnode.Diff.FilesLineCount, Padding)))
+            var chunks = new List<DiffChunk>(diff.Items.Length);
+            foreach (DiffChunk newChunk in diff.Items.Select(diffItem => new DiffChunk(diffItem, diff.FilesLineCount, ContextLinesCount)))
             {
                 if (chunks.Any() && chunks.Last().ChuckOverflows(newChunk))
                     chunks.Last().JoinChunk(newChunk);
@@ -55,15 +67,19 @@ namespace DiffIntegration.DiffOutput
             }
 
             // print chunks
-            using (StreamReader streamA = ((FileInfo)dnode.InfoLocal).OpenText())
-            using (StreamReader streamB = ((FileInfo)dnode.InfoRemote).OpenText())
+            using (StreamReader streamA = infoLocal.OpenText())
+            using (StreamReader streamB = infoRemote.OpenText())
             {
                 int n = 0;
                 int m = 0;
 
                 foreach (DiffChunk chunk in chunks)
                 {
-                    sb.AppendLine(chunk.Header());
+                    CurrentDiffItem = chunk.CurrentDiff();
+
+                    Console.ForegroundColor = ConsoleColor.White;
+                    yield return chunk.Header();
+                    Console.ResetColor();
 
                     // skip same
                     for (; n < chunk.LeftLineStart(); n++) { streamA.ReadLine(); }
@@ -74,45 +90,53 @@ namespace DiffIntegration.DiffOutput
                         // context between diffs
                         while (chunk.CurrentDiff().OldLineStart > n)
                         {
-                            sb.AppendLine(" " + streamA.ReadLine());
+                            yield return " " + streamA.ReadLine();
                             streamB.ReadLine();
                             n++;
                             m++;
                         }
+                        
                         // deleted
-                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { sb.AppendLine("-" + streamA.ReadLine()); n++; }
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { yield return "-" + streamA.ReadLine(); n++; }
+                        Console.ResetColor();
 
                         // missing newline at end of old file
-                        if (n == dnode.Diff.FilesLineCount.Old && !dnode.Diff.FilesEndsWithNewLine.Old)
-                            sb.AppendLine("\\ No newline at end of file");
+                        if (n == diff.FilesLineCount.Old && !diff.FilesEndsWithNewLine.Old)
+                            yield return @"\ No newline at end of file";
 
                         // inserted
-                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { sb.AppendLine("+" + streamB.ReadLine()); m++; }
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { yield return "+" + streamB.ReadLine(); m++; }
+                        Console.ResetColor();
 
                         // missing newline at end of new file
-                        if (m == dnode.Diff.FilesLineCount.New && !dnode.Diff.FilesEndsWithNewLine.New)
-                            sb.AppendLine("\\ No newline at end of file");
+                        if (m == diff.FilesLineCount.New && !diff.FilesEndsWithNewLine.New)
+                            yield return @"\ No newline at end of file";
 
                         // context between diffs
                         while (chunk.HasNextDiff() && chunk.NextDiff().OldLineStart > n)
                         {
-                            sb.AppendLine(" " + streamA.ReadLine());
+                            yield return " " + streamA.ReadLine();
                             streamB.ReadLine();
                             n++;
                             m++;
                         }
-                         
+
+                        if (chunk.HasNextDiff())
+                            DiffHasEnded = true;                        
+
                     } while (chunk.HasNextDiff() && chunk.MoveNextDiff());
 
                     // context after all diffs
-                    for (; n <= chunk.LeftLineEnd(); n++) { sb.AppendLine(" " + streamA.ReadLine()); }
+                    for (; n <= chunk.LeftLineEnd(); n++) { yield return " " + streamA.ReadLine(); }
+
+                    DiffHasEnded = true;
                 }
             }
-
-            Console.WriteLine(sb.ToString());
         }
 
-        private string CreateHeader(string filename, DateTime date)
+        private static string CreateHeader(string filename, DateTime date)
         {
             return filename + "\t" + date.ToString("ddd MMM d H:mm:ss yyyy");
         }

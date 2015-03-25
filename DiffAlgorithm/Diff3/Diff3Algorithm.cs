@@ -61,8 +61,20 @@ namespace DiffAlgorithm.Diff3
         #region very simple iterators over the two-way diffs
         int newIterator = 0;
         int hisIterator = 0;
-        private DiffItem? CurrentNew { get { if (newIterator < diffBaseLocal.Length) return diffBaseLocal[newIterator]; return null; } }
-        private DiffItem? CurrentHis { get { if (hisIterator < diffBaseRemote.Length) return diffBaseRemote[hisIterator]; return null; } }
+        private DiffItem CurrentNew
+        {
+            get
+            {
+                return newIterator < diffBaseLocal.Length ? diffBaseLocal[newIterator] : null;
+            }
+        }
+        private DiffItem CurrentHis
+        {
+            get
+            {
+                return hisIterator < diffBaseRemote.Length ? diffBaseRemote[hisIterator] : null;
+            }
+        }
         #endregion
 
         /// <summary>
@@ -153,18 +165,18 @@ namespace DiffAlgorithm.Diff3
                 AddNewDiff3(CreateFromNew());
                 newIterator++;
 
-            } else if (CurrentNew.Value.OldLineStart == CurrentHis.Value.OldLineStart)
+            } else if (CurrentNew.OldLineStart == CurrentHis.OldLineStart)
             // starts on the same line
             {
-                if (CurrentNew.Value.DeletedInOld == CurrentHis.Value.DeletedInOld &&
-                    CurrentNew.Value.InsertedInNew == CurrentHis.Value.InsertedInNew)
+                if (CurrentNew.DeletedInOld == CurrentHis.DeletedInOld &&
+                    CurrentNew.InsertedInNew == CurrentHis.InsertedInNew)
                 // changes the same lines in old and adds same lines in new
                 {
                     // check if the new lines are same => non-conflicting
                     bool areSame = true;
-                    for (int i = 0; i < CurrentNew.Value.InsertedInNew; i++)
+                    for (int i = 0; i < CurrentNew.InsertedInNew; i++)
                     {
-                        if (localFile[CurrentNew.Value.NewLineStart + i] == remoteFile[CurrentHis.Value.NewLineStart + i])
+                        if (localFile[CurrentNew.NewLineStart + i] == remoteFile[CurrentHis.NewLineStart + i])
                             continue;
 
                         areSame = false;
@@ -188,12 +200,12 @@ namespace DiffAlgorithm.Diff3
             {
                 AddNewDiff3(CreateAllDifferent());
                 newIterator++; hisIterator++;
-            } else if (CurrentNew.Value.OldLineStart < CurrentHis.Value.OldLineStart)
+            } else if (CurrentNew.OldLineStart < CurrentHis.OldLineStart)
             // take CurrentNew as it starts lower 
             {
                 AddNewDiff3(CreateFromNew());
                 newIterator++;
-            } else if (CurrentNew.Value.OldLineStart > CurrentHis.Value.OldLineStart)
+            } else if (CurrentNew.OldLineStart > CurrentHis.OldLineStart)
             // take CurrentHis as it starts lower
             {
                 AddNewDiff3(CreateFromHis());
@@ -216,21 +228,20 @@ namespace DiffAlgorithm.Diff3
 
             if (CurrentHis == null)
             {
-                Debug.Assert(CurrentNew != null, "CurrentNew != null");
-                return CurrentNew.Value;
+                return CurrentNew;
             }
 
             if (CurrentNew == null)
             {
                 wasHis = true;
-                return CurrentHis.Value;
+                return CurrentHis;
             }
 
-            if (CurrentNew.Value.OldLineStart < CurrentHis.Value.OldLineStart)
-                return CurrentNew.Value;
+            if (CurrentNew.OldLineStart < CurrentHis.OldLineStart)
+                return CurrentNew;
 
             wasHis = true;
-            return CurrentHis.Value;
+            return CurrentHis;
         }
 
         /// <summary>
@@ -267,12 +278,10 @@ namespace DiffAlgorithm.Diff3
         /// <param name="bottom">Bottom 2-way diff.</param>
         /// <param name="top">Top 2-way diff.</param>
         /// <returns>Yes if they are ovelapping.</returns>
-        bool AreOverlapping(DiffItem? bottom, DiffItem? top)
+        bool AreOverlapping(DiffItem bottom, DiffItem top)
         {
-            Debug.Assert(bottom != null, "bottom != null");
-            Debug.Assert(top != null, "top != null");
-            return (bottom.Value.OldLineStart < top.Value.OldLineStart
-                    && bottom.Value.OldLineStart + bottom.Value.DeletedInOld >= top.Value.OldLineStart);
+            return (bottom.OldLineStart < top.OldLineStart
+                    && bottom.OldLineStart + bottom.DeletedInOld >= top.OldLineStart);
         }
 
         /// <summary>
@@ -281,15 +290,13 @@ namespace DiffAlgorithm.Diff3
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateFromNew()
         {
-            Debug.Assert(CurrentNew != null, "CurrentNew != null");
-
             return new Diff3Item(
-                CurrentNew.Value.OldLineStart,
-                CurrentNew.Value.NewLineStart,
-                CurrentNew.Value.OldLineStart + deltaToHis,
-                CurrentNew.Value.DeletedInOld,
-                CurrentNew.Value.InsertedInNew,
-                CurrentNew.Value.DeletedInOld,
+                CurrentNew.OldLineStart,
+                CurrentNew.NewLineStart,
+                CurrentNew.OldLineStart + deltaToHis,
+                CurrentNew.DeletedInOld,
+                CurrentNew.InsertedInNew,
+                CurrentNew.DeletedInOld,
                 DifferencesStatusEnum.BaseRemoteSame
             );
         }
@@ -300,15 +307,13 @@ namespace DiffAlgorithm.Diff3
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateFromHis()
         {
-            Debug.Assert(CurrentHis != null, "CurrentHis != null");
-
             return new Diff3Item(
-                CurrentHis.Value.OldLineStart,
-                CurrentHis.Value.OldLineStart + deltaToNew,
-                CurrentHis.Value.NewLineStart,
-                CurrentHis.Value.DeletedInOld,
-                CurrentHis.Value.DeletedInOld,
-                CurrentHis.Value.InsertedInNew,
+                CurrentHis.OldLineStart,
+                CurrentHis.OldLineStart + deltaToNew,
+                CurrentHis.NewLineStart,
+                CurrentHis.DeletedInOld,
+                CurrentHis.DeletedInOld,
+                CurrentHis.InsertedInNew,
                 DifferencesStatusEnum.BaseLocalSame
             );
         }
@@ -319,16 +324,13 @@ namespace DiffAlgorithm.Diff3
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateFullChunk(DifferencesStatusEnum diff)
         {
-            Debug.Assert(CurrentHis != null, "CurrentHis != null");
-            Debug.Assert(CurrentNew != null, "CurrentNew != null");
-
             return new Diff3Item(
-                CurrentHis.Value.OldLineStart,
-                CurrentNew.Value.NewLineStart,
-                CurrentHis.Value.NewLineStart,
-                CurrentHis.Value.DeletedInOld,
-                CurrentNew.Value.InsertedInNew,
-                CurrentHis.Value.InsertedInNew,
+                CurrentHis.OldLineStart,
+                CurrentNew.NewLineStart,
+                CurrentHis.NewLineStart,
+                CurrentHis.DeletedInOld,
+                CurrentNew.InsertedInNew,
+                CurrentHis.InsertedInNew,
                 diff
             );
         }
@@ -342,20 +344,18 @@ namespace DiffAlgorithm.Diff3
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateAllDifferent()
         {
-            Debug.Assert(CurrentNew != null, "CurrentNew != null");
-            Debug.Assert(CurrentHis != null, "CurrentHis != null");
-            int minOldStart = Math.Min(CurrentNew.Value.OldLineStart, CurrentHis.Value.OldLineStart);
-            int maxOldStart = Math.Max(CurrentNew.Value.OldLineStart + CurrentNew.Value.DeletedInOld,
-                        CurrentHis.Value.OldLineStart + CurrentHis.Value.DeletedInOld);
+            int minOldStart = Math.Min(CurrentNew.OldLineStart, CurrentHis.OldLineStart);
+            int maxOldStart = Math.Max(CurrentNew.OldLineStart + CurrentNew.DeletedInOld,
+                        CurrentHis.OldLineStart + CurrentHis.DeletedInOld);
             int oldSpan = maxOldStart - minOldStart;
 
             return new Diff3Item(
                     minOldStart,
-                    CurrentNew.Value.NewLineStart + (minOldStart - CurrentNew.Value.OldLineStart),
-                    CurrentHis.Value.NewLineStart + (minOldStart - CurrentHis.Value.OldLineStart),
+                    CurrentNew.NewLineStart + (minOldStart - CurrentNew.OldLineStart),
+                    CurrentHis.NewLineStart + (minOldStart - CurrentHis.OldLineStart),
                     oldSpan,
-                    CurrentNew.Value.InsertedInNew + (oldSpan - CurrentNew.Value.DeletedInOld),
-                    CurrentHis.Value.InsertedInNew + (oldSpan - CurrentHis.Value.DeletedInOld),
+                    CurrentNew.InsertedInNew + (oldSpan - CurrentNew.DeletedInOld),
+                    CurrentHis.InsertedInNew + (oldSpan - CurrentHis.DeletedInOld),
                     DifferencesStatusEnum.AllDifferent
                 );
         }

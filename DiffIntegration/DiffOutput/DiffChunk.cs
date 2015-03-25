@@ -8,7 +8,7 @@ namespace DiffIntegration.DiffOutput
     /// <summary>
     /// DiffChunk is a container for diff changes that are very near to each other (in terms of line numbers).
     /// </summary>
-    internal struct DiffChunk
+    internal class DiffChunk
     {
         /// <summary>
         /// All diffs close to each other
@@ -35,7 +35,7 @@ namespace DiffIntegration.DiffOutput
         /// </summary>
         /// <param name="diff">First Diff that the chunk is based on.</param>
         /// <param name="filesLineCount">Line numbers of all diffed files.</param>
-        /// <param name="padding">Padding around diffs determining how close the diffs are.</param>
+        /// <param name="padding">ContextLinesCount around diffs determining how close the diffs are.</param>
         public DiffChunk(DiffItem diff, Diff.FilesLineCountStruct filesLineCount, int padding)
         {
             lineCounts = filesLineCount;

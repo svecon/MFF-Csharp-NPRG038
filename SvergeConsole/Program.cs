@@ -162,13 +162,17 @@ namespace SvergeConsole
                 typeof(ExtensionFilterProcessor)
                 , typeof(RegexFilterProcessor)
                 , typeof(CsharpSourcesFilterProcessor)
+                , typeof(FileTypeProcessor)
 
                 , typeof(SizeTimeDiffProcessor)
                 , typeof(ChecksumDiffProcessor)
                 , typeof(BinaryDiffProcessor)
 
+                , typeof(CalculateDiffProcessor)
+                , typeof(InteractiveDiffProcessor)
 
-                //, typeof(SyncMergeProcessor)
+                , typeof(SyncMergeProcessor)
+                , typeof(OutputSingleFileProcessor)
             ));
             diffTree.Accept(ex);
 

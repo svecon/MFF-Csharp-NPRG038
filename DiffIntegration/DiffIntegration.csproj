@@ -48,11 +48,13 @@
     <Compile Include="DiffOutput\Diff3NormalOutput.cs" />
     <Compile Include="DiffOutput\EditScript.cs" />
     <Compile Include="DiffOutput\UnifiedDiffOutput.cs" />
+    <Compile Include="Processors\Postprocessors\NumberOfLinesProcessor.cs" />
     <Compile Include="Processors\Postprocessors\SyncMergeProcessor.cs" />
     <Compile Include="Processors\Preprocessors\FileTypeProcessor.cs" />
     <Compile Include="Processors\Preprocessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\RegexFilterProcessor.cs" />
+    <Compile Include="Processors\Processors\InteractiveDiffProcessor.cs" />
     <Compile Include="Processors\Processors\CalculateDiffProcessor.cs" />
     <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\Processors\ChecksumDiffProcessor.cs" />

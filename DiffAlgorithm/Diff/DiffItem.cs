@@ -5,7 +5,7 @@ namespace DiffAlgorithm.Diff
     /// <summary>
     /// Container for representing one diff change between two files.
     /// </summary>
-    public struct DiffItem
+    public class DiffItem
     {
         /// <summary>
         /// Line number of old file where change starts.
@@ -26,6 +26,8 @@ namespace DiffAlgorithm.Diff
         /// Number of lines inserted in the new file.
         /// </summary>
         public readonly int InsertedInNew;
+
+        public DiffItemActionEnum Action;
 
         public DiffItem(int oldLineStart, int newLineStart, int deletedInOld, int insertedInNew)
         {
