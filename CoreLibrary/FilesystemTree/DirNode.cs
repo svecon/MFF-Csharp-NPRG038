@@ -102,8 +102,11 @@ namespace CoreLibrary.FilesystemTree
 
         public double GetSize()
         {
-            return (double)Files.Sum(f => ((FileInfo)f.Info).Length) 
-                / 1024 + Directories.Select(f => f.GetSize()).Sum();
+            return (double)Files
+                .Where(f => f.Status != NodeStatusEnum.IsIgnored)
+                .Sum(f => ((FileInfo)f.Info).Length) 
+                / 1024 
+                + Directories.Select(f => f.GetSize()).Sum();
         }
 
         public override string GetAbsolutePath(LocationEnum location)
