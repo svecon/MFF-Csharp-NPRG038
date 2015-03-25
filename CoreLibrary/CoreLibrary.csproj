@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
+    <Compile Include="Enums\FileTypeEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
     <Compile Include="Exceptions\NotFound\BaseFileNotFoundException.cs" />
     <Compile Include="Exceptions\NotFound\LocalFileNotFoundException.cs" />

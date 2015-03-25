@@ -15,6 +15,8 @@ namespace CoreLibrary.FilesystemTree
 
         public NodeStatusEnum Status { get; set; }
 
+        public FileTypeEnum FileType { get; set; }
+
         private DifferencesStatusEnum diff;
         public DifferencesStatusEnum Differences
         {
@@ -125,5 +127,9 @@ namespace CoreLibrary.FilesystemTree
 
         public abstract void Accept(IFilesystemTreeVisitor visitor);
 
+        public override string ToString()
+        {
+            return Info.FullName;
+        }
     }
 }

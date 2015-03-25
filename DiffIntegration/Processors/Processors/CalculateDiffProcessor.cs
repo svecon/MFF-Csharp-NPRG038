@@ -39,6 +39,9 @@ namespace DiffIntegration.Processors.Processors
             if (!CheckModeAndStatus(node))
                 return;
 
+            if (node.FileType != FileTypeEnum.Text)
+                return;
+
             if (node.Differences == DifferencesStatusEnum.AllSame)
                 return;
 

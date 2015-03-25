@@ -31,8 +31,6 @@ namespace DiffIntegration.Processors.Preprocessors
             if (!IsEnabled)
                 return;
 
-            CheckModeAndStatus(node);
-
             if (node.Info.Extension.ToLowerInvariant() != ".cs")
                 node.Status = NodeStatusEnum.IsIgnored;
 

@@ -47,6 +47,11 @@ namespace CoreLibrary.Interfaces
         DiffModeEnum Mode { get; }
 
         /// <summary>
+        /// File type for given file.
+        /// </summary>
+        FileTypeEnum FileType { get; set; }
+
+        /// <summary>
         /// Which files are different from each other.
         /// </summary>
         DifferencesStatusEnum Differences { get; set; }
