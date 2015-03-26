@@ -124,7 +124,7 @@ namespace DiffIntegration.DiffOutput
                         }
 
                         if (chunk.HasNextDiff())
-                            DiffHasEnded = true;                        
+                            DiffHasEnded = true;
 
                     } while (chunk.HasNextDiff() && chunk.MoveNextDiff());
 

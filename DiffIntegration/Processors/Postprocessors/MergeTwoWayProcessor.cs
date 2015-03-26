@@ -26,6 +26,14 @@ namespace DiffIntegration.Processors.Postprocessors
         [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
+        public enum DefaultActionEnum
+        {
+            WriteConflicts, RevertToLocal, ApplyRemote
+        }
+
+        [Settings("Default action for merging files.", "2merge-default", "2d")]
+        public DefaultActionEnum DefaultAction;
+
         public override void Process(IFilesystemTreeDirNode node)
         {
             // create directory when file is created
@@ -66,30 +74,64 @@ namespace DiffIntegration.Processors.Postprocessors
             if (dnode == null)
                 return;
 
+            CheckAndCreateDirectory(node);
+            node.Status = NodeStatusEnum.WasMerged;
+
             if (dnode.Diff == null)
             {
-                CheckAndCreateDirectory(node);
-                ((FileInfo) node.Info).CopyTo(CreatePath(node), true);
-                node.Status = NodeStatusEnum.WasMerged;
+                ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
                 return;
+            }
+
+            // create temporary file if the target file exists
+            string temporaryPath;
+            bool isTemporary = false;
+            if (File.Exists(CreatePath(node)))
+            {
+                temporaryPath = CreatePath(node) + ".temp";
+                isTemporary = true;
+            }
+            else
+            {
+                temporaryPath = CreatePath(node);
             }
 
             using (StreamReader localStream = ((FileInfo)node.InfoLocal).OpenText())
             using (StreamReader remoteStream = ((FileInfo)node.InfoRemote).OpenText())
-            using (StreamWriter writer = File.CreateText(CreatePath(node)))
+            using (StreamWriter writer = File.CreateText(temporaryPath))
             {
                 int n = 0;
                 int m = 0;
 
                 foreach (DiffItem diff in dnode.Diff.Items)
                 {
+                    // change default action depending on processor settings
+                    if (diff.Action == DiffItemActionEnum.Default)
+                    {
+                        switch (DefaultAction)
+                        {
+                            case DefaultActionEnum.WriteConflicts:
+                                // keep default
+                                break;
+                            case DefaultActionEnum.RevertToLocal:
+                                diff.Action = DiffItemActionEnum.RevertToLocal;
+                                break;
+                            case DefaultActionEnum.ApplyRemote:
+                                diff.Action = DiffItemActionEnum.ApplyRemote;
+                                break;
+                        }
+                    }
+
                     // same
                     for (; n < diff.OldLineStart; n++) { writer.WriteLine(localStream.ReadLine()); }
                     for (; m < diff.NewLineStart; m++) { remoteStream.ReadLine(); }
 
 
                     if (diff.Action == DiffItemActionEnum.Default)
-                        writer.WriteLine("<<<<<<< " + dnode.InfoLocal.Name);
+                    {
+                        writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
+                        node.Status = NodeStatusEnum.HasConflicts;
+                    }
 
                     // deleted
                     for (int p = 0; p < diff.DeletedInOld; p++)
@@ -98,8 +140,7 @@ namespace DiffIntegration.Processors.Postprocessors
                             || diff.Action == DiffItemActionEnum.Default)
                         {
                             writer.WriteLine(localStream.ReadLine());
-                        }
-                        else
+                        } else
                         {
                             localStream.ReadLine();
                         }
@@ -117,12 +158,12 @@ namespace DiffIntegration.Processors.Postprocessors
                         {
                             writer.WriteLine(remoteStream.ReadLine());
                         }
-                        
+
                         m++;
                     }
 
                     if (diff.Action == DiffItemActionEnum.Default)
-                        writer.WriteLine(">>>>>>> " + dnode.InfoRemote.Name);
+                        writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
                 }
 
                 // same
@@ -130,6 +171,11 @@ namespace DiffIntegration.Processors.Postprocessors
                 //for (; m < dnode.Diff.FilesLineCount.Remote; m++) { remoteStream.ReadLine(); }
             }
 
+            // copy temporary file to correct location
+            if (!isTemporary) return;
+
+            File.Delete(CreatePath(node));
+            File.Move(temporaryPath, CreatePath(node));
         }
 
         private void CheckAndCreateDirectory(string path)
@@ -146,8 +192,8 @@ namespace DiffIntegration.Processors.Postprocessors
         private string CreatePath(IFilesystemTreeFileNode node, bool includeFileName = true)
         {
             string output = node.ParentNode == null || (node.ParentNode != null && node.ParentNode.RelativePath == "")
-                ? string.Join("/", OutputFolder, node.Info.Name)
-                : string.Join("/", OutputFolder, node.ParentNode.RelativePath, node.Info.Name);
+                ? string.Join("/", OutputFolder)
+                : string.Join("/", OutputFolder, node.ParentNode.RelativePath);
 
             if (includeFileName)
                 output = string.Join("/", output, node.Info.Name);

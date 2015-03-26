@@ -54,15 +54,18 @@ namespace DiffIntegration.Processors.Processors
 
             var output = new UnifiedDiffOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoRemote, dnode.Diff, 4);
 
+            DiffItem currentDiffItem = null;
+
             Console.WriteLine();
             foreach (string line in output.Print())
             {
                 if (output.DiffHasEnded)
                 {
-                    ParseUserInput(output.CurrentDiffItem);
+                    ParseUserInput(currentDiffItem);
                 }
 
                 Console.WriteLine(line);
+                currentDiffItem = output.CurrentDiffItem;
             }
 
             if (output.DiffHasEnded)

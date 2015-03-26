@@ -14,7 +14,9 @@ namespace CoreLibrary.Enums
         IsIgnored,
         
         WasDiffed,
-        
+
         WasMerged,
+
+        HasConflicts,
     }
 }
