@@ -6,7 +6,12 @@ using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Postprocessors
 {
-    public class SyncMergeProcessor : PostProcessorAbstract
+    /// <summary>
+    /// This processor synchronizes two folders based on chosen method.
+    /// 
+    /// Default method is Modification time of the file.
+    /// </summary>
+    public class SyncTwoWayProcessor : PostProcessorAbstract
     {
         public override int Priority { get { return 500; } }
 

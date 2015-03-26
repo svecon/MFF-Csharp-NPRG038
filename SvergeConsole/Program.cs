@@ -171,7 +171,8 @@ namespace SvergeConsole
                 , typeof(CalculateDiffProcessor)
                 , typeof(InteractiveDiffProcessor)
 
-                , typeof(SyncMergeProcessor)
+                , typeof(MergeTwoWayProcessor)
+                , typeof(SyncTwoWayProcessor)
                 , typeof(OutputSingleFileProcessor)
             ));
             diffTree.Accept(ex);
