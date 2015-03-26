@@ -52,30 +52,47 @@ namespace DiffIntegration.Processors.Processors
 
             var diff = new DiffHelper(TrimSpace, IgnoreWhitespace, IgnoreCase);
 
-            switch (node.Mode)
+            switch ((LocationCombinationsEnum)node.Location)
             {
-                case DiffModeEnum.TwoWay:
+                case LocationCombinationsEnum.OnBase:
+                case LocationCombinationsEnum.OnLocal:
+                case LocationCombinationsEnum.OnRemote:
+                    return; // do nothing
 
-                    if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote)
-                        return;
+                case LocationCombinationsEnum.OnLocalRemote:
 
-                    dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
-
-                    if (dnode.Diff.Items.Length == 0)
-                        dnode.Differences = DifferencesStatusEnum.AllSame;
+                    switch (node.Mode)
+                    {
+                        case DiffModeEnum.TwoWay:
+                            dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+                            break;
+                        case DiffModeEnum.ThreeWay:
+                            break; // do nothing
+                    }
 
                     break;
-                case DiffModeEnum.ThreeWay:
+                case LocationCombinationsEnum.OnBaseLocal:
 
-                    // TODO: WHAT IF FILES ARE MISSING!!!!!
+                    dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal);
+                    break;
+
+                case LocationCombinationsEnum.OnBaseRemote:
+
+                    dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoRemote);
+                    break;
+
+                case LocationCombinationsEnum.OnAll3:
 
                     dnode.Diff3 = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
-
-                    if (dnode.Diff3.Items.Length == 0)
-                        dnode.Differences = DifferencesStatusEnum.AllSame;
-
                     break;
             }
+
+            if (dnode.Diff != null && dnode.Diff.Items.Length == 0)
+                dnode.Differences = DifferencesStatusEnum.AllSame;
+
+            if (dnode.Diff3 != null && dnode.Diff3.Items.Length == 0)
+                dnode.Differences = DifferencesStatusEnum.AllSame;
+
         }
     }
 }
