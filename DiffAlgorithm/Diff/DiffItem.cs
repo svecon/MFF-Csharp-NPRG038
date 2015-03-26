@@ -27,6 +27,9 @@ namespace DiffAlgorithm.Diff
         /// </summary>
         public readonly int InsertedInNew;
 
+        /// <summary>
+        /// Default action to do with this diff.
+        /// </summary>
         public DiffItemActionEnum Action;
 
         public DiffItem(int oldLineStart, int newLineStart, int deletedInOld, int insertedInNew)

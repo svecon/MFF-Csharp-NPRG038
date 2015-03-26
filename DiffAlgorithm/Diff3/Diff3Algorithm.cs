@@ -113,8 +113,8 @@ namespace DiffAlgorithm.Diff3
                 Diff3Item old;
 
                 if (diff3Items.Any() &&
-                    (old = diff3Items.Last()).OldLineStart
-                                        + old.OldAffectedLines
+                    (old = diff3Items.Last()).BaseLineStart
+                                        + old.BaseAffectedLines
                     >= (lowerDiff = FindLowerDiff(out wasHis)).OldLineStart)
                 // are they overlapping?
                 {
@@ -128,12 +128,12 @@ namespace DiffAlgorithm.Diff3
 
                     // create extended chunk
                     AddNewDiff3(new Diff3Item(
-                            old.OldLineStart,
-                            old.NewLineStart,
-                            old.HisLineStart,
-                            old.OldAffectedLines + lowerDiff.DeletedInOld,
-                            old.NewAffectedLines + (wasHis ? lowerDiff.DeletedInOld : lowerDiff.InsertedInNew),
-                            old.HisAffectedLines + (wasHis ? lowerDiff.InsertedInNew : lowerDiff.DeletedInOld),
+                            old.BaseLineStart,
+                            old.LocalLineStart,
+                            old.RemoteLineStart,
+                            old.BaseAffectedLines + lowerDiff.DeletedInOld,
+                            old.LocalAffectedLines + (wasHis ? lowerDiff.DeletedInOld : lowerDiff.InsertedInNew),
+                            old.RemoteAffectedLines + (wasHis ? lowerDiff.InsertedInNew : lowerDiff.DeletedInOld),
                             DifferencesStatusEnum.AllDifferent
                         ));
 
@@ -218,10 +218,10 @@ namespace DiffAlgorithm.Diff3
 
 
         /// <summary>
-        /// Find lower (in terms of OldLineStart) diff
+        /// Find lower (in terms of BaseLineStart) diff
         /// </summary>
         /// <param name="wasHis">Which file does it come from?</param>
-        /// <returns>DiffItem with lower OldLineStart</returns>
+        /// <returns>DiffItem with lower BaseLineStart</returns>
         private DiffItem FindLowerDiff(out bool wasHis)
         {
             wasHis = false;
@@ -252,8 +252,8 @@ namespace DiffAlgorithm.Diff3
         /// <param name="item">Diff3Item to be added.</param>
         private void AddNewDiff3(Diff3Item item)
         {
-            deltaToHis += item.HisAffectedLines - item.OldAffectedLines;
-            deltaToNew += item.NewAffectedLines - item.OldAffectedLines;
+            deltaToHis += item.RemoteAffectedLines - item.BaseAffectedLines;
+            deltaToNew += item.LocalAffectedLines - item.BaseAffectedLines;
 
             diff3Items.Add(item);
         }
@@ -266,8 +266,8 @@ namespace DiffAlgorithm.Diff3
         private void RemoveLastDiff3()
         {
             Diff3Item item = diff3Items.Last();
-            deltaToHis -= item.HisAffectedLines - item.OldAffectedLines;
-            deltaToNew -= item.NewAffectedLines - item.OldAffectedLines;
+            deltaToHis -= item.RemoteAffectedLines - item.BaseAffectedLines;
+            deltaToNew -= item.LocalAffectedLines - item.BaseAffectedLines;
 
             diff3Items.RemoveAt(diff3Items.Count - 1);
         }

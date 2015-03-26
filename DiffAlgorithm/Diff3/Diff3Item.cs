@@ -1,8 +1,7 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using CoreLibrary.Enums;
 
-namespace DiffAlgorithm
+namespace DiffAlgorithm.Diff3
 {
     /// <summary>
     /// Container for representing one diff change between three files.
@@ -10,50 +9,55 @@ namespace DiffAlgorithm
     public class Diff3Item
     {
         /// <summary>
-        /// Line number of old file where change starts.
+        /// Line number in base file where change starts.
         /// </summary>
-        public readonly int OldLineStart;
+        public readonly int BaseLineStart;
 
         /// <summary>
-        /// Line number of new file where change starts.
+        /// Line number in local file where change starts.
         /// </summary>
-        public readonly int NewLineStart;
+        public readonly int LocalLineStart;
 
         /// <summary>
-        /// Line number of his file where change starts.
+        /// Line number in remote file where change starts.
         /// </summary>
-        public readonly int HisLineStart;
+        public readonly int RemoteLineStart;
 
         /// <summary>
-        /// Number of lines affected in the old file.
+        /// Number of lines affected in the base file.
         /// </summary>
-        public readonly int OldAffectedLines;
+        public readonly int BaseAffectedLines;
 
         /// <summary>
-        /// Number of lines affected in the new file.
+        /// Number of lines affected in the local file.
         /// </summary>
-        public readonly int NewAffectedLines;
+        public readonly int LocalAffectedLines;
 
         /// <summary>
-        /// Number of lines affected in his file.
+        /// Number of lines affected in the remote file.
         /// </summary>
-        public readonly int HisAffectedLines;
+        public readonly int RemoteAffectedLines;
 
         /// <summary>
         /// Type of the diff chunk - which files differ.
         /// </summary>
         public DifferencesStatusEnum Differeces;
 
-        public Diff3Item(int oldLineStart, int newLineStart, int hisLineStart, int oldAffectedLines,
-            int newAffectedLines, int hisAffectedLines, DifferencesStatusEnum diff)
-        {
-            OldLineStart = oldLineStart;
-            NewLineStart = newLineStart;
-            HisLineStart = hisLineStart;
+        /// <summary>
+        /// Default action to do with this diff.
+        /// </summary>
+        public Diff3ItemActionEnum Action;
 
-            OldAffectedLines = oldAffectedLines;
-            NewAffectedLines = newAffectedLines;
-            HisAffectedLines = hisAffectedLines;
+        public Diff3Item(int baseLineStart, int localLineStart, int remoteLineStart, int baseAffectedLines,
+            int localAffectedLines, int remoteAffectedLines, DifferencesStatusEnum diff)
+        {
+            BaseLineStart = baseLineStart;
+            LocalLineStart = localLineStart;
+            RemoteLineStart = remoteLineStart;
+
+            BaseAffectedLines = baseAffectedLines;
+            LocalAffectedLines = localAffectedLines;
+            RemoteAffectedLines = remoteAffectedLines;
 
             Differeces = diff;
         }
@@ -61,17 +65,17 @@ namespace DiffAlgorithm
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(OldLineStart)
+            sb.Append(BaseLineStart)
                 .Append(".")
-                .Append(NewLineStart)
+                .Append(LocalLineStart)
                 .Append(".")
-                .Append(HisLineStart)
+                .Append(RemoteLineStart)
                 .Append("^")
-                .Append(OldAffectedLines)
+                .Append(BaseAffectedLines)
                 .Append(".")
-                .Append(NewAffectedLines)
+                .Append(LocalAffectedLines)
                 .Append(".")
-                .Append(HisAffectedLines)
+                .Append(RemoteAffectedLines)
                 ;
 
             if (Differeces == DifferencesStatusEnum.AllDifferent)

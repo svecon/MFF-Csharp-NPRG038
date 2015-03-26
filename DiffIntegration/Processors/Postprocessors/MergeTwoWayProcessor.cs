@@ -9,7 +9,9 @@ using DiffIntegration.DiffFilesystemTree;
 namespace DiffIntegration.Processors.Postprocessors
 {
     /// <summary>
-    /// TODO
+    /// Merges everything into one directory.
+    /// 
+    /// There must be an OutputFolder specified.
     /// </summary>
     public class MergeTwoWayProcessor : PostProcessorAbstract
     {
@@ -37,7 +39,6 @@ namespace DiffIntegration.Processors.Postprocessors
         public override void Process(IFilesystemTreeDirNode node)
         {
             // create directory when file is created
-
             // this means that empty folders need to be created here
 
             if (!CheckModeAndStatus(node))

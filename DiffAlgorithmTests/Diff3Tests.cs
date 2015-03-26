@@ -2,6 +2,7 @@
 using System.Linq;
 using DiffAlgorithm;
 using DiffAlgorithm.Diff;
+using DiffAlgorithm.Diff3;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiffAlgorithmTests
@@ -9,7 +10,7 @@ namespace DiffAlgorithmTests
     [TestClass]
     public class Diff3Tests
     {
-        public static string J(DiffAlgorithm.Diff3Item[] diff3Items)
+        public static string J(Diff3Item[] diff3Items)
         {
             return String.Join<Diff3Item>("#", diff3Items);
         }

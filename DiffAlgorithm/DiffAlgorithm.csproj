@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Diff3\Diff3.cs" />
+    <Compile Include="Diff3\Diff3ItemActionEnum.cs" />
     <Compile Include="Diff\Diff.cs" />
     <Compile Include="Diff3\Diff3Algorithm.cs" />
     <Compile Include="Diff3\Diff3Item.cs" />

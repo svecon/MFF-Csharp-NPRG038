@@ -18,5 +18,6 @@ namespace CoreLibrary.Enums
         WasMerged,
 
         HasConflicts,
+        IsConflicting,
     }
 }

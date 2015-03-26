@@ -5,6 +5,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Processors;
 using DiffAlgorithm;
+using DiffAlgorithm.Diff3;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.DiffOutput
@@ -45,32 +46,32 @@ namespace DiffIntegration.DiffOutput
                     sb.AppendLine(HunkHeader(diff.Differeces));
 
                     // skip same
-                    for (; o < diff.OldLineStart; o++) { streamO.ReadLine(); }
-                    for (; m < diff.NewLineStart; m++) { streamL.ReadLine(); }
-                    for (; n < diff.HisLineStart; n++) { streamR.ReadLine(); }
+                    for (; o < diff.BaseLineStart; o++) { streamO.ReadLine(); }
+                    for (; m < diff.LocalLineStart; m++) { streamL.ReadLine(); }
+                    for (; n < diff.RemoteLineStart; n++) { streamR.ReadLine(); }
 
                     // DifferencesStatusEnum.LocalRemoteSame has a different order of blocks
                     if (diff.Differeces == DifferencesStatusEnum.LocalRemoteSame)
                     {
-                        sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
+                        sb.Append(PrintSection("1", diff.LocalLineStart, diff.LocalAffectedLines,
                             ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local, false));
 
-                        sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
+                        sb.Append(PrintSection("3", diff.RemoteLineStart, diff.RemoteAffectedLines,
                             ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
 
-                        sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
+                        sb.Append(PrintSection("2", diff.BaseLineStart, diff.BaseAffectedLines,
                             ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base));
                     } else
                     {
-                        sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
+                        sb.Append(PrintSection("1", diff.LocalLineStart, diff.LocalAffectedLines,
                             ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local,
                                 diff.Differeces != DifferencesStatusEnum.BaseLocalSame));
 
-                        sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
+                        sb.Append(PrintSection("2", diff.BaseLineStart, diff.BaseAffectedLines,
                             ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base,
                                 diff.Differeces != DifferencesStatusEnum.BaseRemoteSame));
 
-                        sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
+                        sb.Append(PrintSection("3", diff.RemoteLineStart, diff.RemoteAffectedLines,
                             ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
                     }
 
