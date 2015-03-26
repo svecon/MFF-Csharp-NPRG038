@@ -88,6 +88,15 @@ namespace DiffIntegration.Processors.Postprocessors
 
                     break;
                 case LocationCombinationsEnum.OnLocalRemote:
+
+                    if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
+                    { 
+                        ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
+                        return; // copy
+                    }
+
+                    node.Status = NodeStatusEnum.IsConflicting;
+
                     break;
             }
 
