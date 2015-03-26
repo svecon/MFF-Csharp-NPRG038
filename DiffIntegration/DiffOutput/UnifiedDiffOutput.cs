@@ -67,8 +67,8 @@ namespace DiffIntegration.DiffOutput
             }
 
             // print chunks
-            using (StreamReader streamA = infoLocal.OpenText())
-            using (StreamReader streamB = infoRemote.OpenText())
+            using (StreamReader localStream = infoLocal.OpenText())
+            using (StreamReader remoteStream = infoRemote.OpenText())
             {
                 int n = 0;
                 int m = 0;
@@ -82,43 +82,43 @@ namespace DiffIntegration.DiffOutput
                     Console.ResetColor();
 
                     // skip same
-                    for (; n < chunk.LeftLineStart(); n++) { streamA.ReadLine(); }
-                    for (; m < chunk.RightLineStart(); m++) { streamB.ReadLine(); }
+                    for (; n < chunk.LeftLineStart(); n++) { localStream.ReadLine(); }
+                    for (; m < chunk.RightLineStart(); m++) { remoteStream.ReadLine(); }
 
                     do
                     {
                         // context between diffs
                         while (chunk.CurrentDiff().OldLineStart > n)
                         {
-                            yield return " " + streamA.ReadLine();
-                            streamB.ReadLine();
+                            yield return " " + localStream.ReadLine();
+                            remoteStream.ReadLine();
                             n++;
                             m++;
                         }
                         
                         // deleted
                         Console.ForegroundColor = ConsoleColor.DarkRed;
-                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { yield return "-" + streamA.ReadLine(); n++; }
+                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { yield return "-" + localStream.ReadLine(); n++; }
                         Console.ResetColor();
 
                         // missing newline at end of old file
-                        if (n == diff.FilesLineCount.Old && !diff.FilesEndsWithNewLine.Old)
+                        if (n == diff.FilesLineCount.Local && !diff.FilesEndsWithNewLine.Local)
                             yield return @"\ No newline at end of file";
 
                         // inserted
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { yield return "+" + streamB.ReadLine(); m++; }
+                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { yield return "+" + remoteStream.ReadLine(); m++; }
                         Console.ResetColor();
 
                         // missing newline at end of new file
-                        if (m == diff.FilesLineCount.New && !diff.FilesEndsWithNewLine.New)
+                        if (m == diff.FilesLineCount.Remote && !diff.FilesEndsWithNewLine.Remote)
                             yield return @"\ No newline at end of file";
 
                         // context between diffs
                         while (chunk.HasNextDiff() && chunk.NextDiff().OldLineStart > n)
                         {
-                            yield return " " + streamA.ReadLine();
-                            streamB.ReadLine();
+                            yield return " " + localStream.ReadLine();
+                            remoteStream.ReadLine();
                             n++;
                             m++;
                         }
@@ -129,7 +129,7 @@ namespace DiffIntegration.DiffOutput
                     } while (chunk.HasNextDiff() && chunk.MoveNextDiff());
 
                     // context after all diffs
-                    for (; n <= chunk.LeftLineEnd(); n++) { yield return " " + streamA.ReadLine(); }
+                    for (; n <= chunk.LeftLineEnd(); n++) { yield return " " + localStream.ReadLine(); }
 
                     DiffHasEnded = true;
                 }

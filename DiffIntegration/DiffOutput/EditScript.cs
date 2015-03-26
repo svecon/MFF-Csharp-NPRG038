@@ -51,7 +51,7 @@ namespace DiffIntegration.DiffOutput
                     for (int p = 0; p < diff.DeletedInOld; p++) { sb.AppendLine("< " + streamA.ReadLine()); n++; }
 
                     // missing newline at end of old file
-                    if (n == dnode.Diff.FilesLineCount.Old && !dnode.Diff.FilesEndsWithNewLine.Old)
+                    if (n == dnode.Diff.FilesLineCount.Local && !dnode.Diff.FilesEndsWithNewLine.Local)
                         sb.AppendLine("\\ No newline at end of file");
 
                     if (diff.DeletedInOld > 0 && diff.InsertedInNew > 0)
@@ -61,7 +61,7 @@ namespace DiffIntegration.DiffOutput
                     for (int p = 0; p < diff.InsertedInNew; p++) { sb.AppendLine("> " + streamB.ReadLine()); m++; }
 
                     // missing newline at end of old file
-                    if (m == dnode.Diff.FilesLineCount.New && !dnode.Diff.FilesEndsWithNewLine.New)
+                    if (m == dnode.Diff.FilesLineCount.Remote && !dnode.Diff.FilesEndsWithNewLine.Remote)
                         sb.AppendLine("\\ No newline at end of file");
                 }
             }

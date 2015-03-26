@@ -84,9 +84,9 @@ namespace DiffIntegration.DiffOutput
                 }
 
                 // print end
-                for (; o < dnode.Diff3.FilesLineCount.Old; o++) { Console.WriteLine(streamO.ReadLine()); }
-                for (; m < dnode.Diff3.FilesLineCount.New; m++) { streamL.ReadLine(); }
-                for (; n < dnode.Diff3.FilesLineCount.His; n++) { streamR.ReadLine(); }
+                for (; o < dnode.Diff3.FilesLineCount.Base; o++) { Console.WriteLine(streamO.ReadLine()); }
+                for (; m < dnode.Diff3.FilesLineCount.Local; m++) { streamL.ReadLine(); }
+                for (; n < dnode.Diff3.FilesLineCount.Remote; n++) { streamR.ReadLine(); }
             }
         }
     }

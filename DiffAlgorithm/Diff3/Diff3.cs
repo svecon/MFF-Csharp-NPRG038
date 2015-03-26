@@ -13,9 +13,9 @@ namespace DiffAlgorithm.Diff3
         /// </summary>
         public struct FilesLineCountStruct
         {
-            public int Old;
-            public int New;
-            public int His;
+            public int Base;
+            public int Local;
+            public int Remote;
         }
 
         /// <summary>
@@ -24,9 +24,9 @@ namespace DiffAlgorithm.Diff3
         /// </summary>
         public struct FilesEndsWithNewLineStruct
         {
-            public bool Old;
-            public bool New;
-            public bool His;
+            public bool Base;
+            public bool Local;
+            public bool Remote;
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace DiffAlgorithm.Diff3
         /// <summary>
         /// Constructor for Diff3.
         /// </summary>
-        /// <param name="oldFile">Old file diffed.</param>
-        /// <param name="newFile">New file diffed.</param>
-        /// <param name="hisFile">His new file diffed.</param>
+        /// <param name="oldFile">Local file diffed.</param>
+        /// <param name="newFile">Remote file diffed.</param>
+        /// <param name="hisFile">Remote new file diffed.</param>
         public Diff3(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
         {
             this.oldFile = oldFile;
@@ -83,13 +83,13 @@ namespace DiffAlgorithm.Diff3
         /// <param name="hisEndsNewLine">Does his file end with new line?</param>
         public void SetStatistics(int oldLineCount, int newLineCount, int hisLineCount, bool oldEndsNewLine, bool newEndsNewLine, bool hisEndsNewLine)
         {
-            FilesLineCount.Old = oldLineCount;
-            FilesLineCount.New = newLineCount;
-            FilesLineCount.His = hisLineCount;
+            FilesLineCount.Base = oldLineCount;
+            FilesLineCount.Local = newLineCount;
+            FilesLineCount.Remote = hisLineCount;
 
-            FilesEndsWithNewLine.Old = oldEndsNewLine;
-            FilesEndsWithNewLine.New = newEndsNewLine;
-            FilesEndsWithNewLine.His = hisEndsNewLine;
+            FilesEndsWithNewLine.Base = oldEndsNewLine;
+            FilesEndsWithNewLine.Local = newEndsNewLine;
+            FilesEndsWithNewLine.Remote = hisEndsNewLine;
         }
 
     }

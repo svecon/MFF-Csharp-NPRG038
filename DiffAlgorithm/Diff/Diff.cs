@@ -13,8 +13,8 @@ namespace DiffAlgorithm.Diff
         /// </summary>
         public struct FilesLineCountStruct
         {
-            public int Old;
-            public int New;
+            public int Local;
+            public int Remote;
         }
 
         /// <summary>
@@ -23,8 +23,8 @@ namespace DiffAlgorithm.Diff
         /// </summary>
         public struct FilesEndsWithNewLineStruct
         {
-            public bool Old;
-            public bool New;
+            public bool Local;
+            public bool Remote;
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Constructor for Diff.
         /// </summary>
-        /// <param name="oldFile">Old file diffed.</param>
-        /// <param name="newFile">New file diffed.</param>
+        /// <param name="oldFile">Local file diffed.</param>
+        /// <param name="newFile">Remote file diffed.</param>
         public Diff(FileInfo oldFile, FileInfo newFile)
         {
             this.oldFile = oldFile;
@@ -76,11 +76,11 @@ namespace DiffAlgorithm.Diff
         /// <param name="newEndsNewLine">Does new file end with new line?</param>
         public void SetStatistics(int oldLineCount, int newLineCount, bool oldEndsNewLine, bool newEndsNewLine)
         {
-            FilesLineCount.Old = oldLineCount;
-            FilesLineCount.New = newLineCount;
+            FilesLineCount.Local = oldLineCount;
+            FilesLineCount.Remote = newLineCount;
 
-            FilesEndsWithNewLine.Old = oldEndsNewLine;
-            FilesEndsWithNewLine.New = newEndsNewLine;
+            FilesEndsWithNewLine.Local = oldEndsNewLine;
+            FilesEndsWithNewLine.Remote = newEndsNewLine;
         }
 
     }

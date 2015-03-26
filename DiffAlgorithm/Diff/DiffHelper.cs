@@ -110,8 +110,8 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Diffs two strings
         /// </summary>
-        /// <param name="oldText">Old string</param>
-        /// <param name="newText">New String</param>
+        /// <param name="oldText">Local string</param>
+        /// <param name="newText">Remote String</param>
         /// <returns>DiffItem[] showing the changes between the two strings.</returns>
         public DiffItem[] DiffText(string oldText, string newText)
         {
@@ -129,8 +129,8 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Diffs two int arrays.
         /// </summary>
-        /// <param name="oldArray">Old array to be diffed.</param>
-        /// <param name="newArray">New array to be diffed.</param>
+        /// <param name="oldArray">Local array to be diffed.</param>
+        /// <param name="newArray">Remote array to be diffed.</param>
         /// <returns>DiffItem[] showing the changes between the two arrays.</returns>
         public DiffItem[] DiffInt(int[] oldArray, int[] newArray)
         {
@@ -144,9 +144,9 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Diffs three texts.
         /// </summary>
-        /// <param name="oldText">Old text.</param>
+        /// <param name="oldText">Local text.</param>
         /// <param name="newText">My new text.</param>
-        /// <param name="hisText">His new text.</param>
+        /// <param name="hisText">Remote new text.</param>
         /// <returns>Diff3Item[] showing the differences between three texts.</returns>
         public Diff3Item[] DiffText(string oldText, string newText, string hisText)
         {
@@ -168,8 +168,8 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Diffs two files.
         /// </summary>
-        /// <param name="oldFile">Old file to be diffed.</param>
-        /// <param name="newFile">New file to be diffed.</param>
+        /// <param name="oldFile">Local file to be diffed.</param>
+        /// <param name="newFile">Remote file to be diffed.</param>
         /// <returns>DiffItem[] showing the changes between the two files.</returns>
         public Diff DiffFiles(FileInfo oldFile, FileInfo newFile)
         {
@@ -196,9 +196,9 @@ namespace DiffAlgorithm.Diff
         /// <summary>
         /// Diffs three files.
         /// </summary>
-        /// <param name="oldFile">Old file.</param>
+        /// <param name="oldFile">Local file.</param>
         /// <param name="newFile">My new file.</param>
-        /// <param name="hisFile">His new file.</param>
+        /// <param name="hisFile">Remote new file.</param>
         /// <returns>Diff3 container with all changes between three files.</returns>
         public Diff3.Diff3 DiffFiles(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
         {

@@ -285,7 +285,7 @@ namespace DiffAlgorithm.Diff3
         }
 
         /// <summary>
-        /// Creates a Diff3Item between Old and New file.
+        /// Creates a Diff3Item between Local and Remote file.
         /// </summary>
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateFromNew()
@@ -302,7 +302,7 @@ namespace DiffAlgorithm.Diff3
         }
 
         /// <summary>
-        /// Creates a Diff3Item between Old and His file.
+        /// Creates a Diff3Item between Local and Remote file.
         /// </summary>
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateFromHis()

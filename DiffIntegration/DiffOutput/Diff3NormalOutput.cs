@@ -53,25 +53,25 @@ namespace DiffIntegration.DiffOutput
                     if (diff.Differeces == DifferencesStatusEnum.LocalRemoteSame)
                     {
                         sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
-                            ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New, false));
+                            ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local, false));
 
                         sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
-                            ref n, streamR, dnode.Diff3.FilesLineCount.His, dnode.Diff3.FilesEndsWithNewLine.His));
+                            ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
 
                         sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
-                            ref o, streamO, dnode.Diff3.FilesLineCount.Old, dnode.Diff3.FilesEndsWithNewLine.Old));
+                            ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base));
                     } else
                     {
                         sb.Append(PrintSection("1", diff.NewLineStart, diff.NewAffectedLines,
-                            ref m, streamL, dnode.Diff3.FilesLineCount.New, dnode.Diff3.FilesEndsWithNewLine.New,
+                            ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local,
                                 diff.Differeces != DifferencesStatusEnum.BaseLocalSame));
 
                         sb.Append(PrintSection("2", diff.OldLineStart, diff.OldAffectedLines,
-                            ref o, streamO, dnode.Diff3.FilesLineCount.Old, dnode.Diff3.FilesEndsWithNewLine.Old,
+                            ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base,
                                 diff.Differeces != DifferencesStatusEnum.BaseRemoteSame));
 
                         sb.Append(PrintSection("3", diff.HisLineStart, diff.HisAffectedLines,
-                            ref n, streamR, dnode.Diff3.FilesLineCount.His, dnode.Diff3.FilesEndsWithNewLine.His));
+                            ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
                     }
 
                     Console.Write(sb.ToString());
