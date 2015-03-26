@@ -107,8 +107,12 @@ namespace CoreLibrary.Settings
 
         private void ApplySettings(IEnumerable<ISettings> settingsList, ref string[] arguments, ref int i)
         {
+            int numberOfParams = 0;
+
             foreach (ISettings setting in settingsList)
             {
+                numberOfParams = setting.NumberOfParams;
+
                 try
                 {
                     setting.SetValue(arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray());
@@ -117,9 +121,9 @@ namespace CoreLibrary.Settings
                 {
                     throw new SettingsUnknownValue(arguments[i] + " " + string.Join(" ", arguments.Skip(i + 1).Take(setting.NumberOfParams).ToArray()), e);
                 }
-                
-                i += 1 + setting.NumberOfParams;
             }
+
+            i += 1 + numberOfParams;
         }
 
     }

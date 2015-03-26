@@ -151,7 +151,7 @@ namespace DiffIntegration.Processors.Postprocessors
                     }
 
                     // print between diffs
-                    for (; o < diff.BaseLineStart; o++) { Console.WriteLine(baseStream.ReadLine()); }
+                    for (; o < diff.BaseLineStart; o++) { writer.WriteLine(baseStream.ReadLine()); }
                     for (; m < diff.LocalLineStart; m++) { localStream.ReadLine(); }
                     for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
