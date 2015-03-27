@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using DiffAlgorithm;
-using DiffAlgorithm.Diff;
+using DiffAlgorithm.TwoWay;
 
 namespace DiffAlgorithmTests
 {

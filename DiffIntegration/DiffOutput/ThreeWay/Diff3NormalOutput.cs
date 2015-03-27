@@ -1,82 +1,72 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
-using DiffAlgorithm;
-using DiffAlgorithm.Diff3;
-using DiffIntegration.DiffFilesystemTree;
+using DiffAlgorithm.ThreeWay;
 
-namespace DiffIntegration.DiffOutput
+namespace DiffIntegration.DiffOutput.ThreeWay
 {
     /// <summary>
-    /// Processor for printing out 3-way diff between three files.
+    /// Prints differences between 3 files in Diff3 Normal Output.
     /// </summary>
-    public class Diff3NormalOutput : ProcessorAbstract
+    public class Diff3NormalOutput : DiffOutputAbstract<Diff3, Diff3Item>
     {
-        public override int Priority { get { return 125035; } }
+        private readonly FileInfo infoBase;
 
-        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
-
-        public override void Process(IFilesystemTreeDirNode node)
+        public Diff3NormalOutput(FileInfo infoLocal, FileInfo infoBase, FileInfo infoRemote, Diff3 diff)
+            : base(infoLocal, infoRemote, diff)
         {
-            // empty
+            this.infoBase = infoBase;
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        public override IEnumerable<string> Print()
         {
-            var dnode = node as DiffFileNode;
-
-            if (dnode == null)
-                return;
-
-            var sb = new StringBuilder();
-
-            using (StreamReader streamL = ((FileInfo)dnode.InfoLocal).OpenText())
-            using (StreamReader streamR = ((FileInfo)dnode.InfoRemote).OpenText())
-            using (StreamReader streamO = ((FileInfo)dnode.InfoBase).OpenText())
+            using (StreamReader localStream = InfoLocal.OpenText())
+            using (StreamReader remoteStream = InfoRemote.OpenText())
+            using (StreamReader baseStream = infoBase.OpenText())
             {
                 int m = 0;
                 int n = 0;
                 int o = 0;
 
-                foreach (Diff3Item diff in dnode.Diff3.Items)
+                foreach (Diff3Item diffItem in Diff.Items)
                 {
-                    sb.AppendLine(HunkHeader(diff.Differeces));
+                    CurrentDiffItem = diffItem;
+
+                    yield return HunkHeader(diffItem.Differeces);
 
                     // skip same
-                    for (; o < diff.BaseLineStart; o++) { streamO.ReadLine(); }
-                    for (; m < diff.LocalLineStart; m++) { streamL.ReadLine(); }
-                    for (; n < diff.RemoteLineStart; n++) { streamR.ReadLine(); }
+                    for (; o < diffItem.BaseLineStart; o++) { baseStream.ReadLine(); }
+                    for (; m < diffItem.LocalLineStart; m++) { localStream.ReadLine(); }
+                    for (; n < diffItem.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
                     // DifferencesStatusEnum.LocalRemoteSame has a different order of blocks
-                    if (diff.Differeces == DifferencesStatusEnum.LocalRemoteSame)
+                    if (diffItem.Differeces == DifferencesStatusEnum.LocalRemoteSame)
                     {
-                        sb.Append(PrintSection("1", diff.LocalLineStart, diff.LocalAffectedLines,
-                            ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local, false));
+                        yield return PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
+                            ref m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local, false);
 
-                        sb.Append(PrintSection("3", diff.RemoteLineStart, diff.RemoteAffectedLines,
-                            ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
+                        yield return PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
+                            ref n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote);
 
-                        sb.Append(PrintSection("2", diff.BaseLineStart, diff.BaseAffectedLines,
-                            ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base));
+                        yield return PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
+                            ref o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base);
                     } else
                     {
-                        sb.Append(PrintSection("1", diff.LocalLineStart, diff.LocalAffectedLines,
-                            ref m, streamL, dnode.Diff3.FilesLineCount.Local, dnode.Diff3.FilesEndsWithNewLine.Local,
-                                diff.Differeces != DifferencesStatusEnum.BaseLocalSame));
+                        yield return PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
+                            ref m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local,
+                                diffItem.Differeces != DifferencesStatusEnum.BaseLocalSame);
 
-                        sb.Append(PrintSection("2", diff.BaseLineStart, diff.BaseAffectedLines,
-                            ref o, streamO, dnode.Diff3.FilesLineCount.Base, dnode.Diff3.FilesEndsWithNewLine.Base,
-                                diff.Differeces != DifferencesStatusEnum.BaseRemoteSame));
+                        yield return PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
+                            ref o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base,
+                                diffItem.Differeces != DifferencesStatusEnum.BaseRemoteSame);
 
-                        sb.Append(PrintSection("3", diff.RemoteLineStart, diff.RemoteAffectedLines,
-                            ref n, streamR, dnode.Diff3.FilesLineCount.Remote, dnode.Diff3.FilesEndsWithNewLine.Remote));
+                        yield return PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
+                            ref n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote);
                     }
 
-                    Console.Write(sb.ToString());
-                    sb.Clear();
+                    DiffHasEnded = true;
                 }
             }
         }

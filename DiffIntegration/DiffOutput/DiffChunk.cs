@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DiffAlgorithm;
-using DiffAlgorithm.Diff;
+using DiffAlgorithm.TwoWay;
 
 namespace DiffIntegration.DiffOutput
 {

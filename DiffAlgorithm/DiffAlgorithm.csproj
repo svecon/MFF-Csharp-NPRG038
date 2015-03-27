@@ -44,17 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Diff3\Diff3.cs" />
-    <Compile Include="Diff3\Diff3ItemActionEnum.cs" />
-    <Compile Include="Diff\Diff.cs" />
-    <Compile Include="Diff3\Diff3Algorithm.cs" />
-    <Compile Include="Diff3\Diff3Item.cs" />
-    <Compile Include="Diff\DiffAlgorithm.cs" />
-    <Compile Include="Diff\DiffItemActionEnum.cs" />
-    <Compile Include="Diff\SmsPoint.cs" />
-    <Compile Include="Diff\DiffHelper.cs" />
-    <Compile Include="Diff\DiffData.cs" />
-    <Compile Include="Diff\DiffItem.cs" />
+    <Compile Include="ThreeWay\Diff3.cs" />
+    <Compile Include="ThreeWay\Diff3ItemActionEnum.cs" />
+    <Compile Include="TwoWay\Diff.cs" />
+    <Compile Include="ThreeWay\Diff3Algorithm.cs" />
+    <Compile Include="ThreeWay\Diff3Item.cs" />
+    <Compile Include="TwoWay\DiffAlgorithm.cs" />
+    <Compile Include="TwoWay\DiffItemActionEnum.cs" />
+    <Compile Include="TwoWay\SmsPoint.cs" />
+    <Compile Include="TwoWay\DiffHelper.cs" />
+    <Compile Include="TwoWay\DiffData.cs" />
+    <Compile Include="TwoWay\DiffItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

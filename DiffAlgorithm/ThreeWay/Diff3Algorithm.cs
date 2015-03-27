@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using CoreLibrary.Enums;
-using DiffAlgorithm.Diff;
+using DiffAlgorithm.TwoWay;
 
-namespace DiffAlgorithm.Diff3
+namespace DiffAlgorithm.ThreeWay
 {
     /// <summary>
     /// This class implements Diff3 algorithm.

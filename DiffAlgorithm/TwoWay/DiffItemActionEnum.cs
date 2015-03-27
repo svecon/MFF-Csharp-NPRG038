@@ -1,4 +1,4 @@
-﻿namespace DiffAlgorithm.Diff
+﻿namespace DiffAlgorithm.TwoWay
 {
     /// <summary>
     /// Which version of diff item should be kept and used?

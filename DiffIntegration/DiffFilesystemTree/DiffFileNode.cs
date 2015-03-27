@@ -4,8 +4,8 @@ using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
 using DiffAlgorithm;
-using DiffAlgorithm.Diff;
-using DiffAlgorithm.Diff3;
+using DiffAlgorithm.ThreeWay;
+using DiffAlgorithm.TwoWay;
 
 namespace DiffIntegration.DiffFilesystemTree
 {

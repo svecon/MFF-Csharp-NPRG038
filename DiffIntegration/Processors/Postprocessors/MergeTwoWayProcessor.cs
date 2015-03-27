@@ -3,13 +3,13 @@ using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Postprocessors;
 using CoreLibrary.Settings.Attributes;
-using DiffAlgorithm.Diff;
+using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.Processors.Postprocessors
 {
     /// <summary>
-    /// Merges everything into one directory.
+    /// Processor for merging 2-way diffed files.
     /// 
     /// There must be an OutputFolder specified.
     /// </summary>
@@ -78,7 +78,8 @@ namespace DiffIntegration.Processors.Postprocessors
             CheckAndCreateDirectory(node);
             node.Status = NodeStatusEnum.WasMerged;
 
-            if (dnode.Diff == null)
+            if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote
+                || dnode.Diff == null)
             {
                 ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
                 return;
@@ -91,8 +92,7 @@ namespace DiffIntegration.Processors.Postprocessors
             {
                 temporaryPath = CreatePath(node) + ".temp";
                 isTemporary = true;
-            }
-            else
+            } else
             {
                 temporaryPath = CreatePath(node);
             }
@@ -193,11 +193,11 @@ namespace DiffIntegration.Processors.Postprocessors
         private string CreatePath(IFilesystemTreeFileNode node, bool includeFileName = true)
         {
             string output = node.ParentNode == null || (node.ParentNode != null && node.ParentNode.RelativePath == "")
-                ? string.Join("/", OutputFolder)
-                : string.Join("/", OutputFolder, node.ParentNode.RelativePath);
+                ? OutputFolder
+                : Path.Combine(OutputFolder, node.ParentNode.RelativePath);
 
             if (includeFileName)
-                output = string.Join("/", output, node.Info.Name);
+                output = Path.Combine(output, node.Info.Name);
 
             return output;
         }

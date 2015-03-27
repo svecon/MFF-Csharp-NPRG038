@@ -22,6 +22,9 @@ using DiffIntegration.Processors.Processors;
 
 namespace SvergeConsole
 {
+
+    //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt" -m -o "C:\Users\svecon\Downloads\temp2" -i
+    //"C:\Users\svecon\Downloads\temp" "C:\csharp\Merge" -m -o "C:\Users\svecon\Downloads\temp2" -C# -2d ApplyRemote
     class Program
     {
         [Settings("Show help about using the console.", "help", "h")]
@@ -157,9 +160,9 @@ namespace SvergeConsole
             #endregion
 
             #region Run Processors
-            // execution visitor for filesystem tree processes the files and folders with loaded processors
-            var ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
-                typeof(ExtensionFilterProcessor)
+            // run preprocessors and calculate diffs in parallel 
+            IExecutionVisitor ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
+                  typeof(ExtensionFilterProcessor)
                 , typeof(RegexFilterProcessor)
                 , typeof(CsharpSourcesFilterProcessor)
                 , typeof(FileTypeProcessor)
@@ -169,16 +172,34 @@ namespace SvergeConsole
                 , typeof(BinaryDiffProcessor)
 
                 , typeof(CalculateDiffProcessor)
-                , typeof(InteractiveDiffProcessor)
-
-                , typeof(MergeTwoWayProcessor)
-                , typeof(SyncTwoWayProcessor)
-                , typeof(OutputSingleFileProcessor)
             ));
             diffTree.Accept(ex);
-
-            // wait until the filesystem tree is finished with processing
             ex.Wait();
+
+            // run interactive diffing
+            ex = new ExecutionVisitorInSerial(_loader.SplitLoaderUsing(
+                  typeof(InteractiveTwoWayDiffProcessor)
+                , typeof(InteractiveThreeWayDiffProcessor)
+            ));
+            diffTree.Accept(ex);
+            ex.Wait();
+
+            // run merging and syncing in parallel
+            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
+                  typeof(MergeTwoWayProcessor)
+                , typeof(MergeThreeWayProcessor)
+                , typeof(SyncTwoWayProcessor)
+            ));
+            diffTree.Accept(ex);
+            ex.Wait();
+
+#if DEBUG // run this processor just for fun
+            ex = new ExecutionVisitorInSerial(_loader.SplitLoaderUsing(
+                typeof(OutputSingleFileProcessor)
+            ));
+            diffTree.Accept(ex);
+            ex.Wait();
+#endif
 
             // print the filesystem tree
             diffTree.Accept(new PrinterVisitor());

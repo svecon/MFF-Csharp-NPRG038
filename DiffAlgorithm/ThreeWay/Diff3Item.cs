@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using CoreLibrary.Enums;
 
-namespace DiffAlgorithm.Diff3
+namespace DiffAlgorithm.ThreeWay
 {
     /// <summary>
     /// Container for representing one diff change between three files.

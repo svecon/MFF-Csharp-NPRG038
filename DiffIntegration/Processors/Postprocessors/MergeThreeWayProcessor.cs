@@ -7,7 +7,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Postprocessors;
 using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm;
-using DiffAlgorithm.Diff3;
+using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.Processors.Postprocessors
@@ -90,7 +90,7 @@ namespace DiffIntegration.Processors.Postprocessors
                 case LocationCombinationsEnum.OnLocalRemote:
 
                     if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
-                    { 
+                    {
                         ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
                         return; // copy
                     }
@@ -154,6 +154,41 @@ namespace DiffIntegration.Processors.Postprocessors
                     for (; o < diff.BaseLineStart; o++) { writer.WriteLine(baseStream.ReadLine()); }
                     for (; m < diff.LocalLineStart; m++) { localStream.ReadLine(); }
                     for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
+
+                    // if there is an action asociated:
+                    if (diff.Action != Diff3ItemActionEnum.Default)
+                    {
+                        for (int p = 0; p < diff.LocalAffectedLines; p++)
+                        {
+                            m++;
+
+                            if (diff.Action == Diff3ItemActionEnum.ApplyLocal)
+                                writer.WriteLine(localStream.ReadLine());
+                            else
+                                localStream.ReadLine();
+                        }
+                        for (int p = 0; p < diff.BaseAffectedLines; p++)
+                        {
+                            o++;
+
+                            if (diff.Action == Diff3ItemActionEnum.RevertToBase)
+                                writer.WriteLine(baseStream.ReadLine());
+                            else
+                                baseStream.ReadLine();
+
+                        }
+                        for (int p = 0; p < diff.RemoteAffectedLines; p++)
+                        {
+                            n++;
+
+                            if (diff.Action == Diff3ItemActionEnum.ApplyRemote)
+                                writer.WriteLine(remoteStream.ReadLine());
+                            else
+                                remoteStream.ReadLine();
+                        }
+
+                        continue;
+                    }
 
                     // print diffs
                     switch (diff.Differeces)
@@ -264,11 +299,11 @@ namespace DiffIntegration.Processors.Postprocessors
         private string CreatePath(IFilesystemTreeFileNode node, bool includeFileName = true)
         {
             string output = node.ParentNode == null || (node.ParentNode != null && node.ParentNode.RelativePath == "")
-                ? string.Join("/", OutputFolder)
-                : string.Join("/", OutputFolder, node.ParentNode.RelativePath);
+                ? OutputFolder
+                : Path.Combine(OutputFolder, node.ParentNode.RelativePath);
 
             if (includeFileName)
-                output = string.Join("/", output, node.Info.Name);
+                output = Path.Combine(output, node.Info.Name);
 
             return output;
         }

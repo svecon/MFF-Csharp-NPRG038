@@ -2,63 +2,34 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
-using CoreLibrary.Settings.Attributes;
-using DiffAlgorithm.Diff;
-using DiffIntegration.DiffFilesystemTree;
+using DiffAlgorithm.TwoWay;
 
-namespace DiffIntegration.DiffOutput
+namespace DiffIntegration.DiffOutput.TwoWay
 {
     /// <summary>
-    /// Processor for printing out unified diff output between two files.
+    /// Prints differences between two files in Unified Diff Output
     /// </summary>
-    public class UnifiedDiffOutput
+    public class UnifiedDiffOutput : DiffOutputAbstract<Diff, DiffItem>
     {
-        //[Settings("Context ContextLinesCount in unified diff output.", "context-ContextLinesCount-output", "PO")]
-        public int ContextLinesCount;// = 3;
-
-        private readonly FileInfo infoLocal;
-        private readonly FileInfo infoRemote;
-        private readonly Diff diff;
-
-
-        private bool diffHasEnded;
-
-        public bool DiffHasEnded
-        {
-            get
-            {
-                bool temp = diffHasEnded;
-                diffHasEnded = false;
-                return temp;
-            }
-            private set { diffHasEnded = value; }
-        }
-
-        public DiffItem CurrentDiffItem { get; private set; }
+        public int ContextLinesCount;
 
         public UnifiedDiffOutput(FileInfo infoLocal, FileInfo infoRemote, Diff diff, int contextLinesCount = 3)
+            : base(infoLocal, infoRemote, diff)
         {
-            this.infoLocal = infoLocal;
-            this.diff = diff;
-            this.infoRemote = infoRemote;
             ContextLinesCount = contextLinesCount;
         }
 
-        public IEnumerable<string> Print()
+        public override IEnumerable<string> Print()
         {
             // print headers
             Console.ForegroundColor = ConsoleColor.White;
-            yield return "--- " + CreateHeader(infoLocal.FullName, infoLocal.LastWriteTime);
-            yield return "+++ " + CreateHeader(infoRemote.FullName, infoRemote.LastWriteTime);
+            yield return "--- " + CreateHeader(InfoLocal.FullName, InfoLocal.LastWriteTime);
+            yield return "+++ " + CreateHeader(InfoRemote.FullName, InfoRemote.LastWriteTime);
             Console.ResetColor();
 
             // create and merge ovelapping diffs into chunks
-            var chunks = new List<DiffChunk>(diff.Items.Length);
-            foreach (DiffChunk newChunk in diff.Items.Select(diffItem => new DiffChunk(diffItem, diff.FilesLineCount, ContextLinesCount)))
+            var chunks = new List<DiffChunk>(Diff.Items.Length);
+            foreach (DiffChunk newChunk in Diff.Items.Select(diffItem => new DiffChunk(diffItem, Diff.FilesLineCount, ContextLinesCount)))
             {
                 if (chunks.Any() && chunks.Last().ChuckOverflows(newChunk))
                     chunks.Last().JoinChunk(newChunk);
@@ -67,8 +38,8 @@ namespace DiffIntegration.DiffOutput
             }
 
             // print chunks
-            using (StreamReader localStream = infoLocal.OpenText())
-            using (StreamReader remoteStream = infoRemote.OpenText())
+            using (StreamReader localStream = InfoLocal.OpenText())
+            using (StreamReader remoteStream = InfoRemote.OpenText())
             {
                 int n = 0;
                 int m = 0;
@@ -95,14 +66,14 @@ namespace DiffIntegration.DiffOutput
                             n++;
                             m++;
                         }
-                        
+
                         // deleted
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { yield return "-" + localStream.ReadLine(); n++; }
                         Console.ResetColor();
 
                         // missing newline at end of old file
-                        if (n == diff.FilesLineCount.Local && !diff.FilesEndsWithNewLine.Local)
+                        if (n == Diff.FilesLineCount.Local && !Diff.FilesEndsWithNewLine.Local)
                             yield return @"\ No newline at end of file";
 
                         // inserted
@@ -111,7 +82,7 @@ namespace DiffIntegration.DiffOutput
                         Console.ResetColor();
 
                         // missing newline at end of new file
-                        if (m == diff.FilesLineCount.Remote && !diff.FilesEndsWithNewLine.Remote)
+                        if (m == Diff.FilesLineCount.Remote && !Diff.FilesEndsWithNewLine.Remote)
                             yield return @"\ No newline at end of file";
 
                         // context between diffs

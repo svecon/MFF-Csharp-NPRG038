@@ -43,11 +43,13 @@
     <Compile Include="DiffFilesystemTree\DiffFilesystemTree.cs" />
     <Compile Include="DiffFilesystemTree\DiffDirNode.cs" />
     <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />
+    <Compile Include="DiffOutput\DiffOutputAbstract.cs" />
+    <Compile Include="DiffOutput\IDiffOutput.cs" />
     <Compile Include="Processors\Postprocessors\MergeThreeWayProcessor.cs" />
     <Compile Include="DiffOutput\DiffChunk.cs" />
-    <Compile Include="DiffOutput\Diff3NormalOutput.cs" />
-    <Compile Include="DiffOutput\EditScript.cs" />
-    <Compile Include="DiffOutput\UnifiedDiffOutput.cs" />
+    <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
+    <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
+    <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
     <Compile Include="Processors\Postprocessors\OutputSingleFileProcessor.cs" />
     <Compile Include="Processors\Postprocessors\MergeTwoWayProcessor.cs" />
     <Compile Include="Processors\Postprocessors\SyncTwoWayProcessor.cs" />
@@ -55,7 +57,8 @@
     <Compile Include="Processors\Preprocessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\RegexFilterProcessor.cs" />
-    <Compile Include="Processors\Processors\InteractiveDiffProcessor.cs" />
+    <Compile Include="Processors\Processors\InteractiveThreeWayDiffProcessor.cs" />
+    <Compile Include="Processors\Processors\InteractiveTwoWayDiffProcessor.cs" />
     <Compile Include="Processors\Processors\CalculateDiffProcessor.cs" />
     <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\Processors\ChecksumDiffProcessor.cs" />

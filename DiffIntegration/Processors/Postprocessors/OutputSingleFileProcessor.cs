@@ -28,9 +28,6 @@ namespace DiffIntegration.Processors.Postprocessors
 
         public override void Process(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
-
             if (OutputPath == null)
                 return;
 

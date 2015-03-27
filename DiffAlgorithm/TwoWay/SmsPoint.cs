@@ -1,5 +1,5 @@
 ﻿
-namespace DiffAlgorithm.Diff
+namespace DiffAlgorithm.TwoWay
 {
     /// <summary>
     /// Short Middle Snake point
