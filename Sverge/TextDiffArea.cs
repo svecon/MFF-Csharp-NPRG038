@@ -19,22 +19,37 @@ namespace Sverge
         private FileInfo info;
         private string[] lines;
         private int longestLine;
+
+        private bool ShowLineNumbers = true;
+
+        #region Computing paddings and offsets
+
+        private readonly FormattedText sample;
         private const int CHAR_PADDING_RIGHT = 5;
-        private FormattedText sample;
-        private MouseEventArgs mouse;
+        private const double BORDER_SIZE = 1.0;
+        private const double DIFF_LINE_SIZE = 1.0;
+
+        double LineHeight { get { return sample.Height + DIFF_LINE_SIZE; } }
+
+        double PaddingTop { get { return BORDER_SIZE + sample.Height / 4; } }
+        double PaddingBottom { get { return BORDER_SIZE + sample.Height / 4; } }
+        double PaddingRight { get { return CHAR_PADDING_RIGHT * sample.Width; } }
+        double PaddingLeft { get { return BORDER_SIZE + sample.Width / 1; } }
+        double LineNumbersPaddingRight { get { return sample.Width * 2; } }
+
+        double LineNumbersSize { get { return lines.Length.ToString().Length * sample.Width; } }
 
         public TextDiffArea()
         {
             info = new FileInfo("C:/csharp/Merge/Sverge/TextDiffArea.cs");
 
-            sample = createFormattedText("M");
-            lineSize = sample.Height;
+            sample = CreateFormattedText("M");
 
             var linesList = new List<string>();
             using (StreamReader reader = info.OpenText())
             {
                 string line;
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     linesList.Add(line);
 
@@ -47,10 +62,46 @@ namespace Sverge
             lines = linesList.ToArray();
         }
 
+        double PositionY(int lineNumber)
+        {
+            return lineNumber * LineHeight - offset.Y + PaddingTop;
+        }
+
+        double PositionX(bool includeLineNumbers = true)
+        {
+            double result = PaddingLeft - offset.X;
+
+            if (includeLineNumbers && ShowLineNumbers)
+                result += LineNumbersSize + LineNumbersPaddingRight;
+
+            return result;
+        }
+
+        #endregion
+
+        #region Helper methods
+        private static double AlightRight(double size, double maxSize, double paddingLeft)
+        {
+            return paddingLeft + maxSize - size;
+        }
+
+        private FormattedText CreateFormattedText(string text)
+        {
+            return new FormattedText(
+                text,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Consolas"),
+                13,
+                Brushes.Black
+            );
+        }
+
+        #endregion
+
         #region IScrollInfo
 
-        private readonly double lineSize;
-        private double WheelSize { get { return 3 * lineSize; } }
+        private double WheelSize { get { return 3 * LineHeight; } }
 
         private Vector offset;
         private Size extent;
@@ -81,21 +132,21 @@ namespace Sverge
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
             // We do not have any children in this Element.
-            return new Rect(); 
+            return new Rect();
         }
 
         #region Movement Methods
         public void LineDown()
-        { SetVerticalOffset(VerticalOffset + lineSize); }
+        { SetVerticalOffset(VerticalOffset + LineHeight); }
 
         public void LineUp()
-        { SetVerticalOffset(VerticalOffset - lineSize); }
+        { SetVerticalOffset(VerticalOffset - LineHeight); }
 
         public void LineLeft()
-        { SetHorizontalOffset(HorizontalOffset - lineSize); }
+        { SetHorizontalOffset(HorizontalOffset - LineHeight); }
 
         public void LineRight()
-        { SetHorizontalOffset(HorizontalOffset + lineSize); }
+        { SetHorizontalOffset(HorizontalOffset + LineHeight); }
 
         public void MouseWheelDown()
         { SetVerticalOffset(VerticalOffset + WheelSize); }
@@ -165,9 +216,43 @@ namespace Sverge
 
         #endregion
 
+        #region Mouse events
+
+        private MouseEventArgs mouse;
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            mouse = e;
+            InvalidateVisual();
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            mouse = null;
+            InvalidateVisual();
+        }
+
+        #endregion
+
+        #region Measure & Arrange Override
+
+        private Size CalculateSize()
+        {
+            double width = sample.Width * longestLine + PaddingLeft + PaddingRight;
+            double height = lines.Length * LineHeight + PaddingTop + PaddingBottom;
+
+            if (ShowLineNumbers)
+                width += LineNumbersSize + LineNumbersPaddingRight;
+
+            return new Size(width, height);
+        }
+
         protected override Size MeasureOverride(Size availableSize)
         {
-            var newExtent = new Size(sample.Width * (longestLine + CHAR_PADDING_RIGHT), lines.Length * sample.Height);
+            Size newExtent = CalculateSize();
 
             if (extent != newExtent)
             {
@@ -214,84 +299,48 @@ namespace Sverge
             return finalSize;
         }
 
+        #endregion
+
         protected override void OnRender(DrawingContext dc)
         {
-            int startsOnLine = (int) (offset.Y/sample.Height);
-            int endsOnLine = startsOnLine + (int) (viewport.Height / sample.Height) + 1;
+            int startsOnLine = (int)(offset.Y / LineHeight);
+            int endsOnLine = startsOnLine + (int)(viewport.Height / LineHeight) + 1;
 
-            if (startsOnLine < 0)
-            {
-                startsOnLine = 0;
-            }
-
-            if (endsOnLine > lines.Length)
-            {
-                endsOnLine = lines.Length;
-            }
-
-            double paddingTop = 1.0;
-            double paddingLeft = 1.0;
+            if (startsOnLine < 0) { startsOnLine = 0; }
+            if (endsOnLine > lines.Length) { endsOnLine = lines.Length; }
 
             // background
-            dc.DrawRectangle(Brushes.Gray, null, new Rect(new Point(0.0, 0.0), new Size(extent.Width, extent.Height)));
-            dc.DrawRectangle(Brushes.White, null, new Rect(new Point(paddingTop, paddingLeft), new Size(extent.Width, extent.Height)));
+            dc.DrawRectangle(Brushes.White, null, new Rect(new Point(BORDER_SIZE, BORDER_SIZE), new Size(extent.Width, extent.Height)));
 
             for (int i = startsOnLine; i < endsOnLine; i++)
             {
-                paddingTop = 1.0;
-                paddingLeft = 1.0;
-
-                if (mouse != null && mouse.GetPosition(this).Y > i * sample.Height - offset.Y
-                    && mouse.GetPosition(this).Y < (i+1) * sample.Height - offset.Y)
+                if (mouse != null && mouse.GetPosition(this).Y > PositionY(i)
+                    && mouse.GetPosition(this).Y < PositionY(i + 1))
                 {
-                    dc.DrawRectangle(Brushes.SeaShell, null, new Rect(new Point(0 - offset.X + paddingLeft, i * sample.Height - offset.Y + paddingTop), new Size(extent.Width, sample.Height)));
+                    dc.DrawRectangle(Brushes.SeaShell, null, new Rect(new Point(BORDER_SIZE, PositionY(i)), new Size(extent.Width, LineHeight)));
                 }
 
-                paddingLeft = 1 + (1) * sample.Width;
-
                 // print line numbers
-                var lineNumber = createFormattedText((i + 1).ToString());
-                dc.DrawText(lineNumber, new Point(alightRight(lineNumber.Width, lines.Length.ToString().Length * sample.Width, 0 - offset.X + paddingLeft), i * sample.Height - offset.Y + paddingTop));
-
-                paddingLeft = (1 + lines.Length.ToString().Length + 1) * sample.Width;
+                if (ShowLineNumbers)
+                {
+                    // actual line numbers text
+                    FormattedText lineNumber = CreateFormattedText((i + 1).ToString());
+                    dc.DrawText(lineNumber, new Point(AlightRight(lineNumber.Width, LineNumbersSize, PositionX(false)), PositionY(i)));
+                }
 
                 // print text
-                FormattedText oneLine = createFormattedText(lines[i]);
-                dc.DrawText(oneLine, new Point(0 - offset.X + paddingLeft, i * oneLine.Height - offset.Y + paddingTop));
+                FormattedText oneLine = CreateFormattedText(lines[i]);
+                dc.DrawText(oneLine, new Point(PositionX(), PositionY(i)));
             }
-        }
 
-        private double alightRight(double size, double maxSize, double paddingLeft)
-        {
-            return paddingLeft + maxSize - size;
-        }
+            // border
+            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(extent.Width, BORDER_SIZE)));
+            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(BORDER_SIZE, extent.Height)));
 
-        private FormattedText createFormattedText(string text)
-        {
-            return new FormattedText(
-                text,
-                CultureInfo.CurrentUICulture,
-                FlowDirection.LeftToRight,
-                new Typeface("Consolas"),
-                13,
-                Brushes.Black
-            );
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            mouse = e;
-            InvalidateVisual();
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            base.OnMouseLeave(e);
-
-            mouse = null;
-            InvalidateVisual();
+            if (ShowLineNumbers)
+            { // border between linenumbers and textarea
+                dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(PositionX(false) + LineNumbersSize + LineNumbersPaddingRight / 2, 0.0), new Size(BORDER_SIZE, extent.Height)));
+            }
         }
     }
 }
