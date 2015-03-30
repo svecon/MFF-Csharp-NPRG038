@@ -3,11 +3,23 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using CoreLibrary.Exceptions;
+using CoreLibrary.Exceptions.NotFound;
+using CoreLibrary.FilesystemTree.Visitors;
+using CoreLibrary.Interfaces;
+using CoreLibrary.Processors;
+using CoreLibrary.Settings;
+using DiffIntegration;
+using DiffIntegration.DiffFilesystemTree;
+using DiffIntegration.Processors.Preprocessors;
+using DiffIntegration.Processors.Processors;
 
 namespace Sverge
 {
@@ -16,13 +28,35 @@ namespace Sverge
     /// </summary>
     public partial class App : Application
     {
-        private void App_OnStartup(object sender, StartupEventArgs e)
-        {
-            string[] args = Environment.GetCommandLineArgs();
+        public static bool ShowHelp = false;
 
+        private IProcessorLoader loader;
+
+        private MainWindow mainWindow;
+
+        const int ERROR_PROCESSOR_COLLISION = 9;
+        const int ERROR_SETTINGS_NOT_FOUND = 10;
+        const int ERROR_SETTINGS_UNKNOWN = 11;
+
+        /// <summary>
+        /// Return assembly version for current program
+        /// </summary>
+        /// <returns>Current assembly version</returns>
+        private static string GetVersion()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;
+        }
+
+        private void App_OnStartup(object sender, StartupEventArgs eventArgs)
+        {
+            #region DEBUG: Print arguments
+#if DEBUG
+            //string[] args = Environment.GetCommandLineArgs();
             using (TextWriter tw = File.CreateText("C:/Users/svecon/Downloads/git-arguments.txt"))
             {
-                foreach (var s in args)
+                foreach (string s in eventArgs.Args)
                 {
                     tw.WriteLine(s);
                 }
@@ -30,21 +64,74 @@ namespace Sverge
                 tw.WriteLine(">>>");
                 tw.WriteLine(Environment.CurrentDirectory);
             }
+#endif
+            #endregion
+
+            #region Load all available processors and their settings
+            try
+            {
+                loader = new DiffProcessorLoader();
+                // Load available processors and their settings
+                loader.LoadAll();
+            } catch (ProcessorPriorityColissionException e)
+            {
+                MessageBox.Show(
+                    string.Format(Sverge.Properties.Resources.App_OnStartup_ProcessorCollision, e.Message),
+                    Sverge.Properties.Resources.App_OnStartup_ErrorParsingSettings
+                );
+                Current.Shutdown(ERROR_PROCESSOR_COLLISION);
+                return;
+            }
+            #endregion
+
+            #region Parse arguments as settings
+
+            string[] args = eventArgs.Args;
+            try
+            {
+                // pass the arguments and parse them
+                var parser = new SettingsParser(loader.GetSettings());
+                args = parser.ParseSettings(args);
+            } catch (SettingsNotFoundException e)
+            {
+                MessageBox.Show(
+                    string.Format(Sverge.Properties.Resources.App_OnStartup_InvalidSettingsValue, e.Message),
+                    Sverge.Properties.Resources.App_OnStartup_ErrorParsingSettings
+                );
+                Current.Shutdown(ERROR_SETTINGS_NOT_FOUND);
+                return;
+            } catch (SettingsUnknownValue e)
+            {
+                MessageBox.Show(
+                    string.Format(Sverge.Properties.Resources.App_OnStartup_UnknownSettingsValue, e.Message),
+                    Sverge.Properties.Resources.App_OnStartup_ErrorParsingSettings
+                );
+                Current.Shutdown(ERROR_SETTINGS_UNKNOWN);
+                return;
+            }
+            #endregion
+
+            mainWindow = new MainWindow(loader);
+            mainWindow.Show();
+
+            if (args.Length > 0)
+            {
+                mainWindow.AddNewTab(args);
+            }
         }
 
         private void App_OnActivated(object sender, EventArgs e)
         {
-            
+
         }
-        
+
         private void App_OnDeactivated(object sender, EventArgs e)
         {
-            
+
         }
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            //((Sverge.MainWindow)MainWindow).Hello();
         }
     }
 }

@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Sverge.Properties
-{
-
-
+namespace Sverge.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,49 +22,95 @@ namespace Sverge.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Sverge.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during opening new diff.
+        /// </summary>
+        internal static string App_NewTab_ErrorArgumentsNumber {
+            get {
+                return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of arguments must be 2 or 3..
+        /// </summary>
+        internal static string App_NewTab_ErrorArgumentsNumberText {
+            get {
+                return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumberText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during parsing the settings.
+        /// </summary>
+        internal static string App_OnStartup_ErrorParsingSettings {
+            get {
+                return ResourceManager.GetString("App_OnStartup_ErrorParsingSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This argument option has not been found &apos;{0}&apos;.
+        /// </summary>
+        internal static string App_OnStartup_InvalidSettingsValue {
+            get {
+                return ResourceManager.GetString("App_OnStartup_InvalidSettingsValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processor &apos;{0}&apos; could not be loaded because of a priority collision..
+        /// </summary>
+        internal static string App_OnStartup_ProcessorCollision {
+            get {
+                return ResourceManager.GetString("App_OnStartup_ProcessorCollision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This value for given option is invalid &apos;{0}&apos;.
+        /// </summary>
+        internal static string App_OnStartup_UnknownSettingsValue {
+            get {
+                return ResourceManager.GetString("App_OnStartup_UnknownSettingsValue", resourceCulture);
             }
         }
     }

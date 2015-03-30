@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Custom="http://schemas.microsoft.com/winfx/2006/xaml/presentation/ribbon"
         xmlns:local="clr-namespace:Sverge"
+        xmlns:diffWindow="clr-namespace:Sverge.DiffWindow"
         x:Class="Sverge.MainWindow"
         Title="MainWindow">
     <Grid>
@@ -16,19 +17,24 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TabControl TabStripPlacement="Top" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" BorderThickness="0,1,0,0">
-            <TabItem>
+        <TabControl 
+            x:Name="Tabs"
+            Grid.Row="1"
+            TabStripPlacement="Top"
+            VerticalAlignment="Top"
+            BorderThickness="0,1,0,0">
+            <!--<TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <!--<Image Source="/WpfTutorialSamples;component/Images/bullet_blue.png" />-->
+                        --><!--<Image Source="/WpfTutorialSamples;component/Images/bullet_blue.png" />--><!--
                         <TextBlock Text="Nejaky obrazek pridat!" Foreground="Blue" />
                     </StackPanel>
                 </TabItem.Header>
-                <local:Diff2Way></local:Diff2Way>
+                <diffWindow:TextDiff2Way></diffWindow:TextDiff2Way>
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid Background="#FFE5E5E5"/>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
 
         

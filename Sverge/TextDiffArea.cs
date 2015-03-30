@@ -2,25 +2,71 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
+using DiffAlgorithm.TwoWay;
+using DiffIntegration.DiffFilesystemTree;
 
-namespace Sverge
+namespace Sverge.Control
 {
     class TextDiffArea : FrameworkElement, IScrollInfo
     {
-        private FileInfo info;
-        private string[] lines;
+        private readonly DiffFileNode node;
+        private readonly FileInfo info;
+
+        private List<string> lines;
         private int longestLine;
 
+        private bool drawRightBorder;
+        private bool drawBottomBorder;
+
         private bool ShowLineNumbers = true;
+
+        public enum TargetFileEnum
+        {
+            Local, Remote
+        }
+
+        private TargetFileEnum target;
+
+        public TextDiffArea(DiffFileNode fileNode, TargetFileEnum targetFile)
+        {
+            node = fileNode;
+            target = targetFile;
+            info = (FileInfo)(target == TargetFileEnum.Local ? fileNode.InfoLocal : fileNode.InfoRemote);
+
+            sample = CreateFormattedText("M");
+        }
+
+        private void PreloadFileToMemory()
+        {
+            if (node.Diff == null)
+            {
+                lines = new List<string>();
+            } else
+            {
+                lines = (target == TargetFileEnum.Local)
+                    ? new List<string>(node.Diff.FilesLineCount.Local)
+                    : new List<string>(node.Diff.FilesLineCount.Remote);
+            }
+
+            using (StreamReader reader = info.OpenText())
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+
+                    if (line.Length > longestLine)
+                    {
+                        longestLine = line.Length;
+                    }
+                }
+            }
+        }
 
         #region Computing paddings and offsets
 
@@ -37,30 +83,7 @@ namespace Sverge
         double PaddingLeft { get { return BORDER_SIZE + sample.Width / 1; } }
         double LineNumbersPaddingRight { get { return sample.Width * 2; } }
 
-        double LineNumbersSize { get { return lines.Length.ToString().Length * sample.Width; } }
-
-        public TextDiffArea()
-        {
-            info = new FileInfo("C:/csharp/Merge/Sverge/TextDiffArea.cs");
-
-            sample = CreateFormattedText("M");
-
-            var linesList = new List<string>();
-            using (StreamReader reader = info.OpenText())
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    linesList.Add(line);
-
-                    if (line.Length > longestLine)
-                    {
-                        longestLine = line.Length;
-                    }
-                }
-            }
-            lines = linesList.ToArray();
-        }
+        double LineNumbersSize { get { return lines.Count.ToString().Length * sample.Width; } }
 
         double PositionY(int lineNumber)
         {
@@ -242,7 +265,7 @@ namespace Sverge
         private Size CalculateSize()
         {
             double width = sample.Width * longestLine + PaddingLeft + PaddingRight;
-            double height = lines.Length * LineHeight + PaddingTop + PaddingBottom;
+            double height = lines.Count * LineHeight + PaddingTop + PaddingBottom;
 
             if (ShowLineNumbers)
                 width += LineNumbersSize + LineNumbersPaddingRight;
@@ -252,7 +275,25 @@ namespace Sverge
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (lines == null)
+            {
+                PreloadFileToMemory();
+            }
+
             Size newExtent = CalculateSize();
+
+            if (newExtent.Height < availableSize.Height)
+            {
+                drawRightBorder = true;
+                newExtent.Height = availableSize.Height;
+            } else
+            { drawRightBorder = false; }
+            if (newExtent.Width < availableSize.Width)
+            {
+                drawBottomBorder = true;
+                newExtent.Width = availableSize.Width;
+            } else
+            { drawBottomBorder = false; }
 
             if (extent != newExtent)
             {
@@ -307,7 +348,7 @@ namespace Sverge
             int endsOnLine = startsOnLine + (int)(viewport.Height / LineHeight) + 1;
 
             if (startsOnLine < 0) { startsOnLine = 0; }
-            if (endsOnLine > lines.Length) { endsOnLine = lines.Length; }
+            if (endsOnLine > lines.Count) { endsOnLine = lines.Count; }
 
             // background
             dc.DrawRectangle(Brushes.White, null, new Rect(new Point(BORDER_SIZE, BORDER_SIZE), new Size(extent.Width, extent.Height)));
@@ -333,14 +374,19 @@ namespace Sverge
                 dc.DrawText(oneLine, new Point(PositionX(), PositionY(i)));
             }
 
-            // border
-            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(extent.Width, BORDER_SIZE)));
-            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(BORDER_SIZE, extent.Height)));
+            #region Borders
+            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(extent.Width, BORDER_SIZE))); // top
+            dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, 0.0), new Size(BORDER_SIZE, extent.Height))); // left
+            if (drawBottomBorder)
+                dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(0.0, ActualHeight - BORDER_SIZE), new Size(extent.Width, BORDER_SIZE))); // bottom
+            if (drawRightBorder)
+                dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(ActualWidth - BORDER_SIZE, 0.0), new Size(BORDER_SIZE, extent.Height))); // right
 
             if (ShowLineNumbers)
             { // border between linenumbers and textarea
-                dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(PositionX(false) + LineNumbersSize + LineNumbersPaddingRight / 2, 0.0), new Size(BORDER_SIZE, extent.Height)));
+                dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(Math.Floor(PositionX(false) + LineNumbersSize + LineNumbersPaddingRight / 2), 0.0), new Size(BORDER_SIZE, extent.Height)));
             }
+            #endregion
         }
     }
 }
