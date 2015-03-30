@@ -6,6 +6,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Settings.Attributes;
+using DiffAlgorithm;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 

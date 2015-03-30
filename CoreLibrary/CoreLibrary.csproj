@@ -54,8 +54,8 @@
     <Compile Include="FilesystemTree\AbstractNode.cs" />
     <Compile Include="FilesystemTree\DirNode.cs" />
     <Compile Include="FilesystemTree\FileNode.cs" />
-    <Compile Include="FilesystemTree\Visitors\ExecutionVisitorInSerial.cs" />
-    <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
+    <Compile Include="FilesystemTree\Visitors\ExecutionVisitorIn.cs" />
+    <Compile Include="FilesystemTree\Visitors\ParallelExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
     <Compile Include="FilesystemTree\FilesystemTree.cs" />
     <Compile Include="FilesystemTree\Crawler.cs" />
@@ -86,7 +86,6 @@
     <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />
     <Compile Include="Processors\ProcessorPrinter.cs" />
     <Compile Include="Processors\Processors\ProcessorAbstract.cs" />
-    <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorLoader.cs" />
     <Compile Include="Settings\Types\RegexSettings.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RollingChecksums;
 using System.Linq;
+using DiffIntegration.RollingChecksums;
 
 namespace RollingChecksumTests
 {

@@ -45,6 +45,7 @@
     <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />
     <Compile Include="DiffOutput\DiffOutputAbstract.cs" />
     <Compile Include="DiffOutput\IDiffOutput.cs" />
+    <Compile Include="DiffProcessorLoader.cs" />
     <Compile Include="Processors\Postprocessors\MergeThreeWayProcessor.cs" />
     <Compile Include="DiffOutput\DiffChunk.cs" />
     <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
@@ -63,7 +64,11 @@
     <Compile Include="Processors\Processors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\Processors\ChecksumDiffProcessor.cs" />
     <Compile Include="Processors\Processors\SizeTimeDiffProcessor.cs" />
+    <Compile Include="Processors\ThreeWayDiffHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RollingChecksums\Adler32.cs" />
+    <Compile Include="RollingChecksums\IRollingChecksum.cs" />
+    <Compile Include="RollingChecksums\RabinKarp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
@@ -73,10 +78,6 @@
     <ProjectReference Include="..\DiffAlgorithm\DiffAlgorithm.csproj">
       <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
       <Name>DiffAlgorithm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RollingChecksums\RollingChecksums.csproj">
-      <Project>{C78D56E3-D78C-468E-A520-CE9B703CAB4A}</Project>
-      <Name>RollingChecksums</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

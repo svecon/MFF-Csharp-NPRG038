@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Interfaces;
 using System.Threading;
@@ -9,107 +10,77 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// <summary>
     /// This visitor executes all processors in a given order on a FilesystemTree.
     /// 
-    /// All files and folders are processed in parallel. 
+    /// All files and folders are processed in series. 
     /// But one particular file is processed sequentially with all the processors one by one.
     /// </summary>
     public class ExecutionVisitor : IExecutionVisitor
     {
         readonly IProcessorLoader loader;
 
-        readonly List<Task> tasks = new List<Task>();
-
-        readonly CancellationTokenSource tokenSource;
+        private bool isCancelled = false;
 
         /// <summary>
-        /// Constructor for ExecutionVisitor.
+        /// Constructor for ExecutionVisitorInSerial.
         /// </summary>
         /// <param name="loader">Loader for all Processors.</param>
         public ExecutionVisitor(IProcessorLoader loader)
         {
             this.loader = loader;
-            tokenSource = new CancellationTokenSource();
         }
 
         public void Visit(IFilesystemTreeDirNode node)
         {
-            // create a completed task
-            Task task = Task.FromResult(false);
+            try
+            {
+                // run processors unless this Visitor isCancelled
+                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+            } catch (Exception e)
+            {
+                HandleError(node, e);
+            }
 
-            foreach (IPreProcessor processor in loader.GetPreProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IProcessor processor in loader.GetProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IPostProcessor processor in loader.GetPostProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-
-            // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
-            // add task with processors
-            tasks.Add(task);
-
-            foreach (IFilesystemTreeFileNode file in node.Files)
+            foreach (IFilesystemTreeFileNode file in node.Files.Where(processor => !isCancelled))
                 file.Accept(this);
 
-            foreach (IFilesystemTreeDirNode dir in node.Directories)
+            foreach (IFilesystemTreeDirNode dir in node.Directories.Where(processor => !isCancelled))
                 dir.Accept(this);
         }
 
         public void Visit(IFilesystemTreeFileNode node)
         {
-            // create a completed task
-            Task task = Task.FromResult(false);
-
-            foreach (IPreProcessor processor in loader.GetPreProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IProcessor processor in loader.GetProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IPostProcessor processor in loader.GetPostProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-
-            // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
-            // add task with processors
-            tasks.Add(task);
-        }
-
-        private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
-        {
-            node.Status = Enums.NodeStatusEnum.HasError;
-            node.Exception = task.Exception;
-        }
-
-        /// <summary>
-        /// Wait for all processing to finish.
-        /// </summary>
-        public void Wait()
-        {
-            if (tokenSource.IsCancellationRequested)
-                return;
-
             try
             {
-                Task.WaitAll(tasks.ToArray());
-            } catch (AggregateException ae)
+                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
+                    processor.Process(node);
+            } catch (Exception e)
             {
-                ae.Handle(x =>
-                {
-                    if (x is TaskCanceledException)
-                        return true;
-
-                    System.Diagnostics.Debug.WriteLine(x);
-                    return false;
-                });
+                HandleError(node, e);
             }
         }
 
-        /// <summary>
-        /// Cancel all processing.
-        /// 
-        /// All nodes end up in error state!
-        /// </summary>
+        private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
+        {
+            node.Status = Enums.NodeStatusEnum.HasError;
+            node.Exception = e;
+        }
+
+        public void Wait()
+        {
+            // everything is in serial, no need to wait
+        }
+
         public void Cancel()
         {
-            tokenSource.Cancel();
+            isCancelled = true;
         }
     }
 }

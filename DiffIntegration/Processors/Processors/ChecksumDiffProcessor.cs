@@ -9,7 +9,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Settings.Attributes;
-using RollingChecksums;
+using DiffIntegration.RollingChecksums;
 
 namespace DiffIntegration.Processors.Processors
 {

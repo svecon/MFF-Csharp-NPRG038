@@ -45,20 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ThreeWay\Diff3.cs" />
-    <Compile Include="ThreeWay\Diff3ItemActionEnum.cs" />
     <Compile Include="TwoWay\Diff.cs" />
     <Compile Include="ThreeWay\Diff3Algorithm.cs" />
     <Compile Include="ThreeWay\Diff3Item.cs" />
     <Compile Include="TwoWay\DiffAlgorithm.cs" />
-    <Compile Include="TwoWay\DiffItemActionEnum.cs" />
-    <Compile Include="TwoWay\SmsPoint.cs" />
-    <Compile Include="TwoWay\DiffHelper.cs" />
-    <Compile Include="TwoWay\DiffData.cs" />
+    <Compile Include="DiffHelper.cs" />
     <Compile Include="TwoWay\DiffItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">

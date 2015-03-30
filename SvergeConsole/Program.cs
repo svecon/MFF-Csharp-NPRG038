@@ -161,7 +161,7 @@ namespace SvergeConsole
 
             #region Run Processors
             // run preprocessors and calculate diffs in parallel 
-            IExecutionVisitor ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
+            IExecutionVisitor ex = new ParallelExecutionVisitor(_loader.SplitLoaderUsing(
                   typeof(ExtensionFilterProcessor)
                 , typeof(RegexFilterProcessor)
                 , typeof(CsharpSourcesFilterProcessor)
@@ -177,7 +177,7 @@ namespace SvergeConsole
             ex.Wait();
 
             // run interactive diffing
-            ex = new ExecutionVisitorInSerial(_loader.SplitLoaderUsing(
+            ex = new ExecutionVisitorIn(_loader.SplitLoaderUsing(
                   typeof(InteractiveTwoWayDiffProcessor)
                 , typeof(InteractiveThreeWayDiffProcessor)
             ));
@@ -185,7 +185,7 @@ namespace SvergeConsole
             ex.Wait();
 
             // run merging and syncing in parallel
-            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
+            ex = new ParallelExecutionVisitor(_loader.SplitLoaderUsing(
                   typeof(MergeTwoWayProcessor)
                 , typeof(MergeThreeWayProcessor)
                 , typeof(SyncTwoWayProcessor)
@@ -194,7 +194,7 @@ namespace SvergeConsole
             ex.Wait();
 
 #if DEBUG // run this processor just for fun
-            ex = new ExecutionVisitorInSerial(_loader.SplitLoaderUsing(
+            ex = new ExecutionVisitorIn(_loader.SplitLoaderUsing(
                 typeof(OutputSingleFileProcessor)
             ));
             diffTree.Accept(ex);
@@ -209,7 +209,7 @@ namespace SvergeConsole
         /// <summary>
         /// Return assembly version for current program
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Current assembly version</returns>
         private static string GetVersion()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

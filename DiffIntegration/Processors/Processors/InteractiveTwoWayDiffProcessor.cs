@@ -30,9 +30,9 @@ namespace DiffIntegration.Processors.Processors
         public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "2interactive-default")]
-        public DiffItemActionEnum DefaultAction = DiffItemActionEnum.ApplyRemote;
+        public DiffItem.ActionEnum DefaultAction = DiffItem.ActionEnum.ApplyRemote;
 
-        private DiffItemActionEnum defaultFileAction;
+        private DiffItem.ActionEnum defaultFileAction;
 
         private bool applyToFile;
 
@@ -119,16 +119,16 @@ namespace DiffIntegration.Processors.Processors
                 return;
             }
 
-            DiffItemActionEnum chosenAction = defaultFileAction;
+            DiffItem.ActionEnum chosenAction = defaultFileAction;
             switch (input.Substring(0, 1).ToUpperInvariant())
             {
                 case "R":
-                    diff.Action = chosenAction = DiffItemActionEnum.RevertToLocal;
+                    diff.Action = chosenAction = DiffItem.ActionEnum.RevertToLocal;
                     input = input.Substring(0, 1);
                     break;
 
                 case "K":
-                    diff.Action = chosenAction = DiffItemActionEnum.ApplyRemote;
+                    diff.Action = chosenAction = DiffItem.ActionEnum.ApplyRemote;
                     input = input.Substring(0, 1);
                     break;
             }

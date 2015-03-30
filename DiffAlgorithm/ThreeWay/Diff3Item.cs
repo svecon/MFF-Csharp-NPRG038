@@ -44,9 +44,17 @@ namespace DiffAlgorithm.ThreeWay
         public DifferencesStatusEnum Differeces;
 
         /// <summary>
+        /// Which version of diff item should be kept and used?
+        /// </summary>
+        public enum ActionEnum
+        {
+            Default, RevertToBase, ApplyLocal, ApplyRemote
+        }
+
+        /// <summary>
         /// Default action to do with this diff.
         /// </summary>
-        public Diff3ItemActionEnum Action;
+        public ActionEnum Action;
 
         public Diff3Item(int baseLineStart, int localLineStart, int remoteLineStart, int baseAffectedLines,
             int localAffectedLines, int remoteAffectedLines, DifferencesStatusEnum diff)

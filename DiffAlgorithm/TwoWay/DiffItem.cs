@@ -28,9 +28,17 @@ namespace DiffAlgorithm.TwoWay
         public readonly int InsertedInNew;
 
         /// <summary>
+        /// Which version of diff item should be kept and used?
+        /// </summary>
+        public enum ActionEnum
+        {
+            Default, RevertToLocal, ApplyRemote
+        }
+
+        /// <summary>
         /// Default action to do with this diff.
         /// </summary>
-        public DiffItemActionEnum Action;
+        public ActionEnum Action;
 
         public DiffItem(int oldLineStart, int newLineStart, int deletedInOld, int insertedInNew)
         {

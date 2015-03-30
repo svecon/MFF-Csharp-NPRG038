@@ -131,7 +131,7 @@ namespace DiffIntegration.Processors.Postprocessors
                 foreach (Diff3Item diff in dnode.Diff3.Items)
                 {
                     // change default action depending on processor settings
-                    if (diff.Action == Diff3ItemActionEnum.Default)
+                    if (diff.Action == Diff3Item.ActionEnum.Default)
                     {
                         switch (DefaultAction)
                         {
@@ -139,13 +139,13 @@ namespace DiffIntegration.Processors.Postprocessors
                                 // keep default
                                 break;
                             case DefaultActionEnum.RevertToBase:
-                                diff.Action = Diff3ItemActionEnum.RevertToBase;
+                                diff.Action = Diff3Item.ActionEnum.RevertToBase;
                                 break;
                             case DefaultActionEnum.ApplyLocal:
-                                diff.Action = Diff3ItemActionEnum.ApplyLocal;
+                                diff.Action = Diff3Item.ActionEnum.ApplyLocal;
                                 break;
                             case DefaultActionEnum.ApplyRemote:
-                                diff.Action = Diff3ItemActionEnum.ApplyRemote;
+                                diff.Action = Diff3Item.ActionEnum.ApplyRemote;
                                 break;
                         }
                     }
@@ -156,13 +156,13 @@ namespace DiffIntegration.Processors.Postprocessors
                     for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
                     // if there is an action asociated:
-                    if (diff.Action != Diff3ItemActionEnum.Default)
+                    if (diff.Action != Diff3Item.ActionEnum.Default)
                     {
                         for (int p = 0; p < diff.LocalAffectedLines; p++)
                         {
                             m++;
 
-                            if (diff.Action == Diff3ItemActionEnum.ApplyLocal)
+                            if (diff.Action == Diff3Item.ActionEnum.ApplyLocal)
                                 writer.WriteLine(localStream.ReadLine());
                             else
                                 localStream.ReadLine();
@@ -171,7 +171,7 @@ namespace DiffIntegration.Processors.Postprocessors
                         {
                             o++;
 
-                            if (diff.Action == Diff3ItemActionEnum.RevertToBase)
+                            if (diff.Action == Diff3Item.ActionEnum.RevertToBase)
                                 writer.WriteLine(baseStream.ReadLine());
                             else
                                 baseStream.ReadLine();
@@ -181,7 +181,7 @@ namespace DiffIntegration.Processors.Postprocessors
                         {
                             n++;
 
-                            if (diff.Action == Diff3ItemActionEnum.ApplyRemote)
+                            if (diff.Action == Diff3Item.ActionEnum.ApplyRemote)
                                 writer.WriteLine(remoteStream.ReadLine());
                             else
                                 remoteStream.ReadLine();
@@ -210,7 +210,7 @@ namespace DiffIntegration.Processors.Postprocessors
                             break;
                         case DifferencesStatusEnum.AllDifferent:
 
-                            if (diff.Action == Diff3ItemActionEnum.Default)
+                            if (diff.Action == Diff3Item.ActionEnum.Default)
                             {
                                 node.Status = NodeStatusEnum.HasConflicts;
                                 writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
@@ -219,8 +219,8 @@ namespace DiffIntegration.Processors.Postprocessors
 
                             for (int p = 0; p < diff.LocalAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3ItemActionEnum.ApplyLocal
-                                    || diff.Action == Diff3ItemActionEnum.Default)
+                                if (diff.Action == Diff3Item.ActionEnum.ApplyLocal
+                                    || diff.Action == Diff3Item.ActionEnum.Default)
                                 {
                                     writer.WriteLine(localStream.ReadLine());
                                 } else
@@ -230,14 +230,14 @@ namespace DiffIntegration.Processors.Postprocessors
                                 m++;
                             }
 
-                            if (diff.Action == Diff3ItemActionEnum.Default)
+                            if (diff.Action == Diff3Item.ActionEnum.Default)
                                 writer.WriteLine("||||||| " + dnode.InfoBase.FullName);
 
 
                             for (int p = 0; p < diff.BaseAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3ItemActionEnum.RevertToBase
-                                    || diff.Action == Diff3ItemActionEnum.Default)
+                                if (diff.Action == Diff3Item.ActionEnum.RevertToBase
+                                    || diff.Action == Diff3Item.ActionEnum.Default)
                                 {
                                     writer.WriteLine(baseStream.ReadLine());
                                 } else
@@ -247,14 +247,14 @@ namespace DiffIntegration.Processors.Postprocessors
                                 o++;
                             }
 
-                            if (diff.Action == Diff3ItemActionEnum.Default)
+                            if (diff.Action == Diff3Item.ActionEnum.Default)
                                 writer.WriteLine("=======");
 
 
                             for (int p = 0; p < diff.RemoteAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3ItemActionEnum.ApplyRemote
-                                    || diff.Action == Diff3ItemActionEnum.Default)
+                                if (diff.Action == Diff3Item.ActionEnum.ApplyRemote
+                                    || diff.Action == Diff3Item.ActionEnum.Default)
                                 {
                                     writer.WriteLine(remoteStream.ReadLine());
                                 } else
@@ -265,7 +265,7 @@ namespace DiffIntegration.Processors.Postprocessors
                             }
 
 
-                            if (diff.Action == Diff3ItemActionEnum.Default)
+                            if (diff.Action == Diff3Item.ActionEnum.Default)
                                 writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
 
                             break;

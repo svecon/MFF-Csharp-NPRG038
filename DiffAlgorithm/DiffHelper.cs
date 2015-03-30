@@ -3,10 +3,11 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using DiffAlgorithm.ThreeWay;
+using DiffAlgorithm.TwoWay;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DiffAlgorithmTests")]
 
-namespace DiffAlgorithm.TwoWay
+namespace DiffAlgorithm
 {
     /// <summary>
     /// DiffHelper class makes it easier to diff whole files.
@@ -117,12 +118,12 @@ namespace DiffAlgorithm.TwoWay
         {
             hashedLines = new Dictionary<string, int>(oldText.Length + newText.Length);
 
-            var oldData = new DiffData(HashStringLines(oldText));
-            var newData = new DiffData(HashStringLines(newText));
+            var oldData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(oldText));
+            var newData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(newText));
 
             hashedLines.Clear();
 
-            var da = new DiffAlgorithm(oldData, newData);
+            var da = new TwoWay.DiffAlgorithm(oldData, newData);
             return da.RunAndCreateDiffs();
         }
 
@@ -134,10 +135,10 @@ namespace DiffAlgorithm.TwoWay
         /// <returns>DiffItem[] showing the changes between the two arrays.</returns>
         public DiffItem[] DiffInt(int[] oldArray, int[] newArray)
         {
-            var dataA = new DiffData(oldArray);
-            var dataB = new DiffData(newArray);
+            var dataA = new TwoWay.DiffAlgorithm.DiffData(oldArray);
+            var dataB = new TwoWay.DiffAlgorithm.DiffData(newArray);
 
-            var da = new DiffAlgorithm(dataA, dataB);
+            var da = new TwoWay.DiffAlgorithm(dataA, dataB);
             return da.RunAndCreateDiffs();
         }
 
@@ -152,13 +153,13 @@ namespace DiffAlgorithm.TwoWay
         {
             hashedLines = new Dictionary<string, int>();
 
-            var oldData = new DiffData(HashStringLines(oldText));
-            var newData = new DiffData(HashStringLines(newText));
-            var hisData = new DiffData(HashStringLines(hisText));
+            var oldData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(oldText));
+            var newData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(newText));
+            var hisData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(hisText));
             hashedLines.Clear();
 
-            var da = new DiffAlgorithm(oldData, newData);
-            var da2 = new DiffAlgorithm(oldData, hisData);
+            var da = new TwoWay.DiffAlgorithm(oldData, newData);
+            var da2 = new TwoWay.DiffAlgorithm(oldData, hisData);
 
             var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
 
@@ -180,14 +181,14 @@ namespace DiffAlgorithm.TwoWay
             var oldFileReader = new SmartLineReader(oldFile);
             var newFileReader = new SmartLineReader(newFile);
 
-            var oldData = new DiffData(HashStringLines(oldFileReader));
-            var newData = new DiffData(HashStringLines(newFileReader));
+            var oldData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(oldFileReader));
+            var newData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(newFileReader));
             hashedLines.Clear();
 
             diff.SetStatistics(oldData.Length, newData.Length,
                 oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine());
             
-            var da = new DiffAlgorithm(oldData, newData);
+            var da = new TwoWay.DiffAlgorithm(oldData, newData);
             diff.SetDiffItems(da.RunAndCreateDiffs());
 
             return diff;
@@ -210,16 +211,16 @@ namespace DiffAlgorithm.TwoWay
             var newFileReader = new SmartLineReader(newFile);
             var hisFileReader = new SmartLineReader(hisFile);
 
-            var oldData = new DiffData(HashStringLines(oldFileReader));
-            var newData = new DiffData(HashStringLines(newFileReader));
-            var hisData = new DiffData(HashStringLines(hisFileReader));
+            var oldData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(oldFileReader));
+            var newData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(newFileReader));
+            var hisData = new TwoWay.DiffAlgorithm.DiffData(HashStringLines(hisFileReader));
             hashedLines.Clear();
 
             diff.SetStatistics(oldData.Length, newData.Length, hisData.Length,
                 oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine(), hisFileReader.DoesFileEndWithNewLine());
 
-            var da = new DiffAlgorithm(oldData, newData);
-            var da2 = new DiffAlgorithm(oldData, hisData);
+            var da = new TwoWay.DiffAlgorithm(oldData, newData);
+            var da2 = new TwoWay.DiffAlgorithm(oldData, hisData);
 
             var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
             diff.SetDiffItems(d3A.MergeIntoDiff3Chunks());
