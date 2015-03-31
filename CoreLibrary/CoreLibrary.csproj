@@ -54,7 +54,7 @@
     <Compile Include="FilesystemTree\AbstractNode.cs" />
     <Compile Include="FilesystemTree\DirNode.cs" />
     <Compile Include="FilesystemTree\FileNode.cs" />
-    <Compile Include="FilesystemTree\Visitors\ExecutionVisitorIn.cs" />
+    <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\ParallelExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
     <Compile Include="FilesystemTree\FilesystemTree.cs" />

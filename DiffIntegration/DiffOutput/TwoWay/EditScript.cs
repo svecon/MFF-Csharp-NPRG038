@@ -29,8 +29,8 @@ namespace DiffIntegration.DiffOutput.TwoWay
                     yield return CreateHeader(diffItem);
 
                     // skip same
-                    for (; n < diffItem.OldLineStart; n++) { localStream.ReadLine(); }
-                    for (; m < diffItem.NewLineStart; m++) { remoteStream.ReadLine(); }
+                    for (; n < diffItem.LocalLineStart; n++) { localStream.ReadLine(); }
+                    for (; m < diffItem.RemoteLineStart; m++) { remoteStream.ReadLine(); }
 
                     // deleted
                     for (int p = 0; p < diffItem.DeletedInOld; p++) { yield return "< " + localStream.ReadLine(); n++; }
@@ -92,19 +92,19 @@ namespace DiffIntegration.DiffOutput.TwoWay
             switch (FindDiffType(diffItem))
             {
                 case DiffType.Append:
-                    header += CreateRange(diffItem.OldLineStart, 1)
+                    header += CreateRange(diffItem.LocalLineStart, 1)
                         + "a"
-                        + CreateRange(diffItem.NewLineStart + 1, diffItem.InsertedInNew);
+                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.InsertedInNew);
                     break;
                 case DiffType.Delete:
-                    header += CreateRange(diffItem.OldLineStart + 1, diffItem.DeletedInOld)
+                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.DeletedInOld)
                         + "d"
-                        + CreateRange(diffItem.NewLineStart, 1);
+                        + CreateRange(diffItem.RemoteLineStart, 1);
                     break;
                 case DiffType.Change:
-                    header += CreateRange(diffItem.OldLineStart + 1, diffItem.DeletedInOld)
+                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.DeletedInOld)
                         + "c"
-                        + CreateRange(diffItem.NewLineStart + 1, diffItem.InsertedInNew);
+                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.InsertedInNew);
                     break;
             }
 

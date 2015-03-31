@@ -59,7 +59,7 @@ namespace DiffIntegration.DiffOutput.TwoWay
                     do
                     {
                         // context between diffs
-                        while (chunk.CurrentDiff().OldLineStart > n)
+                        while (chunk.CurrentDiff().LocalLineStart > n)
                         {
                             yield return " " + localStream.ReadLine();
                             remoteStream.ReadLine();
@@ -86,7 +86,7 @@ namespace DiffIntegration.DiffOutput.TwoWay
                             yield return @"\ No newline at end of file";
 
                         // context between diffs
-                        while (chunk.HasNextDiff() && chunk.NextDiff().OldLineStart > n)
+                        while (chunk.HasNextDiff() && chunk.NextDiff().LocalLineStart > n)
                         {
                             yield return " " + localStream.ReadLine();
                             remoteStream.ReadLine();

@@ -124,8 +124,8 @@ namespace DiffIntegration.Processors.Postprocessors
                     }
 
                     // same
-                    for (; n < diff.OldLineStart; n++) { writer.WriteLine(localStream.ReadLine()); }
-                    for (; m < diff.NewLineStart; m++) { remoteStream.ReadLine(); }
+                    for (; n < diff.LocalLineStart; n++) { writer.WriteLine(localStream.ReadLine()); }
+                    for (; m < diff.RemoteLineStart; m++) { remoteStream.ReadLine(); }
 
 
                     if (diff.Action == DiffItem.ActionEnum.Default)

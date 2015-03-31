@@ -10,12 +10,12 @@ namespace DiffAlgorithm.TwoWay
         /// <summary>
         /// Line number of old file where change starts.
         /// </summary>
-        public readonly int OldLineStart;
+        public readonly int LocalLineStart;
 
         /// <summary>
         /// Line number of new file where change starts.
         /// </summary>
-        public readonly int NewLineStart;
+        public readonly int RemoteLineStart;
 
         /// <summary>
         /// Number of lines deleted in the old file.
@@ -40,10 +40,10 @@ namespace DiffAlgorithm.TwoWay
         /// </summary>
         public ActionEnum Action;
 
-        public DiffItem(int oldLineStart, int newLineStart, int deletedInOld, int insertedInNew)
+        public DiffItem(int localLineStart, int remoteLineStart, int deletedInOld, int insertedInNew)
         {
-            OldLineStart = oldLineStart;
-            NewLineStart = newLineStart;
+            LocalLineStart = localLineStart;
+            RemoteLineStart = remoteLineStart;
             DeletedInOld = deletedInOld;
             InsertedInNew = insertedInNew;
         }
@@ -55,9 +55,9 @@ namespace DiffAlgorithm.TwoWay
                 .Append(".")
                 .Append(InsertedInNew.ToString())
                 .Append(".")
-                .Append(OldLineStart.ToString())
+                .Append(LocalLineStart.ToString())
                 .Append(".")
-                .Append(NewLineStart.ToString())
+                .Append(RemoteLineStart.ToString())
                 .Append("*")
                 ;
 

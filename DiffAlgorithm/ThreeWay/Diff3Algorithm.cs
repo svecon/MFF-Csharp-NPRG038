@@ -114,7 +114,7 @@ namespace DiffAlgorithm.ThreeWay
                 if (diff3Items.Any() &&
                     (old = diff3Items.Last()).BaseLineStart
                                         + old.BaseAffectedLines
-                    >= (lowerDiff = FindLowerDiff(out wasHis)).OldLineStart)
+                    >= (lowerDiff = FindLowerDiff(out wasHis)).LocalLineStart)
                 // are they overlapping?
                 {
                     // remove last diff item -- alias "old"
@@ -164,7 +164,7 @@ namespace DiffAlgorithm.ThreeWay
                 AddNewDiff3(CreateFromNew());
                 newIterator++;
 
-            } else if (CurrentNew.OldLineStart == CurrentHis.OldLineStart)
+            } else if (CurrentNew.LocalLineStart == CurrentHis.LocalLineStart)
             // starts on the same line
             {
                 if (CurrentNew.DeletedInOld == CurrentHis.DeletedInOld &&
@@ -175,7 +175,7 @@ namespace DiffAlgorithm.ThreeWay
                     bool areSame = true;
                     for (int i = 0; i < CurrentNew.InsertedInNew; i++)
                     {
-                        if (localFile[CurrentNew.NewLineStart + i] == remoteFile[CurrentHis.NewLineStart + i])
+                        if (localFile[CurrentNew.RemoteLineStart + i] == remoteFile[CurrentHis.RemoteLineStart + i])
                             continue;
 
                         areSame = false;
@@ -199,12 +199,12 @@ namespace DiffAlgorithm.ThreeWay
             {
                 AddNewDiff3(CreateAllDifferent());
                 newIterator++; hisIterator++;
-            } else if (CurrentNew.OldLineStart < CurrentHis.OldLineStart)
+            } else if (CurrentNew.LocalLineStart < CurrentHis.LocalLineStart)
             // take CurrentNew as it starts lower 
             {
                 AddNewDiff3(CreateFromNew());
                 newIterator++;
-            } else if (CurrentNew.OldLineStart > CurrentHis.OldLineStart)
+            } else if (CurrentNew.LocalLineStart > CurrentHis.LocalLineStart)
             // take CurrentHis as it starts lower
             {
                 AddNewDiff3(CreateFromHis());
@@ -236,7 +236,7 @@ namespace DiffAlgorithm.ThreeWay
                 return CurrentHis;
             }
 
-            if (CurrentNew.OldLineStart < CurrentHis.OldLineStart)
+            if (CurrentNew.LocalLineStart < CurrentHis.LocalLineStart)
                 return CurrentNew;
 
             wasHis = true;
@@ -279,8 +279,8 @@ namespace DiffAlgorithm.ThreeWay
         /// <returns>Yes if they are ovelapping.</returns>
         bool AreOverlapping(DiffItem bottom, DiffItem top)
         {
-            return (bottom.OldLineStart < top.OldLineStart
-                    && bottom.OldLineStart + bottom.DeletedInOld >= top.OldLineStart);
+            return (bottom.LocalLineStart < top.LocalLineStart
+                    && bottom.LocalLineStart + bottom.DeletedInOld >= top.LocalLineStart);
         }
 
         /// <summary>
@@ -290,9 +290,9 @@ namespace DiffAlgorithm.ThreeWay
         private Diff3Item CreateFromNew()
         {
             return new Diff3Item(
-                CurrentNew.OldLineStart,
-                CurrentNew.NewLineStart,
-                CurrentNew.OldLineStart + deltaToHis,
+                CurrentNew.LocalLineStart,
+                CurrentNew.RemoteLineStart,
+                CurrentNew.LocalLineStart + deltaToHis,
                 CurrentNew.DeletedInOld,
                 CurrentNew.InsertedInNew,
                 CurrentNew.DeletedInOld,
@@ -307,9 +307,9 @@ namespace DiffAlgorithm.ThreeWay
         private Diff3Item CreateFromHis()
         {
             return new Diff3Item(
-                CurrentHis.OldLineStart,
-                CurrentHis.OldLineStart + deltaToNew,
-                CurrentHis.NewLineStart,
+                CurrentHis.LocalLineStart,
+                CurrentHis.LocalLineStart + deltaToNew,
+                CurrentHis.RemoteLineStart,
                 CurrentHis.DeletedInOld,
                 CurrentHis.DeletedInOld,
                 CurrentHis.InsertedInNew,
@@ -324,9 +324,9 @@ namespace DiffAlgorithm.ThreeWay
         private Diff3Item CreateFullChunk(DifferencesStatusEnum diff)
         {
             return new Diff3Item(
-                CurrentHis.OldLineStart,
-                CurrentNew.NewLineStart,
-                CurrentHis.NewLineStart,
+                CurrentHis.LocalLineStart,
+                CurrentNew.RemoteLineStart,
+                CurrentHis.RemoteLineStart,
                 CurrentHis.DeletedInOld,
                 CurrentNew.InsertedInNew,
                 CurrentHis.InsertedInNew,
@@ -343,15 +343,15 @@ namespace DiffAlgorithm.ThreeWay
         /// <returns>Diff3Item marking the change.</returns>
         private Diff3Item CreateAllDifferent()
         {
-            int minOldStart = Math.Min(CurrentNew.OldLineStart, CurrentHis.OldLineStart);
-            int maxOldStart = Math.Max(CurrentNew.OldLineStart + CurrentNew.DeletedInOld,
-                        CurrentHis.OldLineStart + CurrentHis.DeletedInOld);
+            int minOldStart = Math.Min(CurrentNew.LocalLineStart, CurrentHis.LocalLineStart);
+            int maxOldStart = Math.Max(CurrentNew.LocalLineStart + CurrentNew.DeletedInOld,
+                        CurrentHis.LocalLineStart + CurrentHis.DeletedInOld);
             int oldSpan = maxOldStart - minOldStart;
 
             return new Diff3Item(
                     minOldStart,
-                    CurrentNew.NewLineStart + (minOldStart - CurrentNew.OldLineStart),
-                    CurrentHis.NewLineStart + (minOldStart - CurrentHis.OldLineStart),
+                    CurrentNew.RemoteLineStart + (minOldStart - CurrentNew.LocalLineStart),
+                    CurrentHis.RemoteLineStart + (minOldStart - CurrentHis.LocalLineStart),
                     oldSpan,
                     CurrentNew.InsertedInNew + (oldSpan - CurrentNew.DeletedInOld),
                     CurrentHis.InsertedInNew + (oldSpan - CurrentHis.DeletedInOld),
