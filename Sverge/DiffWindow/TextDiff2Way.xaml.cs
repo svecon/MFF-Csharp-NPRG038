@@ -21,8 +21,11 @@ namespace Sverge.DiffWindow
 
             InitializeComponent();
 
-            ScrollViewerLocal.Content = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Local);
-            ScrollViewerRemote.Content = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Remote);
+            var local = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Local);
+            var remote = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Remote);
+            ScrollViewerLocal.Content = local;
+            ScrollViewerRemote.Content = remote;
+            LineMarkersPanel.Content = new LineMarkersElement(node, local, remote);
         }
 
         public static bool CanBeApplied(object instance)

@@ -28,6 +28,11 @@
             CanContentScroll="True">
         </ScrollViewer>
 
+        <ContentControl
+            x:Name="LineMarkersPanel"
+            Grid.Row="2" Grid.Column="2">
+        </ContentControl>
+        
         <ScrollViewer 
             x:Name="ScrollViewerRemote"
             Grid.Row="2" Grid.Column="3"

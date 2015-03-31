@@ -177,7 +177,7 @@ namespace SvergeConsole
             ex.Wait();
 
             // run interactive diffing
-            ex = new ExecutionVisitorIn(_loader.SplitLoaderUsing(
+            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
                   typeof(InteractiveTwoWayDiffProcessor)
                 , typeof(InteractiveThreeWayDiffProcessor)
             ));
@@ -194,7 +194,7 @@ namespace SvergeConsole
             ex.Wait();
 
 #if DEBUG // run this processor just for fun
-            ex = new ExecutionVisitorIn(_loader.SplitLoaderUsing(
+            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
                 typeof(OutputSingleFileProcessor)
             ));
             diffTree.Accept(ex);
