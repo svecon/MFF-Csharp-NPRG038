@@ -29,7 +29,6 @@ namespace Sverge.Control
 
         #region Computing paddings and offsets
 
-        protected const int CHAR_PADDING_RIGHT = 5;
         protected const double BORDER_SIZE = 1.0;
         protected const double DIFF_LINE_SIZE = 1.0;
         protected int LinesCount;
@@ -64,7 +63,7 @@ namespace Sverge.Control
         /// 
         /// Inverse function to PositionY.
         /// </summary>
-        /// <param name="position">Y position (of a mouse)</param>
+        /// <param name="position">Y position (of a MouseArgs)</param>
         /// <returns>Line number (zero based)</returns>
         protected int PositionToLine(double position)
         {

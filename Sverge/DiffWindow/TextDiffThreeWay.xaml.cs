@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using CoreLibrary.Enums;
 using DiffIntegration.DiffFilesystemTree;
 using Sverge.Control;
+using Sverge.Control.LineMarkers;
 
 namespace Sverge.DiffWindow
 {
@@ -35,11 +36,13 @@ namespace Sverge.DiffWindow
             var localText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Local);
             var remoteText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Remote);
             var baseText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Base);
+
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
             ScrollViewerBase.Content = baseText;
-            //LineMarkersPanelLocal.Content = new LineMarkersElement(node, localText, baseText);
-            //LineMarkersPanelRemote.Content = new LineMarkersElement(node, baseText, remoteText);
+
+            LineMarkersPanelLocal.Content = new LineMarkersThreeWayElement(node, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
+            LineMarkersPanelRemote.Content = new LineMarkersThreeWayElement(node, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
         public static bool CanBeApplied(object instance)

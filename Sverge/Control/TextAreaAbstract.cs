@@ -14,28 +14,30 @@ namespace Sverge.Control
 
         public bool ShowLineNumbers = true;
 
-        protected readonly DiffFileNode node;
-        protected FileInfo info;
+        protected readonly DiffFileNode Node;
+        protected FileInfo Info;
 
-        protected Size extent;
-        protected Size viewport;
+        protected Size Extent;
+        protected Size Viewport;
 
         public delegate void OnVerticalScrollDelegate(double yOffset); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
         public OnVerticalScrollDelegate OnVerticalScroll;
 
-        protected bool drawRightBorder;
-        protected bool drawBottomBorder;
+        protected bool DrawRightBorder;
+        protected bool DrawBottomBorder;
 
-        protected readonly Pen borderLinePen;
+        protected readonly Pen BackgroundPen;
+        protected readonly Pen BorderLinePen;
 
-        protected List<string> lines;
-        protected int longestLine;
+        protected List<string> Lines;
+        protected int LongestLine;
 
         protected TextAreaAbstract(DiffFileNode fileNode)
         {
-            node = fileNode;
+            Node = fileNode;
 
-            borderLinePen = new Pen(Brushes.LightGray, BORDER_SIZE);
+            BackgroundPen = new Pen(Brushes.White, BORDER_SIZE);
+            BorderLinePen = new Pen(Brushes.LightGray, BORDER_SIZE);
         }
 
         #region Horizontal calculations
@@ -48,12 +50,11 @@ namespace Sverge.Control
 
             return result;
         }
-        protected double PaddingRight { get { return CHAR_PADDING_RIGHT * Sample.Width; } }
+        protected double PaddingRight { get { return Sample.Width; } }
         protected double PaddingLeft { get { return BORDER_SIZE + Sample.Width / 1; } }
         protected double LineNumbersPaddingRight { get { return Sample.Width * 2; } }
         protected double LineNumbersSize { get { return LinesCount.ToString().Length * Sample.Width; } }
         #endregion
-
 
         #region IScrollInfo
 
@@ -64,10 +65,10 @@ namespace Sverge.Control
         public bool CanVerticallyScroll { get; set; }
 
         public double ExtentHeight
-        { get { return extent.Height; } }
+        { get { return Extent.Height; } }
 
         public double ExtentWidth
-        { get { return extent.Width; } }
+        { get { return Extent.Width; } }
 
         public double HorizontalOffset
         { get { return Offset.X; } }
@@ -76,10 +77,10 @@ namespace Sverge.Control
         { get { return Offset.Y; } }
 
         public double ViewportHeight
-        { get { return viewport.Height; } }
+        { get { return Viewport.Height; } }
 
         public double ViewportWidth
-        { get { return viewport.Width; } }
+        { get { return Viewport.Width; } }
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
@@ -171,12 +172,12 @@ namespace Sverge.Control
 
         #region Mouse events
 
-        protected MouseEventArgs mouse;
+        protected MouseEventArgs MouseArgs;
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
-            mouse = e;
+            MouseArgs = e;
             InvalidateVisual();
         }
 
@@ -184,7 +185,7 @@ namespace Sverge.Control
         {
             base.OnMouseLeave(e);
 
-            mouse = null;
+            MouseArgs = null;
             InvalidateVisual();
         }
 
@@ -199,8 +200,8 @@ namespace Sverge.Control
 
         private Size CalculateSize()
         {
-            double width = Sample.Width * longestLine + PaddingLeft + PaddingRight;
-            double height = lines.Count * LineHeight + PaddingTop + PaddingBottom;
+            double width = Sample.Width * LongestLine + PaddingLeft + PaddingRight;
+            double height = Lines.Count * LineHeight + PaddingTop + PaddingBottom;
 
             if (ShowLineNumbers)
                 width += LineNumbersSize + LineNumbersPaddingRight;
@@ -210,7 +211,7 @@ namespace Sverge.Control
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (lines == null)
+            if (Lines == null)
             {
                 PreloadFileToMemory();
             }
@@ -219,22 +220,22 @@ namespace Sverge.Control
 
             if (newExtent.Height < availableSize.Height)
             {
-                drawRightBorder = true; // there is no scrollbar
+                DrawRightBorder = true; // there is no scrollbar
                 SetVerticalOffset(0); // when user is scrolled and then resizes window
                 newExtent.Height = availableSize.Height;
             } else
-            { drawRightBorder = false; }
+            { DrawRightBorder = false; }
             if (newExtent.Width < availableSize.Width)
             {
-                drawBottomBorder = true; // there is no scrollbar
+                DrawBottomBorder = true; // there is no scrollbar
                 SetHorizontalOffset(0); // when user is scrolled and then resizes window
                 newExtent.Width = availableSize.Width;
             } else
-            { drawBottomBorder = false; }
+            { DrawBottomBorder = false; }
 
-            if (extent != newExtent)
+            if (Extent != newExtent)
             {
-                extent = newExtent;
+                Extent = newExtent;
                 TryInvalidateScrollInfo();
             }
 
@@ -247,30 +248,30 @@ namespace Sverge.Control
                 availableSize.Height = ExtentHeight;
             }
 
-            if (availableSize != viewport)
+            if (availableSize != Viewport)
             {
-                viewport = availableSize;
+                Viewport = availableSize;
                 TryInvalidateScrollInfo();
             }
 
-            return viewport;
+            return Viewport;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             // basically do nothing -- we are inside a scrollviewer
             // let MeasureOverride do the job
-            Size newExtent = extent;
+            Size newExtent = Extent;
 
-            if (newExtent != extent)
+            if (newExtent != Extent)
             {
-                extent = newExtent;
+                Extent = newExtent;
                 TryInvalidateScrollInfo();
             }
 
-            if (finalSize != viewport)
+            if (finalSize != Viewport)
             {
-                viewport = finalSize;
+                Viewport = finalSize;
                 TryInvalidateScrollInfo();
             }
 
@@ -307,17 +308,23 @@ namespace Sverge.Control
                 }
 
                 // print text
-                FormattedText oneLine = CreateFormattedText(lines[i]);
+                FormattedText oneLine = CreateFormattedText(Lines[i]);
                 dc.DrawText(oneLine, new Point(PositionX(), PositionY(i)));
             }
         }
 
         protected virtual void DrawBorders(DrawingContext dc)
         {
-            DrawHorizontalLine(dc, BORDER_SIZE, 0.0, ActualWidth, borderLinePen); // top
-            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, borderLinePen); // left
-            if (drawBottomBorder) DrawHorizontalLine(dc, ActualHeight - BORDER_SIZE, 0.0, ActualWidth, borderLinePen); // bottom
-            if (drawRightBorder) DrawVerticalLine(dc, ActualWidth - BORDER_SIZE, 0.0, ActualHeight, borderLinePen); // right
+            DrawHorizontalLine(dc, BORDER_SIZE, 0.0, ActualWidth, BorderLinePen); // top
+            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
+            DrawVerticalLine(dc, BORDER_SIZE, 0.0, ActualHeight, BorderLinePen); // left
+
+            if (DrawBottomBorder) DrawHorizontalLine(dc, ActualHeight, 0.0, ActualWidth, BorderLinePen); // bottom
+            if (DrawRightBorder)
+            {
+                DrawVerticalLine(dc, ActualWidth, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
+                DrawVerticalLine(dc, ActualWidth - BORDER_SIZE, 0.0, ActualHeight, BorderLinePen); // right
+            }
 
             // border between linenumbers and textarea
             if (ShowLineNumbers) DrawVerticalLine(dc, PositionX(false) + LineNumbersSize + LineNumbersPaddingRight / 2, 0.0, ActualHeight, DiffLinePen);

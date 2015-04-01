@@ -25,56 +25,56 @@ namespace Sverge.Control
             : base(fileNode)
         {
             target = targetFile;
-            info = (FileInfo)(target == TargetFileEnum.Local ? fileNode.InfoLocal : fileNode.InfoRemote);
+            Info = (FileInfo)(target == TargetFileEnum.Local ? fileNode.InfoLocal : fileNode.InfoRemote);
         }
 
         protected override bool IsDiffAvailable()
         {
-            return node.Diff != null;
+            return Node.Diff != null;
         }
 
         protected override void PreloadFileToMemory()
         {
             if (!IsDiffAvailable())
             {
-                lines = new List<string>();
+                Lines = new List<string>();
             } else
             {
-                lines = (target == TargetFileEnum.Local)
-                    ? new List<string>(node.Diff.FilesLineCount.Local)
-                    : new List<string>(node.Diff.FilesLineCount.Remote);
+                Lines = (target == TargetFileEnum.Local)
+                    ? new List<string>(Node.Diff.FilesLineCount.Local)
+                    : new List<string>(Node.Diff.FilesLineCount.Remote);
             }
 
-            using (StreamReader reader = info.OpenText())
+            using (StreamReader reader = Info.OpenText())
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    lines.Add(line);
+                    Lines.Add(line);
 
-                    if (line.Length > longestLine)
+                    if (line.Length > LongestLine)
                     {
-                        longestLine = line.Length;
+                        LongestLine = line.Length;
                     }
                 }
             }
 
-            LinesCount = lines.Count;
+            LinesCount = Lines.Count;
         }
 
         private void PrepareDiffItemsByLines()
         {
             if (diffItemsByLine == null)
             {
-                diffItemsByLine = (node.Diff == null)
+                diffItemsByLine = (Node.Diff == null)
                 ? new Dictionary<int, DiffItem>()
-                : new Dictionary<int, DiffItem>(node.Diff.Items.Length);
+                : new Dictionary<int, DiffItem>(Node.Diff.Items.Length);
             }
 
-            if (node.Diff == null)
+            if (Node.Diff == null)
                 return;
 
-            foreach (DiffItem diffItem in node.Diff.Items)
+            foreach (DiffItem diffItem in Node.Diff.Items)
             {
                 switch (target)
                 {
@@ -113,19 +113,19 @@ namespace Sverge.Control
                         b = new SolidColorBrush(Colors.MediumPurple) { Opacity = .2 };
 
                         diffStartLine = diffItem.LocalLineStart;
-                        diffAffectedLines = diffItem.DeletedInOld;
+                        diffAffectedLines = diffItem.LocalAffectedLines;
 
                         break;
                     case TargetFileEnum.Remote:
                         b = new SolidColorBrush(Colors.MediumVioletRed) { Opacity = .2 };
 
                         diffStartLine = diffItem.RemoteLineStart;
-                        diffAffectedLines = diffItem.InsertedInNew;
+                        diffAffectedLines = diffItem.RemoteAffectedLines;
 
                         break;
                 }
 
-                if (diffStartLine <= PositionToLine(mouse) && PositionToLine(mouse) < diffStartLine + diffAffectedLines)
+                if (diffStartLine <= PositionToLine(MouseArgs) && PositionToLine(MouseArgs) < diffStartLine + diffAffectedLines)
                 {
                     b.Opacity = 1;
                 }
@@ -141,7 +141,7 @@ namespace Sverge.Control
 
         private IEnumerable<DiffItem> VisibleDiffItems()
         {
-            if (node.Diff == null)
+            if (Node.Diff == null)
             {
                 return Enumerable.Empty<DiffItem>();
             }
@@ -149,13 +149,13 @@ namespace Sverge.Control
             switch (target)
             {
                 case TargetFileEnum.Local:
-                    return node.Diff.Items
-                        .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.DeletedInOld < StartsOnLine)
+                    return Node.Diff.Items
+                        .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.LocalAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Remote:
-                    return node.Diff.Items
-                        .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.InsertedInNew < StartsOnLine)
+                    return Node.Diff.Items
+                        .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.RemoteAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.RemoteLineStart <= EndsOnLine);
             }
 

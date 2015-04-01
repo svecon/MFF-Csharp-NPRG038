@@ -5,6 +5,7 @@ using CoreLibrary.Enums;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 using Sverge.Control;
+using Sverge.Control.LineMarkers;
 
 namespace Sverge.DiffWindow
 {
@@ -23,9 +24,11 @@ namespace Sverge.DiffWindow
 
             var local = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Local);
             var remote = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Remote);
+
             ScrollViewerLocal.Content = local;
             ScrollViewerRemote.Content = remote;
-            LineMarkersPanel.Content = new LineMarkersElement(node, local, remote);
+
+            LineMarkersPanel.Content = new LineMarkersTwoWayElement(node, local, remote);
         }
 
         public static bool CanBeApplied(object instance)

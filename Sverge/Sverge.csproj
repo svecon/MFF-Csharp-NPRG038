@@ -57,7 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Control\LineMarkersElement.cs" />
+    <Compile Include="Control\LineMarkers\LineMarkersThreeWayElement.cs" />
+    <Compile Include="Control\LineMarkers\LineMarkersElementAbstract.cs" />
+    <Compile Include="Control\LineMarkers\LineMarkersTwoWayElement.cs" />
     <Compile Include="Control\TextAreaAbstract.cs" />
     <Compile Include="Control\PositioningAreaAbstract.cs" />
     <Compile Include="Control\TextDiff3Area.cs" />
