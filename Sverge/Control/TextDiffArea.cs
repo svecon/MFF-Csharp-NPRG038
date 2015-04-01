@@ -417,13 +417,13 @@ namespace Sverge.Control
             {
                 case TargetFileEnum.Local:
                     return node.Diff.Items
-                            .Where(diffItem => diffItem.LocalLineStart <= EndsOnLine)
-                            .Where(diffItem => diffItem.LocalLineStart + diffItem.DeletedInOld >= StartsOnLine);
+                        .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.DeletedInOld < StartsOnLine)
+                        .TakeWhile(diffItem => diffItem.LocalLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Remote:
                     return node.Diff.Items
-                            .Where(diffItem => diffItem.RemoteLineStart <= EndsOnLine)
-                            .Where(diffItem => diffItem.RemoteLineStart + diffItem.InsertedInNew >= StartsOnLine);
+                        .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.InsertedInNew < StartsOnLine)
+                        .TakeWhile(diffItem => diffItem.RemoteLineStart <= EndsOnLine);
             }
 
             return Enumerable.Empty<DiffItem>();

@@ -82,7 +82,7 @@ namespace Sverge.Control
                 if (diffItem.LocalLineStart > PositionToLine(localOffset + ActualHeight)
                     && diffItem.RemoteLineStart > PositionToLine(remoteOffset + ActualHeight))
                 {
-                    continue;
+                    break;
                 }
 
 
