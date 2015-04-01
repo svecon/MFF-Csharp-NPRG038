@@ -130,7 +130,7 @@ namespace Sverge.Control
                         b = new SolidColorBrush(Colors.MediumPurple) { Opacity = .2 };
 
                         diffStartLine = diffItem.LocalLineStart;
-                        diffAffectedLines = diffItem.BaseAffectedLines;
+                        diffAffectedLines = diffItem.LocalAffectedLines;
 
                         break;
                     case TargetFileEnum.Remote:
