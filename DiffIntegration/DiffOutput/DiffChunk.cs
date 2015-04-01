@@ -55,7 +55,7 @@ namespace DiffIntegration.DiffOutput
 
         public int LeftLineEnd()
         {
-            int end = diffs.Last().LocalLineStart + diffs.Last().DeletedInOld - 1 + padding;
+            int end = diffs.Last().LocalLineStart + diffs.Last().LocalAffectedLines - 1 + padding;
 
             return (end > lineCounts.Local - 1) ? lineCounts.Local - 1 : end;
         }
@@ -69,7 +69,7 @@ namespace DiffIntegration.DiffOutput
 
         public int RightLineEnd()
         {
-            int end = diffs.Last().RemoteLineStart + diffs.Last().InsertedInNew - 1 + padding;
+            int end = diffs.Last().RemoteLineStart + diffs.Last().RemoteAffectedLines - 1 + padding;
 
             return (end > lineCounts.Remote - 1) ? lineCounts.Remote - 1 : end;
         }

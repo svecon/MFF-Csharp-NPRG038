@@ -20,12 +20,12 @@ namespace DiffAlgorithm.TwoWay
         /// <summary>
         /// Number of lines deleted in the old file.
         /// </summary>
-        public readonly int DeletedInOld;
+        public readonly int LocalAffectedLines;
 
         /// <summary>
         /// Number of lines inserted in the new file.
         /// </summary>
-        public readonly int InsertedInNew;
+        public readonly int RemoteAffectedLines;
 
         /// <summary>
         /// Which version of diff item should be kept and used?
@@ -40,20 +40,20 @@ namespace DiffAlgorithm.TwoWay
         /// </summary>
         public ActionEnum Action;
 
-        public DiffItem(int localLineStart, int remoteLineStart, int deletedInOld, int insertedInNew)
+        public DiffItem(int localLineStart, int remoteLineStart, int localAffectedLines, int remoteAffectedLines)
         {
             LocalLineStart = localLineStart;
             RemoteLineStart = remoteLineStart;
-            DeletedInOld = deletedInOld;
-            InsertedInNew = insertedInNew;
+            LocalAffectedLines = localAffectedLines;
+            RemoteAffectedLines = remoteAffectedLines;
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(DeletedInOld.ToString())
+            sb.Append(LocalAffectedLines.ToString())
                 .Append(".")
-                .Append(InsertedInNew.ToString())
+                .Append(RemoteAffectedLines.ToString())
                 .Append(".")
                 .Append(LocalLineStart.ToString())
                 .Append(".")

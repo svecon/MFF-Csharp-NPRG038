@@ -33,17 +33,17 @@ namespace DiffIntegration.DiffOutput.TwoWay
                     for (; m < diffItem.RemoteLineStart; m++) { remoteStream.ReadLine(); }
 
                     // deleted
-                    for (int p = 0; p < diffItem.DeletedInOld; p++) { yield return "< " + localStream.ReadLine(); n++; }
+                    for (int p = 0; p < diffItem.LocalAffectedLines; p++) { yield return "< " + localStream.ReadLine(); n++; }
 
                     // missing newline at end of old file
                     if (n == Diff.FilesLineCount.Local && !Diff.FilesEndsWithNewLine.Local)
                         yield return @"\ No newline at end of file";
 
-                    if (diffItem.DeletedInOld > 0 && diffItem.InsertedInNew > 0)
+                    if (diffItem.LocalAffectedLines > 0 && diffItem.RemoteAffectedLines > 0)
                         yield return "---";
 
                     // inserted
-                    for (int p = 0; p < diffItem.InsertedInNew; p++) { yield return "> " + remoteStream.ReadLine(); m++; }
+                    for (int p = 0; p < diffItem.RemoteAffectedLines; p++) { yield return "> " + remoteStream.ReadLine(); m++; }
 
                     // missing newline at end of old file
                     if (m == Diff.FilesLineCount.Remote && !Diff.FilesEndsWithNewLine.Remote)
@@ -71,10 +71,10 @@ namespace DiffIntegration.DiffOutput.TwoWay
         /// <returns>DiffType of the change between two files.</returns>
         private DiffType FindDiffType(DiffItem diffItem)
         {
-            if (diffItem.DeletedInOld > 0 && diffItem.InsertedInNew > 0)
+            if (diffItem.LocalAffectedLines > 0 && diffItem.RemoteAffectedLines > 0)
                 return DiffType.Change;
 
-            if (diffItem.DeletedInOld > 0)
+            if (diffItem.LocalAffectedLines > 0)
                 return DiffType.Delete;
 
             return DiffType.Append;
@@ -94,17 +94,17 @@ namespace DiffIntegration.DiffOutput.TwoWay
                 case DiffType.Append:
                     header += CreateRange(diffItem.LocalLineStart, 1)
                         + "a"
-                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.InsertedInNew);
+                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.RemoteAffectedLines);
                     break;
                 case DiffType.Delete:
-                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.DeletedInOld)
+                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.LocalAffectedLines)
                         + "d"
                         + CreateRange(diffItem.RemoteLineStart, 1);
                     break;
                 case DiffType.Change:
-                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.DeletedInOld)
+                    header += CreateRange(diffItem.LocalLineStart + 1, diffItem.LocalAffectedLines)
                         + "c"
-                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.InsertedInNew);
+                        + CreateRange(diffItem.RemoteLineStart + 1, diffItem.RemoteAffectedLines);
                     break;
             }
 

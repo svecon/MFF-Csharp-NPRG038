@@ -69,7 +69,7 @@ namespace DiffIntegration.DiffOutput.TwoWay
 
                         // deleted
                         Console.ForegroundColor = ConsoleColor.DarkRed;
-                        for (int p = 0; p < chunk.CurrentDiff().DeletedInOld; p++) { yield return "-" + localStream.ReadLine(); n++; }
+                        for (int p = 0; p < chunk.CurrentDiff().LocalAffectedLines; p++) { yield return "-" + localStream.ReadLine(); n++; }
                         Console.ResetColor();
 
                         // missing newline at end of old file
@@ -78,7 +78,7 @@ namespace DiffIntegration.DiffOutput.TwoWay
 
                         // inserted
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        for (int p = 0; p < chunk.CurrentDiff().InsertedInNew; p++) { yield return "+" + remoteStream.ReadLine(); m++; }
+                        for (int p = 0; p < chunk.CurrentDiff().RemoteAffectedLines; p++) { yield return "+" + remoteStream.ReadLine(); m++; }
                         Console.ResetColor();
 
                         // missing newline at end of new file

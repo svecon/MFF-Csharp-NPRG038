@@ -91,7 +91,7 @@ namespace DiffAlgorithm.TwoWay
             /// <summary>
             /// Array of booleans that flag for modified data.
             /// This is the result of the diff.
-            /// This means DeletedInOld in the first Data or inserted in the second Data.
+            /// This means LocalAffectedLines in the first Data or inserted in the second Data.
             /// </summary>
             internal bool[] Modified;
 

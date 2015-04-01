@@ -130,9 +130,9 @@ namespace DiffAlgorithm.ThreeWay
                             old.BaseLineStart,
                             old.LocalLineStart,
                             old.RemoteLineStart,
-                            old.BaseAffectedLines + lowerDiff.DeletedInOld,
-                            old.LocalAffectedLines + (wasHis ? lowerDiff.DeletedInOld : lowerDiff.InsertedInNew),
-                            old.RemoteAffectedLines + (wasHis ? lowerDiff.InsertedInNew : lowerDiff.DeletedInOld),
+                            old.BaseAffectedLines + lowerDiff.LocalAffectedLines,
+                            old.LocalAffectedLines + (wasHis ? lowerDiff.LocalAffectedLines : lowerDiff.RemoteAffectedLines),
+                            old.RemoteAffectedLines + (wasHis ? lowerDiff.RemoteAffectedLines : lowerDiff.LocalAffectedLines),
                             DifferencesStatusEnum.AllDifferent
                         ));
 
@@ -167,13 +167,13 @@ namespace DiffAlgorithm.ThreeWay
             } else if (CurrentNew.LocalLineStart == CurrentHis.LocalLineStart)
             // starts on the same line
             {
-                if (CurrentNew.DeletedInOld == CurrentHis.DeletedInOld &&
-                    CurrentNew.InsertedInNew == CurrentHis.InsertedInNew)
+                if (CurrentNew.LocalAffectedLines == CurrentHis.LocalAffectedLines &&
+                    CurrentNew.RemoteAffectedLines == CurrentHis.RemoteAffectedLines)
                 // changes the same lines in old and adds same lines in new
                 {
                     // check if the new lines are same => non-conflicting
                     bool areSame = true;
-                    for (int i = 0; i < CurrentNew.InsertedInNew; i++)
+                    for (int i = 0; i < CurrentNew.RemoteAffectedLines; i++)
                     {
                         if (localFile[CurrentNew.RemoteLineStart + i] == remoteFile[CurrentHis.RemoteLineStart + i])
                             continue;
@@ -280,7 +280,7 @@ namespace DiffAlgorithm.ThreeWay
         bool AreOverlapping(DiffItem bottom, DiffItem top)
         {
             return (bottom.LocalLineStart < top.LocalLineStart
-                    && bottom.LocalLineStart + bottom.DeletedInOld >= top.LocalLineStart);
+                    && bottom.LocalLineStart + bottom.LocalAffectedLines >= top.LocalLineStart);
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace DiffAlgorithm.ThreeWay
                 CurrentNew.LocalLineStart,
                 CurrentNew.RemoteLineStart,
                 CurrentNew.LocalLineStart + deltaToHis,
-                CurrentNew.DeletedInOld,
-                CurrentNew.InsertedInNew,
-                CurrentNew.DeletedInOld,
+                CurrentNew.LocalAffectedLines,
+                CurrentNew.RemoteAffectedLines,
+                CurrentNew.LocalAffectedLines,
                 DifferencesStatusEnum.BaseRemoteSame
             );
         }
@@ -310,9 +310,9 @@ namespace DiffAlgorithm.ThreeWay
                 CurrentHis.LocalLineStart,
                 CurrentHis.LocalLineStart + deltaToNew,
                 CurrentHis.RemoteLineStart,
-                CurrentHis.DeletedInOld,
-                CurrentHis.DeletedInOld,
-                CurrentHis.InsertedInNew,
+                CurrentHis.LocalAffectedLines,
+                CurrentHis.LocalAffectedLines,
+                CurrentHis.RemoteAffectedLines,
                 DifferencesStatusEnum.BaseLocalSame
             );
         }
@@ -327,9 +327,9 @@ namespace DiffAlgorithm.ThreeWay
                 CurrentHis.LocalLineStart,
                 CurrentNew.RemoteLineStart,
                 CurrentHis.RemoteLineStart,
-                CurrentHis.DeletedInOld,
-                CurrentNew.InsertedInNew,
-                CurrentHis.InsertedInNew,
+                CurrentHis.LocalAffectedLines,
+                CurrentNew.RemoteAffectedLines,
+                CurrentHis.RemoteAffectedLines,
                 diff
             );
         }
@@ -344,8 +344,8 @@ namespace DiffAlgorithm.ThreeWay
         private Diff3Item CreateAllDifferent()
         {
             int minOldStart = Math.Min(CurrentNew.LocalLineStart, CurrentHis.LocalLineStart);
-            int maxOldStart = Math.Max(CurrentNew.LocalLineStart + CurrentNew.DeletedInOld,
-                        CurrentHis.LocalLineStart + CurrentHis.DeletedInOld);
+            int maxOldStart = Math.Max(CurrentNew.LocalLineStart + CurrentNew.LocalAffectedLines,
+                        CurrentHis.LocalLineStart + CurrentHis.LocalAffectedLines);
             int oldSpan = maxOldStart - minOldStart;
 
             return new Diff3Item(
@@ -353,8 +353,8 @@ namespace DiffAlgorithm.ThreeWay
                     CurrentNew.RemoteLineStart + (minOldStart - CurrentNew.LocalLineStart),
                     CurrentHis.RemoteLineStart + (minOldStart - CurrentHis.LocalLineStart),
                     oldSpan,
-                    CurrentNew.InsertedInNew + (oldSpan - CurrentNew.DeletedInOld),
-                    CurrentHis.InsertedInNew + (oldSpan - CurrentHis.DeletedInOld),
+                    CurrentNew.RemoteAffectedLines + (oldSpan - CurrentNew.LocalAffectedLines),
+                    CurrentHis.RemoteAffectedLines + (oldSpan - CurrentHis.LocalAffectedLines),
                     DifferencesStatusEnum.AllDifferent
                 );
         }

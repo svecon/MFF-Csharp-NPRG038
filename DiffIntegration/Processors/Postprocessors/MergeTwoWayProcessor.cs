@@ -135,7 +135,7 @@ namespace DiffIntegration.Processors.Postprocessors
                     }
 
                     // deleted
-                    for (int p = 0; p < diff.DeletedInOld; p++)
+                    for (int p = 0; p < diff.LocalAffectedLines; p++)
                     {
                         if (diff.Action == DiffItem.ActionEnum.RevertToLocal
                             || diff.Action == DiffItem.ActionEnum.Default)
@@ -152,7 +152,7 @@ namespace DiffIntegration.Processors.Postprocessors
                         writer.WriteLine("=======");
 
                     // inserted
-                    for (int p = 0; p < diff.InsertedInNew; p++)
+                    for (int p = 0; p < diff.RemoteAffectedLines; p++)
                     {
                         if (diff.Action == DiffItem.ActionEnum.ApplyRemote
                             || diff.Action == DiffItem.ActionEnum.Default)
