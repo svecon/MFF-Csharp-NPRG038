@@ -35,6 +35,9 @@ namespace Sverge.DiffWindow
             if (diffNode == null)
                 return false;
 
+            if (diffNode.FileType != FileTypeEnum.Text)
+                return false;
+
             return diffNode.Mode == DiffModeEnum.TwoWay;
         }
     }

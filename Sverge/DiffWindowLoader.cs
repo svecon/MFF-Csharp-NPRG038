@@ -18,6 +18,11 @@ namespace Sverge
                 return new TextDiff2Way(structure);
             }
 
+            if (TextDiffThreeWay.CanBeApplied(structure))
+            {
+                return new TextDiffThreeWay(structure);
+            }
+
             throw new ArgumentException("This instance does not have a diff window associated.");
         }
 

@@ -12,18 +12,18 @@ using Sverge.DiffWindow;
 
 namespace Sverge.Control
 {
-    class LineMarkersElement : TextAreaAbstract
+    class LineMarkersElement : PositioningAreaAbstract
     {
         private readonly DiffFileNode node;
-        private readonly TextDiffArea local;
-        private readonly TextDiffArea remote;
+        private readonly TextAreaAbstract local;
+        private readonly TextAreaAbstract remote;
 
         private double localOffset;
         private double remoteOffset;
 
         private const double DIFF_LENGTH = 7;
 
-        public LineMarkersElement(DiffFileNode fileNode, TextDiffArea localText, TextDiffArea remoteText)
+        public LineMarkersElement(DiffFileNode fileNode, TextAreaAbstract localText, TextAreaAbstract remoteText)
         {
             node = fileNode;
             local = localText;
@@ -70,7 +70,7 @@ namespace Sverge.Control
         protected override void OnRender(DrawingContext dc)
         {
             //dc.DrawRectangle(Brushes.Red, null, new Rect(new Point(0.0, 0.0), new Size(ActualWidth, ActualHeight)));
-
+            
             foreach (DiffItem diffItem in node.Diff.Items)
             {
                 if (diffItem.LocalLineStart + diffItem.DeletedInOld < PositionToLine(localOffset)

@@ -59,12 +59,18 @@
     </ApplicationDefinition>
     <Compile Include="Control\LineMarkersElement.cs" />
     <Compile Include="Control\TextAreaAbstract.cs" />
+    <Compile Include="Control\PositioningAreaAbstract.cs" />
+    <Compile Include="Control\TextDiff3Area.cs" />
     <Compile Include="Control\TextDiffArea.cs" />
     <Compile Include="DiffWindowLoader.cs" />
     <Compile Include="DiffWindow\IDiffWindow.cs" />
     <Compile Include="DiffWindow\TextDiff2Way.xaml.cs">
       <DependentUpon>TextDiff2Way.xaml</DependentUpon>
     </Compile>
+    <Page Include="DiffWindow\TextDiffThreeWay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,6 +78,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DiffWindow\TextDiffThreeWay.xaml.cs">
+      <DependentUpon>TextDiffThreeWay.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

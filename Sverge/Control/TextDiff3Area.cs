@@ -8,29 +8,38 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using DiffAlgorithm.ThreeWay;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace Sverge.Control
 {
-    class TextDiffArea : TextAreaAbstract, IScrollInfo
+    class TextDiff3Area : TextAreaAbstract, IScrollInfo
     {
-        private Dictionary<int, DiffItem> diffItemsByLine;
+        private Dictionary<int, Diff3Item> diffItemsByLine;
 
-
-        public enum TargetFileEnum { Local, Remote }
+        public enum TargetFileEnum { Local, Base, Remote }
         private readonly TargetFileEnum target;
 
-        public TextDiffArea(DiffFileNode fileNode, TargetFileEnum targetFile)
+        public TextDiff3Area(DiffFileNode fileNode, TargetFileEnum targetFile)
             : base(fileNode)
         {
             target = targetFile;
-            info = (FileInfo)(target == TargetFileEnum.Local ? fileNode.InfoLocal : fileNode.InfoRemote);
+
+            switch (target)
+            {
+                case TargetFileEnum.Local: info = (FileInfo)node.InfoLocal;
+                    break;
+                case TargetFileEnum.Remote: info = (FileInfo)node.InfoRemote;
+                    break;
+                case TargetFileEnum.Base: info = (FileInfo)node.InfoBase;
+                    break;
+            }
         }
 
         protected override bool IsDiffAvailable()
         {
-            return node.Diff != null;
+            return node.Diff3 != null;
         }
 
         protected override void PreloadFileToMemory()
@@ -40,9 +49,18 @@ namespace Sverge.Control
                 lines = new List<string>();
             } else
             {
-                lines = (target == TargetFileEnum.Local)
-                    ? new List<string>(node.Diff.FilesLineCount.Local)
-                    : new List<string>(node.Diff.FilesLineCount.Remote);
+                switch (target)
+                {
+                    case TargetFileEnum.Local:
+                        lines = new List<string>(node.Diff3.FilesLineCount.Local);
+                        break;
+                    case TargetFileEnum.Remote:
+                        lines = new List<string>(node.Diff3.FilesLineCount.Remote);
+                        break;
+                    case TargetFileEnum.Base:
+                        lines = new List<string>(node.Diff3.FilesLineCount.Base);
+                        break;
+                }
             }
 
             using (StreamReader reader = info.OpenText())
@@ -61,20 +79,19 @@ namespace Sverge.Control
 
             LinesCount = lines.Count;
         }
-
         private void PrepareDiffItemsByLines()
         {
             if (diffItemsByLine == null)
             {
-                diffItemsByLine = (node.Diff == null)
-                ? new Dictionary<int, DiffItem>()
-                : new Dictionary<int, DiffItem>(node.Diff.Items.Length);
+                diffItemsByLine = (!IsDiffAvailable())
+                ? new Dictionary<int, Diff3Item>()
+                : new Dictionary<int, Diff3Item>(node.Diff3.Items.Length);
             }
 
-            if (node.Diff == null)
+            if (!IsDiffAvailable())
                 return;
 
-            foreach (DiffItem diffItem in node.Diff.Items)
+            foreach (Diff3Item diffItem in node.Diff3.Items)
             {
                 switch (target)
                 {
@@ -101,7 +118,7 @@ namespace Sverge.Control
 
         private void DrawDiffs(DrawingContext dc)
         {
-            foreach (DiffItem diffItem in VisibleDiffItems())
+            foreach (Diff3Item diffItem in VisibleDiffItems())
             {
                 int diffStartLine = -1;
                 int diffAffectedLines = 0;
@@ -113,14 +130,21 @@ namespace Sverge.Control
                         b = new SolidColorBrush(Colors.MediumPurple) { Opacity = .2 };
 
                         diffStartLine = diffItem.LocalLineStart;
-                        diffAffectedLines = diffItem.DeletedInOld;
+                        diffAffectedLines = diffItem.BaseAffectedLines;
 
                         break;
                     case TargetFileEnum.Remote:
                         b = new SolidColorBrush(Colors.MediumVioletRed) { Opacity = .2 };
 
                         diffStartLine = diffItem.RemoteLineStart;
-                        diffAffectedLines = diffItem.InsertedInNew;
+                        diffAffectedLines = diffItem.RemoteAffectedLines;
+
+                        break;
+                    case TargetFileEnum.Base:
+                        b = new SolidColorBrush(Colors.MediumAquamarine) { Opacity = .2 };
+
+                        diffStartLine = diffItem.BaseLineStart;
+                        diffAffectedLines = diffItem.BaseAffectedLines;
 
                         break;
                 }
@@ -130,7 +154,7 @@ namespace Sverge.Control
                     b.Opacity = 1;
                 }
 
-                dc.DrawRectangle(b, null, new Rect(new Point(BORDER_SIZE, PositionY(diffStartLine)), new Size(ActualWidth, LineHeight * diffAffectedLines)));
+                dc.DrawRectangle(b, null, new Rect(new Point(BORDER_SIZE, PositionY(diffStartLine)), new Size(ActualWidth - 2 * BORDER_SIZE, LineHeight * diffAffectedLines)));
 
                 DrawHorizontalLine(dc, PositionY(diffStartLine), 0.0, ActualWidth, DiffLinePen);
                 DrawHorizontalLine(dc, PositionY(diffStartLine + diffAffectedLines), 0.0, ActualWidth, DiffLinePen);
@@ -139,27 +163,32 @@ namespace Sverge.Control
 
         #endregion
 
-        private IEnumerable<DiffItem> VisibleDiffItems()
+        private IEnumerable<Diff3Item> VisibleDiffItems()
         {
-            if (node.Diff == null)
+            if (!IsDiffAvailable())
             {
-                return Enumerable.Empty<DiffItem>();
+                return Enumerable.Empty<Diff3Item>();
             }
 
             switch (target)
             {
                 case TargetFileEnum.Local:
-                    return node.Diff.Items
-                        .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.DeletedInOld < StartsOnLine)
+                    return node.Diff3.Items
+                        .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.LocalAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Remote:
-                    return node.Diff.Items
-                        .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.InsertedInNew < StartsOnLine)
+                    return node.Diff3.Items
+                        .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.RemoteAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.RemoteLineStart <= EndsOnLine);
+
+                case TargetFileEnum.Base:
+                    return node.Diff3.Items
+                        .SkipWhile(diffItem => diffItem.BaseLineStart + diffItem.BaseAffectedLines < StartsOnLine)
+                        .TakeWhile(diffItem => diffItem.BaseLineStart <= EndsOnLine);
             }
 
-            return Enumerable.Empty<DiffItem>();
+            return Enumerable.Empty<Diff3Item>();
         }
     }
 }
