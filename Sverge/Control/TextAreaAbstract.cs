@@ -191,7 +191,6 @@ namespace Sverge.Control
 
         #endregion
 
-
         protected abstract void PreloadFileToMemory();
 
         protected abstract bool IsDiffAvailable();
@@ -315,15 +314,26 @@ namespace Sverge.Control
 
         protected virtual void DrawBorders(DrawingContext dc)
         {
-            DrawHorizontalLine(dc, BORDER_SIZE, 0.0, ActualWidth, BorderLinePen); // top
-            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
-            DrawVerticalLine(dc, BORDER_SIZE, 0.0, ActualHeight, BorderLinePen); // left
+            // top
+            DrawHorizontalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
+            DrawHorizontalLine(dc, BORDER_SIZE, 0.0, ActualWidth, BorderLinePen);
 
-            if (DrawBottomBorder) DrawHorizontalLine(dc, ActualHeight, 0.0, ActualWidth, BorderLinePen); // bottom
+            // left
+            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
+            DrawVerticalLine(dc, BORDER_SIZE, 0.0, ActualHeight, BorderLinePen);
+
+            // bottom
+            if (DrawBottomBorder)
+            {
+                DrawHorizontalLine(dc, ActualHeight, 0.0, ActualWidth, BackgroundPen); // overpaint subpixel text overflow
+                DrawHorizontalLine(dc, ActualHeight - BORDER_SIZE, 0.0, ActualWidth, BorderLinePen);
+            }
+
+            // right
             if (DrawRightBorder)
             {
                 DrawVerticalLine(dc, ActualWidth, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
-                DrawVerticalLine(dc, ActualWidth - BORDER_SIZE, 0.0, ActualHeight, BorderLinePen); // right
+                DrawVerticalLine(dc, ActualWidth - BORDER_SIZE, 0.0, ActualHeight, BorderLinePen);
             }
 
             // border between linenumbers and textarea

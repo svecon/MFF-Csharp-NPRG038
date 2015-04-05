@@ -8,7 +8,7 @@ namespace DiffIntegration.DiffFilesystemTree
     /// <summary>
     /// DiffFilesystemTree is enhanced for some features needed in diffing between files.
     /// </summary>
-    class DiffFilesystemTree : FilesystemTree
+    public class DiffFilesystemTree : FilesystemTree
     {
         /// <summary>
         /// Constructor for DiffFilesystemTree

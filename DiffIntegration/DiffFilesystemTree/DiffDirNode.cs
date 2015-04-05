@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
@@ -33,5 +35,27 @@ namespace DiffIntegration.DiffFilesystemTree
         {
             return new DiffFileNode(this, info, location, Mode);
         }
+
+
+        /// <summary>
+        /// TODO: ADD TO INTERFACE? VYMYSLET
+        /// </summary>
+        public IEnumerable<IFilesystemTreeAbstractNode> FilesAndDirectories
+        {
+            get
+            {
+                foreach (IFilesystemTreeDirNode filesystemTreeDirNode in Directories)
+                {
+                    yield return filesystemTreeDirNode;
+                }
+
+                foreach (IFilesystemTreeFileNode filesystemTreeFileNode in !FilterIgnored ? Files : Files.Where(f => f.Status != NodeStatusEnum.IsIgnored))
+                {
+                    yield return filesystemTreeFileNode;
+                }
+            }
+        }
+
+        public static bool FilterIgnored = false;
     }
 }
