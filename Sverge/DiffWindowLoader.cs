@@ -23,6 +23,16 @@ namespace Sverge
                 return new TextDiffThreeWay(structure);
             }
 
+            if (FolderDiffTwoWay.CanBeApplied(structure))
+            {
+                return new FolderDiffTwoWay(structure);
+            }
+
+            if (DefaultDiffWindow.CanBeApplied(structure))
+            {
+                return new DefaultDiffWindow(structure);
+            }
+
             throw new ArgumentException("This instance does not have a diff window associated.");
         }
 

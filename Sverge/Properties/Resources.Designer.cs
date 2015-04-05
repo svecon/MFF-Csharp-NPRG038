@@ -22,7 +22,7 @@ namespace Sverge.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Sverge.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Sverge.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Sverge.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Sverge.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error during opening new diff.
         /// </summary>
-        internal static string App_NewTab_ErrorArgumentsNumber {
+        public static string App_NewTab_ErrorArgumentsNumber {
             get {
                 return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumber", resourceCulture);
             }
@@ -72,16 +72,25 @@ namespace Sverge.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Number of arguments must be 2 or 3..
         /// </summary>
-        internal static string App_NewTab_ErrorArgumentsNumberText {
+        public static string App_NewTab_ErrorArgumentsNumberText {
             get {
                 return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumberText", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, there is no special window viewing this diff..
+        /// </summary>
+        public static string App_NoWindowDefined {
+            get {
+                return ResourceManager.GetString("App_NoWindowDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error during parsing the settings.
         /// </summary>
-        internal static string App_OnStartup_ErrorParsingSettings {
+        public static string App_OnStartup_ErrorParsingSettings {
             get {
                 return ResourceManager.GetString("App_OnStartup_ErrorParsingSettings", resourceCulture);
             }
@@ -90,7 +99,7 @@ namespace Sverge.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This argument option has not been found &apos;{0}&apos;.
         /// </summary>
-        internal static string App_OnStartup_InvalidSettingsValue {
+        public static string App_OnStartup_InvalidSettingsValue {
             get {
                 return ResourceManager.GetString("App_OnStartup_InvalidSettingsValue", resourceCulture);
             }
@@ -99,7 +108,7 @@ namespace Sverge.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Processor &apos;{0}&apos; could not be loaded because of a priority collision..
         /// </summary>
-        internal static string App_OnStartup_ProcessorCollision {
+        public static string App_OnStartup_ProcessorCollision {
             get {
                 return ResourceManager.GetString("App_OnStartup_ProcessorCollision", resourceCulture);
             }
@@ -108,9 +117,39 @@ namespace Sverge.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This value for given option is invalid &apos;{0}&apos;.
         /// </summary>
-        internal static string App_OnStartup_UnknownSettingsValue {
+        public static string App_OnStartup_UnknownSettingsValue {
             get {
                 return ResourceManager.GetString("App_OnStartup_UnknownSettingsValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap folder {
+            get {
+                object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap folder_open {
+            get {
+                object obj = ResourceManager.GetObject("folder_open", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap list {
+            get {
+                object obj = ResourceManager.GetObject("list", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

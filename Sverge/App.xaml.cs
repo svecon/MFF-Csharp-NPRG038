@@ -21,6 +21,11 @@ using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.Processors.Preprocessors;
 using DiffIntegration.Processors.Processors;
 
+
+//"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt"
+//"C:\Users\svecon\Downloads\DiffAlgorithm.cs" "C:\Users\svecon\Downloads\DiffAlgorithmB.cs" "C:\Users\svecon\Downloads\DiffAlgorithmR.cs"
+//"C:\Users\svecon\Downloads\WpfApplication1" "C:\Users\svecon\Downloads\WpfApplication1 - Copy" "C:\Users\svecon\Downloads\WpfApplication1 - Copy - Copy"
+
 namespace Sverge
 {
     /// <summary>
