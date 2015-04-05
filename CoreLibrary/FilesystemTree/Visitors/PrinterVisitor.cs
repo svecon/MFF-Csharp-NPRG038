@@ -26,8 +26,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             if (node.RelativePath == "")
             {
                 Console.WriteLine(@"+- \{0} ({1:0.00}kB)", node.Info.FullName, node.GetSize());
-            }
-            else
+            } else
             {
                 // postpone printing to later
                 directoryCache = node;
@@ -115,6 +114,13 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 + ": " + (LocationCombinationsEnum)node.Location
                 + " # " + node.Differences
                 + " # " + node.Status);
+
+#if DEBUG
+            if (node.Status == NodeStatusEnum.HasError)
+            {
+                Console.WriteLine(node.Exception);
+            }
+#endif
 
             Console.ResetColor();
         }
