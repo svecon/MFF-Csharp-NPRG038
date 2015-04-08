@@ -201,7 +201,7 @@
                                     </Style>
                                 </Image.Style>
                                 <!--{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}-->
-                                </Image>
+                            </Image>
                             <TextBlock Text="{Binding Path=Info}" FontWeight="Bold" Foreground="Black" FontFamily="Consolas" FontSize="13" ></TextBlock>
                         </StackPanel>
                     </Grid>
