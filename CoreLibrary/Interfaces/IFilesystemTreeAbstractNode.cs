@@ -69,6 +69,13 @@ namespace CoreLibrary.Interfaces
         bool IsInLocation(LocationEnum location);
 
         /// <summary>
+        /// Check whether a file has been found in given location combination.
+        /// </summary>
+        /// <param name="location">Location combination you want to check.</param>
+        /// <returns>True if files has been found from that location.</returns>
+        bool IsInLocation(LocationCombinationsEnum location);
+
+        /// <summary>
         /// Adds Info from new Location (new file has been found).
         /// </summary>
         /// <param name="info">Info about the file.</param>

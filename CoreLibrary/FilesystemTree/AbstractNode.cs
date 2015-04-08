@@ -85,7 +85,12 @@ namespace CoreLibrary.FilesystemTree
 
         public bool IsInLocation(LocationEnum location)
         {
-            return ((int)location & Location) > 0;
+            return ((int)location & Location) == (int)location;
+        }
+
+        public bool IsInLocation(LocationCombinationsEnum location)
+        {
+            return ((int)location & Location) == (int)location;
         }
 
         /// <summary>

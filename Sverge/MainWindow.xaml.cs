@@ -28,10 +28,12 @@ namespace Sverge
     public partial class MainWindow : Window
     {
         private readonly IProcessorLoader loader;
+        private readonly DiffWindowLoader windowLoader;
 
         public MainWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
+            windowLoader = new DiffWindowLoader();
 
             InitializeComponent();
         }
@@ -134,9 +136,6 @@ namespace Sverge
 
             #endregion
 
-            
-
-
             #region Run Processors
             // run preprocessors and calculate diffs in parallel 
             IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitLoaderUsing(
@@ -157,13 +156,17 @@ namespace Sverge
 
             #endregion
 
-            var windowLoader = new DiffWindowLoader();
+            AddNewTab(diffTree);
+        }
+
+        public void AddNewTab(IFilesystemTreeVisitable diffTree)
+        {
             Tabs.Items.Add(new TabItem {
                 Header = "New Header",
                 Content = windowLoader.CreateWindowFor(diffTree),
-                IsSelected = Tabs.Items.Count == 0
+                //IsSelected = Tabs.Items.Count == 0
+                IsSelected = true
             });
-
         }
 
         public void WrongNumberOfArguments()

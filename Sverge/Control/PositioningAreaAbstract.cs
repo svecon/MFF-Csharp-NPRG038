@@ -102,10 +102,10 @@ namespace Sverge.Control
         {
             double thickness = p.Thickness / 2;
 
-            var set = new GuidelineSet(new[] { x1 + thickness, x2 + thickness }, new[] { y + thickness });
+            var set = new GuidelineSet(new[] { x1 + thickness, x2 + thickness }, new[] { y });
             dc.PushGuidelineSet(set);
 
-            dc.DrawLine(p, new Point(x1, y), new Point(x2, y));
+            dc.DrawLine(p, new Point(x1, y + thickness), new Point(x2, y + thickness));
 
             dc.Pop();
         }
@@ -114,10 +114,10 @@ namespace Sverge.Control
         {
             double thickness = p.Thickness / 2;
 
-            var set = new GuidelineSet(new[] { x + thickness }, new[] { y1 + thickness, y2 + thickness });
+            var set = new GuidelineSet(new[] { x }, new[] { y1 + thickness, y2 + thickness });
             dc.PushGuidelineSet(set);
 
-            dc.DrawLine(p, new Point(x, y1), new Point(x, y2));
+            dc.DrawLine(p, new Point(x + thickness, y1), new Point(x + thickness, y2));
 
             dc.Pop();
         }

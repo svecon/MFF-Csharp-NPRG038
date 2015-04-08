@@ -200,7 +200,9 @@ namespace Sverge.Control
         private Size CalculateSize()
         {
             double width = Sample.Width * LongestLine + PaddingLeft + PaddingRight;
-            double height = Lines.Count * LineHeight + PaddingTop + PaddingBottom;
+
+            double linesCount = Lines == null ? 1 : Lines.Count;
+            double height = linesCount * LineHeight + PaddingTop + PaddingBottom;
 
             if (ShowLineNumbers)
                 width += LineNumbersSize + LineNumbersPaddingRight;
@@ -210,7 +212,7 @@ namespace Sverge.Control
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Lines == null)
+            if (Lines == null && Info != null)
             {
                 PreloadFileToMemory();
             }
@@ -315,26 +317,17 @@ namespace Sverge.Control
         protected virtual void DrawBorders(DrawingContext dc)
         {
             // top
-            DrawHorizontalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
-            DrawHorizontalLine(dc, BORDER_SIZE, 0.0, ActualWidth, BorderLinePen);
-
+            DrawHorizontalLine(dc, 0.0, 0.0, ActualWidth, BorderLinePen);
             // left
-            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
-            DrawVerticalLine(dc, BORDER_SIZE, 0.0, ActualHeight, BorderLinePen);
+            DrawVerticalLine(dc, 0.0, 0.0, ActualHeight, BorderLinePen);
 
             // bottom
             if (DrawBottomBorder)
-            {
-                DrawHorizontalLine(dc, ActualHeight, 0.0, ActualWidth, BackgroundPen); // overpaint subpixel text overflow
                 DrawHorizontalLine(dc, ActualHeight - BORDER_SIZE, 0.0, ActualWidth, BorderLinePen);
-            }
 
             // right
             if (DrawRightBorder)
-            {
-                DrawVerticalLine(dc, ActualWidth, 0.0, ActualHeight, BackgroundPen); // overpaint subpixel text overflow
                 DrawVerticalLine(dc, ActualWidth - BORDER_SIZE, 0.0, ActualHeight, BorderLinePen);
-            }
 
             // border between linenumbers and textarea
             if (ShowLineNumbers) DrawVerticalLine(dc, PositionX(false) + LineNumbersSize + LineNumbersPaddingRight / 2, 0.0, ActualHeight, DiffLinePen);

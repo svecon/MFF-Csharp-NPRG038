@@ -14,6 +14,9 @@ namespace Sverge.Control.LineMarkers
 
         protected override IEnumerable<DiffItem> VisibleDiffItems()
         {
+            if (Node.Diff == null)
+                yield break;
+
             foreach (DiffItem diffItem in Node.Diff.Items)
             {
                 if (diffItem.LocalLineStart + diffItem.LocalAffectedLines < PositionToLine(LeftOffset)
