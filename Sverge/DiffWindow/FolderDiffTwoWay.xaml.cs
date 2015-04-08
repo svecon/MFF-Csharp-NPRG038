@@ -25,6 +25,7 @@ namespace Sverge.DiffWindow
     public partial class FolderDiffTwoWay : UserControl, IDiffWindow
     {
         private DiffFilesystemTree node;
+        private MainWindow window;
 
         public FolderDiffTwoWay(object diffNode)
         {
@@ -47,8 +48,19 @@ namespace Sverge.DiffWindow
 
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            DiffDirNode.FilterIgnored = true;
-            TreeView.ItemsSource = ((DiffDirNode)node.Root).FilesAndDirectories;
+            var item = sender as TreeViewItem;
+
+            if (item == null)
+                return;
+
+            var diffnode = item.Header as DiffFileNode;
+
+            if (diffnode == null)
+                return;
+
+            window = Application.Current.Windows.OfType<MainWindow>().SingleOrDefault(x => x.IsActive);
+            // TODO - predat si window pres nejaky interface?
+            window.AddNewTab(diffnode);
         }
     }
 }
