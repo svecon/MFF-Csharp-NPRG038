@@ -174,6 +174,24 @@ namespace Sverge
             var x = MessageBox.Show("You need to specify 2 or 3 arguments.");
         }
 
+        private void TabCloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var x = FindParent<TabItem>(sender as DependencyObject);
+            Tabs.Items.Remove(x);
+        }
+
+        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            //get parent item
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+
+            if (parentObject == null)
+                return null;
+
+            //check if the parent matches the type we're looking for
+            var parent = parentObject as T;
+            return parent ?? FindParent<T>(parentObject);
+        }
     }
 
 

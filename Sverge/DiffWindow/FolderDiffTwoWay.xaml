@@ -172,8 +172,13 @@
     </UserControl.Resources>
 
     <Grid Background="White">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-        <TreeView 
+        <TreeView Grid.Row="1"
             Grid.IsSharedSizeScope="True"
             x:Name="TreeView"
             BorderBrush="{x:Null}"

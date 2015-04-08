@@ -6,6 +6,72 @@
         xmlns:diffWindow="clr-namespace:Sverge.DiffWindow"
         x:Class="Sverge.MainWindow"
         Title="MainWindow">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border 
+                                Name="Border"
+                                Margin="10,0,0,0"
+                                Background="Transparent"
+                                BorderBrush="SlateGray"
+                                BorderThickness="1,1,1,0"
+                                SnapsToDevicePixels="True">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentPresenter 
+                                        x:Name="ContentSite"
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="12,2,6,2"
+                                        RecognizesAccessKey="True">
+                                    </ContentPresenter>
+
+                                    <Image Source="Resources/close.png" MouseUp="TabCloseImage_OnMouseUp"
+                                           Height="10"
+                                           Width="10"
+                                           Margin="0,0,6,0">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <ScaleTransform ScaleX="1.5" ScaleY="1.5" CenterX="5" CenterY="5" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </StackPanel>
+
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="Background" Value="LightGray" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="DarkRed" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
+                                <Setter Property="Foreground" Value="DarkGray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="75" />
@@ -26,7 +92,9 @@
             <!--<TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        --><!--<Image Source="/WpfTutorialSamples;component/Images/bullet_blue.png" />--><!--
+                        -->
+            <!--<Image Source="/WpfTutorialSamples;component/Images/bullet_blue.png" />-->
+            <!--
                         <TextBlock Text="Nejaky obrazek pridat!" Foreground="Blue" />
                     </StackPanel>
                 </TabItem.Header>
@@ -37,8 +105,8 @@
             </TabItem>-->
         </TabControl>
 
-        
-        
+
+
         <StatusBar Grid.Row="3">
             <StatusBarItem>
                 <TextBlock Text="I am statusbar" />

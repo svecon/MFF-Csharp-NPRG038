@@ -136,7 +136,7 @@
     <value>Number of arguments must be 2 or 3.</value>
   </data>
   <data name="App_NoWindowDefined" xml:space="preserve">
-    <value>Sorry, there is no special window viewing this diff.</value>
+    <value>Sorry, there is no special window for viewing this diff.</value>
   </data>
   <data name="Diff_No_File_At_Location" xml:space="preserve">
     <value>No file at this location.</value>

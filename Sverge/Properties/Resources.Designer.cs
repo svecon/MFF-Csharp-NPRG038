@@ -79,7 +79,7 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, there is no special window viewing this diff..
+        ///   Looks up a localized string similar to Sorry, there is no special window for viewing this diff..
         /// </summary>
         public static string App_NoWindowDefined {
             get {
