@@ -124,32 +124,11 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to No file at this location..
         /// </summary>
-        public static System.Drawing.Bitmap folder {
+        public static string Diff_No_File_At_Location {
             get {
-                object obj = ResourceManager.GetObject("folder", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap folder_open {
-            get {
-                object obj = ResourceManager.GetObject("folder_open", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap list {
-            get {
-                object obj = ResourceManager.GetObject("list", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Diff_No_File_At_Location", resourceCulture);
             }
         }
     }
