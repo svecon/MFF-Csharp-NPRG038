@@ -33,7 +33,7 @@ namespace Sverge.DiffWindows
                 {
                     var attr = (DiffWindowAttribute)item.GetCustomAttributes(typeof(DiffWindowAttribute), false)[0];
                     availableWindows.Add(attr.Priority, item);
-                } catch (Exception e)
+                } catch (Exception)
                 {
 #if DEBUG
                     throw;
@@ -66,7 +66,7 @@ namespace Sverge.DiffWindows
 
                     return (IDiffWindow)constructorInfo.Invoke( usingWindowParam ? new[] { structure, window } : new[] { structure });
 
-                } catch (Exception e)
+                } catch (Exception)
                 {
 #if DEBUG
                     throw;

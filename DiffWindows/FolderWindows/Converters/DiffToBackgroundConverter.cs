@@ -6,7 +6,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using CoreLibrary.Enums;
 
-namespace DiffWindows.FolderWindows
+namespace DiffWindows.FolderWindows.Converters
 {
     class DiffToBackgroundConverter : MarkupExtension, IMultiValueConverter
     {

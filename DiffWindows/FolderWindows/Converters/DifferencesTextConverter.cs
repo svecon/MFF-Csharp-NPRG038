@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using CoreLibrary.Enums;
 
-namespace DiffWindows.FolderWindows
+namespace DiffWindows.FolderWindows.Converters
 {
     [ValueConversion(typeof(object), typeof(string))]
     class DifferencesTextConverter : MarkupExtension, IValueConverter

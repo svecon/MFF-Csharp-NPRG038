@@ -46,9 +46,9 @@
     <Compile Include="FolderWindows\FolderDiffTwoWay.xaml.cs">
       <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FolderWindows\DifferencesTextConverter.cs" />
-    <Compile Include="FolderWindows\DiffToBackgroundConverter.cs" />
-    <Compile Include="FolderWindows\SizeConverter.cs" />
+    <Compile Include="FolderWindows\Converters\DifferencesTextConverter.cs" />
+    <Compile Include="FolderWindows\Converters\DiffToBackgroundConverter.cs" />
+    <Compile Include="FolderWindows\Converters\SizeConverter.cs" />
     <Compile Include="FolderWindows\PathHelper.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

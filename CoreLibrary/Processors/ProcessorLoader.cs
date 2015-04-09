@@ -74,7 +74,7 @@ namespace CoreLibrary.Processors
                     AddProcessor(instance, item);
                     RetrieveSettings(instance);
 
-                } catch (Exception e)
+                } catch (Exception)
                 {
 #if DEBUG
                     throw;
@@ -109,7 +109,7 @@ namespace CoreLibrary.Processors
 
                     availableSettings.Add((Type)property.GetValue(null), item);
 
-                } catch (Exception e)
+                } catch (Exception)
                 {
 #if DEBUG
                     throw;
@@ -152,7 +152,7 @@ namespace CoreLibrary.Processors
 
                     settingsByProcessorList.Add(settingsInstance);
 
-                } catch (Exception e)
+                } catch (Exception)
                 {
 #if DEBUG
                     throw;
