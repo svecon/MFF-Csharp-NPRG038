@@ -68,6 +68,8 @@
     <Compile Include="DiffWindow\DefaultDiffWindow.xaml.cs">
       <DependentUpon>DefaultDiffWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DiffWindow\DiffToBackgroundConverter.cs" />
+    <Compile Include="DiffWindow\PathHelper.cs" />
     <Compile Include="DiffWindow\FolderDiffTwoWay.xaml.cs">
       <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
     </Compile>

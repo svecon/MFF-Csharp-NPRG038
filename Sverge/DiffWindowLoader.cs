@@ -35,6 +35,5 @@ namespace Sverge
 
             throw new ArgumentException("This instance does not have a diff window associated.");
         }
-
     }
 }

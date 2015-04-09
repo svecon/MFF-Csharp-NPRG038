@@ -27,6 +27,25 @@ namespace Sverge.DiffWindow
         private DiffFilesystemTree node;
         private MainWindow window;
 
+        public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
+
+        public string LocalFolderLocation
+        {
+            get
+            {
+                return (string)GetValue(LocalFolderLocationProperty);
+            }
+            set { SetValue(LocalFolderLocationProperty, value); }
+        }
+
+        public static readonly DependencyProperty RemoteFolderLocationProperty = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
+
+        public string RemoteFolderLocation
+        {
+            get { return (string)GetValue(RemoteFolderLocationProperty); }
+            set { SetValue(RemoteFolderLocationProperty, value); }
+        }
+
         public FolderDiffTwoWay(object diffNode)
         {
             node = (DiffFilesystemTree)diffNode;
@@ -61,6 +80,12 @@ namespace Sverge.DiffWindow
             window = Application.Current.Windows.OfType<MainWindow>().SingleOrDefault(x => x.IsActive);
             // TODO - predat si window pres nejaky interface?
             window.AddNewTab(diffnode);
+        }
+
+        private void FolderDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            LocalFolderLocation = PathHelper.TrimPath(node.Root.InfoLocal.FullName, FilePathLabel);
+            RemoteFolderLocation = PathHelper.TrimPath(node.Root.InfoRemote.FullName, FilePathLabel);
         }
     }
 }

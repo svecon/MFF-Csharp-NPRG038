@@ -19,6 +19,7 @@ using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.Processors.Preprocessors;
 using DiffIntegration.Processors.Processors;
+using Sverge.DiffWindow;
 
 namespace Sverge
 {
@@ -161,10 +162,21 @@ namespace Sverge
 
         public void AddNewTab(IFilesystemTreeVisitable diffTree)
         {
+            string header = "";
+            if (diffTree is IFilesystemTreeFileNode)
+            {
+                header = ((IFilesystemTreeFileNode)diffTree).Info.Name;
+            } else if (diffTree is IFilesystemTree)
+            {
+                header = ((IFilesystemTree)diffTree).Root.Info.Name;
+            } else
+            {
+                header = "Unknown";
+            }
+
             Tabs.Items.Add(new TabItem {
-                Header = "New Header",
+                Header = header,
                 Content = windowLoader.CreateWindowFor(diffTree),
-                //IsSelected = Tabs.Items.Count == 0
                 IsSelected = true
             });
         }
