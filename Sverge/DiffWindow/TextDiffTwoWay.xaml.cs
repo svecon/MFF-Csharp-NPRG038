@@ -14,14 +14,14 @@ using Sverge.Control.LineMarkers;
 namespace Sverge.DiffWindow
 {
     /// <summary>
-    /// Interaction logic for TextDiff2Way.xaml
+    /// Interaction logic for TextDiffTwoWay.xaml
     /// </summary>
-    public partial class TextDiff2Way : UserControl, IDiffWindow
+    public partial class TextDiffTwoWay : UserControl, IDiffWindow
     {
         private DiffFileNode node;
 
         public static readonly DependencyProperty LocalFileLocationProperty
-            = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiff2Way));
+            = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffTwoWay));
 
         public string LocalFileLocation
         {
@@ -30,7 +30,7 @@ namespace Sverge.DiffWindow
         }
 
         public static readonly DependencyProperty RemoteFileLocationProperty
-            = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(TextDiff2Way));
+            = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(TextDiffTwoWay));
 
         public string RemoteFileLocation
         {
@@ -38,7 +38,7 @@ namespace Sverge.DiffWindow
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
-        public TextDiff2Way(object diffNode)
+        public TextDiffTwoWay(object diffNode)
         {
             node = (DiffFileNode)diffNode;
 

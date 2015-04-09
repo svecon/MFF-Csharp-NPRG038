@@ -13,9 +13,9 @@ namespace Sverge
         public IDiffWindow CreateWindowFor(object structure)
         {
 
-            if (TextDiff2Way.CanBeApplied(structure))
+            if (TextDiffTwoWay.CanBeApplied(structure))
             {
-                return new TextDiff2Way(structure);
+                return new TextDiffTwoWay(structure);
             }
 
             if (TextDiffThreeWay.CanBeApplied(structure))
