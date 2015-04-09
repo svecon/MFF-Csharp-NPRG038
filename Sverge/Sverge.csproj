@@ -57,38 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Control\LineMarkers\LineMarkersThreeWayElement.cs" />
-    <Compile Include="Control\LineMarkers\LineMarkersElementAbstract.cs" />
-    <Compile Include="Control\LineMarkers\LineMarkersTwoWayElement.cs" />
-    <Compile Include="Control\TextAreaAbstract.cs" />
-    <Compile Include="Control\PositioningAreaAbstract.cs" />
-    <Compile Include="Control\TextDiff3Area.cs" />
-    <Compile Include="Control\TextDiffArea.cs" />
-    <Compile Include="DiffWindowLoader.cs" />
-    <Compile Include="DiffWindow\DefaultDiffWindow.xaml.cs">
+    <Compile Include="DiffWindows\DiffWindowLoader.cs" />
+    <Compile Include="DiffWindows\DefaultDiffWindow.xaml.cs">
       <DependentUpon>DefaultDiffWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DiffWindow\DiffToBackgroundConverter.cs" />
-    <Compile Include="DiffWindow\PathHelper.cs" />
-    <Compile Include="DiffWindow\FolderDiffTwoWay.xaml.cs">
-      <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DiffWindow\IDiffWindow.cs" />
-    <Compile Include="DiffWindow\DifferencesTextConverter.cs" />
-    <Compile Include="DiffWindow\TimeFormatConverter.cs" />
-    <Compile Include="DiffWindow\SizeConverter.cs" />
-    <Compile Include="DiffWindow\TextDiffTwoWay.xaml.cs">
-      <DependentUpon>TextDiffTwoWay.xaml</DependentUpon>
-    </Compile>
-    <Page Include="DiffWindow\DefaultDiffWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DiffWindow\FolderDiffTwoWay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DiffWindow\TextDiffThreeWay.xaml">
+    <Page Include="DiffWindows\DefaultDiffWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -100,17 +73,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DiffWindow\TextDiffThreeWay.xaml.cs">
-      <DependentUpon>TextDiffThreeWay.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="DiffWindow\TextDiffTwoWay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Exceptions.NotFound;
@@ -124,14 +125,14 @@ namespace CoreLibrary.FilesystemTree
                     // discovery permission on a folder or file.
                 catch (UnauthorizedAccessException e)
                 {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.Message);
                     continue;
                     // It is also possible (but unlikely) that a DirectoryNotFound exception  
                     // will be raised. This will happen if currentDir has been deleted by 
                     // another application or thread after our call to Directory.Exists.
                 } catch (DirectoryNotFoundException e)
                 {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.Message);
                     continue;
                 }
 
@@ -156,11 +157,11 @@ namespace CoreLibrary.FilesystemTree
                     files = currentDir.Info.GetFiles();
                 } catch (UnauthorizedAccessException e)
                 {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.Message);
                     continue;
                 } catch (DirectoryNotFoundException e)
                 {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.Message);
                     continue;
                 }
 
@@ -182,7 +183,7 @@ namespace CoreLibrary.FilesystemTree
                         // If file was deleted by a separate application 
                         //  or thread since the call to TraverseTree() 
                         // then just continue.
-                        System.Diagnostics.Debug.WriteLine(e.Message);
+                        Debug.WriteLine(e.Message);
                     }
                 }
             }

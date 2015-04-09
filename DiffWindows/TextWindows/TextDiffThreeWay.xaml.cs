@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
+using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
-using Sverge.Control;
-using Sverge.Control.LineMarkers;
+using DiffWindows.TextWindows.Controls;
+using DiffWindows.TextWindows.Controls.LineMarkers;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.TextWindows
 {
     /// <summary>
     /// Interaction logic for TextDiffThreeWay.xaml
     /// </summary>
+    [DiffWindow(200)]
     public partial class TextDiffThreeWay : UserControl, IDiffWindow
     {
         private DiffFileNode node;

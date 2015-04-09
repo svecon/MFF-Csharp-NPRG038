@@ -3,7 +3,6 @@ using CoreLibrary.Enums;
 using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
-using DiffAlgorithm;
 using DiffAlgorithm.ThreeWay;
 using DiffAlgorithm.TwoWay;
 

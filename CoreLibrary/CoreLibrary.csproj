@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiffWindow\DiffWindowAttribute.cs" />
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
     <Compile Include="Enums\FileTypeEnum.cs" />
     <Compile Include="Enums\NodeStatusEnum.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Exceptions\NotFound\LocalDirectoryNotFoundException.cs" />
     <Compile Include="Exceptions\NotFound\LocationFileNotFoundException.cs" />
     <Compile Include="Interfaces\ICrawler.cs" />
+    <Compile Include="Interfaces\IDiffWindow.cs" />
     <Compile Include="Interfaces\IExecutionVisitor.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitable.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
+    <Compile Include="Interfaces\IWindow.cs" />
     <Compile Include="Processors\BaseProcessorAbstract.cs" />
     <Compile Include="Processors\Postprocessors\PostProcessorAbstract.cs" />
     <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />

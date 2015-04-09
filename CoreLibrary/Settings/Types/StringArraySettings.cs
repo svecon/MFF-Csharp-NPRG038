@@ -1,6 +1,6 @@
-﻿using CoreLibrary.Settings.Attributes;
-using System;
+﻿using System;
 using System.Reflection;
+using CoreLibrary.Settings.Attributes;
 
 namespace CoreLibrary.Settings.Types
 {

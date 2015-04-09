@@ -1,8 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Interfaces;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CoreLibraryTests
 {
@@ -73,9 +74,9 @@ namespace CoreLibraryTests
 
             IFilesystemTree filesystemTree = crawler.TraverseTree();
 
-            Assert.AreEqual(CoreLibrary.Enums.DiffModeEnum.TwoWay, filesystemTree.DiffMode);
+            Assert.AreEqual(DiffModeEnum.TwoWay, filesystemTree.DiffMode);
 
-            Assert.AreEqual((int)CoreLibrary.Enums.LocationCombinationsEnum.OnLocalRemote, filesystemTree.Root.Location);
+            Assert.AreEqual((int)LocationCombinationsEnum.OnLocalRemote, filesystemTree.Root.Location);
 
             Assert.AreEqual(3, filesystemTree.Root.Directories.Count);
             Assert.AreEqual(4, filesystemTree.Root.Files.Count);

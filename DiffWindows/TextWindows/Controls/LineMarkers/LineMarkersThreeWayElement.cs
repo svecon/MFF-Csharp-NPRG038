@@ -2,7 +2,7 @@
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace Sverge.Control.LineMarkers
+namespace DiffWindows.TextWindows.Controls.LineMarkers
 {
     class LineMarkersThreeWayElement : LineMarkersElementAbstract<Diff3Item>
     {

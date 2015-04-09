@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DiffIntegration")]
+[assembly: AssemblyTitle("DiffWindows")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DiffIntegration")]
+[assembly: AssemblyProduct("DiffWindows")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7dc6fd47-ed4f-4d40-990d-3f492b94bf1d")]
+[assembly: Guid("552da88d-6d78-4a42-a3f7-eba6aba176a2")]
 
 // Version information for an assembly consists of the following four values:
 //

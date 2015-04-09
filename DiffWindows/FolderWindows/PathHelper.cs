@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.FolderWindows
 {
     public static class PathHelper
     {
@@ -23,8 +20,8 @@ namespace Sverge.DiffWindow
             if (directory == null)
                 return filename;
 
-            bool widthOk;
-            bool changedWidth = false;
+            bool stringFits;
+            bool widthChanged = false;
 
             Typeface tf = filePathLabel.FontFamily.GetTypefaces().FirstOrDefault() ?? new Typeface("Consolas");
 
@@ -39,19 +36,26 @@ namespace Sverge.DiffWindow
                     Brushes.Black
                     );
 
-                widthOk = formatted.Width < width;
+                stringFits = formatted.Width < width;
 
-                if (widthOk) continue;
+                if (stringFits)
+                {
+                    continue;
+                }
 
-                changedWidth = true;
-
+                widthChanged = true;
                 directory = directory.Substring(0, directory.Length - 1);
+
                 if (directory.Length == 0)
+                {
                     return string.Format("{0}{1}{2}", ellipsis, Path.DirectorySeparatorChar, filename);
+                }
 
-            } while (!widthOk);
+            } while (!stringFits);
 
-            return !changedWidth ? path : String.Format("{0}{1}{2}{3}", directory, ellipsis, Path.DirectorySeparatorChar, filename);
+            return !widthChanged
+                ? path
+                : String.Format("{0}{1}{2}{3}", directory, ellipsis, Path.DirectorySeparatorChar, filename);
         }
     }
 }

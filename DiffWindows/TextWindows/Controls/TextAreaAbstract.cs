@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace Sverge.Control
+namespace DiffWindows.TextWindows.Controls
 {
     abstract class TextAreaAbstract : PositioningAreaAbstract
     {

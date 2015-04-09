@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace Sverge.Control.LineMarkers
+namespace DiffWindows.TextWindows.Controls.LineMarkers
 {
     abstract class LineMarkersElementAbstract<TU> : PositioningAreaAbstract
     {

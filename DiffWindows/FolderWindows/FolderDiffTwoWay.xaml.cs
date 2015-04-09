@@ -1,31 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
-using Sverge.Control;
-using Sverge.Control.LineMarkers;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.FolderWindows
 {
     /// <summary>
     /// Interaction logic for FolderDiffTwoWay.xaml
     /// </summary>
+    [DiffWindow(1000)]
     public partial class FolderDiffTwoWay : UserControl, IDiffWindow
     {
-        private DiffFilesystemTree node;
-        private MainWindow window;
+        private readonly DiffFilesystemTree node;
+        private readonly IWindow window;
 
         public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
 
@@ -46,9 +36,10 @@ namespace Sverge.DiffWindow
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
-        public FolderDiffTwoWay(object diffNode)
+        public FolderDiffTwoWay(object diffNode, IWindow window)
         {
             node = (DiffFilesystemTree)diffNode;
+            this.window = window;
 
             InitializeComponent();
 
@@ -77,8 +68,6 @@ namespace Sverge.DiffWindow
             if (diffnode == null)
                 return;
 
-            window = Application.Current.Windows.OfType<MainWindow>().SingleOrDefault(x => x.IsActive);
-            // TODO - predat si window pres nejaky interface?
             window.AddNewTab(diffnode);
         }
 

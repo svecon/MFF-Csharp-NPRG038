@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using System.Threading;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {
@@ -69,7 +67,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
 
         private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
         {
-            node.Status = Enums.NodeStatusEnum.HasError;
+            node.Status = NodeStatusEnum.HasError;
             node.Exception = e;
         }
 

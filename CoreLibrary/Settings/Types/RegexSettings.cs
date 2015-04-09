@@ -1,7 +1,7 @@
-﻿using CoreLibrary.Settings.Attributes;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using CoreLibrary.Settings.Attributes;
 
 namespace CoreLibrary.Settings.Types
 {

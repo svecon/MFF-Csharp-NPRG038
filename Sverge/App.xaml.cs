@@ -1,26 +1,13 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 using CoreLibrary.Exceptions;
-using CoreLibrary.Exceptions.NotFound;
-using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
 using CoreLibrary.Settings;
 using DiffIntegration;
-using DiffIntegration.DiffFilesystemTree;
-using DiffIntegration.Processors.Preprocessors;
-using DiffIntegration.Processors.Processors;
-
 
 //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt"
 //"C:\Users\svecon\Downloads\DiffAlgorithm.cs" "C:\Users\svecon\Downloads\DiffAlgorithmB.cs" "C:\Users\svecon\Downloads\DiffAlgorithmR.cs"
@@ -55,6 +42,19 @@ namespace Sverge
             return fvi.FileVersion;
         }
 
+        private void LoadAssemblies()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "plugins");
+
+            if (!Directory.Exists(path))
+                return;
+
+            foreach (string file in Directory.GetFiles(path, "*.dll"))
+            {
+                Assembly.LoadFile(file);
+            }
+        }
+
         private void App_OnStartup(object sender, StartupEventArgs eventArgs)
         {
             #region DEBUG: Print arguments
@@ -76,6 +76,7 @@ namespace Sverge
             #region Load all available processors and their settings
             try
             {
+                LoadAssemblies();
                 loader = new DiffProcessorLoader();
                 // Load available processors and their settings
                 loader.LoadAll();

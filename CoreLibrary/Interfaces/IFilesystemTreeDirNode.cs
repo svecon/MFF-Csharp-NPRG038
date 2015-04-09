@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using CoreLibrary.Enums;
 using System.IO;
+using CoreLibrary.Enums;
 
 namespace CoreLibrary.Interfaces
 {

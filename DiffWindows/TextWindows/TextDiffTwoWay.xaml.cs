@@ -1,21 +1,19 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
-using DiffAlgorithm.TwoWay;
+using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
-using Sverge.Control;
-using Sverge.Control.LineMarkers;
+using DiffWindows.FolderWindows;
+using DiffWindows.TextWindows.Controls;
+using DiffWindows.TextWindows.Controls.LineMarkers;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.TextWindows
 {
     /// <summary>
     /// Interaction logic for TextDiffTwoWay.xaml
     /// </summary>
+    [DiffWindow(100)]
     public partial class TextDiffTwoWay : UserControl, IDiffWindow
     {
         private DiffFileNode node;
@@ -69,11 +67,11 @@ namespace Sverge.DiffWindow
         private void TextDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             LocalFileLocation = node.IsInLocation(LocationEnum.OnLocal)
-                ? PathHelper.TrimPath(node.InfoLocal.FullName, FilePathLabel) 
-                : Properties.Resources.Diff_No_File_At_Location;
+                ? PathHelper.TrimPath(node.InfoLocal.FullName, FilePathLabel)
+                : DiffWindows.Resources.Diff_No_File_At_Location;
             RemoteFileLocation = node.IsInLocation(LocationEnum.OnRemote)
                 ? PathHelper.TrimPath(node.InfoRemote.FullName, FilePathLabel)
-                : Properties.Resources.Diff_No_File_At_Location;
+                : DiffWindows.Resources.Diff_No_File_At_Location;
         }
     }
 }

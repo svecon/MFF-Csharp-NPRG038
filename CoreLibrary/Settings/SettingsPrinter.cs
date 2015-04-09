@@ -1,7 +1,7 @@
-﻿using CoreLibrary.Interfaces;
-using CoreLibrary.Settings.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CoreLibrary.Interfaces;
+using CoreLibrary.Settings.Types;
 
 namespace CoreLibrary.Settings
 {

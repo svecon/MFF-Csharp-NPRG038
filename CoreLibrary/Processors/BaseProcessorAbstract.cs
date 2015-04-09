@@ -1,5 +1,5 @@
-﻿using CoreLibrary.Interfaces;
-using CoreLibrary.Enums;
+﻿using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.Processors
 {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Postprocessors;
 using CoreLibrary.Settings.Attributes;
-using DiffAlgorithm;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 

@@ -3,7 +3,6 @@ using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Preprocessors;
-using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Preprocessors
 {

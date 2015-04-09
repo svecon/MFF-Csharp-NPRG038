@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 using CoreLibrary.Enums;
-using Brushes = System.Drawing.Brushes;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.FolderWindows
 {
     class DiffToBackgroundConverter : MarkupExtension, IMultiValueConverter
     {
         public DiffToBackgroundConverter() { }
 
-        public object Convert(object[] value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.Length != 2)
                 return new SolidColorBrush { Color = Colors.Gray };
@@ -70,7 +65,7 @@ namespace Sverge.DiffWindow
             return "";
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,6 @@
 ﻿using System;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {

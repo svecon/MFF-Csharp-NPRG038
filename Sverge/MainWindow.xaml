@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Custom="http://schemas.microsoft.com/winfx/2006/xaml/presentation/ribbon"
         xmlns:local="clr-namespace:Sverge"
-        xmlns:diffWindow="clr-namespace:Sverge.DiffWindow"
+        xmlns:diffWindow="clr-namespace:Sverge.DiffWindows"
         x:Class="Sverge.MainWindow"
         Title="MainWindow">
 

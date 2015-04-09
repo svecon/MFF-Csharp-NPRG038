@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using CoreLibrary.Interfaces;
+using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
+using CoreLibrary.Enums;
+using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {
@@ -74,7 +76,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
 
         private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
         {
-            node.Status = Enums.NodeStatusEnum.HasError;
+            node.Status = NodeStatusEnum.HasError;
             node.Exception = task.Exception;
         }
 
@@ -96,7 +98,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     if (x is TaskCanceledException)
                         return true;
 
-                    System.Diagnostics.Debug.WriteLine(x);
+                    Debug.WriteLine(x);
                     return false;
                 });
             }

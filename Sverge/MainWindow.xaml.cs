@@ -1,32 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.Processors.Preprocessors;
 using DiffIntegration.Processors.Processors;
-using Sverge.DiffWindow;
+using Sverge.DiffWindows;
 
 namespace Sverge
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IWindow
     {
         private readonly IProcessorLoader loader;
         private readonly DiffWindowLoader windowLoader;
@@ -34,7 +25,8 @@ namespace Sverge
         public MainWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
-            windowLoader = new DiffWindowLoader();
+            windowLoader = new DiffWindowLoader(this);
+            windowLoader.LoadWindows();
 
             InitializeComponent();
         }

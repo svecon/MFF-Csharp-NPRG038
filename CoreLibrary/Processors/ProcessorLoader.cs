@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Exceptions;
-using CoreLibrary.Settings.Attributes;
 using System.Reflection;
+using CoreLibrary.Exceptions;
+using CoreLibrary.Interfaces;
+using CoreLibrary.Settings.Attributes;
 
 namespace CoreLibrary.Processors
 {
@@ -74,7 +74,12 @@ namespace CoreLibrary.Processors
                     AddProcessor(instance, item);
                     RetrieveSettings(instance);
 
-                } catch (NullReferenceException) { }
+                } catch (Exception e)
+                {
+#if DEBUG
+                    throw;
+#endif
+                }
             }
         }
 
@@ -95,11 +100,21 @@ namespace CoreLibrary.Processors
 
             foreach (Type item in types)
             {
-                PropertyInfo property = item.GetProperty("ForType", typeof(Type));
-                if (property == null)
-                    throw new NotImplementedException("All Setting types have to implement 'Type ForType' static property.");
+                try
+                {
+                    PropertyInfo property = item.GetProperty("ForType", typeof(Type));
+                    if (property == null)
+                        throw new NotImplementedException(
+                            "All Setting types have to implement 'Type ForType' static property.");
 
-                availableSettings.Add((Type)property.GetValue(null), item);
+                    availableSettings.Add((Type)property.GetValue(null), item);
+
+                } catch (Exception e)
+                {
+#if DEBUG
+                    throw;
+#endif
+                }
             }
         }
 
@@ -112,30 +127,40 @@ namespace CoreLibrary.Processors
 
             foreach (FieldInfo field in isStatic ? ((Type)instance).GetFields() : instance.GetType().GetFields())
             {
-                var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
-
-                Type matchedSettings = null;
-
-                if (availableSettings.ContainsKey(field.FieldType))
+                try
                 {
-                    matchedSettings = availableSettings[field.FieldType];
-                } else if (field.FieldType.BaseType != null && availableSettings.ContainsKey(field.FieldType.BaseType))
+                    var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
+
+                    Type matchedSettings = null;
+
+                    if (availableSettings.ContainsKey(field.FieldType))
+                    {
+                        matchedSettings = availableSettings[field.FieldType];
+                    } else if (field.FieldType.BaseType != null && availableSettings.ContainsKey(field.FieldType.BaseType))
+                    {
+                        matchedSettings = availableSettings[field.FieldType.BaseType];
+                    }
+
+                    if (matchedSettings == null)
+                        throw new NotImplementedException("Setting class for this type has not been implemented yet.");
+
+                    ConstructorInfo constructorInfo = matchedSettings.GetConstructor(settingsConstructorSignature);
+                    if (constructorInfo == null) continue;
+
+                    var settingsInstance =
+                        (ISettings)constructorInfo.Invoke(new object[] { isStatic ? null : instance, field, annotation });
+
+                    settingsByProcessorList.Add(settingsInstance);
+
+                } catch (Exception e)
                 {
-                    matchedSettings = availableSettings[field.FieldType.BaseType];
+#if DEBUG
+                    throw;
+#endif
                 }
-
-                if (matchedSettings == null)
-                    throw new NotImplementedException("Setting class for this type has not been implemented yet.");
-
-                ConstructorInfo constructorInfo = matchedSettings.GetConstructor(settingsConstructorSignature);
-                if (constructorInfo == null) continue;
-
-                var settingsInstance = (ISettings) constructorInfo.Invoke(new object[] { isStatic ? null : instance, field, annotation});
-
-                settingsByProcessorList.Add(settingsInstance);
             }
 
-            string instanceType = instance is IProcessorBase && !isStatic ? instance.GetType().ToString() : typeof (Object).ToString();
+            string instanceType = instance is IProcessorBase && !isStatic ? instance.GetType().ToString() : typeof(Object).ToString();
             SettingsByProcessor.Add(instanceType, settingsByProcessorList);
         }
 
@@ -169,7 +194,9 @@ namespace CoreLibrary.Processors
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
+#if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
+#endif
             }
         }
 
@@ -181,7 +208,9 @@ namespace CoreLibrary.Processors
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
+#if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
+#endif
             }
         }
 
@@ -193,7 +222,9 @@ namespace CoreLibrary.Processors
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
+#if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
+#endif
             }
         }
 

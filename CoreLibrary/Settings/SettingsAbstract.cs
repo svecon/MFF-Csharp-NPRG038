@@ -1,9 +1,7 @@
-﻿using System;
+﻿using System.Reflection;
+using System.Text;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Settings.Attributes;
-using System.Reflection;
-using System.Text;
-using CoreLibrary.Settings.Types;
 
 namespace CoreLibrary.Settings
 {

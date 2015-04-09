@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
+﻿using System.Text;
 using DiffAlgorithm;
 using DiffAlgorithm.TwoWay;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiffAlgorithmTests
 {

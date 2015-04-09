@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D39D9ECE-1B05-4877-A197-949A0623FD3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DiffWindows</RootNamespace>
+    <AssemblyName>DiffWindows</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FolderWindows\FolderDiffTwoWay.xaml.cs">
+      <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderWindows\DifferencesTextConverter.cs" />
+    <Compile Include="FolderWindows\DiffToBackgroundConverter.cs" />
+    <Compile Include="FolderWindows\SizeConverter.cs" />
+    <Compile Include="FolderWindows\PathHelper.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TextWindows\Controls\LineMarkers\LineMarkersElementAbstract.cs" />
+    <Compile Include="TextWindows\Controls\LineMarkers\LineMarkersThreeWayElement.cs" />
+    <Compile Include="TextWindows\Controls\LineMarkers\LineMarkersTwoWayElement.cs" />
+    <Compile Include="TextWindows\Controls\PositioningAreaAbstract.cs" />
+    <Compile Include="TextWindows\Controls\TextAreaAbstract.cs" />
+    <Compile Include="TextWindows\Controls\TextDiff3Area.cs" />
+    <Compile Include="TextWindows\Controls\TextDiffArea.cs" />
+    <Compile Include="TextWindows\TextDiffThreeWay.xaml.cs">
+      <DependentUpon>TextDiffThreeWay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextWindows\TextDiffTwoWay.xaml.cs">
+      <DependentUpon>TextDiffTwoWay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="FolderWindows\FolderDiffTwoWay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TextWindows\TextDiffThreeWay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TextWindows\TextDiffTwoWay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
+      <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
+      <Name>CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiffAlgorithm\DiffAlgorithm.csproj">
+      <Project>{03ee01e0-b64c-4ab9-ae6b-354b6a8b5bdb}</Project>
+      <Name>DiffAlgorithm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
+      <Project>{0525db80-454e-4d32-87ae-4a48972877fe}</Project>
+      <Name>DiffIntegration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

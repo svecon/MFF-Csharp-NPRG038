@@ -1,14 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
 using CoreLibrary.Processors.Processors;
 using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
-using DiffIntegration.DiffOutput;
 using DiffIntegration.DiffOutput.TwoWay;
 
 namespace DiffIntegration.Processors.Processors

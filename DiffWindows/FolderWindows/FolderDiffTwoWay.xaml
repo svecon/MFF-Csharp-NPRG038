@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="Sverge.DiffWindow.FolderDiffTwoWay"
+﻿<UserControl x:Class="DiffWindows.FolderWindows.FolderDiffTwoWay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:diff="clr-namespace:DiffIntegration.DiffFilesystemTree;assembly=DiffIntegration"
-             xmlns:loc="clr-namespace:Sverge.DiffWindow"
+             xmlns:folderWindows="clr-namespace:DiffWindows.FolderWindows"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              SizeChanged="FolderDiff2Way_OnSizeChanged"
@@ -206,7 +206,7 @@
 
                             <Border Grid.Column="1" Grid.ColumnSpan="3">
                                 <Border.Background>
-                                    <MultiBinding Converter="{loc:DiffToBackgroundConverter}">
+                                    <MultiBinding Converter="{folderWindows:DiffToBackgroundConverter}">
                                         <Binding Path="Location" />
                                         <Binding Path="Differences" />
                                     </MultiBinding>
@@ -216,9 +216,9 @@
                             <!--<StackPanel Grid.Column="1" Orientation="Horizontal" >-->
 
                             <!--<TextBlock  Text="{Binding Path=Info.LastWriteTime}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
-                            <TextBlock Grid.Column="1" Text="{Binding Path=Differences, Converter={loc:DifferencesTextConverter}}" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2"></TextBlock>
-                            <TextBlock Grid.Column="2" Text="{Binding Path=InfoLocal, Converter={loc:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
-                            <TextBlock Grid.Column="3" Text="{Binding Path=InfoRemote, Converter={loc:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding Path=Differences, Converter={folderWindows:DifferencesTextConverter}}" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2"></TextBlock>
+                            <TextBlock Grid.Column="2" Text="{Binding Path=InfoLocal, Converter={folderWindows:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
+                            <TextBlock Grid.Column="3" Text="{Binding Path=InfoRemote, Converter={folderWindows:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
                             <!--<TextBlock Grid.Column="1" Text="{Binding Path=Info, Converter={loc:TimeFormatConverter}}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
                             <!--</StackPanel>-->
                         </Grid>

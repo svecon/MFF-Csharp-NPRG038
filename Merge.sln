@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sverge", "Sverge\Sverge.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvergeConsole", "SvergeConsole\SvergeConsole.csproj", "{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffWindows", "DiffWindows\DiffWindows.csproj", "{D39D9ECE-1B05-4877-A197-949A0623FD3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D39D9ECE-1B05-4877-A197-949A0623FD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39D9ECE-1B05-4877-A197-949A0623FD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39D9ECE-1B05-4877-A197-949A0623FD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39D9ECE-1B05-4877-A197-949A0623FD3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

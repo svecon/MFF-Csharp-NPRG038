@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.FolderWindows
 {
     [ValueConversion(typeof(object), typeof(string))]
     class SizeConverter : MarkupExtension, IValueConverter
@@ -16,7 +13,7 @@ namespace Sverge.DiffWindow
         {
         }
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var v = value as FileInfo;
 
@@ -26,7 +23,7 @@ namespace Sverge.DiffWindow
             return String.Format("{0}kB", Math.Ceiling(v.Length / 1024.0));
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

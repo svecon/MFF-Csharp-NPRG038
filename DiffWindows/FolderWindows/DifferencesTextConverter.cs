@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using CoreLibrary.Enums;
 
-namespace Sverge.DiffWindow
+namespace DiffWindows.FolderWindows
 {
     [ValueConversion(typeof(object), typeof(string))]
     class DifferencesTextConverter : MarkupExtension, IValueConverter
     {
         public DifferencesTextConverter() { }
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.GetType() != typeof(DifferencesStatusEnum))
                 return "";
@@ -39,7 +35,7 @@ namespace Sverge.DiffWindow
             return "";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
