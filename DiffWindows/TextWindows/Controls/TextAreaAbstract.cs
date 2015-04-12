@@ -23,6 +23,11 @@ namespace DiffWindows.TextWindows.Controls
         public delegate void OnVerticalScrollDelegate(double yOffset); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
         public OnVerticalScrollDelegate OnVerticalScroll;
 
+        public OnVerticalScrollDelegate OnVerticalScrollSynchronization;
+
+        public delegate void OnHorizontalScrollDelegate(double xOffset); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public OnHorizontalScrollDelegate OnHorizontalScroll;
+
         protected bool DrawRightBorder;
         protected bool DrawBottomBorder;
 
@@ -146,6 +151,9 @@ namespace DiffWindows.TextWindows.Controls
             if (!(Math.Abs(newOffset - Offset.X) > 0)) return;
 
             Offset.X = newOffset;
+
+            if (OnHorizontalScroll != null) OnHorizontalScroll(newOffset);
+
             InvalidateVisual();
         }
 
@@ -158,7 +166,21 @@ namespace DiffWindows.TextWindows.Controls
             Offset.Y = newOffset;
 
             if (OnVerticalScroll != null) OnVerticalScroll(newOffset);
+            if (OnVerticalScrollSynchronization != null) OnVerticalScrollSynchronization(newOffset);
 
+            InvalidateVisual();
+        }
+
+        public void SetVerticalOffsetWithoutSynchornizing(double newOffset, int lineDifference)
+        {
+            newOffset += lineDifference * LineHeight;
+
+            CheckOffeset(ref newOffset, ViewportHeight, ExtentHeight);
+            if (!(Math.Abs(newOffset - Offset.Y) > 0)) return;
+
+            if (OnVerticalScroll != null) OnVerticalScroll(newOffset);
+
+            Offset.Y = newOffset;
             InvalidateVisual();
         }
 

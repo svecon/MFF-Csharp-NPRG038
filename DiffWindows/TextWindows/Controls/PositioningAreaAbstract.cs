@@ -32,15 +32,15 @@ namespace DiffWindows.TextWindows.Controls
         {
             return lineNumber * LineHeight - Offset.Y + PaddingTop;
         }
-        protected int StartsOnLine
+        public int StartsOnLine
         {
             get
             {
-                int temp = (int)(Offset.Y / LineHeight);
+                int temp = (int)((Offset.Y - PaddingTop) / LineHeight);
                 return temp < 0 ? 0 : temp;
             }
         }
-        protected int EndsOnLine
+        public int EndsOnLine
         {
             get
             {

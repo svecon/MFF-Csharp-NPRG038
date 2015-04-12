@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
@@ -47,6 +48,34 @@ namespace DiffWindows.TextWindows
 
             ScrollViewerLocal.Content = local;
             ScrollViewerRemote.Content = remote;
+
+            local.OnHorizontalScroll += offset =>
+            {
+                remote.SetHorizontalOffset(offset);
+            };
+
+            remote.OnHorizontalScroll += offset =>
+            {
+                local.SetHorizontalOffset(offset);
+            };
+
+            local.OnVerticalScrollSynchronization += offset =>
+            {
+                int difference = node.Diff.Items
+                    .TakeWhile(diffItem => diffItem.LocalLineStart <= local.StartsOnLine)
+                    .Sum(diffItem => diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
+
+                remote.SetVerticalOffsetWithoutSynchornizing(offset, difference);
+            };
+
+            remote.OnVerticalScrollSynchronization += offset =>
+            {
+                int difference = node.Diff.Items
+                    .TakeWhile(diffItem => diffItem.RemoteLineStart <= remote.StartsOnLine)
+                    .Sum(diffItem => diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
+
+                local.SetVerticalOffsetWithoutSynchornizing(offset, difference);
+            };
 
             LineMarkersPanel.Content = new LineMarkersTwoWayElement(node, local, remote);
         }

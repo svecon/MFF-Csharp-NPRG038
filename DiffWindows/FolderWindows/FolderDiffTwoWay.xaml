@@ -221,7 +221,14 @@
                             <!--<StackPanel Grid.Column="1" Orientation="Horizontal" >-->
 
                             <!--<TextBlock  Text="{Binding Path=Info.LastWriteTime}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
-                            <TextBlock Grid.Column="1" Text="{Binding Path=Differences, Converter={converters:DifferencesTextConverter}}" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2"></TextBlock>
+                            <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{converters:DifferencesTextConverter}">
+                                        <Binding Path="Location" />
+                                        <Binding Path="Differences" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                             <TextBlock Grid.Column="2" Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
                             <TextBlock Grid.Column="4" Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
                             

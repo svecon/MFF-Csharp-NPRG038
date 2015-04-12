@@ -6,36 +6,49 @@ using CoreLibrary.Enums;
 
 namespace DiffWindows.FolderWindows.Converters
 {
-    [ValueConversion(typeof(object), typeof(string))]
-    class DifferencesTextConverter : MarkupExtension, IValueConverter
+    class DifferencesTextConverter : MarkupExtension, IMultiValueConverter
     {
         public DifferencesTextConverter() { }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.GetType() != typeof(DifferencesStatusEnum))
-                return "";
+            if (value.Length != 2)
+                throw new ArgumentException("Wrong argument number.");
 
-            var differencesStatus = (DifferencesStatusEnum)value;
+            if (value[1].GetType() != typeof(DifferencesStatusEnum))
+                throw new ArgumentException("Second param is not DifferencesStatusEnum");
 
-            switch (differencesStatus)
+            if (value[0].GetType() != typeof(int))
+                throw new ArgumentException("First param is not int.");
+
+            var differences = (DifferencesStatusEnum)value[1];
+
+            var location = (LocationEnum)value[0];
+
+            switch ((LocationCombinationsEnum)location)
+            {
+                case LocationCombinationsEnum.OnLocal:
+                    return "Remote file missing";
+                case LocationCombinationsEnum.OnRemote:
+                    return "Local file missing";
+            }
+
+            switch (differences)
             {
                 case DifferencesStatusEnum.AllDifferent:
-                    return "All different";
-                case DifferencesStatusEnum.AllSame:
-                    return "";
-                case DifferencesStatusEnum.BaseLocalSame:
-                    return "Remote different";
-                case DifferencesStatusEnum.BaseRemoteSame:
-                    return "Local different";
-                case DifferencesStatusEnum.LocalRemoteSame:
-                    return "Base different";
+                    return "Files differ";
+                //case DifferencesStatusEnum.BaseLocalSame:
+                //    return "Remote different";
+                //case DifferencesStatusEnum.BaseRemoteSame:
+                //    return "Local different";
+                //case DifferencesStatusEnum.LocalRemoteSame:
+                //    return "Base different";
             }
 
             return "";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -44,5 +57,6 @@ namespace DiffWindows.FolderWindows.Converters
         {
             return this;
         }
+
     }
 }
