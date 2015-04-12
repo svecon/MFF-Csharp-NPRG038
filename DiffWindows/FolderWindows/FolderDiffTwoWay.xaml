@@ -198,7 +198,9 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="FDiffStatus" />
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="FSizeLocal" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="FTimeLocal" />
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="FSizeRemote" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="FTimeRemote" />
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal">
@@ -207,7 +209,7 @@
                             </StackPanel>
 
 
-                            <Border Grid.Column="1" Grid.ColumnSpan="3">
+                            <Border Grid.Column="1" Grid.ColumnSpan="5">
                                 <Border.Background>
                                     <MultiBinding Converter="{converters:DiffToBackgroundConverter}">
                                         <Binding Path="Location" />
@@ -221,7 +223,10 @@
                             <!--<TextBlock  Text="{Binding Path=Info.LastWriteTime}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
                             <TextBlock Grid.Column="1" Text="{Binding Path=Differences, Converter={converters:DifferencesTextConverter}}" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2"></TextBlock>
                             <TextBlock Grid.Column="2" Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
-                            <TextBlock Grid.Column="3" Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
+                            <TextBlock Grid.Column="4" Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
+                            
+                            <TextBlock Grid.Column="3" Text="{Binding Path=InfoLocal, Converter={converters:TimestampConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
+                            <TextBlock Grid.Column="5" Text="{Binding Path=InfoRemote, Converter={converters:TimestampConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right"></TextBlock>
                             <!--<TextBlock Grid.Column="1" Text="{Binding Path=Info, Converter={loc:TimeFormatConverter}}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
                             <!--</StackPanel>-->
                         </Grid>

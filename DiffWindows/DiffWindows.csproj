@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FolderWindows\Converters\TimestampConverter.cs" />
     <Compile Include="FolderWindows\FolderDiffTwoWay.xaml.cs">
       <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
     </Compile>

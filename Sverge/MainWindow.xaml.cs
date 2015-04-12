@@ -214,6 +214,14 @@ namespace Sverge
             OpenWindowDialog();
         }
 
+        public static readonly RoutedUICommand CloseWindow = new RoutedUICommand(
+            "CloseWindow", "CloseWindow",
+            typeof(MainWindow),
+            new InputGestureCollection() { 
+                new KeyGesture(Key.W, ModifierKeys.Control)
+            }
+        );
+
         private void CloseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Tabs.SelectedIndex != -1;
