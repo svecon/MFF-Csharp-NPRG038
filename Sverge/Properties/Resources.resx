@@ -141,4 +141,28 @@
   <data name="Diff_No_File_At_Location" xml:space="preserve">
     <value>No file at this location.</value>
   </data>
+  <data name="NewWindow_Label_Base" xml:space="preserve">
+    <value>Base (optional)</value>
+  </data>
+  <data name="NewWindow_Label_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="NewWindow_Label_Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="App_Title" xml:space="preserve">
+    <value>Sverge - diff &amp; merge tool </value>
+  </data>
+  <data name="NewWindow_Button_DirectoryDialog" xml:space="preserve">
+    <value>Directory...</value>
+  </data>
+  <data name="NewWindow_Button_FileDialog" xml:space="preserve">
+    <value>File...</value>
+  </data>
+  <data name="NewWindow_Button_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="NewWindow_Title" xml:space="preserve">
+    <value>Open files/directories for diffing</value>
+  </data>
 </root>

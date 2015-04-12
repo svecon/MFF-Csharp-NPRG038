@@ -173,6 +173,12 @@ namespace Sverge
             });
         }
 
+        public void OpenWindowDialog()
+        {
+            var open = new OpenDialogWindow(this);
+            open.ShowDialog();
+        }
+
         public void WrongNumberOfArguments()
         {
             var x = MessageBox.Show("You need to specify 2 or 3 arguments.");
@@ -196,7 +202,47 @@ namespace Sverge
             var parent = parentObject as T;
             return parent ?? FindParent<T>(parentObject);
         }
+
+
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenWindowDialog();
+        }
+
+        private void CloseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = Tabs.SelectedIndex != -1;
+        }
+
+        private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Tabs.Items.RemoveAt(Tabs.SelectedIndex);
+        }
+
+        public static readonly RoutedUICommand Exit = new RoutedUICommand(
+            "Exit", "Exit",
+            typeof(MainWindow),
+            new InputGestureCollection() { 
+                new KeyGesture(Key.F4, ModifierKeys.Alt)
+            }
+        );
+
+        private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Application.Current.Shutdown(); // @TODO Exit code
+        }
+
+
+
     }
-
-
 }

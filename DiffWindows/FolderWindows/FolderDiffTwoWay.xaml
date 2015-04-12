@@ -12,6 +12,8 @@
              x:Name="UserControl">
 
     <UserControl.Resources>
+        <!--TreeViewItem based on template from
+        http://leecampbell.blogspot.cz/2009/01/horizontal-stretch-on-treeviewitems.html-->
         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
             <EventSetter Event="MouseDoubleClick" Handler="OnItemMouseDoubleClick" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />

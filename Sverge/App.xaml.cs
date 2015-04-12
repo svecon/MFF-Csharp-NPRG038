@@ -125,6 +125,10 @@ namespace Sverge
             {
                 mainWindow.AddNewTab(args);
             }
+            else
+            {
+                mainWindow.OpenWindowDialog();
+            }
         }
 
         private void App_OnActivated(object sender, EventArgs e)
