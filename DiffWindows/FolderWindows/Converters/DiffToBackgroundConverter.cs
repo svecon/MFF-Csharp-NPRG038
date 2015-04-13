@@ -52,14 +52,6 @@ namespace DiffWindows.FolderWindows.Converters
                     gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0, 255, 255, 255), 1));
 
                     return new SolidColorBrush() { Color = Colors.Purple, Opacity = .4};
-                case DifferencesStatusEnum.AllSame:
-                    return "";
-                case DifferencesStatusEnum.BaseLocalSame:
-                    return "Remote different";
-                case DifferencesStatusEnum.BaseRemoteSame:
-                    return "Local different";
-                case DifferencesStatusEnum.LocalRemoteSame:
-                    return "Base different";
             }
 
             return "";

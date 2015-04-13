@@ -1,6 +1,7 @@
 ﻿namespace CoreLibrary.Interfaces
 {
-    public interface IDiffWindow
+    public interface IDiffWindow<out TNode>
     {
+        TNode DiffNode { get; }
     }
 }

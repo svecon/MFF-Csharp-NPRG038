@@ -16,9 +16,9 @@ namespace DiffWindows.TextWindows
     /// Interaction logic for TextDiffThreeWay.xaml
     /// </summary>
     [DiffWindow(200)]
-    public partial class TextDiffThreeWay : UserControl, IDiffWindow
+    public partial class TextDiffThreeWay : UserControl, IDiffWindow<DiffFileNode>
     {
-        private DiffFileNode node;
+        public DiffFileNode DiffNode { get; private set; }
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffThreeWay));
@@ -51,13 +51,13 @@ namespace DiffWindows.TextWindows
         public TextDiffThreeWay(object diffNode)
         {
             InitializeComponent();
-            node = (DiffFileNode)diffNode;
+            DiffNode = (DiffFileNode)diffNode;
 
             InitializeComponent();
 
-            var localText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Local);
-            var remoteText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Remote);
-            var baseText = new TextDiff3Area(node, TextDiff3Area.TargetFileEnum.Base);
+            var localText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Local);
+            var remoteText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Remote);
+            var baseText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Base);
 
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
@@ -83,12 +83,14 @@ namespace DiffWindows.TextWindows
             {
                 int differenceToBase = 0;
                 int differenceToRemote = 0;
-                foreach (Diff3Item diffItem in node.Diff3.Items
-                    .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
-                {
-                    differenceToBase += (diffItem.BaseAffectedLines - diffItem.LocalAffectedLines);
-                    differenceToRemote += (diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
-                }
+
+                if (DiffNode.Diff3 != null)
+                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                        .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
+                    {
+                        differenceToBase += (diffItem.BaseAffectedLines - diffItem.LocalAffectedLines);
+                        differenceToRemote += (diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
+                    }
 
                 remoteText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToRemote);
                 baseText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToBase);
@@ -98,12 +100,14 @@ namespace DiffWindows.TextWindows
             {
                 int differenceToBase = 0;
                 int differenceToLocal = 0;
-                foreach (Diff3Item diffItem in node.Diff3.Items
-                    .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
-                {
-                    differenceToBase += (diffItem.BaseAffectedLines - diffItem.RemoteAffectedLines);
-                    differenceToLocal += (diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
-                }
+
+                if (DiffNode.Diff3 != null)
+                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                        .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
+                    {
+                        differenceToBase += (diffItem.BaseAffectedLines - diffItem.RemoteAffectedLines);
+                        differenceToLocal += (diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
+                    }
 
                 baseText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToBase);
                 localText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToLocal);
@@ -113,19 +117,21 @@ namespace DiffWindows.TextWindows
             {
                 int differenceToRemote = 0;
                 int differenceToLocal = 0;
-                foreach (Diff3Item diffItem in node.Diff3.Items
-                    .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
-                {
-                    differenceToRemote += (diffItem.RemoteAffectedLines - diffItem.BaseAffectedLines);
-                    differenceToLocal += (diffItem.LocalAffectedLines - diffItem.BaseAffectedLines);
-                }
+
+                if (DiffNode.Diff3 != null)
+                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                        .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
+                    {
+                        differenceToRemote += (diffItem.RemoteAffectedLines - diffItem.BaseAffectedLines);
+                        differenceToLocal += (diffItem.LocalAffectedLines - diffItem.BaseAffectedLines);
+                    }
 
                 remoteText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToRemote);
                 localText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToLocal);
             };
 
-            LineMarkersPanelLocal.Content = new LineMarkersThreeWayElement(node, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
-            LineMarkersPanelRemote.Content = new LineMarkersThreeWayElement(node, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
+            LineMarkersPanelLocal.Content = new LineMarkersThreeWayElement(DiffNode, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
+            LineMarkersPanelRemote.Content = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
         public static bool CanBeApplied(object instance)
@@ -143,14 +149,14 @@ namespace DiffWindows.TextWindows
 
         private void TextDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            LocalFileLocation = node.IsInLocation(LocationEnum.OnLocal)
-                ? PathHelper.TrimPath(node.InfoLocal.FullName, FilePathLabel)
+            LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
+                ? PathHelper.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
-            RemoteFileLocation = node.IsInLocation(LocationEnum.OnRemote)
-                ? PathHelper.TrimPath(node.InfoRemote.FullName, FilePathLabel)
+            RemoteFileLocation = DiffNode.IsInLocation(LocationEnum.OnRemote)
+                ? PathHelper.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
-            BaseFileLocation = node.IsInLocation(LocationEnum.OnBase)
-                ? PathHelper.TrimPath(node.InfoBase.FullName, FilePathLabel)
+            BaseFileLocation = DiffNode.IsInLocation(LocationEnum.OnBase)
+                ? PathHelper.TrimPath(DiffNode.InfoBase.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
         }
     }

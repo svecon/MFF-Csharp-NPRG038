@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using CoreLibrary.DiffWindow;
 using CoreLibrary.Interfaces;
+using DiffIntegration.DiffFilesystemTree;
 
 namespace Sverge.DiffWindows
 {
@@ -20,7 +21,7 @@ namespace Sverge.DiffWindows
 
         public void LoadWindows()
         {
-            Type type = typeof(IDiffWindow);
+            Type type = typeof(IDiffWindow<object>);
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsAbstract)
@@ -41,7 +42,7 @@ namespace Sverge.DiffWindows
                 }
         }
 
-        public IDiffWindow CreateWindowFor(object structure)
+        public IDiffWindow<object> CreateWindowFor(object structure)
         {
             foreach (KeyValuePair<int, Type> valuePair in availableWindows)
             {
@@ -64,7 +65,7 @@ namespace Sverge.DiffWindows
                     if (constructorInfo == null)
                         throw new InvalidOperationException(string.Format("DiffWindow of type {0} does not have correct constructor.", valuePair.Value));
 
-                    return (IDiffWindow)constructorInfo.Invoke( usingWindowParam ? new[] { structure, window } : new[] { structure });
+                    return (IDiffWindow<object>)constructorInfo.Invoke( usingWindowParam ? new[] { structure, window } : new[] { structure });
 
                 } catch (Exception)
                 {

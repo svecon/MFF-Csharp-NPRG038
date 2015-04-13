@@ -15,9 +15,9 @@ namespace DiffWindows.TextWindows
     /// Interaction logic for TextDiffTwoWay.xaml
     /// </summary>
     [DiffWindow(100)]
-    public partial class TextDiffTwoWay : UserControl, IDiffWindow
+    public partial class TextDiffTwoWay : UserControl, IDiffWindow<DiffFileNode>
     {
-        private DiffFileNode node;
+        public DiffFileNode DiffNode { get; private set; }
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffTwoWay));
@@ -39,12 +39,12 @@ namespace DiffWindows.TextWindows
 
         public TextDiffTwoWay(object diffNode)
         {
-            node = (DiffFileNode)diffNode;
+            DiffNode = (DiffFileNode)diffNode;
 
             InitializeComponent();
 
-            var local = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Local);
-            var remote = new TextDiffArea(node, TextDiffArea.TargetFileEnum.Remote);
+            var local = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Local);
+            var remote = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Remote);
 
             ScrollViewerLocal.Content = local;
             ScrollViewerRemote.Content = remote;
@@ -61,7 +61,7 @@ namespace DiffWindows.TextWindows
 
             local.OnVerticalScrollSynchronization += offset =>
             {
-                int difference = node.Diff.Items
+                int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
                     .TakeWhile(diffItem => diffItem.LocalLineStart <= local.StartsOnLine)
                     .Sum(diffItem => diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
 
@@ -70,14 +70,14 @@ namespace DiffWindows.TextWindows
 
             remote.OnVerticalScrollSynchronization += offset =>
             {
-                int difference = node.Diff.Items
+                int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
                     .TakeWhile(diffItem => diffItem.RemoteLineStart <= remote.StartsOnLine)
                     .Sum(diffItem => diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
 
                 local.SetVerticalOffsetWithoutSynchornizing(offset, difference);
             };
 
-            LineMarkersPanel.Content = new LineMarkersTwoWayElement(node, local, remote);
+            LineMarkersPanel.Content = new LineMarkersTwoWayElement(DiffNode, local, remote);
         }
 
         public static bool CanBeApplied(object instance)
@@ -95,11 +95,11 @@ namespace DiffWindows.TextWindows
 
         private void TextDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            LocalFileLocation = node.IsInLocation(LocationEnum.OnLocal)
-                ? PathHelper.TrimPath(node.InfoLocal.FullName, FilePathLabel)
+            LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
+                ? PathHelper.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
-            RemoteFileLocation = node.IsInLocation(LocationEnum.OnRemote)
-                ? PathHelper.TrimPath(node.InfoRemote.FullName, FilePathLabel)
+            RemoteFileLocation = DiffNode.IsInLocation(LocationEnum.OnRemote)
+                ? PathHelper.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,12 +22,15 @@ namespace Sverge
     {
         private readonly IProcessorLoader loader;
         private readonly DiffWindowLoader windowLoader;
+        private readonly Dictionary<object, int> tabsPositions;
 
         public MainWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
             windowLoader = new DiffWindowLoader(this);
             windowLoader.LoadWindows();
+
+            tabsPositions = new Dictionary<object, int>();
 
             InitializeComponent();
         }
@@ -154,6 +158,13 @@ namespace Sverge
 
         public void AddNewTab(IFilesystemTreeVisitable diffTree)
         {
+            int tabPosition;
+            if (tabsPositions.TryGetValue(diffTree, out tabPosition))
+            {
+                Tabs.SelectedIndex = tabPosition;
+                return;
+            }
+
             string header = "";
             if (diffTree is IFilesystemTreeFileNode)
             {
@@ -171,6 +182,20 @@ namespace Sverge
                 Content = windowLoader.CreateWindowFor(diffTree),
                 IsSelected = true
             });
+
+            tabsPositions.Add(diffTree, Tabs.SelectedIndex);
+        }
+
+        private void RemoveWindow(int position)
+        {
+            tabsPositions.Remove(((IDiffWindow<object>)((TabItem)Tabs.Items.GetItemAt(position)).Content).DiffNode);
+            Tabs.Items.RemoveAt(position);
+        }
+
+        private void RemoveWindow(TabItem item)
+        {
+            tabsPositions.Remove(((IDiffWindow<object>)item.Content).DiffNode);
+            Tabs.Items.Remove(item);
         }
 
         public void OpenWindowDialog()
@@ -186,8 +211,7 @@ namespace Sverge
 
         private void TabCloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            var x = FindParent<TabItem>(sender as DependencyObject);
-            Tabs.Items.Remove(x);
+            RemoveWindow(FindParent<TabItem>(sender as DependencyObject));
         }
 
         public static T FindParent<T>(DependencyObject child) where T : DependencyObject
@@ -229,7 +253,7 @@ namespace Sverge
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Tabs.Items.RemoveAt(Tabs.SelectedIndex);
+            RemoveWindow(Tabs.SelectedIndex);
         }
 
         public static readonly RoutedUICommand Exit = new RoutedUICommand(
