@@ -6,6 +6,7 @@ using CoreLibrary.Exceptions;
 using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
@@ -31,6 +32,7 @@ namespace SvergeConsole
             #region Load all available processors and their settings
             try
             {
+                PluginsLoader.LoadAssemblies();
                 _loader = new ProcessorLoader();
                 // Load available processors and their settings
                 _loader.LoadAll();

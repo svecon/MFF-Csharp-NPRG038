@@ -84,6 +84,7 @@
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
     <Compile Include="Interfaces\IWindow.cs" />
+    <Compile Include="Plugins\PluginsLoader.cs" />
     <Compile Include="Processors\BaseProcessorAbstract.cs" />
     <Compile Include="Processors\Postprocessors\PostProcessorAbstract.cs" />
     <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />

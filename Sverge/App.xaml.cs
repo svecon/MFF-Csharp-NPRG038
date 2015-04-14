@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Navigation;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins;
 using CoreLibrary.Settings;
 using DiffIntegration;
 
@@ -42,19 +43,6 @@ namespace Sverge
             return fvi.FileVersion;
         }
 
-        private void LoadAssemblies()
-        {
-            string path = Path.Combine(Environment.CurrentDirectory, "plugins");
-
-            if (!Directory.Exists(path))
-                return;
-
-            foreach (string file in Directory.GetFiles(path, "*.dll"))
-            {
-                Assembly.LoadFile(file);
-            }
-        }
-
         private void App_OnStartup(object sender, StartupEventArgs eventArgs)
         {
             #region DEBUG: Print arguments
@@ -76,7 +64,7 @@ namespace Sverge
             #region Load all available processors and their settings
             try
             {
-                LoadAssemblies();
+                PluginsLoader.LoadAssemblies();
                 loader = new DiffProcessorLoader();
                 // Load available processors and their settings
                 loader.LoadAll();
