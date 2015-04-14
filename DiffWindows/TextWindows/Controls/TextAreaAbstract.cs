@@ -131,6 +131,11 @@ namespace DiffWindows.TextWindows.Controls
         { SetHorizontalOffset(HorizontalOffset + ViewportWidth); }
         #endregion
 
+        public void ScrollToLine(int line)
+        {
+            SetVerticalOffsetWithoutSynchornizing(PaddingTop, line);
+        }
+
         private void CheckOffeset(ref double newOffset, double viewportSize, double extentSize)
         {
             if (newOffset < 0 || viewportSize >= extentSize)

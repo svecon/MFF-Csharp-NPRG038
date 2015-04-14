@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,8 @@ using CoreLibrary.Interfaces;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.Processors.Preprocessors;
 using DiffIntegration.Processors.Processors;
+using DiffWindows.Menus;
+using DiffWindows.TextWindows;
 using Sverge.DiffWindows;
 
 namespace Sverge
@@ -23,12 +26,15 @@ namespace Sverge
         private readonly IProcessorLoader loader;
         private readonly DiffWindowLoader windowLoader;
         private readonly Dictionary<object, int> tabsPositions;
+        private int windowMenusAdded;
+        private int windowMenusBindingsAdded;
 
         public MainWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
             windowLoader = new DiffWindowLoader(this);
             windowLoader.LoadWindows();
+            windowLoader.LoadWindowMenus();
 
             tabsPositions = new Dictionary<object, int>();
 
@@ -253,6 +259,9 @@ namespace Sverge
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            RemoveCustomWindowMenuBindings();
+            CloseCustomWindowMenus();
+
             RemoveWindow(Tabs.SelectedIndex);
         }
 
@@ -274,7 +283,55 @@ namespace Sverge
             Application.Current.Shutdown(); // @TODO Exit code
         }
 
+        private void CloseCustomWindowMenus()
+        {
+            for (; windowMenusAdded > 0; windowMenusAdded--)
+            {
+                Menu.Items.RemoveAt(Menu.Items.Count - 1);
+            }
+        }
 
+        private void RemoveCustomWindowMenuBindings()
+        {
+            for (; windowMenusBindingsAdded > 0; windowMenusBindingsAdded--)
+            {
+                CommandBindings.RemoveAt(CommandBindings.Count - 1);
+            }
+        }
 
+        private void Tabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                if (Tabs.SelectedIndex == -1)
+                    return;
+
+                RemoveCustomWindowMenuBindings();
+                CloseCustomWindowMenus();
+
+                IEnumerable<IDiffWindowMenu> windows = windowLoader.CreateDiffWindowMenus(
+                    ((TabItem)Tabs.Items.GetItemAt(Tabs.SelectedIndex)).Content
+                );
+
+                foreach (IDiffWindowMenu diffWindowMenu in windows)
+                {
+                    MenuItem item = diffWindowMenu.CreateMenuItem();
+                    Menu.Items.Add(item);
+
+                    item.Style = (Style)Resources["WindowMenuItemStyle"];
+
+                    windowMenusAdded++;
+
+                    foreach (CommandBinding commandBinding in diffWindowMenu.CommandBindings())
+                    {
+                        CommandBindings.Add(commandBinding);
+
+                        windowMenusBindingsAdded++;
+                    }
+                }
+
+                
+            }
+        }
     }
 }

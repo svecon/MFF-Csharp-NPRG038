@@ -11,12 +11,14 @@ namespace Sverge.DiffWindows
     class DiffWindowLoader
     {
         private readonly SortedList<int, Type> availableWindows;
+        private readonly List<Type> availableWindowMenus;
         private MainWindow window;
 
         public DiffWindowLoader(MainWindow mainWindow)
         {
             window = mainWindow;
             availableWindows = new SortedList<int, Type>();
+            availableWindowMenus = new List<Type>();
         }
 
         public void LoadWindows()
@@ -42,6 +44,56 @@ namespace Sverge.DiffWindows
                 }
         }
 
+        public void LoadWindowMenus()
+        {
+            Type type = typeof(IDiffWindowMenu);
+            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => !p.IsAbstract)
+                .Where(p => !p.IsInterface)
+                .Where(p => type.IsAssignableFrom(p));
+
+            foreach (Type item in types)
+
+                try
+                {
+                    availableWindowMenus.Add(item);
+                } catch (Exception)
+                {
+#if DEBUG
+                    throw;
+#endif
+                }
+        }
+
+        public IEnumerable<IDiffWindowMenu> CreateDiffWindowMenus(object diffWindow)
+        {
+            foreach (Type availableWindowMenu in availableWindowMenus)
+            {
+                bool canBeApplied = false;
+
+                try
+                {
+                    canBeApplied = (bool)availableWindowMenu.GetMethod("CanBeApplied").Invoke(null, new[] { diffWindow });
+                } catch (Exception)
+                {
+#if DEBUG
+                    throw;
+#endif
+                }
+
+                if (!canBeApplied)
+                    continue;
+
+                ConstructorInfo constructorInfo = availableWindowMenu.GetConstructor(new Type[] { typeof(object) });
+
+                if (constructorInfo == null)
+                    continue;
+
+                yield return (IDiffWindowMenu)constructorInfo.Invoke(new[] { diffWindow });
+            }
+        }
+
         public IDiffWindow<object> CreateWindowFor(object structure)
         {
             foreach (KeyValuePair<int, Type> valuePair in availableWindows)
@@ -65,7 +117,7 @@ namespace Sverge.DiffWindows
                     if (constructorInfo == null)
                         throw new InvalidOperationException(string.Format("DiffWindow of type {0} does not have correct constructor.", valuePair.Value));
 
-                    return (IDiffWindow<object>)constructorInfo.Invoke( usingWindowParam ? new[] { structure, window } : new[] { structure });
+                    return (IDiffWindow<object>)constructorInfo.Invoke(usingWindowParam ? new[] { structure, window } : new[] { structure });
 
                 } catch (Exception)
                 {

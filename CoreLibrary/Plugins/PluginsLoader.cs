@@ -12,7 +12,7 @@ namespace CoreLibrary.Plugins
     {
         public static void LoadAssemblies()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "plugins");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
             if (!Directory.Exists(path))
                 return;

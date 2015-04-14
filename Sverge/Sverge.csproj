@@ -129,6 +129,10 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DiffWindows\DiffWindows.csproj">
+      <Project>{D39D9ECE-1B05-4877-A197-949A0623FD3C}</Project>
+      <Name>DiffWindows</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\folder.png">

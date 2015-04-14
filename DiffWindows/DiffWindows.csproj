@@ -61,6 +61,7 @@
     <Compile Include="FolderWindows\Converters\DiffToBackgroundConverter.cs" />
     <Compile Include="FolderWindows\Converters\SizeConverter.cs" />
     <Compile Include="FolderWindows\PathHelper.cs" />
+    <Compile Include="Menus\ChangesMenu.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -57,6 +57,8 @@ namespace Sverge
 
                 tw.WriteLine(">>>");
                 tw.WriteLine(Environment.CurrentDirectory);
+                tw.WriteLine(System.Windows.Forms.Application.ExecutablePath);
+                tw.WriteLine(Assembly.GetEntryAssembly().Location);
             }
 #endif
             #endregion
