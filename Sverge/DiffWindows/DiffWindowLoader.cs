@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CoreLibrary.DiffWindow;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace Sverge.DiffWindows
@@ -11,14 +11,14 @@ namespace Sverge.DiffWindows
     class DiffWindowLoader
     {
         private readonly SortedList<int, Type> availableWindows;
-        private readonly List<Type> availableWindowMenus;
+        private readonly SortedList<int, Type> availableWindowMenus;
         private MainWindow window;
 
         public DiffWindowLoader(MainWindow mainWindow)
         {
             window = mainWindow;
             availableWindows = new SortedList<int, Type>();
-            availableWindowMenus = new List<Type>();
+            availableWindowMenus = new SortedList<int, Type>();
         }
 
         public void LoadWindows()
@@ -57,7 +57,8 @@ namespace Sverge.DiffWindows
 
                 try
                 {
-                    availableWindowMenus.Add(item);
+                    var attr = (DiffWindowMenuAttribute)item.GetCustomAttributes(typeof(DiffWindowMenuAttribute), false)[0];
+                    availableWindowMenus.Add(attr.Priority, item);
                 } catch (Exception)
                 {
 #if DEBUG
@@ -68,13 +69,13 @@ namespace Sverge.DiffWindows
 
         public IEnumerable<IDiffWindowMenu> CreateDiffWindowMenus(object diffWindow)
         {
-            foreach (Type availableWindowMenu in availableWindowMenus)
+            foreach (KeyValuePair<int, Type> availableWindowMenu in availableWindowMenus)
             {
                 bool canBeApplied = false;
 
                 try
                 {
-                    canBeApplied = (bool)availableWindowMenu.GetMethod("CanBeApplied").Invoke(null, new[] { diffWindow });
+                    canBeApplied = (bool)availableWindowMenu.Value.GetMethod("CanBeApplied").Invoke(null, new[] { diffWindow });
                 } catch (Exception)
                 {
 #if DEBUG
@@ -85,7 +86,7 @@ namespace Sverge.DiffWindows
                 if (!canBeApplied)
                     continue;
 
-                ConstructorInfo constructorInfo = availableWindowMenu.GetConstructor(new Type[] { typeof(object) });
+                ConstructorInfo constructorInfo = availableWindowMenu.Value.GetConstructor(new Type[] { typeof(object) });
 
                 if (constructorInfo == null)
                     continue;

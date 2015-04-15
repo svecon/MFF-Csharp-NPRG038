@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace CoreLibrary.DiffWindow
+namespace CoreLibrary.Plugins.DiffWindow
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class DiffWindowAttribute : Attribute
+    public class DiffWindowMenuAttribute : Attribute
     {
         public int Priority { get; set; }
 
-        public DiffWindowAttribute(int priority)
+        public DiffWindowMenuAttribute(int priority)
         {
             Priority = priority;
         }

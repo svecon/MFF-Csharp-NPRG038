@@ -106,14 +106,14 @@ namespace DiffWindows.TextWindows.Controls
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        b = new SolidColorBrush(Colors.MediumPurple) { Opacity = .2 };
+                        b = new SolidColorBrush(diffItem.RemoteAffectedLines == 0 ? Colors.MediumVioletRed : Colors.MediumPurple) { Opacity = .2 };
 
                         diffStartLine = diffItem.LocalLineStart;
                         diffAffectedLines = diffItem.LocalAffectedLines;
 
                         break;
                     case TargetFileEnum.Remote:
-                        b = new SolidColorBrush(Colors.MediumVioletRed) { Opacity = .2 };
+                        b = new SolidColorBrush(diffItem.LocalAffectedLines == 0 ? Colors.LimeGreen : Colors.MediumPurple) { Opacity = .2 };
 
                         diffStartLine = diffItem.RemoteLineStart;
                         diffAffectedLines = diffItem.RemoteAffectedLines;

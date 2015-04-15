@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffWindows.FolderWindows

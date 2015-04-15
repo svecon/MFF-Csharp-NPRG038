@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
-using CoreLibrary.DiffWindow;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 
 namespace Sverge.DiffWindows
 {

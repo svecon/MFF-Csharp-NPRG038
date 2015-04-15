@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.FolderWindows;
 using DiffWindows.TextWindows.Controls;

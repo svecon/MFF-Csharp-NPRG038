@@ -3,6 +3,7 @@ using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 
 namespace DiffWindows.Menus
 {
@@ -18,6 +19,7 @@ namespace DiffWindows.Menus
         CommandBinding NextCommandBinding();
     }
 
+    [DiffWindowMenu(100)]
     public class ChangesMenu : IDiffWindowMenu
     {
         private readonly IChangesMenu window;

@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoreLibrary.DiffWindow;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.FolderWindows;
@@ -19,15 +19,15 @@ namespace DiffWindows.TextWindows
     /// Interaction logic for TextDiffThreeWay.xaml
     /// </summary>
     [DiffWindow(200)]
-    public partial class TextDiffThreeWay : UserControl, IDiffWindow<DiffFileNode>, IChangesMenu
+    public partial class TextDiffThreeWay : UserControl, IDiffWindow<DiffFileNode>, IChangesMenu, IMergeMenu
     {
         public DiffFileNode DiffNode { get; private set; }
 
         public int CurrentDiff { get; internal set; }
 
-        private TextDiff3Area localText;
-        private TextDiff3Area baseText;
-        private TextDiff3Area remoteText;
+        private readonly TextDiff3Area localText;
+        private readonly TextDiff3Area baseText;
+        private readonly TextDiff3Area remoteText;
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffThreeWay));
@@ -56,7 +56,6 @@ namespace DiffWindows.TextWindows
             set { SetValue(BaseFileLocationProperty, value); }
         }
 
-
         public TextDiffThreeWay(object diffNode)
         {
             InitializeComponent();
@@ -73,10 +72,18 @@ namespace DiffWindows.TextWindows
             ScrollViewerRemote.Content = remoteText;
             ScrollViewerBase.Content = baseText;
 
+            localText.OnDiffChange += InvalidateAllVisual;
+            remoteText.OnDiffChange += InvalidateAllVisual;
+            baseText.OnDiffChange += InvalidateAllVisual;
+
+            localText.OnDiffSelected += selected => CurrentDiff = selected;
+            remoteText.OnDiffSelected += selected => CurrentDiff = selected;
+            baseText.OnDiffSelected += selected => CurrentDiff = selected;
+
             localText.OnHorizontalScroll += offset =>
-            {
-                baseText.SetHorizontalOffset(offset);
-            };
+                {
+                    baseText.SetHorizontalOffset(offset);
+                };
 
             remoteText.OnHorizontalScroll += offset =>
             {
@@ -144,6 +151,13 @@ namespace DiffWindows.TextWindows
             LineMarkersPanelRemote.Content = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
+        private void InvalidateAllVisual()
+        {
+            localText.InvalidateVisual();
+            remoteText.InvalidateVisual();
+            baseText.InvalidateVisual();
+        }
+
         public static bool CanBeApplied(object instance)
         {
             var diffNode = instance as DiffFileNode;
@@ -170,13 +184,13 @@ namespace DiffWindows.TextWindows
                 : DiffWindows.Resources.Diff_No_File_At_Location;
         }
 
-        #region Custom menu commands
+        #region Custom ChangesMenu commands
 
-        private void ScrollToCurrentDiff()
+        private void ScrollToLine(int line)
         {
-            localText.ScrollToLine(DiffNode.Diff3.Items[CurrentDiff].LocalLineStart - 1);
-            baseText.ScrollToLine(DiffNode.Diff3.Items[CurrentDiff].BaseLineStart - 1);
-            remoteText.ScrollToLine(DiffNode.Diff3.Items[CurrentDiff].RemoteLineStart - 1);
+            localText.ScrollToLine(DiffNode.Diff3.Items[line].LocalLineStart - 1);
+            baseText.ScrollToLine(DiffNode.Diff3.Items[line].BaseLineStart - 1);
+            remoteText.ScrollToLine(DiffNode.Diff3.Items[line].RemoteLineStart - 1);
         }
 
         public RoutedUICommand PreviousCommand()
@@ -187,15 +201,11 @@ namespace DiffWindows.TextWindows
         public CommandBinding PreviousCommandBinding()
         {
             return new CommandBinding(Previous,
-                (sender, args) =>
-                {
-                    CurrentDiff--;
-                    ScrollToCurrentDiff();
-                },
+                (sender, args) => { ScrollToLine(--CurrentDiff); },
                 (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff > 0; });
         }
 
-        public static RoutedUICommand Previous = new RoutedUICommand("PreviousCommand", "PreviousCommand", typeof(TextDiff3Area),
+        public static RoutedUICommand Previous = new RoutedUICommand("Previous", "Previous", typeof(TextDiff3Area),
                 new InputGestureCollection() { new KeyGesture(Key.F7) }
             );
 
@@ -207,17 +217,145 @@ namespace DiffWindows.TextWindows
         public CommandBinding NextCommandBinding()
         {
             return new CommandBinding(Next,
-                (sender, args) =>
-                {
-                    CurrentDiff++;
-                    ScrollToCurrentDiff();
-                },
+                (sender, args) => { ScrollToLine(++CurrentDiff); },
                 (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < DiffNode.Diff3.Items.Length - 1; });
         }
 
-        public static RoutedUICommand Next = new RoutedUICommand("NextCommand", "NextCommand", typeof(TextDiff3Area),
+        public static RoutedUICommand Next = new RoutedUICommand("Next", "Next", typeof(TextDiff3Area),
                 new InputGestureCollection() { new KeyGesture(Key.F8) }
             );
+
+        #endregion
+
+        #region Custom MergeMenu commands
+
+        public RoutedUICommand PreviousConflictCommand() { return PreviousConflict; }
+
+        private int FindPreviousConflict()
+        {
+            for (int i = CurrentDiff - 1; i >= 0; i--)
+            {
+                if (DiffNode.Diff3.Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public CommandBinding PreviousConflictCommandBinding()
+        {
+            return new CommandBinding(PreviousConflict,
+                (sender, args) =>
+                {
+                    ScrollToLine(CurrentDiff = FindPreviousConflict());
+                },
+                (sender, args) =>
+                {
+                    args.CanExecute = DiffNode.Diff3 != null && FindPreviousConflict() != -1;
+                });
+        }
+
+        public static RoutedUICommand PreviousConflict = new RoutedUICommand("PreviousConflict", "PreviousConflict", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.D9, ModifierKeys.Control) }
+        );
+
+        public RoutedUICommand NextConflictCommand() { return NextConflict; }
+
+        private int FindNextConflict()
+        {
+            for (int i = CurrentDiff + 1; i < DiffNode.Diff3.Items.Length; i++)
+            {
+                if (DiffNode.Diff3.Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public CommandBinding NextConflictCommandBinding()
+        {
+            return new CommandBinding(NextConflict, (sender, args) =>
+            {
+                ScrollToLine(CurrentDiff = FindNextConflict());
+            }, (sender, args) =>
+            {
+                args.CanExecute = DiffNode.Diff3 != null && FindNextConflict() != -1;
+            });
+        }
+
+        public static RoutedUICommand NextConflict = new RoutedUICommand("NextConflict", "NextConflict", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.D0, ModifierKeys.Control) }
+        );
+
+        public RoutedUICommand MergeCommand() { return Merge; }
+
+        public CommandBinding MergeCommandBinding()
+        {
+            return new CommandBinding(Merge, (sender, args) => { }, (sender, args) => { });
+        }
+
+        public static RoutedUICommand Merge = new RoutedUICommand("Merge", "Merge", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.M, ModifierKeys.Control) }
+        );
+
+        private bool CurrentDiffAvailable()
+        {
+            return DiffNode.Diff3 != null && 0 <= CurrentDiff && CurrentDiff < DiffNode.Diff3.Items.Length;
+        }
+
+        public RoutedUICommand UseLocalCommand() { return UseLocal; }
+
+        public static RoutedUICommand UseLocal = new RoutedUICommand("UseLocal", "UseLocal", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.I, ModifierKeys.Control) }
+        );
+
+        public CommandBinding UseLocalCommandBinding()
+        {
+            return new CommandBinding(UseLocal,
+                (sender, args) =>
+                {
+                    DiffNode.Diff3.Items[CurrentDiff].Action = Diff3Item.ActionEnum.ApplyLocal;
+                    InvalidateAllVisual();
+                },
+                (sender, args) => args.CanExecute = CurrentDiffAvailable()
+            );
+        }
+
+        public RoutedUICommand UseBaseCommand() { return UseBase; }
+
+        public static RoutedUICommand UseBase = new RoutedUICommand("UseBase", "UseBase", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control) }
+        );
+
+        public CommandBinding UseBaseCommandBinding()
+        {
+            return new CommandBinding(UseBase,
+                (sender, args) =>
+                {
+                    DiffNode.Diff3.Items[CurrentDiff].Action = Diff3Item.ActionEnum.RevertToBase;
+                    InvalidateAllVisual();
+                },
+                (sender, args) => args.CanExecute = CurrentDiffAvailable()
+            );
+        }
+
+        public RoutedUICommand UseRemoteCommand() { return UseRemote; }
+
+        public static RoutedUICommand UseRemote = new RoutedUICommand("UseRemote", "UseRemote", typeof(TextDiff3Area),
+            new InputGestureCollection() { new KeyGesture(Key.P, ModifierKeys.Control) }
+        );
+
+        public CommandBinding UseRemoteCommandBinding()
+        {
+            return new CommandBinding(UseRemote,
+                (sender, args) =>
+                {
+                    DiffNode.Diff3.Items[CurrentDiff].Action = Diff3Item.ActionEnum.ApplyRemote;
+                    InvalidateAllVisual();
+                },
+                (sender, args) => args.CanExecute = CurrentDiffAvailable()
+            );
+        }
 
         #endregion
     }
