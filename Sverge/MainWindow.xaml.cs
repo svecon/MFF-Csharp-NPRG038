@@ -157,6 +157,7 @@ namespace Sverge
             }
 
             runner.RunMerge(window.DiffNode);
+            runner.RunDiff(window.DiffNode);
         }
 
         public DW OpenNewTab(TV diffNode, DW parentWindow = null)

@@ -19,9 +19,6 @@ namespace DiffIntegration.Processors.Postprocessors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
 
-        [Settings("Merge folders and files.", "merge", "m")]
-        public bool IsEnabled = false;
-
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
@@ -45,9 +42,6 @@ namespace DiffIntegration.Processors.Postprocessors
                 return;
 
             if (OutputFolder == null)
-                IsEnabled = false;
-
-            if (!IsEnabled)
                 return;
 
             // processor setting
@@ -67,7 +61,7 @@ namespace DiffIntegration.Processors.Postprocessors
             if (!CheckModeAndStatus(node))
                 return;
 
-            if (!IsEnabled)
+            if (OutputFolder == null)
                 return;
 
             var dnode = node as DiffFileNode;

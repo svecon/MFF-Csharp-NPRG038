@@ -25,7 +25,12 @@ namespace SvergeConsole
         [Settings("Show help about using the console.", "help", "h")]
         public static bool ShowHelp = false;
 
+        [Settings("Merge folders and files.", "merge", "m")]
+        public static bool MergeMode = false;
+
         private static IProcessorLoader _loader;
+        private static ProcessorRunner _runner;
+        private static IFilesystemTreeVisitable _diffTree;
 
         static void Main(string[] args)
         {
@@ -38,6 +43,7 @@ namespace SvergeConsole
                 _loader.LoadAll();
                 // Add special settings from this Program
                 _loader.RetrieveSettings(typeof(Program), true);
+                _runner = new ProcessorRunner(_loader);
             } catch (ProcessorPriorityColissionException e)
             {
                 Console.WriteLine("Processor " + e.Message + "could not be loaded because of a priority collision.");
@@ -103,22 +109,20 @@ namespace SvergeConsole
             #endregion
 
             #region Creating main structure
-            IFilesystemTreeVisitable diffTree;
-
             try
             {
                 if (args.Length == 2 && areArgsFiles > 0)
                 {
-                    diffTree = new DiffFileNode(args[0], args[1]);
+                    _diffTree = new DiffFileNode(args[0], args[1]);
                 } else if (args.Length == 3 && areArgsFiles > 0)
                 {
-                    diffTree = new DiffFileNode(args[0], args[1], args[2]);
+                    _diffTree = new DiffFileNode(args[0], args[1], args[2]);
                 } else if (args.Length == 2 && areArgsFiles == 0)
                 {
-                    diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();
+                    _diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();
                 } else if (args.Length == 3 && areArgsFiles == 0)
                 {
-                    diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1], args[2]).TraverseTree();
+                    _diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1], args[2]).TraverseTree();
                 } else
                 {
                     Console.WriteLine("You can not mix folders and files together as arguments.");
@@ -156,49 +160,21 @@ namespace SvergeConsole
             #endregion
 
             #region Run Processors
-            // run preprocessors and calculate diffs in parallel 
-            IExecutionVisitor ex = new ParallelExecutionVisitor(_loader.SplitLoaderUsing(
-                  typeof(ExtensionFilterProcessor)
-                , typeof(RegexFilterProcessor)
-                , typeof(CsharpSourcesFilterProcessor)
-                , typeof(FileTypeProcessor)
 
-                , typeof(SizeTimeDiffProcessor)
-                , typeof(ChecksumDiffProcessor)
-                , typeof(BinaryDiffProcessor)
+            _runner.RunDiff(_diffTree).Wait();
 
-                , typeof(CalculateDiffProcessor)
-            ));
-            diffTree.Accept(ex);
-            ex.Wait();
+            if (MergeMode)
+            {
+                // run interactive diffing
+                _runner.RunInteractiveResolving(_diffTree);
 
-            // run interactive diffing
-            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
-                  typeof(InteractiveTwoWayDiffProcessor)
-                , typeof(InteractiveThreeWayDiffProcessor)
-            ));
-            diffTree.Accept(ex);
-            ex.Wait();
+                // run merging and syncing in parallel
+                _runner.RunMerge(_diffTree).Wait();
 
-            // run merging and syncing in parallel
-            ex = new ParallelExecutionVisitor(_loader.SplitLoaderUsing(
-                  typeof(MergeTwoWayProcessor)
-                , typeof(MergeThreeWayProcessor)
-                , typeof(SyncTwoWayProcessor)
-            ));
-            diffTree.Accept(ex);
-            ex.Wait();
-
-#if DEBUG // run this processor just for fun
-            ex = new ExecutionVisitor(_loader.SplitLoaderUsing(
-                typeof(OutputSingleFileProcessor)
-            ));
-            diffTree.Accept(ex);
-            ex.Wait();
-#endif
+            }
 
             // print the filesystem tree
-            diffTree.Accept(new PrinterVisitor());
+            _diffTree.Accept(new PrinterVisitor());
             #endregion
         }
 

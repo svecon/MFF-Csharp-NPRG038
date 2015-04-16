@@ -44,7 +44,7 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public async void RunDiff(IFilesystemTreeVisitable diffTree)
+        public async Task RunDiff(IFilesystemTreeVisitable diffTree)
         {
             IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitUsingPreprocessors());
 
@@ -61,7 +61,7 @@ namespace CoreLibrary.Processors
             diffDelegates.Remove(diffTree);
         }
 
-        public async void RunMerge(IFilesystemTreeVisitable diffTree)
+        public async Task RunMerge(IFilesystemTreeVisitable diffTree)
         {
             IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitUsingPostprocessors());
 
@@ -72,13 +72,15 @@ namespace CoreLibrary.Processors
                 ex.Wait();
             }, TaskCreationOptions.LongRunning);
 
-            if (mergeDelegates.ContainsKey(diffTree) && mergeDelegates[diffTree] != null)
-            {
-                mergeDelegates[diffTree]();
-                mergeDelegates.Remove(diffTree);
-            }
+            if (!mergeDelegates.ContainsKey(diffTree) || mergeDelegates[diffTree] == null) return;
+            
+            mergeDelegates[diffTree]();
+            mergeDelegates.Remove(diffTree);
+        }
 
-            RunDiff(diffTree);
+        public void RunInteractiveResolving(IFilesystemTreeVisitable diffTree)
+        {
+
         }
     }
 }

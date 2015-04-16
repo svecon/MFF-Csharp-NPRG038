@@ -17,9 +17,6 @@ namespace DiffIntegration.Processors.Postprocessors
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
 
-        [Settings("Merge folders and files.", "merge", "m")]
-        public bool IsEnabled = true;
-
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
@@ -34,7 +31,7 @@ namespace DiffIntegration.Processors.Postprocessors
         public override void Process(IFilesystemTreeDirNode node)
         {
             // if OutputFolder is unset
-            if (IsEnabled && OutputFolder == null)
+            if (OutputFolder == null)
             {
                 // set it to root folder of InfoBase
                 OutputFolder = node.InfoBase.FullName;
@@ -44,9 +41,6 @@ namespace DiffIntegration.Processors.Postprocessors
         public override void Process(IFilesystemTreeFileNode node)
         {
             if (!CheckModeAndStatus(node))
-                return;
-
-            if (!IsEnabled)
                 return;
 
             var dnode = node as DiffFileNode;

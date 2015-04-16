@@ -52,7 +52,6 @@
     <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
     <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
     <Compile Include="Processors\Postprocessors\MergeCleanupProcessor.cs" />
-    <Compile Include="Processors\Postprocessors\OutputSingleFileProcessor.cs" />
     <Compile Include="Processors\Postprocessors\MergeTwoWayProcessor.cs" />
     <Compile Include="Processors\Postprocessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Processors\Preprocessors\FileTypeProcessor.cs" />

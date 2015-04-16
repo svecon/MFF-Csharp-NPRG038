@@ -7,7 +7,7 @@ namespace DiffIntegration.Processors.Postprocessors
 {
     public class MergeCleanupProcessor : PostProcessorAbstract
     {
-        public override int Priority { get { return int.MaxValue; } }
+        public override int Priority { get { return 9999; } }
 
         public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
 
