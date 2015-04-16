@@ -23,9 +23,9 @@ namespace CoreLibrary.Processors
             this.printSettings = printSettings;
         }
 
-        private void PrintProcessorInfo(IProcessorBase processor)
+        private void PrintProcessorInfo(IProcessor processor)
         {
-            Console.WriteLine("{0,10} {1} in {2}", processor.Priority, processor.GetType().Name,
+            Console.WriteLine("{0,10} {1} in {2}", processor.Attribute.Priority, processor.GetType().Name,
                 processor.GetType().Namespace);
 
             if (!printSettings)
@@ -47,22 +47,14 @@ namespace CoreLibrary.Processors
             var settingsPrinter = new SettingsPrinter(loader.GetSettingsByProcessor(typeof(Object).ToString()), 11);
             settingsPrinter.Print();
 
-            Console.WriteLine("\n=== PreProcessors");
-            foreach (IPreProcessor processor in loader.GetPreProcessors())
+            foreach (object value in Enum.GetValues(typeof(ProcessorTypeEnum)))
             {
-                PrintProcessorInfo(processor);
-            }
+                Console.WriteLine("\n=== {0}", value);
 
-            Console.WriteLine("\n=== Processors");
-            foreach (IProcessor processor in loader.GetProcessors())
-            {
-                PrintProcessorInfo(processor);
-            }
-
-            Console.WriteLine("\n=== PostProcessors");
-            foreach (IPostProcessor processor in loader.GetPostProcessors())
-            {
-                PrintProcessorInfo(processor);
+                foreach (IProcessor processor in loader.GetProcessors((ProcessorTypeEnum)value))
+                {
+                    PrintProcessorInfo(processor);
+                }
             }
         }
 

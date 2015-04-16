@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoreLibrary.Processors;
 
 namespace CoreLibrary.Interfaces
 {
@@ -18,23 +19,7 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         void LoadAll();
 
-        /// <summary>
-        /// Iterates over PreProcessors.
-        /// </summary>
-        /// <returns>IEnumerable</returns>
-        IEnumerable<IPreProcessor> GetPreProcessors();
-
-        /// <summary>
-        /// Iterates over Processors.
-        /// </summary>
-        /// <returns>IEnumerable</returns>
-        IEnumerable<IProcessor> GetProcessors();
-
-        /// <summary>
-        /// Iterates over PostProcessors.
-        /// </summary>
-        /// <returns>IEnumerable</returns>
-        IEnumerable<IPostProcessor> GetPostProcessors();
+        IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType);
 
         /// <summary>
         /// Traverses through instance of an object and creates instances of annotated fields with ISettings annotation.
@@ -44,29 +29,10 @@ namespace CoreLibrary.Interfaces
         void RetrieveSettings(object instance, bool isStatic = false);
 
         /// <summary>
-        /// Add IProcessorBase into a correct Processor type.
-        /// </summary>
-        /// <param name="processor">IProcessorBase to be added.</param>
-        /// <param name="type">Type of IProcessorBase. If null then defaults to GetType.</param>
-        void AddProcessor(IProcessorBase processor, Type type = null);
-
-        /// <summary>
-        /// Adds a custom PreProcessor that was not loaded automatically.
-        /// </summary>
-        /// <param name="processor">IPreProcessor to be added.</param>
-        void AddProcessor(IPreProcessor processor);
-
-        /// <summary>
         /// Adds a custom Processor that was not loaded automatically.
         /// </summary>
         /// <param name="processor">IProcessor to be added.</param>
         void AddProcessor(IProcessor processor);
-
-        /// <summary>
-        /// Adds a custom PostProcessor that was not loaded automatically.
-        /// </summary>
-        /// <param name="processor">IPostProcessor to be added.</param>
-        void AddProcessor(IPostProcessor processor);
 
         /// <summary>
         /// Iterates over all available Settings on the loaded Processors.
@@ -81,14 +47,6 @@ namespace CoreLibrary.Interfaces
         /// <returns>IEnumerable</returns>
         IEnumerable<ISettings> GetSettingsByProcessor(string processorName);
 
-        /// <summary>
-        /// Creates new ProcessorLoader using only selected processors.
-        /// </summary>
-        /// <param name="processors">Processors to be in the new Loader</param>
-        /// <returns>New ProcessorLoader</returns>
-        IProcessorLoader SplitLoaderUsing(params Type[] processors);
-
-        IProcessorLoader SplitUsingPreprocessors();
-        IProcessorLoader SplitUsingPostprocessors();
+        IProcessorLoader SplitLoaderByType(ProcessorTypeEnum processorType);
     }
 }

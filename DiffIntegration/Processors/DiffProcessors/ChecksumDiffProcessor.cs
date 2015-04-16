@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 using DiffIntegration.RollingChecksums;
 
@@ -13,12 +13,9 @@ namespace DiffIntegration.Processors.Processors
     /// <summary>
     /// ChecksumDiffProcessor calculates multiple checksums for the files and checks if they are all same.
     /// </summary>
+    [Processor(ProcessorTypeEnum.Diff, 1100, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class ChecksumDiffProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 100; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
-
         [Settings("Force checksum diff check.", "check-sum", "CS")]
         public bool IsEnabled = false;
 
@@ -27,19 +24,18 @@ namespace DiffIntegration.Processors.Processors
         /// </summary>
         const int BUFFER_SIZE = 4096;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
 
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
+            return base.CheckStatus(node) && IsEnabled;
+        }
 
-            if (!IsEnabled)
-                return;
-
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        {
             var threeWay = new ThreeWayDiffHelper();
             var readers = new BinaryReader[3];
 

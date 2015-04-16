@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
@@ -13,17 +14,17 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// </summary>
     public class ExecutionVisitor : IExecutionVisitor
     {
-        readonly IProcessorLoader loader;
+        readonly IEnumerable<IProcessor> processors;
 
         private bool isCancelled = false;
 
         /// <summary>
         /// Constructor for ExecutionVisitorInSerial.
         /// </summary>
-        /// <param name="loader">Loader for all Processors.</param>
-        public ExecutionVisitor(IProcessorLoader loader)
+        /// <param name="processors">Processors to be run.</param>
+        public ExecutionVisitor(IEnumerable<IProcessor> processors)
         {
-            this.loader = loader;
+            this.processors = processors;
         }
 
         public void Visit(IFilesystemTreeDirNode node)
@@ -31,12 +32,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
             try
             {
                 // run processors unless this Visitor isCancelled
-                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
+                foreach (IProcessor processor in processors.Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
-                    processor.Process(node);
-                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
-                    processor.Process(node);
+
             } catch (Exception e)
             {
                 HandleError(node, e);
@@ -53,12 +51,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
         {
             try
             {
-                foreach (IPreProcessor processor in loader.GetPreProcessors().Where(processor => !isCancelled))
+                foreach (IProcessor processor in processors.Where(processor => !isCancelled))
                     processor.Process(node);
-                foreach (IProcessor processor in loader.GetProcessors().Where(processor => !isCancelled))
-                    processor.Process(node);
-                foreach (IPostProcessor processor in loader.GetPostProcessors().Where(processor => !isCancelled))
-                    processor.Process(node);
+
             } catch (Exception e)
             {
                 HandleError(node, e);

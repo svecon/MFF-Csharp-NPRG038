@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm;
 using DiffIntegration.DiffFilesystemTree;
@@ -11,12 +11,9 @@ namespace DiffIntegration.Processors.Processors
     /// <summary>
     /// CalculateDiffProcessor calculates diff between files that we know are different
     /// </summary>
+    [Processor(ProcessorTypeEnum.Diff, 1500, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CalculateDiffProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 500; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
-
         [Settings("Diff algorithm will ignore leading and trailing whitespace", "trim-space", "ts")]
         public bool TrimSpace = false;
 
@@ -26,21 +23,23 @@ namespace DiffIntegration.Processors.Processors
         [Settings("Diff algorithm will ignore case senstivity", "ignore-case", "ic")]
         public bool IgnoreCase = false;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
-
             if (node.FileType != FileTypeEnum.Text)
-                return;
+                return false;
 
             if (node.Differences == DifferencesStatusEnum.AllSame)
-                return;
+                return false;
 
+            return base.CheckStatus(node);
+        }
+
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        {
             var dnode = node as DiffFileNode;
 
             if (dnode == null)

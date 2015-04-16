@@ -8,43 +8,43 @@ namespace CoreLibrary.Processors
 {
     public class ProcessorRunner
     {
-        private readonly IProcessorLoader loader;
+        private readonly IExecutionVisitor diffVisitor;
+        private readonly IExecutionVisitor mergeVisitor;
+        private readonly IExecutionVisitor interactiveVisitor;
 
         public delegate void OnDiffCompleteDelegate();
         public delegate void OnMergeCompleteDelegate();
 
         public ProcessorRunner(IProcessorLoader processorLoader)
         {
-            loader = processorLoader;
+            diffVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Diff));
+            mergeVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Merge));
+            interactiveVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.InteractiveResolving));
         }
 
         public async Task RunDiff(IFilesystemTreeVisitable diffTree)
         {
-            IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitUsingPreprocessors());
-
             await Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2000);
-                diffTree.Accept(ex);
-                ex.Wait();
+                diffTree.Accept(diffVisitor);
+                diffVisitor.Wait();
             }, TaskCreationOptions.LongRunning);
         }
 
         public async Task RunMerge(IFilesystemTreeVisitable diffTree)
         {
-            IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitUsingPostprocessors());
-
             await Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2000);
-                diffTree.Accept(ex);
-                ex.Wait();
+                diffTree.Accept(mergeVisitor);
+                mergeVisitor.Wait();
             }, TaskCreationOptions.LongRunning);
         }
 
         public void RunInteractiveResolving(IFilesystemTreeVisitable diffTree)
         {
-
+            diffTree.Accept(interactiveVisitor);
         }
     }
 }

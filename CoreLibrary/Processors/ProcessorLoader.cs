@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,15 +18,11 @@ namespace CoreLibrary.Processors
     /// </summary>
     public class ProcessorLoader : IProcessorLoader
     {
-        protected readonly SortedList<int, IPreProcessor> PreProcessors;
-
-        protected readonly SortedList<int, IProcessor> Processors;
-
-        protected readonly SortedList<int, IPostProcessor> PostProcessors;
+        protected Dictionary<ProcessorTypeEnum, SortedList<int, IProcessor>> ProcessorsDictionary;
 
         protected readonly Dictionary<string, List<ISettings>> SettingsByProcessor;
 
-        protected readonly Dictionary<string, IProcessorBase> ProcessorByName;
+        protected readonly Dictionary<string, IProcessor> ProcessorByName;
 
         /// <summary>
         /// Structure that holds available settings types (for different variable types).
@@ -36,11 +33,9 @@ namespace CoreLibrary.Processors
 
         public ProcessorLoader()
         {
-            PreProcessors = new SortedList<int, IPreProcessor>();
-            Processors = new SortedList<int, IProcessor>();
-            PostProcessors = new SortedList<int, IPostProcessor>();
+            ProcessorsDictionary = new Dictionary<ProcessorTypeEnum, SortedList<int, IProcessor>>();
             SettingsByProcessor = new Dictionary<string, List<ISettings>>();
-            ProcessorByName = new Dictionary<string, IProcessorBase>();
+            ProcessorByName = new Dictionary<string, IProcessor>();
         }
 
         public void LoadAll()
@@ -55,7 +50,7 @@ namespace CoreLibrary.Processors
         /// </summary>
         public void LoadAllAvailableProcessors()
         {
-            Type type = typeof(IProcessorBase);
+            Type type = typeof(IProcessor);
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsAbstract)
@@ -70,8 +65,8 @@ namespace CoreLibrary.Processors
 
                     if (constructorInfo == null) continue;
 
-                    var instance = (IProcessorBase)constructorInfo.Invoke(new object[] { });
-                    AddProcessor(instance, item);
+                    var instance = (IProcessor)constructorInfo.Invoke(new object[] { });
+                    AddProcessor(instance);
                     RetrieveSettings(instance);
 
                 } catch (Exception)
@@ -160,51 +155,22 @@ namespace CoreLibrary.Processors
                 }
             }
 
-            string instanceType = instance is IProcessorBase && !isStatic ? instance.GetType().ToString() : typeof(Object).ToString();
+            string instanceType = instance is IProcessor && !isStatic ? instance.GetType().ToString() : typeof(Object).ToString();
             SettingsByProcessor.Add(instanceType, settingsByProcessorList);
-        }
-
-        public void AddProcessor(IProcessorBase processor, Type item = null)
-        {
-            if (item == null)
-            {
-                item = processor.GetType();
-            }
-
-            if (typeof(IPreProcessor).IsAssignableFrom(item))
-            {
-                AddProcessor((IPreProcessor)processor);
-            } else if (typeof(IProcessor).IsAssignableFrom(item))
-            {
-                AddProcessor((IProcessor)processor);
-            } else if (typeof(IPostProcessor).IsAssignableFrom(item))
-            {
-                AddProcessor((IPostProcessor)processor);
-            } else
-            {
-                throw new NotImplementedException("This instance type is not supported.");
-            }
-        }
-
-        public void AddProcessor(IPreProcessor processor)
-        {
-            try
-            {
-                PreProcessors.Add(processor.Priority, processor);
-                ProcessorByName.Add(processor.GetType().ToString(), processor);
-            } catch (ArgumentException e)
-            {
-#if DEBUG
-                throw new ProcessorPriorityColissionException(processor.ToString(), e);
-#endif
-            }
         }
 
         public void AddProcessor(IProcessor processor)
         {
+            SortedList<int, IProcessor> list;
+            if (!ProcessorsDictionary.TryGetValue(processor.Attribute.ProcessorType, out list))
+            {
+                list = new SortedList<int, IProcessor>();
+                ProcessorsDictionary.Add(processor.Attribute.ProcessorType, list);
+            }
+
             try
             {
-                Processors.Add(processor.Priority, processor);
+                list.Add(processor.Attribute.Priority, processor);
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
@@ -214,30 +180,11 @@ namespace CoreLibrary.Processors
             }
         }
 
-        public void AddProcessor(IPostProcessor processor)
-        {
-            try
-            {
-                PostProcessors.Add(processor.Priority, processor);
-                ProcessorByName.Add(processor.GetType().ToString(), processor);
-            } catch (ArgumentException e)
-            {
-#if DEBUG
-                throw new ProcessorPriorityColissionException(processor.ToString(), e);
-#endif
-            }
-        }
-
-        public IProcessorLoader SplitUsingPreprocessors()
+        public IProcessorLoader SplitLoaderByType(ProcessorTypeEnum processorType)
         {
             var newLoader = new ProcessorLoader();
 
-            foreach (IPreProcessor processor in GetPreProcessors())
-            {
-                newLoader.AddProcessor(processor);
-            }
-
-            foreach (IProcessor processor in GetProcessors())
+            foreach (IProcessor processor in GetProcessors(processorType))
             {
                 newLoader.AddProcessor(processor);
             }
@@ -245,51 +192,12 @@ namespace CoreLibrary.Processors
             return newLoader;
         }
 
-        public IProcessorLoader SplitUsingPostprocessors()
+        public IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType)
         {
-            var newLoader = new ProcessorLoader();
+            if (!ProcessorsDictionary.ContainsKey(processorType))
+                return Enumerable.Empty<IProcessor>();
 
-            foreach (IPostProcessor processor in GetPostProcessors())
-            {
-                newLoader.AddProcessor(processor);
-            }
-
-            return newLoader;
-        }
-
-        public IProcessorLoader SplitLoaderUsing(params Type[] processors)
-        {
-            var newLoader = new ProcessorLoader();
-
-            foreach (string processorName in processors.Select(x => x.ToString()))
-            {
-                IProcessorBase processor;
-                if (!ProcessorByName.TryGetValue(processorName, out processor))
-                {
-                    throw new KeyNotFoundException(
-                        String.Format("Requested instance '{0}' was not found.", processorName)
-                    );
-                }
-
-                newLoader.AddProcessor(processor);
-            }
-
-            return newLoader;
-        }
-
-        public IEnumerable<IPreProcessor> GetPreProcessors()
-        {
-            return PreProcessors.Select(processor => processor.Value);
-        }
-
-        public IEnumerable<IProcessor> GetProcessors()
-        {
-            return Processors.Select(processor => processor.Value);
-        }
-
-        public IEnumerable<IPostProcessor> GetPostProcessors()
-        {
-            return PostProcessors.Select(processor => processor.Value);
+            return ProcessorsDictionary[processorType].Select(valuePair => valuePair.Value);
         }
 
         public IEnumerable<ISettings> GetSettings()

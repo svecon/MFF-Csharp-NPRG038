@@ -13,12 +13,12 @@ namespace Sverge.DiffWindows
     [DiffWindow(int.MaxValue)]
     public partial class DefaultDiffWindow : UserControl, DW
     {
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
         public IFilesystemTreeVisitable DiffNode { get; private set; }
 
-        public DefaultDiffWindow(IFilesystemTreeVisitable instance, IWindow window)
+        public DefaultDiffWindow(IFilesystemTreeVisitable instance, IDiffWindowManager manager)
         {
-            this.window = window;
+            this.manager = manager;
             DiffNode = instance;
 
             InitializeComponent();

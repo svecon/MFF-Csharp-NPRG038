@@ -2,7 +2,7 @@
 {
     using TV = IFilesystemTreeVisitable;
 
-    public interface IWindow
+    public interface IDiffWindowManager
     {
         IDiffWindow<TV> OpenNewTab(params string[] args);
         IDiffWindow<TV> OpenNewTab(TV diffNode, IDiffWindow<TV> treeNode = null);

@@ -19,9 +19,9 @@ namespace Sverge
     using DW = IDiffWindow<IFilesystemTreeVisitable>;
 
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for diffManager.xaml
     /// </summary>
-    public partial class MainWindow : Window, IWindow
+    public partial class MainWindow : Window, IDiffWindowManager
     {
         private readonly ProcessorRunner runner;
         private readonly DiffWindowLoader windowLoader;

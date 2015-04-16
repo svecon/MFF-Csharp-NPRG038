@@ -12,7 +12,6 @@ namespace DiffIntegration.DiffFilesystemTree
     /// </summary>
     public class DiffDirNode : DirNode
     {
-
         /// <summary>
         /// Constructor for creating DiffDirNode.
         /// </summary>

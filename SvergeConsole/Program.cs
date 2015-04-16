@@ -25,9 +25,6 @@ namespace SvergeConsole
         [Settings("Show help about using the console.", "help", "h")]
         public static bool ShowHelp = false;
 
-        [Settings("Merge folders and files.", "merge", "m")]
-        public static bool MergeMode = false;
-
         private static IProcessorLoader _loader;
         private static ProcessorRunner _runner;
         private static IFilesystemTreeVisitable _diffTree;
@@ -163,18 +160,23 @@ namespace SvergeConsole
 
             _runner.RunDiff(_diffTree).Wait();
 
-            if (MergeMode)
-            {
-                // run interactive diffing
-                _runner.RunInteractiveResolving(_diffTree);
+            // print the filesystem tree
+            _diffTree.Accept(new PrinterVisitor());
 
-                // run merging and syncing in parallel
-                _runner.RunMerge(_diffTree).Wait();
+            Console.WriteLine("\nDo you want to run merging processors? [Y/n]");
+            string input = Console.ReadLine();
 
-            }
+            if (input == null || input.Trim().ToUpperInvariant() != "Y") return;
+
+            // run interactive diffing
+            _runner.RunInteractiveResolving(_diffTree);
+
+            // run merging and syncing in parallel
+            _runner.RunMerge(_diffTree).Wait();
 
             // print the filesystem tree
             _diffTree.Accept(new PrinterVisitor());
+
             #endregion
         }
 

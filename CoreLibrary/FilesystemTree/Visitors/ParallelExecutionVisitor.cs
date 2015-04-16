@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Processors;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {
@@ -16,7 +17,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// </summary>
     public class ParallelExecutionVisitor : IExecutionVisitor
     {
-        readonly IProcessorLoader loader;
+        readonly IEnumerable<IProcessor> processors;
 
         readonly List<Task> tasks = new List<Task>();
 
@@ -26,9 +27,9 @@ namespace CoreLibrary.FilesystemTree.Visitors
         /// Constructor for ParallelExecutionVisitor.
         /// </summary>
         /// <param name="loader">Loader for all Processors.</param>
-        public ParallelExecutionVisitor(IProcessorLoader loader)
+        public ParallelExecutionVisitor(IEnumerable<IProcessor> processors)
         {
-            this.loader = loader;
+            this.processors = processors;
             tokenSource = new CancellationTokenSource();
         }
 
@@ -37,11 +38,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (IPreProcessor processor in loader.GetPreProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IProcessor processor in loader.GetProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IPostProcessor processor in loader.GetPostProcessors())
+            foreach (IProcessor processor in processors)
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error
@@ -61,11 +58,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (IPreProcessor processor in loader.GetPreProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IProcessor processor in loader.GetProcessors())
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
-            foreach (IPostProcessor processor in loader.GetPostProcessors())
+            foreach (IProcessor processor in processors)
                 task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
             // add task which runs when there is an error

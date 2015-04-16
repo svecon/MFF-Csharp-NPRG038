@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\TextFileChecker.cs" />
+    <Compile Include="Helpers\ThreeWayDiffHelper.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowMenuAttribute.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowAttribute.cs" />
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
@@ -79,25 +80,21 @@
     <Compile Include="Interfaces\IFilesystemTreeVisitable.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="Interfaces\ISettings.cs" />
-    <Compile Include="Interfaces\IPostProcessor.cs" />
-    <Compile Include="Interfaces\IProcessor.cs" />
-    <Compile Include="Interfaces\IPreProcessor.cs" />
     <Compile Include="Interfaces\IProcessorLoader.cs" />
     <Compile Include="Interfaces\IFilesystemTreeDirNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeFileNode.cs" />
     <Compile Include="Interfaces\IFilesystemTreeAbstractNode.cs" />
-    <Compile Include="Interfaces\IProcessorBase.cs" />
+    <Compile Include="Interfaces\IProcessor.cs" />
     <Compile Include="Interfaces\IFilesystemTree.cs" />
     <Compile Include="Interfaces\IFilesystemTreeVisitor.cs" />
     <Compile Include="Enums\LocationEnum.cs" />
-    <Compile Include="Interfaces\IWindow.cs" />
+    <Compile Include="Interfaces\IDiffWindowManager.cs" />
     <Compile Include="Plugins\PluginsLoader.cs" />
-    <Compile Include="Processors\BaseProcessorAbstract.cs" />
-    <Compile Include="Processors\Postprocessors\PostProcessorAbstract.cs" />
-    <Compile Include="Processors\Preprocessors\PreProcessorAbstract.cs" />
+    <Compile Include="Processors\ProcessorAbstract.cs" />
     <Compile Include="Processors\ProcessorPrinter.cs" />
     <Compile Include="Processors\ProcessorRunner.cs" />
-    <Compile Include="Processors\Processors\ProcessorAbstract.cs" />
+    <Compile Include="Processors\ProcessorAttribute.cs" />
+    <Compile Include="Processors\ProcessorTypeEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processors\ProcessorLoader.cs" />
     <Compile Include="Settings\Types\RegexSettings.cs" />

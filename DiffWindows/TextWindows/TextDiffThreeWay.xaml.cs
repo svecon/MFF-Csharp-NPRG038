@@ -22,7 +22,7 @@ namespace DiffWindows.TextWindows
     [DiffWindow(200)]
     public partial class TextDiffThreeWay : UserControl, IDiffWindow<DiffFileNode>, IChangesMenu, IMergeMenu
     {
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
         public DiffFileNode DiffNode { get; private set; }
 
         public int CurrentDiff { get; internal set; }
@@ -64,10 +64,10 @@ namespace DiffWindows.TextWindows
 
         #endregion
 
-        public TextDiffThreeWay(IFilesystemTreeVisitable diffNode, IWindow window)
+        public TextDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
             InitializeComponent();
-            this.window = window;
+            this.manager = manager;
             DiffNode = (DiffFileNode)diffNode;
             CurrentDiff = -1;
 
@@ -352,7 +352,7 @@ namespace DiffWindows.TextWindows
                         ScrollToLine(CurrentDiff);
                     } else
                     {
-                        window.RequestMerge(this);
+                        manager.RequestMerge(this);
                     }
                 },
                 (sender, args) => { args.CanExecute = DiffNode.Diff3 != null; }

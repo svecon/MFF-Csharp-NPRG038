@@ -16,7 +16,7 @@ namespace DiffWindows.FolderWindows
     public partial class FolderDiffThreeWay : UserControl, IDiffWindow<DiffFilesystemTree>
     {
         public DiffFilesystemTree DiffNode { get; private set; }
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
 
         public static readonly DependencyProperty LocalFolderLocationProperty
             = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffThreeWay));
@@ -45,10 +45,10 @@ namespace DiffWindows.FolderWindows
             set { SetValue(BaseFolderLocationProperty, value); }
         }
 
-        public FolderDiffThreeWay(IFilesystemTreeVisitable diffNode, IWindow window)
+        public FolderDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (DiffFilesystemTree)diffNode;
-            this.window = window;
+            this.manager = manager;
 
             InitializeComponent();
 
@@ -89,7 +89,7 @@ namespace DiffWindows.FolderWindows
             if (newDiffNode == null)
                 return;
 
-            window.OpenNewTab(newDiffNode, this);
+            manager.OpenNewTab(newDiffNode, this);
         }
 
         private void FolderDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)

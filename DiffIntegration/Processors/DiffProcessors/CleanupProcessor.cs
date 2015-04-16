@@ -1,22 +1,18 @@
 ﻿using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Preprocessors;
+using CoreLibrary.Processors;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace DiffIntegration.Processors.Preprocessors
 {
-    public class CleanupProcessor : PreProcessorAbstract
+    [Processor(ProcessorTypeEnum.Diff, 0, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
+    public class CleanupProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 0; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
-
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
-
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
             var diffNode = node as DiffFileNode;
 

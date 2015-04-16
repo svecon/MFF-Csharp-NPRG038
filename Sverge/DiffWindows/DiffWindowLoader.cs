@@ -13,11 +13,11 @@ namespace Sverge.DiffWindows
     {
         private readonly SortedList<int, Type> availableWindows;
         private readonly SortedList<int, Type> availableWindowMenus;
-        private readonly MainWindow window;
+        private readonly MainWindow manager;
 
-        public DiffWindowLoader(MainWindow mainWindow)
+        public DiffWindowLoader(MainWindow diffManager)
         {
-            window = mainWindow;
+            manager = diffManager;
             availableWindows = new SortedList<int, Type>();
             availableWindowMenus = new SortedList<int, Type>();
         }
@@ -107,12 +107,12 @@ namespace Sverge.DiffWindows
                     if (!canBeApplied)
                         continue;
 
-                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(IFilesystemTreeVisitable), typeof(IWindow) });
+                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(IFilesystemTreeVisitable), typeof(IDiffWindowManager) });
 
                     if (constructorInfo == null)
                         throw new InvalidOperationException(string.Format("DiffWindow of type {0} does not have correct constructor.", valuePair.Value));
 
-                    return (DW)constructorInfo.Invoke(new[] { structure, window });
+                    return (DW)constructorInfo.Invoke(new[] { structure, manager });
 
                 } catch (Exception)
                 {
@@ -122,7 +122,7 @@ namespace Sverge.DiffWindows
                 }
             }
 
-            throw new ArgumentException("This instance does not have a diff window associated.");
+            throw new ArgumentException("This instance does not have a diff manager associated.");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Sverge
 
         private IProcessorLoader loader;
 
-        private MainWindow mainWindow;
+        private MainWindow diffManager;
 
         const int ERROR_PROCESSOR_COLLISION = 9;
         const int ERROR_SETTINGS_NOT_FOUND = 10;
@@ -108,16 +108,16 @@ namespace Sverge
             }
             #endregion
 
-            mainWindow = new MainWindow(loader);
-            mainWindow.Show();
+            diffManager = new MainWindow(loader);
+            diffManager.Show();
 
             if (args.Length > 0)
             {
-                mainWindow.OpenNewTab(args);
+                diffManager.OpenNewTab(args);
             }
             else
             {
-                mainWindow.OpenWindowDialog();
+                diffManager.OpenWindowDialog();
             }
         }
 

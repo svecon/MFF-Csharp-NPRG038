@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Postprocessors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
@@ -11,12 +11,9 @@ namespace DiffIntegration.Processors.Postprocessors
     /// <summary>
     /// Processor for merging 3-way diffed files.
     /// </summary>
-    public class MergeThreeWayProcessor : PostProcessorAbstract
+    [Processor(ProcessorTypeEnum.Merge, 301, DiffModeEnum.ThreeWay)]
+    public class MergeThreeWayProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 301; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
-
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
@@ -28,7 +25,7 @@ namespace DiffIntegration.Processors.Postprocessors
         [Settings("Default action for merging files.", "3merge-default", "3d")]
         public DefaultActionEnum DefaultAction;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
             // if OutputFolder is unset
             if (OutputFolder == null)
@@ -38,11 +35,13 @@ namespace DiffIntegration.Processors.Postprocessors
             }
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
+            return base.CheckStatus(node) && node.Status != NodeStatusEnum.WasMerged;
+        }
 
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        {
             var dnode = node as DiffFileNode;
 
             if (dnode == null)

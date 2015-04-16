@@ -2,7 +2,7 @@
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Processors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Processors
@@ -10,39 +10,34 @@ namespace DiffIntegration.Processors.Processors
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
+    [Processor(ProcessorTypeEnum.Diff, 1050, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class SizeTimeDiffProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 50; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
-
         [Settings("Disable fast diff check.", "slow-diff", "D")]
         public bool IsEnabled = true;
 
         [Flags]
         public enum CompareModeEnum
         {
-            Size                = 1 << 0,
-            Modification        = 1 << 1,
-            SizeModification    = Size | Modification,
+            Size = 1 << 0,
+            Modification = 1 << 1,
+            SizeModification = Size | Modification,
         }
 
         [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
         public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
-
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
+            return base.CheckStatus(node) && IsEnabled;
+        }
 
-            if (!IsEnabled)
-                return;
-
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        {
             var threeWay = new ThreeWayDiffHelper();
 
             // check for existence

@@ -93,11 +93,11 @@ namespace Sverge
 
         private string currentDirectory;
 
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
 
-        public OpenDialogWindow(IWindow window)
+        public OpenDialogWindow(IDiffWindowManager manager)
         {
-            this.window = window;
+            this.manager = manager;
             InitializeComponent();
         }
 
@@ -168,10 +168,10 @@ namespace Sverge
         {
             if (string.IsNullOrEmpty(BaseLocation))
             {
-                window.OpenNewTab(LocalLocation, RemoteLocation);
+                manager.OpenNewTab(LocalLocation, RemoteLocation);
             } else
             {
-                window.OpenNewTab(LocalLocation, BaseLocation, RemoteLocation);
+                manager.OpenNewTab(LocalLocation, BaseLocation, RemoteLocation);
             }
 
             Close();

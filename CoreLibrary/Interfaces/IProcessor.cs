@@ -1,16 +1,27 @@
 ﻿
+using CoreLibrary.Processors;
+
 namespace CoreLibrary.Interfaces
 {
     /// <summary>
-    /// Standard processor interface.
+    /// Processor interface that can process nodes from FilesystemTree.
     /// 
-    /// Processors are run after all PreProcessors are finished.
-    /// 
-    /// Processors should get more detailed information about the file.
-    /// The information from the processors may play a huge role in PostProcessing phase.
+    /// This is the base interface for all processor types.
     /// </summary>
-    public interface IProcessor : IProcessorBase
+    public interface IProcessor
     {
+        /// <summary>
+        /// Processes a directory node.
+        /// </summary>
+        /// <param name="node"></param>
+        void Process(IFilesystemTreeDirNode node);
 
+        /// <summary>
+        /// Processes a file node.
+        /// </summary>
+        /// <param name="node">File node from the FilesystemTree</param>
+        void Process(IFilesystemTreeFileNode node);
+
+        ProcessorAttribute Attribute { get; }
     }
 }

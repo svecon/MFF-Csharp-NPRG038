@@ -19,7 +19,7 @@ namespace DiffWindows.TextWindows
     [DiffWindow(100)]
     public partial class TextDiffTwoWay : UserControl, IDiffWindow<DiffFileNode>
     {
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
         public DiffFileNode DiffNode { get; private set; }
         private readonly TextDiffArea localText;
         private readonly TextDiffArea remoteText;
@@ -43,9 +43,9 @@ namespace DiffWindows.TextWindows
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
-        public TextDiffTwoWay(IFilesystemTreeVisitable diffNode, IWindow window)
+        public TextDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
-            this.window = window;
+            this.manager = manager;
             DiffNode = (DiffFileNode)diffNode;
 
             InitializeComponent();

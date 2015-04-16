@@ -16,7 +16,7 @@ namespace DiffWindows.FolderWindows
     public partial class FolderDiffTwoWay : UserControl, IDiffWindow<DiffFilesystemTree>
     {
         public DiffFilesystemTree DiffNode { get; private set; }
-        private readonly IWindow window;
+        private readonly IDiffWindowManager manager;
 
         public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
 
@@ -37,10 +37,10 @@ namespace DiffWindows.FolderWindows
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
-        public FolderDiffTwoWay(IFilesystemTreeVisitable diffNode, IWindow window)
+        public FolderDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (DiffFilesystemTree)diffNode;
-            this.window = window;
+            this.manager = manager;
 
             InitializeComponent();
 
@@ -81,7 +81,7 @@ namespace DiffWindows.FolderWindows
             if (newDiffNode == null)
                 return;
 
-            window.OpenNewTab(newDiffNode, this);
+            manager.OpenNewTab(newDiffNode, this);
         }
 
         private void FolderDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)

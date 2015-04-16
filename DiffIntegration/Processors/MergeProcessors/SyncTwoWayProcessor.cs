@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Postprocessors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Postprocessors
@@ -11,12 +11,9 @@ namespace DiffIntegration.Processors.Postprocessors
     /// 
     /// Default method is Modification time of the file.
     /// </summary>
-    public class SyncTwoWayProcessor : PostProcessorAbstract
+    [Processor(ProcessorTypeEnum.Merge, 500, DiffModeEnum.TwoWay)]
+    public class SyncTwoWayProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 500; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
-
         public enum CompareOnEnum { Size = 1, Modification = 2 }
 
         [Settings("Sync 2 folders with the newer version of the files.", "sync", "s")]
@@ -28,21 +25,20 @@ namespace DiffIntegration.Processors.Postprocessors
         [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override bool CheckStatus(IFilesystemTreeDirNode node)
+        {
+            return base.CheckStatus(node) && IsEnabled && CreateEmptyFolders;
+        }
+
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        {
+            return base.CheckStatus(node) && IsEnabled && node.Differences != DifferencesStatusEnum.AllSame;
+        }
+
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
             // create directory only when file is created
-
             // this means that empty folders need to be created here
-
-            if (!CheckModeAndStatus(node))
-                return;
-
-            if (!IsEnabled)
-                return;
-
-            // processor setting
-            if (!CreateEmptyFolders)
-                return;
 
             // if there are any files, folder will be created implicitly
             if (node.Files.Count > 0)
@@ -56,17 +52,8 @@ namespace DiffIntegration.Processors.Postprocessors
                 CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLocal));
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
-
-            if (!IsEnabled)
-                return;
-
-            if (node.Differences == DifferencesStatusEnum.AllSame)
-                return;
-
             FileInfo from = null;
             string to = null;
 

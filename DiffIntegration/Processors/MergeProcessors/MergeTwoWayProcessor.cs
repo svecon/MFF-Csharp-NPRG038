@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Postprocessors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
@@ -13,12 +13,9 @@ namespace DiffIntegration.Processors.Postprocessors
     /// 
     /// There must be an OutputFolder specified.
     /// </summary>
-    public class MergeTwoWayProcessor : PostProcessorAbstract
+    [Processor(ProcessorTypeEnum.Merge, 300, DiffModeEnum.TwoWay)]
+    public class MergeTwoWayProcessor : ProcessorAbstract
     {
-        public override int Priority { get { return 300; } }
-
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay; } }
-
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
@@ -33,20 +30,23 @@ namespace DiffIntegration.Processors.Postprocessors
         [Settings("Default action for merging files.", "2merge-default", "2d")]
         public DefaultActionEnum DefaultAction;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override bool CheckStatus(IFilesystemTreeDirNode node)
+        {
+            return base.CheckStatus(node) && OutputFolder != null && CreateEmptyFolders;
+        }
+
+        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        {
+            if (node.Status == NodeStatusEnum.WasMerged)
+                return false;
+
+            return base.CheckStatus(node) && OutputFolder != null;
+        }
+
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
             // create directory when file is created
             // this means that empty folders need to be created here
-
-            if (!CheckModeAndStatus(node))
-                return;
-
-            if (OutputFolder == null)
-                return;
-
-            // processor setting
-            if (!CreateEmptyFolders)
-                return;
 
             // if there are any files, folder will be created implicitly
             if (node.Files.Count > 0)
@@ -56,14 +56,8 @@ namespace DiffIntegration.Processors.Postprocessors
             CheckAndCreateDirectory(string.Join("/", OutputFolder, node.RelativePath));
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
-
-            if (OutputFolder == null)
-                return;
-
             var dnode = node as DiffFileNode;
 
             if (dnode == null)

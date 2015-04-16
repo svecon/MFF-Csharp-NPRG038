@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors.Preprocessors;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
 namespace DiffIntegration.Processors.Preprocessors
@@ -11,27 +11,21 @@ namespace DiffIntegration.Processors.Preprocessors
     /// 
     /// Leaves out everything else.
     /// </summary>
-    public class RegexFilterProcessor : PreProcessorAbstract
+    [Processor(ProcessorTypeEnum.Diff, 150, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
+    public class RegexFilterProcessor : ProcessorAbstract
     {
-        public override DiffModeEnum Mode { get { return DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay; } }
-
-        public override int Priority { get { return 150; } }
-
         [Settings("Include only file names that are matching Regex.", "include-regex", "iR")]
         public Regex IncludeRegex = null;
 
         [Settings("Exclude file name that are matching Regex.", "exclude-regex", "eR")]
         public Regex ExcludeRegex = null;
 
-        public override void Process(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
         }
 
-        public override void Process(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
-            if (!CheckModeAndStatus(node))
-                return;
-
             if (ExcludeRegex != null && ExcludeRegex.IsMatch(node.Info.Name))
             {
                 node.Status = NodeStatusEnum.IsIgnored;
