@@ -51,12 +51,14 @@
     <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
     <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
     <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
+    <Compile Include="Processors\Postprocessors\MergeCleanupProcessor.cs" />
     <Compile Include="Processors\Postprocessors\OutputSingleFileProcessor.cs" />
     <Compile Include="Processors\Postprocessors\MergeTwoWayProcessor.cs" />
     <Compile Include="Processors\Postprocessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Processors\Preprocessors\FileTypeProcessor.cs" />
     <Compile Include="Processors\Preprocessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\Preprocessors\ExtensionFilterProcessor.cs" />
+    <Compile Include="Processors\Preprocessors\CleanupProcessor.cs" />
     <Compile Include="Processors\Preprocessors\RegexFilterProcessor.cs" />
     <Compile Include="Processors\Processors\InteractiveThreeWayDiffProcessor.cs" />
     <Compile Include="Processors\Processors\InteractiveTwoWayDiffProcessor.cs" />

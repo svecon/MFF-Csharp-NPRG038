@@ -1,6 +1,5 @@
-﻿using System.IO;
-using System.Linq;
-using CoreLibrary.Enums;
+﻿using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors.Preprocessors;
 
@@ -17,21 +16,6 @@ namespace DiffIntegration.Processors.Preprocessors
 
         public override int Priority { get { return 300; } }
 
-        /// <summary>
-        /// Number of bytes to read from the begining of a file.
-        /// </summary>
-        private const int READ_BYTES = 256;
-
-        /// <summary>
-        /// Number of consecutive zeroe bytes that imply binary file.
-        /// </summary>
-        private const int CONSECUTIVE_THRESHOLD = 4;
-
-        /// <summary>
-        /// Total number of zero bytes that imply binary file.
-        /// </summary>
-        private const int ZEROES_THRESHOLD = READ_BYTES / 2;
-
         public override void Process(IFilesystemTreeDirNode node)
         {
         }
@@ -44,28 +28,10 @@ namespace DiffIntegration.Processors.Preprocessors
             if (node.Status == NodeStatusEnum.IsIgnored)
                 return;
 
-            using (var reader = new BinaryReader(File.OpenRead(node.Info.FullName)))
-            {
-                int numberOfZeroBytes = 0;
-                int maxConsecutiveZeroBytes = 0;
-                int currentConsecutiveZeroBytes = 0;
+            node.FileType = node.Info.FullName.IsTextFile()
+                ? FileTypeEnum.Text
+                : FileTypeEnum.Binary;
 
-                foreach (byte b in reader.ReadBytes(READ_BYTES).Where(b => b == 0))
-                {
-                    currentConsecutiveZeroBytes++;
-                    numberOfZeroBytes++;
-
-                    if (currentConsecutiveZeroBytes > maxConsecutiveZeroBytes)
-                    {
-                        maxConsecutiveZeroBytes = currentConsecutiveZeroBytes;
-                    }
-                }
-
-                node.FileType = maxConsecutiveZeroBytes >= CONSECUTIVE_THRESHOLD
-                                || numberOfZeroBytes >= ZEROES_THRESHOLD
-                    ? FileTypeEnum.Binary
-                    : FileTypeEnum.Text;
-            }
         }
     }
 }

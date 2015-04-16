@@ -4,15 +4,16 @@ using System.Linq;
 using System.Reflection;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
-using DiffIntegration.DiffFilesystemTree;
 
 namespace Sverge.DiffWindows
 {
+    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+
     class DiffWindowLoader
     {
         private readonly SortedList<int, Type> availableWindows;
         private readonly SortedList<int, Type> availableWindowMenus;
-        private MainWindow window;
+        private readonly MainWindow window;
 
         public DiffWindowLoader(MainWindow mainWindow)
         {
@@ -23,7 +24,7 @@ namespace Sverge.DiffWindows
 
         public void LoadWindows()
         {
-            Type type = typeof(IDiffWindow<object>);
+            Type type = typeof(DW);
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => !p.IsAbstract)
@@ -95,7 +96,7 @@ namespace Sverge.DiffWindows
             }
         }
 
-        public IDiffWindow<object> CreateWindowFor(object structure)
+        public DW CreateWindowFor(object structure)
         {
             foreach (KeyValuePair<int, Type> valuePair in availableWindows)
             {
@@ -106,19 +107,12 @@ namespace Sverge.DiffWindows
                     if (!canBeApplied)
                         continue;
 
-                    bool usingWindowParam = false;
-                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(object) });
-
-                    if (constructorInfo == null)
-                    {
-                        constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(object), typeof(IWindow) });
-                        usingWindowParam = true;
-                    }
+                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(IFilesystemTreeVisitable), typeof(IWindow) });
 
                     if (constructorInfo == null)
                         throw new InvalidOperationException(string.Format("DiffWindow of type {0} does not have correct constructor.", valuePair.Value));
 
-                    return (IDiffWindow<object>)constructorInfo.Invoke(usingWindowParam ? new[] { structure, window } : new[] { structure });
+                    return (DW)constructorInfo.Invoke(new[] { structure, window });
 
                 } catch (Exception)
                 {

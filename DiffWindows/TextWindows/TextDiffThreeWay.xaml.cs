@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffAlgorithm.ThreeWay;
@@ -21,6 +21,7 @@ namespace DiffWindows.TextWindows
     [DiffWindow(200)]
     public partial class TextDiffThreeWay : UserControl, IDiffWindow<DiffFileNode>, IChangesMenu, IMergeMenu
     {
+        private readonly IWindow window;
         public DiffFileNode DiffNode { get; private set; }
 
         public int CurrentDiff { get; internal set; }
@@ -28,6 +29,10 @@ namespace DiffWindows.TextWindows
         private readonly TextDiff3Area localText;
         private readonly TextDiff3Area baseText;
         private readonly TextDiff3Area remoteText;
+        private readonly LineMarkersThreeWayElement lineMarkersLeft;
+        private readonly LineMarkersThreeWayElement lineMarkersRight;
+
+        #region Dependency properties
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffThreeWay));
@@ -56,9 +61,12 @@ namespace DiffWindows.TextWindows
             set { SetValue(BaseFileLocationProperty, value); }
         }
 
-        public TextDiffThreeWay(object diffNode)
+        #endregion
+
+        public TextDiffThreeWay(IFilesystemTreeVisitable diffNode, IWindow window)
         {
             InitializeComponent();
+            this.window = window;
             DiffNode = (DiffFileNode)diffNode;
             CurrentDiff = -1;
 
@@ -80,16 +88,8 @@ namespace DiffWindows.TextWindows
             remoteText.OnDiffSelected += selected => CurrentDiff = selected;
             baseText.OnDiffSelected += selected => CurrentDiff = selected;
 
-            localText.OnHorizontalScroll += offset =>
-                {
-                    baseText.SetHorizontalOffset(offset);
-                };
-
-            remoteText.OnHorizontalScroll += offset =>
-            {
-                baseText.SetHorizontalOffset(offset);
-            };
-
+            localText.OnHorizontalScroll += offset => baseText.SetHorizontalOffset(offset);
+            remoteText.OnHorizontalScroll += offset => baseText.SetHorizontalOffset(offset);
             baseText.OnHorizontalScroll += offset =>
             {
                 localText.SetHorizontalOffset(offset);
@@ -147,15 +147,10 @@ namespace DiffWindows.TextWindows
                 localText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToLocal);
             };
 
-            LineMarkersPanelLocal.Content = new LineMarkersThreeWayElement(DiffNode, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
-            LineMarkersPanelRemote.Content = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
-        }
-
-        private void InvalidateAllVisual()
-        {
-            localText.InvalidateVisual();
-            remoteText.InvalidateVisual();
-            baseText.InvalidateVisual();
+            LineMarkersPanelLocal.Content = lineMarkersLeft
+                = new LineMarkersThreeWayElement(DiffNode, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
+            LineMarkersPanelRemote.Content = lineMarkersRight
+                = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
         public static bool CanBeApplied(object instance)
@@ -165,10 +160,51 @@ namespace DiffWindows.TextWindows
             if (diffNode == null)
                 return false;
 
+            if (diffNode.FileType == FileTypeEnum.Unknown)
+            {
+                if (diffNode.Info.FullName.IsTextFile())
+                    diffNode.FileType = FileTypeEnum.Text;
+                else
+                {
+                    diffNode.FileType = FileTypeEnum.Binary;
+                    return false;
+                }
+            }
+
             if (diffNode.FileType != FileTypeEnum.Text)
                 return false;
 
             return diffNode.Mode == DiffModeEnum.ThreeWay;
+        }
+
+        public void OnDiffComplete()
+        {
+            InvalidateAllVisual();
+        }
+
+        public void OnMergeComplete()
+        {
+            InvalidateAllFileContents();
+        }
+
+        private void InvalidateAllFileContents()
+        {
+            localText.InvalidateFileContents();
+            remoteText.InvalidateFileContents();
+            baseText.InvalidateFileContents();
+
+            localText.InvalidateVisual();
+            remoteText.InvalidateVisual();
+            baseText.InvalidateVisual();
+        }
+
+        private void InvalidateAllVisual()
+        {
+            localText.InvalidateVisual();
+            remoteText.InvalidateVisual();
+            baseText.InvalidateVisual();
+            lineMarkersLeft.InvalidateVisual();
+            lineMarkersRight.InvalidateVisual();
         }
 
         private void TextDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -186,11 +222,11 @@ namespace DiffWindows.TextWindows
 
         #region Custom ChangesMenu commands
 
-        private void ScrollToLine(int line)
+        private void ScrollToLine(int diffIndex)
         {
-            localText.ScrollToLine(DiffNode.Diff3.Items[line].LocalLineStart - 1);
-            baseText.ScrollToLine(DiffNode.Diff3.Items[line].BaseLineStart - 1);
-            remoteText.ScrollToLine(DiffNode.Diff3.Items[line].RemoteLineStart - 1);
+            localText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].LocalLineStart - 1);
+            baseText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].BaseLineStart - 1);
+            remoteText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].RemoteLineStart - 1);
         }
 
         public RoutedUICommand PreviousCommand()
@@ -261,12 +297,27 @@ namespace DiffWindows.TextWindows
 
         public RoutedUICommand NextConflictCommand() { return NextConflict; }
 
-        private int FindNextConflict()
+        private int FindNextConflict(int start)
         {
-            for (int i = CurrentDiff + 1; i < DiffNode.Diff3.Items.Length; i++)
+            for (int i = start; i < DiffNode.Diff3.Items.Length; i++)
             {
                 if (DiffNode.Diff3.Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
                     return i;
+            }
+
+            return -1;
+        }
+
+        private int FindUnresolvedConflict(int start)
+        {
+            int next = start - 1;
+            while ((next = FindNextConflict(next + 1)) != -1)
+            {
+                if (next == -1)
+                    break;
+
+                if (DiffNode.Diff3.Items[next].Action == Diff3Item.ActionEnum.Default)
+                    return next;
             }
 
             return -1;
@@ -276,10 +327,10 @@ namespace DiffWindows.TextWindows
         {
             return new CommandBinding(NextConflict, (sender, args) =>
             {
-                ScrollToLine(CurrentDiff = FindNextConflict());
+                ScrollToLine(CurrentDiff = FindNextConflict(CurrentDiff + 1));
             }, (sender, args) =>
             {
-                args.CanExecute = DiffNode.Diff3 != null && FindNextConflict() != -1;
+                args.CanExecute = DiffNode.Diff3 != null && FindNextConflict(CurrentDiff + 1) != -1;
             });
         }
 
@@ -291,7 +342,20 @@ namespace DiffWindows.TextWindows
 
         public CommandBinding MergeCommandBinding()
         {
-            return new CommandBinding(Merge, (sender, args) => { }, (sender, args) => { });
+            return new CommandBinding(Merge,
+                (sender, args) =>
+                {
+                    CurrentDiff = FindUnresolvedConflict(0);
+                    if (CurrentDiff != -1)
+                    {
+                        ScrollToLine(CurrentDiff);
+                    } else
+                    {
+                        window.RequestMerge(this);
+                    }
+                },
+                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null; }
+            );
         }
 
         public static RoutedUICommand Merge = new RoutedUICommand("Merge", "Merge", typeof(TextDiff3Area),

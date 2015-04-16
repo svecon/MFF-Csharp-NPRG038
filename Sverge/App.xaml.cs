@@ -113,7 +113,7 @@ namespace Sverge
 
             if (args.Length > 0)
             {
-                mainWindow.AddNewTab(args);
+                mainWindow.OpenNewTab(args);
             }
             else
             {

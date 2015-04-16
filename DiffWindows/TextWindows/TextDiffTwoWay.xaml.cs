@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
@@ -17,7 +18,11 @@ namespace DiffWindows.TextWindows
     [DiffWindow(100)]
     public partial class TextDiffTwoWay : UserControl, IDiffWindow<DiffFileNode>
     {
+        private readonly IWindow window;
         public DiffFileNode DiffNode { get; private set; }
+        private readonly TextDiffArea localText;
+        private readonly TextDiffArea remoteText;
+        private readonly LineMarkersTwoWayElement lineMarkers;
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffTwoWay));
@@ -37,47 +42,48 @@ namespace DiffWindows.TextWindows
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
-        public TextDiffTwoWay(object diffNode)
+        public TextDiffTwoWay(IFilesystemTreeVisitable diffNode, IWindow window)
         {
+            this.window = window;
             DiffNode = (DiffFileNode)diffNode;
 
             InitializeComponent();
 
-            var local = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Local);
-            var remote = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Remote);
+            localText = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Local);
+            remoteText = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Remote);
 
-            ScrollViewerLocal.Content = local;
-            ScrollViewerRemote.Content = remote;
+            ScrollViewerLocal.Content = localText;
+            ScrollViewerRemote.Content = remoteText;
 
-            local.OnHorizontalScroll += offset =>
+            localText.OnHorizontalScroll += offset =>
             {
-                remote.SetHorizontalOffset(offset);
+                remoteText.SetHorizontalOffset(offset);
             };
 
-            remote.OnHorizontalScroll += offset =>
+            remoteText.OnHorizontalScroll += offset =>
             {
-                local.SetHorizontalOffset(offset);
+                localText.SetHorizontalOffset(offset);
             };
 
-            local.OnVerticalScrollSynchronization += offset =>
+            localText.OnVerticalScrollSynchronization += offset =>
             {
                 int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
-                    .TakeWhile(diffItem => diffItem.LocalLineStart <= local.StartsOnLine)
+                    .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine)
                     .Sum(diffItem => diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
 
-                remote.SetVerticalOffsetWithoutSynchornizing(offset, difference);
+                remoteText.SetVerticalOffsetWithoutSynchornizing(offset, difference);
             };
 
-            remote.OnVerticalScrollSynchronization += offset =>
+            remoteText.OnVerticalScrollSynchronization += offset =>
             {
                 int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
-                    .TakeWhile(diffItem => diffItem.RemoteLineStart <= remote.StartsOnLine)
+                    .TakeWhile(diffItem => diffItem.RemoteLineStart <= remoteText.StartsOnLine)
                     .Sum(diffItem => diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
 
-                local.SetVerticalOffsetWithoutSynchornizing(offset, difference);
+                localText.SetVerticalOffsetWithoutSynchornizing(offset, difference);
             };
 
-            LineMarkersPanel.Content = new LineMarkersTwoWayElement(DiffNode, local, remote);
+            LineMarkersPanel.Content = lineMarkers = new LineMarkersTwoWayElement(DiffNode, localText, remoteText);
         }
 
         public static bool CanBeApplied(object instance)
@@ -87,10 +93,47 @@ namespace DiffWindows.TextWindows
             if (diffNode == null)
                 return false;
 
+            if (diffNode.FileType == FileTypeEnum.Unknown)
+            {
+                if (diffNode.Info.FullName.IsTextFile())
+                    diffNode.FileType = FileTypeEnum.Text;
+                else
+                {
+                    diffNode.FileType = FileTypeEnum.Binary;
+                    return false;
+                }
+            }
+
             if (diffNode.FileType != FileTypeEnum.Text)
                 return false;
 
             return diffNode.Mode == DiffModeEnum.TwoWay;
+        }
+
+        private void InvalidateAllVisual()
+        {
+            localText.InvalidateVisual();
+            remoteText.InvalidateVisual();
+            lineMarkers.InvalidateVisual();
+        }
+
+        public void OnDiffComplete()
+        {
+            InvalidateAllVisual();
+        }
+
+        public void OnMergeComplete()
+        {
+            InvalidateAllFileContents();
+        }
+
+        private void InvalidateAllFileContents()
+        {
+            localText.InvalidateFileContents();
+            remoteText.InvalidateFileContents();
+
+            localText.InvalidateVisual();
+            remoteText.InvalidateVisual();
         }
 
         private void TextDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)

@@ -36,7 +36,7 @@ namespace DiffWindows.FolderWindows
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
-        public FolderDiffTwoWay(object diffNode, IWindow window)
+        public FolderDiffTwoWay(IFilesystemTreeVisitable diffNode, IWindow window)
         {
             DiffNode = (DiffFilesystemTree)diffNode;
             this.window = window;
@@ -56,6 +56,18 @@ namespace DiffWindows.FolderWindows
             return filesystemTree.DiffMode == DiffModeEnum.TwoWay;
         }
 
+        public void OnDiffComplete()
+        {
+            TreeView.Items.Refresh();
+            TreeView.InvalidateVisual();
+        }
+
+        public void OnMergeComplete()
+        {
+            TreeView.Items.Refresh();
+            TreeView.InvalidateVisual();
+        }
+
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = sender as TreeViewItem;
@@ -63,12 +75,12 @@ namespace DiffWindows.FolderWindows
             if (item == null)
                 return;
 
-            var diffnode = item.Header as DiffFileNode;
+            var newDiffNode = item.Header as DiffFileNode;
 
-            if (diffnode == null)
+            if (newDiffNode == null)
                 return;
 
-            window.AddNewTab(diffnode);
+            window.OpenNewTab(newDiffNode, this);
         }
 
         private void FolderDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)

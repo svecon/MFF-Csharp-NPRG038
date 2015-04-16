@@ -129,7 +129,7 @@
   <data name="App_OnStartup_ProcessorCollision" xml:space="preserve">
     <value>Processor '{0}' could not be loaded because of a priority collision.</value>
   </data>
-  <data name="App_NewTab_ErrorArgumentsNumber" xml:space="preserve">
+  <data name="App_NewTab_ErrorArguments" xml:space="preserve">
     <value>Error during opening new diff</value>
   </data>
   <data name="App_NewTab_ErrorArgumentsNumberText" xml:space="preserve">
@@ -164,5 +164,14 @@
   </data>
   <data name="NewWindow_Title" xml:space="preserve">
     <value>Open files/directories for diffing</value>
+  </data>
+  <data name="App_NewTab_MixingFilesAndFolders" xml:space="preserve">
+    <value>You can not mix folders and files together as arguments.</value>
+  </data>
+  <data name="App_NewTab_DirectoryNotFound" xml:space="preserve">
+    <value>Directory '{0}' not found or not readable.</value>
+  </data>
+  <data name="App_NewTab_FileNotFound" xml:space="preserve">
+    <value>File '{0}' not found or not readable.</value>
   </data>
 </root>

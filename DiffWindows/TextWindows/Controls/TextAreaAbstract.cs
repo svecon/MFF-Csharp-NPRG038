@@ -145,8 +145,6 @@ namespace DiffWindows.TextWindows.Controls
             {
                 newOffset = extentSize - viewportSize;
             }
-
-            TryInvalidateScrollInfo();
         }
 
         public void SetHorizontalOffset(double newOffset)
@@ -159,6 +157,7 @@ namespace DiffWindows.TextWindows.Controls
 
             if (OnHorizontalScroll != null) OnHorizontalScroll(newOffset);
 
+            TryInvalidateScrollInfo();
             InvalidateVisual();
         }
 
@@ -173,6 +172,7 @@ namespace DiffWindows.TextWindows.Controls
             if (OnVerticalScroll != null) OnVerticalScroll(newOffset);
             if (OnVerticalScrollSynchronization != null) OnVerticalScrollSynchronization(newOffset);
 
+            TryInvalidateScrollInfo();
             InvalidateVisual();
         }
 
@@ -186,6 +186,7 @@ namespace DiffWindows.TextWindows.Controls
             if (OnVerticalScroll != null) OnVerticalScroll(newOffset);
 
             Offset.Y = newOffset;
+            TryInvalidateScrollInfo();
             InvalidateVisual();
         }
 
@@ -217,6 +218,14 @@ namespace DiffWindows.TextWindows.Controls
         }
 
         #endregion
+
+        public void InvalidateFileContents()
+        {
+            if (Lines == null) return;
+            
+            Lines.Clear();
+            Lines = null;
+        }
 
         protected abstract void PreloadFileToMemory();
 

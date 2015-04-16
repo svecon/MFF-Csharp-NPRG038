@@ -114,6 +114,11 @@ namespace DiffWindows.TextWindows.Controls
 
         protected override void OnRender(DrawingContext dc)
         {
+            if (Lines == null && Info != null)
+            {
+                PreloadFileToMemory();
+            }
+
             DrawBackground(dc);
             DrawDiffs(dc);
             DrawText(dc);
@@ -167,7 +172,7 @@ namespace DiffWindows.TextWindows.Controls
                         if (diffItem.BaseAffectedLines == 0 && diffItem.LocalAffectedLines == 0)
                         {
                             diffColor = Colors.LimeGreen;
-                        } 
+                        }
                         if (diffItem.Action != Diff3Item.ActionEnum.Default &&
                                    diffItem.Action != Diff3Item.ActionEnum.ApplyRemote)
                         {
@@ -182,7 +187,7 @@ namespace DiffWindows.TextWindows.Controls
                         if (diffItem.LocalAffectedLines == 0 && diffItem.RemoteAffectedLines == 0)
                         {
                             diffColor = Colors.LimeGreen;
-                        } 
+                        }
                         if (diffItem.Action != Diff3Item.ActionEnum.Default &&
                                     diffItem.Action != Diff3Item.ActionEnum.RevertToBase)
                         {

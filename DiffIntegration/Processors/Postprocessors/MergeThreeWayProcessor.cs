@@ -18,7 +18,7 @@ namespace DiffIntegration.Processors.Postprocessors
         public override DiffModeEnum Mode { get { return DiffModeEnum.ThreeWay; } }
 
         [Settings("Merge folders and files.", "merge", "m")]
-        public bool IsEnabled = false;
+        public bool IsEnabled = true;
 
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;

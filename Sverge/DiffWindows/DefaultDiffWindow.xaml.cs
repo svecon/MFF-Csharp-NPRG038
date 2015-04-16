@@ -4,16 +4,20 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace Sverge.DiffWindows
 {
+    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+
     /// <summary>
     /// Interaction logic for DefaultDiffWindow.xaml
     /// </summary>
     [DiffWindow(int.MaxValue)]
-    public partial class DefaultDiffWindow : UserControl, IDiffWindow<object>
+    public partial class DefaultDiffWindow : UserControl, DW
     {
-        public object DiffNode { get; private set; }
+        private readonly IWindow window;
+        public IFilesystemTreeVisitable DiffNode { get; private set; }
 
-        public DefaultDiffWindow(object instance)
+        public DefaultDiffWindow(IFilesystemTreeVisitable instance, IWindow window)
         {
+            this.window = window;
             DiffNode = instance;
 
             InitializeComponent();
@@ -22,6 +26,14 @@ namespace Sverge.DiffWindows
         public static bool CanBeApplied(object instance)
         {
             return true;
+        }
+
+        public void OnDiffComplete()
+        {
+        }
+
+        public void OnMergeComplete()
+        {
         }
     }
 }

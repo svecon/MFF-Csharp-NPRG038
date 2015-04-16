@@ -228,6 +228,35 @@ namespace CoreLibrary.Processors
             }
         }
 
+        public IProcessorLoader SplitUsingPreprocessors()
+        {
+            var newLoader = new ProcessorLoader();
+
+            foreach (IPreProcessor processor in GetPreProcessors())
+            {
+                newLoader.AddProcessor(processor);
+            }
+
+            foreach (IProcessor processor in GetProcessors())
+            {
+                newLoader.AddProcessor(processor);
+            }
+
+            return newLoader;
+        }
+
+        public IProcessorLoader SplitUsingPostprocessors()
+        {
+            var newLoader = new ProcessorLoader();
+
+            foreach (IPostProcessor processor in GetPostProcessors())
+            {
+                newLoader.AddProcessor(processor);
+            }
+
+            return newLoader;
+        }
+
         public IProcessorLoader SplitLoaderUsing(params Type[] processors)
         {
             var newLoader = new ProcessorLoader();

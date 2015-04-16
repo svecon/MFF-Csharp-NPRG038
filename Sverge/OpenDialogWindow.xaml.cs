@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
@@ -169,10 +168,10 @@ namespace Sverge
         {
             if (string.IsNullOrEmpty(BaseLocation))
             {
-                window.AddNewTab(LocalLocation, RemoteLocation);
+                window.OpenNewTab(LocalLocation, RemoteLocation);
             } else
             {
-                window.AddNewTab(LocalLocation, BaseLocation, RemoteLocation);
+                window.OpenNewTab(LocalLocation, BaseLocation, RemoteLocation);
             }
 
             Close();

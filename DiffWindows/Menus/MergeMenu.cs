@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Interfaces;
@@ -47,23 +46,14 @@ namespace DiffWindows.Menus
         {
             var menu = new MenuItem { Header = "Merge" };
 
-            var previous = new MenuItem { Header = "Previous conflict" };
-            previous.Command = window.PreviousConflictCommand();
+            var previous = new MenuItem {Header = "Previous conflict", Command = window.PreviousConflictCommand()};
+            var next = new MenuItem {Header = "Next conflict", Command = window.NextConflictCommand()};
 
-            var next = new MenuItem { Header = "Next conflict" };
-            next.Command = window.NextConflictCommand();
+            var useLocal = new MenuItem {Header = "Use local version", Command = window.UseLocalCommand()};
+            var useBase = new MenuItem {Header = "Use base version", Command = window.UseBaseCommand()};
+            var useRemote = new MenuItem {Header = "Use remote version", Command = window.UseRemoteCommand()};
 
-            var useLocal = new MenuItem { Header = "Use local version" };
-            useLocal.Command = window.UseLocalCommand();
-
-            var useBase = new MenuItem { Header = "Use base version" };
-            useBase.Command = window.UseBaseCommand();
-
-            var useRemote = new MenuItem { Header = "Use remote version" };
-            useRemote.Command = window.UseRemoteCommand();
-
-            var merge = new MenuItem { Header = "Merge" };
-            merge.Command = window.MergeCommand();
+            var merge = new MenuItem {Header = "Merge to base", Command = window.MergeCommand()};
 
             menu.Items.Add(previous);
             menu.Items.Add(next);

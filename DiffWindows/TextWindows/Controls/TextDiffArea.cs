@@ -89,6 +89,11 @@ namespace DiffWindows.TextWindows.Controls
 
         protected override void OnRender(DrawingContext dc)
         {
+            if (Lines == null && Info != null)
+            {
+                PreloadFileToMemory();
+            }
+
             DrawBackground(dc);
             DrawDiffs(dc);
             DrawText(dc);

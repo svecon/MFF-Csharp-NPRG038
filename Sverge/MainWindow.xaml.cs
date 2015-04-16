@@ -1,42 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CoreLibrary.Exceptions.NotFound;
-using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Interfaces;
+using CoreLibrary.Processors;
 using DiffIntegration.DiffFilesystemTree;
-using DiffIntegration.Processors.Preprocessors;
-using DiffIntegration.Processors.Processors;
-using DiffWindows.Menus;
-using DiffWindows.TextWindows;
 using Sverge.DiffWindows;
 
 namespace Sverge
 {
+    using TV = IFilesystemTreeVisitable;
+    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window, IWindow
     {
-        private readonly IProcessorLoader loader;
+        private readonly ProcessorRunner runner;
         private readonly DiffWindowLoader windowLoader;
-        private readonly Dictionary<object, int> tabsPositions;
+        private readonly Dictionary<TV, int> tabsPositions;
+        private readonly Dictionary<DW, DW> parentWindows;
         private int windowMenusAdded;
         private int windowMenusBindingsAdded;
 
         public MainWindow(IProcessorLoader processorLoader)
         {
-            loader = processorLoader;
+            runner = new ProcessorRunner(processorLoader);
+
             windowLoader = new DiffWindowLoader(this);
             windowLoader.LoadWindows();
             windowLoader.LoadWindowMenus();
 
-            tabsPositions = new Dictionary<object, int>();
+            tabsPositions = new Dictionary<TV, int>();
+            parentWindows = new Dictionary<DW, DW>();
 
             InitializeComponent();
         }
@@ -55,16 +56,16 @@ namespace Sverge
             return (attr & FileAttributes.Directory) == FileAttributes.Directory ? 0 : 1;
         }
 
-        public void AddNewTab(params string[] args)
+        public DW OpenNewTab(params string[] args)
         {
             #region Wrong number of arguments
             if (args.Length != 2 && args.Length != 3)
             {
                 MessageBox.Show(
                     Properties.Resources.App_NewTab_ErrorArgumentsNumberText,
-                    Properties.Resources.App_NewTab_ErrorArgumentsNumber
+                    Properties.Resources.App_NewTab_ErrorArguments
                 );
-                return;
+                return null;
             }
             #endregion
 
@@ -105,102 +106,107 @@ namespace Sverge
                     diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1], args[2]).TraverseTree();
                 } else
                 {
-                    Console.WriteLine("You can not mix folders and files together as arguments.");
-                    return;
+                    MessageBox.Show(
+                        Properties.Resources.App_NewTab_ErrorArgumentsNumberText,
+                        Properties.Resources.App_NewTab_MixingFilesAndFolders
+                    );
+                    return null;
                 }
 
                 #region Catch all possible NotFoundExceptions
-            } catch (LocalFileNotFoundException e)
+            } catch (LocationFileNotFoundException e)
             {
-                Console.WriteLine(e);
-                return;
-            } catch (BaseFileNotFoundException e)
+                MessageBox.Show(
+                    String.Format(Properties.Resources.App_NewTab_FileNotFound, e.Info.FullName),
+                    Properties.Resources.App_NewTab_MixingFilesAndFolders
+                );
+                return null;
+            } catch (LocationDirectoryNotFoundException e)
             {
-                Console.WriteLine(e);
-                return;
-            } catch (RemoteFileNotFoundException e)
-            {
-                Console.WriteLine(e);
-                return;
-            } catch (LocalDirectoryNotFoundException e)
-            {
-                Console.WriteLine(e);
-                return;
-            } catch (BaseDirectoryNotFoundException e)
-            {
-                Console.WriteLine(e);
-                return;
-            } catch (RemoteDirectoryNotFoundException e)
-            {
-                Console.WriteLine(e);
-                return;
+                MessageBox.Show(
+                    String.Format(Properties.Resources.App_NewTab_DirectoryNotFound, e.Info.FullName),
+                    Properties.Resources.App_NewTab_MixingFilesAndFolders
+                );
+                return null;
             }
                 #endregion
 
             #endregion
 
-            #region Run Processors
-            // run preprocessors and calculate diffs in parallel 
-            IExecutionVisitor ex = new ParallelExecutionVisitor(loader.SplitLoaderUsing(
-                  typeof(ExtensionFilterProcessor)
-                , typeof(RegexFilterProcessor)
-                , typeof(CsharpSourcesFilterProcessor)
-                , typeof(FileTypeProcessor)
+            DW newWindow = OpenNewTab(diffTree);
+            RequestDiff(newWindow);
 
-                , typeof(SizeTimeDiffProcessor)
-                , typeof(ChecksumDiffProcessor)
-                , typeof(BinaryDiffProcessor)
-
-                , typeof(CalculateDiffProcessor)
-            ));
-            diffTree.Accept(ex);
-            ex.Wait();
-
-
-            #endregion
-
-            AddNewTab(diffTree);
+            return newWindow;
         }
 
-        public void AddNewTab(IFilesystemTreeVisitable diffTree)
+        public void RequestDiff(DW window)
         {
-            int tabPosition;
-            if (tabsPositions.TryGetValue(diffTree, out tabPosition))
+            runner.AddOnDiffCompleteDelegate(window.DiffNode, window.OnDiffComplete);
+            runner.RunDiff(window.DiffNode);
+        }
+
+        public void RequestMerge(DW window)
+        {
+            runner.AddOnMergeCompleteDelegate(window.DiffNode, window.OnMergeComplete);
+            runner.AddOnDiffCompleteDelegate(window.DiffNode, window.OnDiffComplete);
+
+            if (parentWindows.ContainsKey(window))
             {
-                Tabs.SelectedIndex = tabPosition;
-                return;
+                runner.AddOnMergeCompleteDelegate(window.DiffNode, parentWindows[window].OnMergeComplete);
+                runner.AddOnDiffCompleteDelegate(window.DiffNode, parentWindows[window].OnDiffComplete);
             }
 
-            string header = "";
-            if (diffTree is IFilesystemTreeFileNode)
+            runner.RunMerge(window.DiffNode);
+        }
+
+        public DW OpenNewTab(TV diffNode, DW parentWindow = null)
+        {
+            int tabPosition;
+            if (tabsPositions.TryGetValue(diffNode, out tabPosition))
             {
-                header = ((IFilesystemTreeFileNode)diffTree).Info.Name;
-            } else if (diffTree is IFilesystemTree)
+                Tabs.SelectedIndex = tabPosition;
+                return null;
+            }
+
+            DW newWindow = windowLoader.CreateWindowFor(diffNode);
+
+            if (parentWindow != null)
             {
-                header = ((IFilesystemTree)diffTree).Root.Info.Name;
+                parentWindows.Add(newWindow, parentWindow);
+                runner.AddOnDiffCompleteDelegate(parentWindow.DiffNode, newWindow.OnDiffComplete);
+            }
+
+            string header;
+            var node = diffNode as IFilesystemTreeFileNode;
+            if (node != null)
+            {
+                header = node.Info.Name;
             } else
             {
-                header = "Unknown";
+                var tree = diffNode as IFilesystemTree;
+                header = tree != null ? tree.Root.Info.Name : "Unknown";
             }
 
             Tabs.Items.Add(new TabItem {
                 Header = header,
-                Content = windowLoader.CreateWindowFor(diffTree),
+                Content = newWindow,
                 IsSelected = true
             });
 
-            tabsPositions.Add(diffTree, Tabs.SelectedIndex);
+            tabsPositions.Add(diffNode, Tabs.SelectedIndex);
+
+            return newWindow;
         }
 
         private void RemoveWindow(int position)
         {
-            tabsPositions.Remove(((IDiffWindow<object>)((TabItem)Tabs.Items.GetItemAt(position)).Content).DiffNode);
+            tabsPositions.Remove(((DW)((TabItem)Tabs.Items.GetItemAt(position)).Content).DiffNode);
             Tabs.Items.RemoveAt(position);
         }
 
         private void RemoveWindow(TabItem item)
         {
-            tabsPositions.Remove(((IDiffWindow<object>)item.Content).DiffNode);
+            tabsPositions.Remove(((DW)item.Content).DiffNode);
             Tabs.Items.Remove(item);
         }
 
@@ -208,11 +214,6 @@ namespace Sverge
         {
             var open = new OpenDialogWindow(this);
             open.ShowDialog();
-        }
-
-        public void WrongNumberOfArguments()
-        {
-            var x = MessageBox.Show("You need to specify 2 or 3 arguments.");
         }
 
         private void TabCloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -301,36 +302,34 @@ namespace Sverge
 
         private void Tabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.Source is TabControl)
+            if (!(e.Source is TabControl))
+                return;
+
+            if (Tabs.SelectedIndex == -1)
+                return;
+
+            RemoveCustomWindowMenuBindings();
+            CloseCustomWindowMenus();
+
+            IEnumerable<IDiffWindowMenu> windows = windowLoader.CreateDiffWindowMenus(
+                ((TabItem)Tabs.Items.GetItemAt(Tabs.SelectedIndex)).Content
+            );
+
+            foreach (IDiffWindowMenu diffWindowMenu in windows)
             {
-                if (Tabs.SelectedIndex == -1)
-                    return;
+                MenuItem item = diffWindowMenu.CreateMenuItem();
+                Menu.Items.Add(item);
 
-                RemoveCustomWindowMenuBindings();
-                CloseCustomWindowMenus();
+                item.Style = (Style)Resources["WindowMenuItemStyle"];
 
-                IEnumerable<IDiffWindowMenu> windows = windowLoader.CreateDiffWindowMenus(
-                    ((TabItem)Tabs.Items.GetItemAt(Tabs.SelectedIndex)).Content
-                );
+                windowMenusAdded++;
 
-                foreach (IDiffWindowMenu diffWindowMenu in windows)
+                foreach (CommandBinding commandBinding in diffWindowMenu.CommandBindings())
                 {
-                    MenuItem item = diffWindowMenu.CreateMenuItem();
-                    Menu.Items.Add(item);
+                    CommandBindings.Add(commandBinding);
 
-                    item.Style = (Style)Resources["WindowMenuItemStyle"];
-
-                    windowMenusAdded++;
-
-                    foreach (CommandBinding commandBinding in diffWindowMenu.CommandBindings())
-                    {
-                        CommandBindings.Add(commandBinding);
-
-                        windowMenusBindingsAdded++;
-                    }
+                    windowMenusBindingsAdded++;
                 }
-
-                
             }
         }
     }

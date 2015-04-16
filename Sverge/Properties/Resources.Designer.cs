@@ -61,11 +61,20 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory &apos;{0}&apos; not found or not readable..
+        /// </summary>
+        public static string App_NewTab_DirectoryNotFound {
+            get {
+                return ResourceManager.GetString("App_NewTab_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error during opening new diff.
         /// </summary>
-        public static string App_NewTab_ErrorArgumentsNumber {
+        public static string App_NewTab_ErrorArguments {
             get {
-                return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumber", resourceCulture);
+                return ResourceManager.GetString("App_NewTab_ErrorArguments", resourceCulture);
             }
         }
         
@@ -75,6 +84,24 @@ namespace Sverge.Properties {
         public static string App_NewTab_ErrorArgumentsNumberText {
             get {
                 return ResourceManager.GetString("App_NewTab_ErrorArgumentsNumberText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; not found or not readable..
+        /// </summary>
+        public static string App_NewTab_FileNotFound {
+            get {
+                return ResourceManager.GetString("App_NewTab_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can not mix folders and files together as arguments..
+        /// </summary>
+        public static string App_NewTab_MixingFilesAndFolders {
+            get {
+                return ResourceManager.GetString("App_NewTab_MixingFilesAndFolders", resourceCulture);
             }
         }
         
