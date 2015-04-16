@@ -6,7 +6,7 @@ using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace DiffIntegration.Processors.Processors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// CalculateDiffProcessor calculates diff between files that we know are different

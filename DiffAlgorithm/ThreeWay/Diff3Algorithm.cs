@@ -204,14 +204,11 @@ namespace DiffAlgorithm.ThreeWay
             {
                 AddNewDiff3(CreateFromNew());
                 newIterator++;
-            } else if (CurrentNew.LocalLineStart > CurrentHis.LocalLineStart)
+            } else // if (CurrentNew.LocalLineStart > CurrentHis.LocalLineStart)
             // take CurrentHis as it starts lower
             {
                 AddNewDiff3(CreateFromHis());
                 hisIterator++;
-            } else
-            {
-                throw new ApplicationException("This should never happen.");
             }
         }
 

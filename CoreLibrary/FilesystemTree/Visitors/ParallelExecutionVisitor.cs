@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {

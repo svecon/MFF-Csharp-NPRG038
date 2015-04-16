@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
-      <Project>{0525db80-454e-4d32-87ae-4a48972877fe}</Project>
-      <Name>DiffIntegration</Name>
+    <ProjectReference Include="..\RollingChecksum\RollingChecksum.csproj">
+      <Project>{558DC270-8FFB-4EBD-AA26-4F32A8B3FB62}</Project>
+      <Name>RollingChecksum</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DiffIntegration.RollingChecksums
+namespace RollingChecksum
 {
     /// <summary>
     /// Interface that all algorithms for Rolling Checksums must implement.

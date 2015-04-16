@@ -7,8 +7,8 @@ using System.Windows.Navigation;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins;
+using CoreLibrary.Processors;
 using CoreLibrary.Settings;
-using DiffIntegration;
 
 //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt"
 //"C:\Users\svecon\Downloads\DiffAlgorithm.cs" "C:\Users\svecon\Downloads\DiffAlgorithmB.cs" "C:\Users\svecon\Downloads\DiffAlgorithmR.cs"
@@ -67,7 +67,7 @@ namespace Sverge
             try
             {
                 PluginsLoader.LoadAssemblies();
-                loader = new DiffProcessorLoader();
+                loader = new ProcessorLoader();
                 // Load available processors and their settings
                 loader.LoadAll();
             } catch (ProcessorPriorityColissionException e)

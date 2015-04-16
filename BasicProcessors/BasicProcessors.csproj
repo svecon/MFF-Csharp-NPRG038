@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0525DB80-454E-4D32-87AE-4A48972877FE}</ProjectGuid>
+    <ProjectGuid>{5BA70E5B-9E07-412B-8065-5BE557177C8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DiffIntegration</RootNamespace>
-    <AssemblyName>DiffIntegration</AssemblyName>
+    <RootNamespace>BasicProcessors</RootNamespace>
+    <AssemblyName>BasicProcessors</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,16 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiffFilesystemTree\DiffCrawler.cs" />
-    <Compile Include="DiffFilesystemTree\DiffFilesystemTree.cs" />
-    <Compile Include="DiffFilesystemTree\DiffDirNode.cs" />
-    <Compile Include="DiffFilesystemTree\DiffFileNode.cs" />
-    <Compile Include="DiffOutput\DiffOutputAbstract.cs" />
-    <Compile Include="DiffOutput\IDiffOutput.cs" />
-    <Compile Include="DiffOutput\DiffChunk.cs" />
-    <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
-    <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
-    <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
+    <Compile Include="Processors\DiffProcessors\BinaryDiffProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\CalculateDiffProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\ChecksumDiffProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\CleanupProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\CsharpSourcesFilterProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\ExtensionFilterProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\FileTypeProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\RegexFilterProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\SizeTimeDiffProcessor.cs" />
+    <Compile Include="Processors\InteractiveResolveProcessors\InteractiveThreeWayDiffProcessor.cs" />
+    <Compile Include="Processors\InteractiveResolveProcessors\InteractiveTwoWayDiffProcessor.cs" />
+    <Compile Include="Processors\MergeProcessors\MergeCleanupProcessor.cs" />
+    <Compile Include="Processors\MergeProcessors\MergeThreeWayProcessor.cs" />
+    <Compile Include="Processors\MergeProcessors\MergeTwoWayProcessor.cs" />
+    <Compile Include="Processors\MergeProcessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -60,8 +65,19 @@
       <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
       <Name>DiffAlgorithm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
+      <Project>{0525DB80-454E-4D32-87AE-4A48972877FE}</Project>
+      <Name>DiffIntegration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RollingChecksum\RollingChecksum.csproj">
+      <Project>{558DC270-8FFB-4EBD-AA26-4F32A8B3FB62}</Project>
+      <Name>RollingChecksum</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

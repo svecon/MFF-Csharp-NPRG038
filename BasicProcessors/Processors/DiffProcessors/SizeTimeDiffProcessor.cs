@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
-namespace DiffIntegration.Processors.Processors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.

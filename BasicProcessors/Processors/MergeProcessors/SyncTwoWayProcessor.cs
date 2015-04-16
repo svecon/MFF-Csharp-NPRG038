@@ -4,7 +4,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
-namespace DiffIntegration.Processors.Postprocessors
+namespace BasicProcessors.Processors.MergeProcessors
 {
     /// <summary>
     /// This processor synchronizes two folders based on chosen method.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiffIntegration.RollingChecksums
+namespace RollingChecksum
 {
     /// <summary>
     /// Rolling Checksum algorithm Adler32 based on Fletcher checksum algorithm.

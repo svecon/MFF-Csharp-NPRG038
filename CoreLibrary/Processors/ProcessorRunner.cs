@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Interfaces;

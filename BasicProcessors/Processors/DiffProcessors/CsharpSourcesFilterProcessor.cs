@@ -3,7 +3,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
-namespace DiffIntegration.Processors.Preprocessors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// Filter for C# source codes (manually typed ones).

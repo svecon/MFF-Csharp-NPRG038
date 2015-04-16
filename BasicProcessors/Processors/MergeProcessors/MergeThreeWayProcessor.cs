@@ -6,7 +6,7 @@ using CoreLibrary.Settings.Attributes;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace DiffIntegration.Processors.Postprocessors
+namespace BasicProcessors.Processors.MergeProcessors
 {
     /// <summary>
     /// Processor for merging 3-way diffed files.

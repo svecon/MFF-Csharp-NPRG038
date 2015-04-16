@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
 using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
-namespace DiffIntegration.Processors.DiffProcessors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.

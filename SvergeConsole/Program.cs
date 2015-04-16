@@ -11,9 +11,6 @@ using CoreLibrary.Processors;
 using CoreLibrary.Settings;
 using CoreLibrary.Settings.Attributes;
 using DiffIntegration.DiffFilesystemTree;
-using DiffIntegration.Processors.Postprocessors;
-using DiffIntegration.Processors.Preprocessors;
-using DiffIntegration.Processors.Processors;
 
 namespace SvergeConsole
 {

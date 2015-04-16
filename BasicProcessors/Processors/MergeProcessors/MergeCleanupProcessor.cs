@@ -3,7 +3,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace DiffIntegration.Processors.Postprocessors
+namespace BasicProcessors.Processors.MergeProcessors
 {
     [Processor(ProcessorTypeEnum.Merge, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class MergeCleanupProcessor : ProcessorAbstract

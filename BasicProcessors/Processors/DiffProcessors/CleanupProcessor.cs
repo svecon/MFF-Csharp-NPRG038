@@ -3,7 +3,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using DiffIntegration.DiffFilesystemTree;
 
-namespace DiffIntegration.Processors.Preprocessors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     [Processor(ProcessorTypeEnum.Diff, 0, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CleanupProcessor : ProcessorAbstract

@@ -5,7 +5,7 @@ using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
 
-namespace DiffIntegration.Processors.Preprocessors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// Filteres files by an extension or by an extension type/group.

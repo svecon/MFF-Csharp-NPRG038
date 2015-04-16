@@ -1,5 +1,5 @@
 ﻿
-namespace DiffIntegration.Processors
+namespace CoreLibrary.Helpers
 {
     /// <summary>
     /// ThreeWayDiffHelper uses binary masks to help you gradually differentiate between three different files

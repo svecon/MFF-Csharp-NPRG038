@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CoreLibrary.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Processors;
 using CoreLibrary.Settings.Attributes;
-using DiffIntegration.RollingChecksums;
+using RollingChecksum;
 
-namespace DiffIntegration.Processors.Processors
+namespace BasicProcessors.Processors.DiffProcessors
 {
     /// <summary>
     /// ChecksumDiffProcessor calculates multiple checksums for the files and checks if they are all same.
