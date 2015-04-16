@@ -182,10 +182,10 @@
                             <Image Height="13" Margin="0,0,4,0">
                                 <Image.Style>
                                     <Style TargetType="Image">
-                                        <Setter Property="Source" Value="/Resources/folder.png" />
+                                        <Setter Property="Source" Value="/DiffWindows;component/Resources/folder.png" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
-                                                <Setter Property="Source" Value="/Resources/folder_open.png" />
+                                                <Setter Property="Source" Value="/DiffWindows;component/Resources/folder_open.png" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -212,7 +212,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="/Resources/list.png" Height="13" Margin="0,0,4,0" />
+                                <Image Source="/DiffWindows;component/Resources/list.png" Height="13" Margin="0,0,4,0" />
                                 <TextBlock  Text="{Binding Path=Info}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch" Padding="0,2,0,2"></TextBlock>
                             </StackPanel>
 
