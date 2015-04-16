@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -139,26 +141,47 @@ namespace Sverge
             return newWindow;
         }
 
+        private void CallDiffContinuations(Task t, DW window)
+        {
+            window.OnDiffComplete(t);
+
+            foreach (DW childrenWindow in parentWindows.Where(p => p.Value == window).Select(p => p.Key))
+                childrenWindow.OnDiffComplete(t);
+
+            if (!parentWindows.ContainsKey(window)) return;
+            parentWindows[window].OnDiffComplete(t);
+        }
+
+        private void CallMergeContinuations(Task t, DW window)
+        {
+            window.OnMergeComplete(t);
+
+            foreach (DW childrenWindow in parentWindows.Where(p => p.Value == window).Select(p => p.Key))
+                childrenWindow.OnMergeComplete(t);
+
+            if (!parentWindows.ContainsKey(window)) return;
+            parentWindows[window].OnMergeComplete(t);
+        }
+
+#pragma warning disable 4014
         public void RequestDiff(DW window)
         {
-            runner.AddOnDiffCompleteDelegate(window.DiffNode, window.OnDiffComplete);
-            runner.RunDiff(window.DiffNode);
+            runner.RunDiff(window.DiffNode).ContinueWith(t => CallDiffContinuations(t, window)
+                , TaskContinuationOptions.ExecuteSynchronously);
         }
 
         public void RequestMerge(DW window)
         {
-            runner.AddOnMergeCompleteDelegate(window.DiffNode, window.OnMergeComplete);
-            runner.AddOnDiffCompleteDelegate(window.DiffNode, window.OnDiffComplete);
-
-            if (parentWindows.ContainsKey(window))
+            runner.RunMerge(window.DiffNode).ContinueWith(t =>
             {
-                runner.AddOnMergeCompleteDelegate(window.DiffNode, parentWindows[window].OnMergeComplete);
-                runner.AddOnDiffCompleteDelegate(window.DiffNode, parentWindows[window].OnDiffComplete);
-            }
+                CallMergeContinuations(t, window);
 
-            runner.RunMerge(window.DiffNode);
-            runner.RunDiff(window.DiffNode);
+                runner.RunDiff(window.DiffNode).ContinueWith(tt => CallDiffContinuations(tt, window)
+                    , TaskContinuationOptions.ExecuteSynchronously);
+            }, TaskContinuationOptions.ExecuteSynchronously);
+
         }
+#pragma warning restore 4014
 
         public DW OpenNewTab(TV diffNode, DW parentWindow = null)
         {
@@ -172,10 +195,7 @@ namespace Sverge
             DW newWindow = windowLoader.CreateWindowFor(diffNode);
 
             if (parentWindow != null)
-            {
                 parentWindows.Add(newWindow, parentWindow);
-                runner.AddOnDiffCompleteDelegate(parentWindow.DiffNode, newWindow.OnDiffComplete);
-            }
 
             string header;
             var node = diffNode as IFilesystemTreeFileNode;

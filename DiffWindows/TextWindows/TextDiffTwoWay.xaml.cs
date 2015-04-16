@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using CoreLibrary.Enums;
@@ -117,12 +118,12 @@ namespace DiffWindows.TextWindows
             lineMarkers.InvalidateVisual();
         }
 
-        public void OnDiffComplete()
+        public void OnDiffComplete(Task t)
         {
             InvalidateAllVisual();
         }
 
-        public void OnMergeComplete()
+        public void OnMergeComplete(Task t)
         {
             InvalidateAllFileContents();
         }

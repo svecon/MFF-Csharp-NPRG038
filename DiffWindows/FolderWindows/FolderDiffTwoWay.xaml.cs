@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Enums;
@@ -56,13 +57,13 @@ namespace DiffWindows.FolderWindows
             return filesystemTree.DiffMode == DiffModeEnum.TwoWay;
         }
 
-        public void OnDiffComplete()
+        public void OnDiffComplete(Task t)
         {
             TreeView.Items.Refresh();
             TreeView.InvalidateVisual();
         }
 
-        public void OnMergeComplete()
+        public void OnMergeComplete(Task t)
         {
             TreeView.Items.Refresh();
             TreeView.InvalidateVisual();

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 
@@ -28,11 +29,11 @@ namespace Sverge.DiffWindows
             return true;
         }
 
-        public void OnDiffComplete()
+        public void OnDiffComplete(Task t)
         {
         }
 
-        public void OnMergeComplete()
+        public void OnMergeComplete(Task t)
         {
         }
     }
