@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="Processors\DiffProcessors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CalculateDiffProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\ChecksumDiffProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CleanupProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\ExtensionFilterProcessor.cs" />
@@ -68,10 +67,6 @@
     <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
       <Project>{0525DB80-454E-4D32-87AE-4A48972877FE}</Project>
       <Name>DiffIntegration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RollingChecksum\RollingChecksum.csproj">
-      <Project>{558DC270-8FFB-4EBD-AA26-4F32A8B3FB62}</Project>
-      <Name>RollingChecksum</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
