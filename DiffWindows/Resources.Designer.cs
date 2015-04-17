@@ -68,5 +68,203 @@ namespace DiffWindows {
                 return ResourceManager.GetString("Diff_No_File_At_Location", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base file different.
+        /// </summary>
+        public static string Differences_BaseDifferent {
+            get {
+                return ResourceManager.GetString("Differences_BaseDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base file missing.
+        /// </summary>
+        public static string Differences_BaseMissing {
+            get {
+                return ResourceManager.GetString("Differences_BaseMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only on base.
+        /// </summary>
+        public static string Differences_BaseOnly {
+            get {
+                return ResourceManager.GetString("Differences_BaseOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files differ.
+        /// </summary>
+        public static string Differences_FilesDifferent {
+            get {
+                return ResourceManager.GetString("Differences_FilesDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local file deleted.
+        /// </summary>
+        public static string Differences_LocalDeleted {
+            get {
+                return ResourceManager.GetString("Differences_LocalDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local file different.
+        /// </summary>
+        public static string Differences_LocalDifferent {
+            get {
+                return ResourceManager.GetString("Differences_LocalDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local file missing.
+        /// </summary>
+        public static string Differences_LocalMissing {
+            get {
+                return ResourceManager.GetString("Differences_LocalMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only on local.
+        /// </summary>
+        public static string Differences_LocalOnly {
+            get {
+                return ResourceManager.GetString("Differences_LocalOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote file deleted.
+        /// </summary>
+        public static string Differences_RemoteDeleted {
+            get {
+                return ResourceManager.GetString("Differences_RemoteDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote file different.
+        /// </summary>
+        public static string Differences_RemoteDifferent {
+            get {
+                return ResourceManager.GetString("Differences_RemoteDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote file missing.
+        /// </summary>
+        public static string Differences_RemoteMissing {
+            get {
+                return ResourceManager.GetString("Differences_RemoteMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only on remote.
+        /// </summary>
+        public static string Differences_RemoteOnly {
+            get {
+                return ResourceManager.GetString("Differences_RemoteOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changes.
+        /// </summary>
+        public static string Menu_Changes {
+            get {
+                return ResourceManager.GetString("Menu_Changes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Menu_Changes_Next {
+            get {
+                return ResourceManager.GetString("Menu_Changes_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Menu_Changes_Previous {
+            get {
+                return ResourceManager.GetString("Menu_Changes_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge.
+        /// </summary>
+        public static string Menu_Merge {
+            get {
+                return ResourceManager.GetString("Menu_Merge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge to base.
+        /// </summary>
+        public static string Menu_Merge_Merge {
+            get {
+                return ResourceManager.GetString("Menu_Merge_Merge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next conflict.
+        /// </summary>
+        public static string Menu_Merge_Next {
+            get {
+                return ResourceManager.GetString("Menu_Merge_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous conflict.
+        /// </summary>
+        public static string Menu_Merge_Previous {
+            get {
+                return ResourceManager.GetString("Menu_Merge_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use base version.
+        /// </summary>
+        public static string Menu_Merge_UseBase {
+            get {
+                return ResourceManager.GetString("Menu_Merge_UseBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use local version.
+        /// </summary>
+        public static string Menu_Merge_UseLocal {
+            get {
+                return ResourceManager.GetString("Menu_Merge_UseLocal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use remote version.
+        /// </summary>
+        public static string Menu_Merge_UseRemote {
+            get {
+                return ResourceManager.GetString("Menu_Merge_UseRemote", resourceCulture);
+            }
+        }
     }
 }

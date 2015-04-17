@@ -174,4 +174,16 @@
   <data name="App_NewTab_FileNotFound" xml:space="preserve">
     <value>File '{0}' not found or not readable.</value>
   </data>
+  <data name="Menu_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Menu_CloseComparison" xml:space="preserve">
+    <value>Close current comparison</value>
+  </data>
+  <data name="Menu_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Menu_NewComparison" xml:space="preserve">
+    <value>Start a new comparison</value>
+  </data>
 </root>

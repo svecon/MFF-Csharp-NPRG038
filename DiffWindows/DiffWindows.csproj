@@ -92,6 +92,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="FolderWindows\TreeViewTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TextWindows\TextDiffThreeWay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

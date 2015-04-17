@@ -31,51 +31,51 @@ namespace DiffWindows.FolderWindows.Converters
                     switch (differences)
                     {
                         case DifferencesStatusEnum.AllDifferent:
-                            return "Files differ";
+                            return Resources.Differences_FilesDifferent;
                         case DifferencesStatusEnum.BaseLocalSame:
-                            return "Remote different";
+                            return Resources.Differences_RemoteDifferent;
                         case DifferencesStatusEnum.BaseRemoteSame:
-                            return "Local different";
+                            return Resources.Differences_LocalDifferent;
                         case DifferencesStatusEnum.LocalRemoteSame:
-                            return "Base different";
+                            return Resources.Differences_BaseDifferent;
                     }
                     break;
                 case LocationCombinationsEnum.OnBase:
-                    return "Only on base";
+                    return Resources.Differences_BaseOnly;
                 case LocationCombinationsEnum.OnLocal:
-                    return "Only on local";
+                    return Resources.Differences_LocalOnly;
                 case LocationCombinationsEnum.OnRemote:
-                    return "Only on remote";
+                    return Resources.Differences_RemoteOnly;
                 case LocationCombinationsEnum.OnBaseLocal:
                     switch (differences)
                     {
                         case DifferencesStatusEnum.AllDifferent:
-                            return "Files differ";
+                            return Resources.Differences_FilesDifferent;
                         case DifferencesStatusEnum.BaseLocalSame:
-                            return "Remote file deleted";
+                            return Resources.Differences_RemoteDeleted;
                     }
                     break;
                 case LocationCombinationsEnum.OnBaseRemote:
                     switch (differences)
                     {
                         case DifferencesStatusEnum.AllDifferent:
-                            return "Files differ";
+                            return Resources.Differences_FilesDifferent;
                         case DifferencesStatusEnum.BaseRemoteSame:
-                            return "Local file deleted";
+                            return Resources.Differences_LocalDeleted;
                     }
                     break;
                 case LocationCombinationsEnum.OnLocalRemote:
                     switch (differences)
                     {
                         case DifferencesStatusEnum.AllDifferent:
-                            return "Files differ";
+                            return Resources.Differences_FilesDifferent;
                         case DifferencesStatusEnum.LocalRemoteSame:
-                            return "Base file missing";
+                            return Resources.Differences_BaseMissing;
                     }
                     break;
             }
 
-            return "";
+            return string.Empty;
         }
 
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

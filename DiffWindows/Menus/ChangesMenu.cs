@@ -35,13 +35,11 @@ namespace DiffWindows.Menus
 
         public MenuItem CreateMenuItem()
         {
-            var menu = new MenuItem { Header = "Changes" };
+            var menu = new MenuItem { Header = Resources.Menu_Changes };
 
-            var previous = new MenuItem { Header = "Previous" };
-            previous.Command = window.PreviousCommand();
+            var previous = new MenuItem {Header = Resources.Menu_Changes_Previous, Command = window.PreviousCommand()};
 
-            var next = new MenuItem { Header = "Next" };
-            next.Command = window.NextCommand();
+            var next = new MenuItem {Header = Resources.Menu_Changes_Next, Command = window.NextCommand()};
 
             menu.Items.Add(previous);
             menu.Items.Add(next);

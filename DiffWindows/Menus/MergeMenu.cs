@@ -44,16 +44,16 @@ namespace DiffWindows.Menus
 
         public MenuItem CreateMenuItem()
         {
-            var menu = new MenuItem { Header = "Merge" };
+            var menu = new MenuItem { Header = Resources.Menu_Merge };
 
-            var previous = new MenuItem {Header = "Previous conflict", Command = window.PreviousConflictCommand()};
-            var next = new MenuItem {Header = "Next conflict", Command = window.NextConflictCommand()};
+            var previous = new MenuItem { Header = Resources.Menu_Merge_Previous, Command = window.PreviousConflictCommand() };
+            var next = new MenuItem { Header = Resources.Menu_Merge_Next, Command = window.NextConflictCommand() };
 
-            var useLocal = new MenuItem {Header = "Use local version", Command = window.UseLocalCommand()};
-            var useBase = new MenuItem {Header = "Use base version", Command = window.UseBaseCommand()};
-            var useRemote = new MenuItem {Header = "Use remote version", Command = window.UseRemoteCommand()};
+            var useLocal = new MenuItem { Header = Resources.Menu_Merge_UseLocal, Command = window.UseLocalCommand() };
+            var useBase = new MenuItem { Header = Resources.Menu_Merge_UseBase, Command = window.UseBaseCommand() };
+            var useRemote = new MenuItem { Header = Resources.Menu_Merge_UseRemote, Command = window.UseRemoteCommand() };
 
-            var merge = new MenuItem {Header = "Merge to base", Command = window.MergeCommand()};
+            var merge = new MenuItem { Header = Resources.Menu_Merge_Merge, Command = window.MergeCommand() };
 
             menu.Items.Add(previous);
             menu.Items.Add(next);

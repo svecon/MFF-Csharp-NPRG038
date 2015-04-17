@@ -28,24 +28,18 @@ namespace DiffWindows.FolderWindows.Converters
             switch ((LocationCombinationsEnum)location)
             {
                 case LocationCombinationsEnum.OnLocal:
-                    return "Remote file missing";
+                    return Resources.Differences_RemoteMissing;
                 case LocationCombinationsEnum.OnRemote:
-                    return "Local file missing";
+                    return Resources.Differences_LocalMissing;
             }
 
             switch (differences)
             {
                 case DifferencesStatusEnum.AllDifferent:
-                    return "Files differ";
-                //case DifferencesStatusEnum.BaseLocalSame:
-                //    return "Remote different";
-                //case DifferencesStatusEnum.BaseRemoteSame:
-                //    return "Local different";
-                //case DifferencesStatusEnum.LocalRemoteSame:
-                //    return "Base different";
+                    return Resources.Differences_FilesDifferent;
             }
 
-            return "";
+            return string.Empty;
         }
 
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

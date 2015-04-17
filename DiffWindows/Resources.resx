@@ -117,7 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Differences_BaseDifferent" xml:space="preserve">
+    <value>Base file different</value>
+  </data>
+  <data name="Differences_BaseMissing" xml:space="preserve">
+    <value>Base file missing</value>
+  </data>
+  <data name="Differences_BaseOnly" xml:space="preserve">
+    <value>Only on base</value>
+  </data>
+  <data name="Differences_FilesDifferent" xml:space="preserve">
+    <value>Files differ</value>
+  </data>
+  <data name="Differences_LocalDeleted" xml:space="preserve">
+    <value>Local file deleted</value>
+  </data>
+  <data name="Differences_LocalDifferent" xml:space="preserve">
+    <value>Local file different</value>
+  </data>
+  <data name="Differences_LocalMissing" xml:space="preserve">
+    <value>Local file missing</value>
+  </data>
+  <data name="Differences_LocalOnly" xml:space="preserve">
+    <value>Only on local</value>
+  </data>
+  <data name="Differences_RemoteDeleted" xml:space="preserve">
+    <value>Remote file deleted</value>
+  </data>
+  <data name="Differences_RemoteDifferent" xml:space="preserve">
+    <value>Remote file different</value>
+  </data>
+  <data name="Differences_RemoteMissing" xml:space="preserve">
+    <value>Remote file missing</value>
+  </data>
+  <data name="Differences_RemoteOnly" xml:space="preserve">
+    <value>Only on remote</value>
+  </data>
   <data name="Diff_No_File_At_Location" xml:space="preserve">
     <value>No file at this location.</value>
+  </data>
+  <data name="Menu_Changes" xml:space="preserve">
+    <value>Changes</value>
+  </data>
+  <data name="Menu_Changes_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Menu_Changes_Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Menu_Merge" xml:space="preserve">
+    <value>Merge</value>
+  </data>
+  <data name="Menu_Merge_Merge" xml:space="preserve">
+    <value>Merge to base</value>
+  </data>
+  <data name="Menu_Merge_Next" xml:space="preserve">
+    <value>Next conflict</value>
+  </data>
+  <data name="Menu_Merge_Previous" xml:space="preserve">
+    <value>Previous conflict</value>
+  </data>
+  <data name="Menu_Merge_UseBase" xml:space="preserve">
+    <value>Use base version</value>
+  </data>
+  <data name="Menu_Merge_UseLocal" xml:space="preserve">
+    <value>Use local version</value>
+  </data>
+  <data name="Menu_Merge_UseRemote" xml:space="preserve">
+    <value>Use remote version</value>
   </data>
 </root>

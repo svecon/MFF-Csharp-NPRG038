@@ -108,22 +108,22 @@
             </Menu.Resources>
 
             <MenuItem Header="File">
-                <MenuItem Header="Open new comparison" Command="New" />
-                <MenuItem Header="Close current comparison" Command="local:MainWindow.CloseWindow" />
+                <MenuItem Header="{x:Static p:Resources.Menu_NewComparison}" Command="New" />
+                <MenuItem Header="{x:Static p:Resources.Menu_CloseComparison}" Command="local:MainWindow.CloseWindow" />
 
                 <Separator />
 
-                <MenuItem Header="About" />
+                <MenuItem Header="{x:Static p:Resources.Menu_About}" />
 
-                <MenuItem Header="Exit" Command="local:MainWindow.Exit" />
+                <MenuItem Header="{x:Static p:Resources.Menu_Exit}" Command="local:MainWindow.Exit" />
             </MenuItem>
         </Menu>
 
-        <StatusBar DockPanel.Dock="Bottom">
+        <!--<StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="I am statusbar" />
+                <TextBlock Text="I am statusbar @TODO" />
             </StatusBarItem>
-        </StatusBar>
+        </StatusBar>-->
 
         <Grid>
             <Grid.RowDefinitions>

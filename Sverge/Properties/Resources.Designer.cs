@@ -8,15 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System.CodeDom.Compiler;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Resources;
-using System.Runtime.CompilerServices;
-
 namespace Sverge.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -24,27 +19,27 @@ namespace Sverge.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
-    [DebuggerNonUserCode()]
-    [CompilerGenerated()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
         
-        private static ResourceManager resourceMan;
+        private static global::System.Resources.ResourceManager resourceMan;
         
-        private static CultureInfo resourceCulture;
+        private static global::System.Globalization.CultureInfo resourceCulture;
         
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static ResourceManager ResourceManager {
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
-                if (ReferenceEquals(resourceMan, null)) {
-                    ResourceManager temp = new ResourceManager("Sverge.Properties.Resources", typeof(Resources).Assembly);
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Sverge.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -55,8 +50,8 @@ namespace Sverge.Properties {
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static CultureInfo Culture {
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -170,6 +165,42 @@ namespace Sverge.Properties {
         public static string Diff_No_File_At_Location {
             get {
                 return ResourceManager.GetString("Diff_No_File_At_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string Menu_About {
+            get {
+                return ResourceManager.GetString("Menu_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close current comparison.
+        /// </summary>
+        public static string Menu_CloseComparison {
+            get {
+                return ResourceManager.GetString("Menu_CloseComparison", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        public static string Menu_Exit {
+            get {
+                return ResourceManager.GetString("Menu_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start a new comparison.
+        /// </summary>
+        public static string Menu_NewComparison {
+            get {
+                return ResourceManager.GetString("Menu_NewComparison", resourceCulture);
             }
         }
         
