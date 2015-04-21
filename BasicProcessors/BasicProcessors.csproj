@@ -71,7 +71,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"
+echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)SvergeConsole\$(OutDir)plugins\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
