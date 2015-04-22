@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CoreLibrary.Enums;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
 
@@ -20,6 +21,12 @@ namespace DiffWindows.TextWindows.Controls.LineMarkers
         protected override IEnumerable<Diff3Item> VisibleDiffItems()
         {
             if (Node.Diff3 == null)
+                yield break;
+
+            if (type == MarkerTypeEnum.BaseLeft && !Node.IsInLocation(LocationCombinationsEnum.OnBaseLocal))
+                yield break;
+
+            if (type == MarkerTypeEnum.BaseRight && !Node.IsInLocation(LocationCombinationsEnum.OnBaseRemote))
                 yield break;
 
             foreach (Diff3Item diffItem in Node.Diff3.Items)

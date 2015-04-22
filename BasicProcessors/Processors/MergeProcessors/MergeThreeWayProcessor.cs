@@ -27,17 +27,14 @@ namespace BasicProcessors.Processors.MergeProcessors
 
         protected override void ProcessChecked(IFilesystemTreeDirNode node)
         {
-            // if OutputFolder is unset
-            if (OutputFolder == null)
-            {
-                // set it to root folder of InfoBase
-                OutputFolder = node.InfoBase.FullName;
-            }
         }
 
         protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            return base.CheckStatus(node) && node.Status != NodeStatusEnum.WasMerged;
+            if (node.Status == NodeStatusEnum.WasMerged)
+                return false;
+
+            return base.CheckStatus(node);
         }
 
         protected override void ProcessChecked(IFilesystemTreeFileNode node)
@@ -47,48 +44,8 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (dnode == null)
                 return;
 
-            // this means that the files are not in a folder
-            if (OutputFolder == null)
-                OutputFolder = Path.GetDirectoryName(node.InfoBase.FullName);
-
-            switch ((LocationCombinationsEnum)node.Location)
-            {
-                case LocationCombinationsEnum.OnBase:
-                    return; // delete
-                case LocationCombinationsEnum.OnLocal:
-                case LocationCombinationsEnum.OnRemote:
-                    // one new file
-                    ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
-                    break;
-                case LocationCombinationsEnum.OnBaseLocal:
-
-                    if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
-                        return; // delete
-
-                    node.Status = NodeStatusEnum.IsConflicting;
-
-                    break;
-                case LocationCombinationsEnum.OnBaseRemote:
-
-                    if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
-                        return; // delete
-
-                    node.Status = NodeStatusEnum.IsConflicting;
-
-                    break;
-                case LocationCombinationsEnum.OnLocalRemote:
-
-                    if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
-                    {
-                        ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
-                        return; // copy
-                    }
-
-                    node.Status = NodeStatusEnum.IsConflicting;
-
-                    break;
-            }
-
+            if (dnode.Diff3 == null)
+                return;
 
             // only continue if all 3 files are present
             if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnAll3)
@@ -120,7 +77,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                 foreach (Diff3Item diff in dnode.Diff3.Items)
                 {
                     // change default action depending on processor settings
-                    if (diff.Action == Diff3Item.ActionEnum.Default)
+                    if (diff.PreferedAction == PreferedActionEnum.Default)
                     {
                         switch (DefaultAction)
                         {
@@ -128,13 +85,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 // keep default
                                 break;
                             case DefaultActionEnum.RevertToBase:
-                                diff.Action = Diff3Item.ActionEnum.RevertToBase;
+                                diff.PreferedAction = PreferedActionEnum.RevertToBase;
                                 break;
                             case DefaultActionEnum.ApplyLocal:
-                                diff.Action = Diff3Item.ActionEnum.ApplyLocal;
+                                diff.PreferedAction = PreferedActionEnum.ApplyLocal;
                                 break;
                             case DefaultActionEnum.ApplyRemote:
-                                diff.Action = Diff3Item.ActionEnum.ApplyRemote;
+                                diff.PreferedAction = PreferedActionEnum.ApplyRemote;
                                 break;
                         }
                     }
@@ -145,13 +102,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                     for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
                     // if there is an action asociated:
-                    if (diff.Action != Diff3Item.ActionEnum.Default)
+                    if (diff.PreferedAction != PreferedActionEnum.Default)
                     {
                         for (int p = 0; p < diff.LocalAffectedLines; p++)
                         {
                             m++;
 
-                            if (diff.Action == Diff3Item.ActionEnum.ApplyLocal)
+                            if (diff.PreferedAction == PreferedActionEnum.ApplyLocal)
                                 writer.WriteLine(localStream.ReadLine());
                             else
                                 localStream.ReadLine();
@@ -160,7 +117,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                         {
                             o++;
 
-                            if (diff.Action == Diff3Item.ActionEnum.RevertToBase)
+                            if (diff.PreferedAction == PreferedActionEnum.RevertToBase)
                                 writer.WriteLine(baseStream.ReadLine());
                             else
                                 baseStream.ReadLine();
@@ -170,7 +127,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                         {
                             n++;
 
-                            if (diff.Action == Diff3Item.ActionEnum.ApplyRemote)
+                            if (diff.PreferedAction == PreferedActionEnum.ApplyRemote)
                                 writer.WriteLine(remoteStream.ReadLine());
                             else
                                 remoteStream.ReadLine();
@@ -199,7 +156,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                             break;
                         case DifferencesStatusEnum.AllDifferent:
 
-                            if (diff.Action == Diff3Item.ActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionEnum.Default)
                             {
                                 node.Status = NodeStatusEnum.HasConflicts;
                                 writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
@@ -208,8 +165,8 @@ namespace BasicProcessors.Processors.MergeProcessors
 
                             for (int p = 0; p < diff.LocalAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3Item.ActionEnum.ApplyLocal
-                                    || diff.Action == Diff3Item.ActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionEnum.ApplyLocal
+                                    || diff.PreferedAction == PreferedActionEnum.Default)
                                 {
                                     writer.WriteLine(localStream.ReadLine());
                                 } else
@@ -219,14 +176,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 m++;
                             }
 
-                            if (diff.Action == Diff3Item.ActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionEnum.Default)
                                 writer.WriteLine("||||||| " + dnode.InfoBase.FullName);
 
 
                             for (int p = 0; p < diff.BaseAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3Item.ActionEnum.RevertToBase
-                                    || diff.Action == Diff3Item.ActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionEnum.RevertToBase
+                                    || diff.PreferedAction == PreferedActionEnum.Default)
                                 {
                                     writer.WriteLine(baseStream.ReadLine());
                                 } else
@@ -236,14 +193,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 o++;
                             }
 
-                            if (diff.Action == Diff3Item.ActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionEnum.Default)
                                 writer.WriteLine("=======");
 
 
                             for (int p = 0; p < diff.RemoteAffectedLines; p++)
                             {
-                                if (diff.Action == Diff3Item.ActionEnum.ApplyRemote
-                                    || diff.Action == Diff3Item.ActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionEnum.ApplyRemote
+                                    || diff.PreferedAction == PreferedActionEnum.Default)
                                 {
                                     writer.WriteLine(remoteStream.ReadLine());
                                 } else
@@ -254,7 +211,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                             }
 
 
-                            if (diff.Action == Diff3Item.ActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionEnum.Default)
                                 writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
 
                             break;
@@ -280,19 +237,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                 Directory.CreateDirectory(path);
         }
 
-        private void CheckAndCreateDirectory(IFilesystemTreeFileNode node)
+        private string CreatePath(IFilesystemTreeFileNode node)
         {
-            CheckAndCreateDirectory(CreatePath(node, false));
-        }
+            string output = OutputFolder == null
+                ? node.GetAbsolutePath(LocationEnum.OnBase)
+                : Path.Combine(OutputFolder, node.Info.Name);
 
-        private string CreatePath(IFilesystemTreeFileNode node, bool includeFileName = true)
-        {
-            string output = node.ParentNode == null || (node.ParentNode != null && node.ParentNode.RelativePath == "")
-                ? OutputFolder
-                : Path.Combine(OutputFolder, node.ParentNode.RelativePath);
-
-            if (includeFileName)
-                output = Path.Combine(output, node.Info.Name);
+            CheckAndCreateDirectory(Path.GetDirectoryName(output));
 
             return output;
         }

@@ -17,8 +17,8 @@ namespace DiffWindows.FolderWindows.Converters
         {
             var v = value as FileInfo;
 
-            if (v == null)
-                return "";
+            if (v == null || !v.Exists)
+                return string.Empty;
 
             return String.Format("{0}kB", Math.Ceiling(v.Length / 1024.0));
         }

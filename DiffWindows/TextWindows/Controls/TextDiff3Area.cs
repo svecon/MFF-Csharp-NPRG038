@@ -158,8 +158,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.Action != Diff3Item.ActionEnum.Default &&
-                                   diffItem.Action != Diff3Item.ActionEnum.ApplyLocal)
+                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionEnum.ApplyLocal)
                         {
                             textDiscarded = true;
                         }
@@ -173,8 +173,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.Action != Diff3Item.ActionEnum.Default &&
-                                   diffItem.Action != Diff3Item.ActionEnum.ApplyRemote)
+                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionEnum.ApplyRemote)
                         {
                             textDiscarded = true;
                         }
@@ -188,8 +188,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.Action != Diff3Item.ActionEnum.Default &&
-                                    diffItem.Action != Diff3Item.ActionEnum.RevertToBase)
+                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
+                                    diffItem.PreferedAction != PreferedActionEnum.RevertToBase)
                         {
                             textDiscarded = true;
                         }
@@ -310,13 +310,13 @@ namespace DiffWindows.TextWindows.Controls
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        diffItem.Action = Diff3Item.ActionEnum.ApplyLocal;
+                        diffItem.PreferedAction = PreferedActionEnum.ApplyLocal;
                         break;
                     case TargetFileEnum.Remote:
-                        diffItem.Action = Diff3Item.ActionEnum.ApplyRemote;
+                        diffItem.PreferedAction = PreferedActionEnum.ApplyRemote;
                         break;
                     case TargetFileEnum.Base:
-                        diffItem.Action = Diff3Item.ActionEnum.RevertToBase;
+                        diffItem.PreferedAction = PreferedActionEnum.RevertToBase;
                         break;
                 }
 

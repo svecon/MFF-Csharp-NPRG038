@@ -55,7 +55,7 @@ namespace DiffIntegration.DiffOutput.TwoWay
         }
 
         /// <summary>
-        /// Type of a diffItem chunk. Action that was performed on an old file to get new file.
+        /// Type of a diffItem chunk. PreferedAction that was performed on an old file to get new file.
         /// </summary>
         private enum DiffType
         {

@@ -63,7 +63,6 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (dnode == null)
                 return;
 
-            CheckAndCreateDirectory(node);
             node.Status = NodeStatusEnum.WasMerged;
 
             if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote
@@ -173,19 +172,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                 Directory.CreateDirectory(path);
         }
 
-        private void CheckAndCreateDirectory(IFilesystemTreeFileNode node)
+        private string CreatePath(IFilesystemTreeFileNode node)
         {
-            CheckAndCreateDirectory(CreatePath(node, false));
-        }
+            string output = OutputFolder == null
+                ? node.GetAbsolutePath(LocationEnum.OnBase)
+                : Path.Combine(OutputFolder, node.Info.Name);
 
-        private string CreatePath(IFilesystemTreeFileNode node, bool includeFileName = true)
-        {
-            string output = node.ParentNode == null || (node.ParentNode != null && node.ParentNode.RelativePath == "")
-                ? OutputFolder
-                : Path.Combine(OutputFolder, node.ParentNode.RelativePath);
-
-            if (includeFileName)
-                output = Path.Combine(output, node.Info.Name);
+            CheckAndCreateDirectory(Path.GetDirectoryName(output));
 
             return output;
         }

@@ -53,6 +53,9 @@ namespace DiffAlgorithm
             /// <returns>Enumerable lines.</returns>
             public IEnumerable<string> IterateLines()
             {
+                if (file == null)
+                    yield break;
+
                 StreamReader fileReader = file.OpenText();
                 var sb = new StringBuilder();
                 while (!fileReader.EndOfStream)
@@ -188,7 +191,7 @@ namespace DiffAlgorithm
 
             diff.SetStatistics(oldData.Length, newData.Length,
                 oldFileReader.DoesFileEndWithNewLine(), newFileReader.DoesFileEndWithNewLine());
-            
+
             var da = new TwoWay.DiffAlgorithm(oldData, newData);
             diff.SetDiffItems(da.RunAndCreateDiffs());
 
@@ -223,7 +226,9 @@ namespace DiffAlgorithm
             var da = new TwoWay.DiffAlgorithm(oldData, newData);
             var da2 = new TwoWay.DiffAlgorithm(oldData, hisData);
 
-            var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
+            var d3A = new Diff3Algorithm(
+                oldFile == null || newFile == null ? new DiffItem[0] : da.RunAndCreateDiffs(),
+                newFile == null || hisFile == null ? new DiffItem[0] : da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
             diff.SetDiffItems(d3A.MergeIntoDiff3Chunks());
 
             return diff;

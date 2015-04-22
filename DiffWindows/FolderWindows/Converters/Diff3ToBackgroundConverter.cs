@@ -32,27 +32,6 @@ namespace DiffWindows.FolderWindows.Converters
                 EndPoint = new Point(1, 1)
             };
 
-            //switch ((LocationCombinationsEnum)location)
-            //{
-            //    case LocationCombinationsEnum.OnLocal:
-            //        gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0, 255, 255, 255), 0));
-            //        gradientBrush.GradientStops.Add(new GradientStop(Colors.PaleVioletRed, 1));
-            //        return gradientBrush;
-
-            //    case LocationCombinationsEnum.OnRemote:
-            //        gradientBrush.GradientStops.Add(new GradientStop(Colors.PaleVioletRed, 0));
-            //        gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0, 255, 255, 255), 1));
-            //        return gradientBrush;
-            //}
-
-            //switch (differences)
-            //{
-            //    case DifferencesStatusEnum.AllDifferent:
-            //        gradientBrush.GradientStops.Add(new GradientStop(Colors.Purple, 0));
-            //        gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0, 255, 255, 255), 1));
-
-            //}
-
             Color changes = Color.FromArgb(100, 128, 0, 128);
             Color transparentWhite = Color.FromArgb(0, 255, 255, 255);
             Color deleted = Colors.PaleVioletRed;

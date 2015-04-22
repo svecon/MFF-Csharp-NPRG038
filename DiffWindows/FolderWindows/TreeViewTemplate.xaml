@@ -6,6 +6,7 @@
         http://leecampbell.blogspot.cz/2009/01/horizontal-stretch-on-treeviewitems.html-->
     <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
         <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="IsExpanded" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TreeViewItem">
@@ -76,13 +77,14 @@
                                         <Setter Property="SnapsToDevicePixels" Value="True" />
                                     </Style>
                                 </Border.Resources>
-                                <ContentPresenter x:Name="PART_Header"
-                                                      Content="{TemplateBinding HeaderedContentControl.Header}"
-                                                      ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
-                                                      ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"
-                                                      ContentTemplateSelector="{TemplateBinding HeaderedItemsControl.HeaderTemplateSelector}"
-                                                      ContentSource="Header"
-                                                      SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                <ContentPresenter 
+                                    x:Name="PART_Header"
+                                    Content="{TemplateBinding HeaderedContentControl.Header}"
+                                    ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                    ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"
+                                    ContentTemplateSelector="{TemplateBinding HeaderedItemsControl.HeaderTemplateSelector}"
+                                    ContentSource="Header"
+                                    SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                             </Border>
                             <ItemsPresenter x:Name="ItemsHost" Grid.Column="1" Grid.Row="1" />
                         </Grid>

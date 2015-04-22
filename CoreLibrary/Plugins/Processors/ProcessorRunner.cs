@@ -25,7 +25,6 @@ namespace CoreLibrary.Processors
         {
             await Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(2000);
                 diffTree.Accept(diffVisitor);
                 diffVisitor.Wait();
             }, TaskCreationOptions.LongRunning);
@@ -35,7 +34,6 @@ namespace CoreLibrary.Processors
         {
             await Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(2000);
                 diffTree.Accept(mergeVisitor);
                 mergeVisitor.Wait();
             }, TaskCreationOptions.LongRunning);

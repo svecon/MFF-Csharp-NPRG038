@@ -24,9 +24,9 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
         public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
-        public Diff3Item.ActionEnum DefaultAction = Diff3Item.ActionEnum.Default;
+        public PreferedActionEnum DefaultPreferedAction = PreferedActionEnum.Default;
 
-        private Diff3Item.ActionEnum defaultFileAction;
+        private PreferedActionEnum defaultFilePreferedAction;
 
         private bool applyToFile;
 
@@ -54,7 +54,7 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
             if (!applyToAll)
             {
                 applyToFile = false;
-                defaultFileAction = DefaultAction;
+                defaultFilePreferedAction = DefaultPreferedAction;
             }
 
             var output = new Diff3NormalOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoBase, (FileInfo)node.InfoRemote, dnode.Diff3);
@@ -83,7 +83,7 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
         {
             if (applyToFile)
             {
-                diff.Action = defaultFileAction;
+                diff.PreferedAction = defaultFilePreferedAction;
                 return;
             }
 
@@ -102,25 +102,25 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
 
             if (string.IsNullOrEmpty(input))
             {
-                diff.Action = defaultFileAction;
+                diff.PreferedAction = defaultFilePreferedAction;
                 return;
             }
 
-            Diff3Item.ActionEnum chosenAction = defaultFileAction;
+            PreferedActionEnum chosenPreferedAction = defaultFilePreferedAction;
             switch (input.Substring(0, 1).ToUpperInvariant())
             {
                 case "B":
-                    diff.Action = chosenAction = Diff3Item.ActionEnum.RevertToBase;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.RevertToBase;
                     input = input.Substring(0, 1);
                     break;
 
                 case "L":
-                    diff.Action = chosenAction = Diff3Item.ActionEnum.ApplyLocal;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.ApplyLocal;
                     input = input.Substring(0, 1);
                     break;
 
                 case "R":
-                    diff.Action = chosenAction = Diff3Item.ActionEnum.ApplyRemote;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.ApplyRemote;
                     input = input.Substring(0, 1);
                     break;
             }
@@ -132,12 +132,12 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
             {
                 case "FILE":
                     applyToFile = true;
-                    defaultFileAction = chosenAction;
+                    defaultFilePreferedAction = chosenPreferedAction;
                     break;
 
                 case "ALL":
                     applyToAll = applyToFile = true;
-                    DefaultAction = defaultFileAction = chosenAction;
+                    DefaultPreferedAction = defaultFilePreferedAction = chosenPreferedAction;
                     break;
             }
         }

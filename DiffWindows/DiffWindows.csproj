@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="FolderWindows\Converters\Differences3TextConverter.cs" />
     <Compile Include="FolderWindows\Converters\Diff3ToBackgroundConverter.cs" />
+    <Compile Include="FolderWindows\Converters\StatusConflictToColorConverter.cs" />
     <Compile Include="FolderWindows\Converters\TimestampConverter.cs" />
     <Compile Include="FolderWindows\FolderDiffThreeWay.xaml.cs">
       <DependentUpon>FolderDiffThreeWay.xaml</DependentUpon>

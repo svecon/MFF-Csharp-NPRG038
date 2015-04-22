@@ -80,8 +80,9 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <param name="info">Info about the file.</param>
         /// <param name="location">Location of the file.</param>
-        /// <param name="markIsFound">Mark that file has been found.</param>
-        void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true);
+        void AddInfoFromLocation(FileSystemInfo info, LocationEnum location);
+
+        void RemoveInfoFromLocation(LocationEnum location);
 
         /// <summary>
         /// Absolute path of a file (or directory) for given location.

@@ -104,8 +104,8 @@ namespace CoreLibrary.FilesystemTree
         {
             return (double)Files
                 .Where(f => f.Status != NodeStatusEnum.IsIgnored)
-                .Sum(f => ((FileInfo)f.Info).Length) 
-                / 1024 
+                .Sum(f => ((FileInfo)f.Info).Length)
+                / 1024
                 + Directories.Select(f => f.GetSize()).Sum();
         }
 
@@ -129,6 +129,25 @@ namespace CoreLibrary.FilesystemTree
             }
 
             return RelativePath == "" ? info.FullName : info.FullName + @"\" + RelativePath;
+        }
+
+        /// <summary>
+        /// TODO: ADD TO INTERFACE? VYMYSLET
+        /// </summary>
+        public IEnumerable<IFilesystemTreeAbstractNode> FilesAndDirectories
+        {
+            get
+            {
+                foreach (IFilesystemTreeDirNode filesystemTreeDirNode in Directories)
+                {
+                    yield return filesystemTreeDirNode;
+                }
+
+                foreach (IFilesystemTreeFileNode filesystemTreeFileNode in Files.Where(f => f.Status != NodeStatusEnum.IsIgnored))
+                {
+                    yield return filesystemTreeFileNode;
+                }
+            }
         }
 
     }

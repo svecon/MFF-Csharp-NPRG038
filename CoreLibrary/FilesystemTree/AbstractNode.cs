@@ -1,19 +1,41 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree
 {
-    public abstract class AbstractNode : IFilesystemTreeAbstractNode
+    public abstract class AbstractNode : IFilesystemTreeAbstractNode, INotifyPropertyChanged
     {
-        public FileSystemInfo InfoBase { get; protected set; }
+        private FileSystemInfo infoBase;
+        public FileSystemInfo InfoBase
+        {
+            get { return infoBase; }
+            protected set { infoBase = value; OnPropertyChanged("InfoBase"); }
+        }
 
-        public FileSystemInfo InfoLocal { get; protected set; }
+        private FileSystemInfo infoLocal;
+        public FileSystemInfo InfoLocal
+        {
+            get { return infoLocal; }
+            protected set { infoLocal = value; OnPropertyChanged("InfoLocal"); }
+        }
 
-        public FileSystemInfo InfoRemote { get; protected set; }
+        private FileSystemInfo infoRemote;
 
-        public NodeStatusEnum Status { get; set; }
+        public FileSystemInfo InfoRemote
+        {
+            get { return infoRemote; }
+            protected set { infoRemote = value; OnPropertyChanged("InfoRemote"); }
+        }
+
+        private NodeStatusEnum status;
+        public NodeStatusEnum Status
+        {
+            get { return status; }
+            set { status = value; OnPropertyChanged("Status"); }
+        }
 
         public FileTypeEnum FileType { get; set; }
 
@@ -30,11 +52,11 @@ namespace CoreLibrary.FilesystemTree
                 if (Mode == DiffModeEnum.TwoWay && value == DifferencesStatusEnum.LocalRemoteSame)
                 {
                     diff = DifferencesStatusEnum.AllSame;
-                }
-                else
+                } else
                 {
                     diff = value;
                 }
+                OnPropertyChanged("Differences");
             }
         }
 
@@ -64,9 +86,26 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
-        public int Location { get; protected set; }
+        private int location;
+
+        public int Location
+        {
+            get { return location; }
+            protected set { location = value; OnPropertyChanged("Location"); }
+        }
 
         public DiffModeEnum Mode { get; protected set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public abstract string GetAbsolutePath(LocationEnum location);
 
@@ -102,10 +141,9 @@ namespace CoreLibrary.FilesystemTree
             Location = Location | (int)location;
         }
 
-        public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location, bool markIsFound = true)
+        public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
         {
-            if (markIsFound)
-                MarkFound(location);
+            MarkFound(location);
 
             switch (location)
             {
@@ -127,6 +165,24 @@ namespace CoreLibrary.FilesystemTree
                     }
 
                     throw new ArgumentException("Cannot add Info from this location.");
+            }
+        }
+
+        public void RemoveInfoFromLocation(LocationEnum location)
+        {
+            Location &= ~(int)location;
+
+            switch (location)
+            {
+                case LocationEnum.OnBase:
+                    InfoBase = null;
+                    break;
+                case LocationEnum.OnLocal:
+                    InfoLocal = null;
+                    break;
+                case LocationEnum.OnRemote:
+                    InfoRemote = null;
+                    break;
             }
         }
 

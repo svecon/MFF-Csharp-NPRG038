@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using CoreLibrary.Enums;
@@ -13,13 +14,13 @@ namespace DiffWindows.FolderWindows.Converters
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.Length != 2)
-                throw new ArgumentException("Wrong argument number.");
+                return string.Empty;
 
-            if (value[1].GetType() != typeof(DifferencesStatusEnum))
-                throw new ArgumentException("Second param is not DifferencesStatusEnum");
+            if (value[1] == DependencyProperty.UnsetValue || value[1].GetType() != typeof(DifferencesStatusEnum))
+                return string.Empty;
 
-            if (value[0].GetType() != typeof(int))
-                throw new ArgumentException("First param is not int.");
+            if (value[0] == DependencyProperty.UnsetValue || value[0].GetType() != typeof(int))
+                return string.Empty;
 
             var differences = (DifferencesStatusEnum)value[1];
 

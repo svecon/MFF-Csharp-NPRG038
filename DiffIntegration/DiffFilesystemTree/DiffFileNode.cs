@@ -13,15 +13,34 @@ namespace DiffIntegration.DiffFilesystemTree
     /// </summary>
     public class DiffFileNode : FileNode
     {
+        private Diff diff;
+
         /// <summary>
         /// Diff contains all information about a 2-way diff.
         /// </summary>
-        public Diff Diff { get; set; }
+        public Diff Diff
+        {
+            get { return diff; }
+            set { diff = value; OnPropertyChanged("Diff"); }
+        }
+
+        private Diff3 diff3;
 
         /// <summary>
         /// Diff3 contains all information about a 3-way diff.
         /// </summary>
-        public Diff3 Diff3 { get; set; }
+        public Diff3 Diff3
+        {
+            get { return diff3; }
+            set { diff3 = value; OnPropertyChanged("Diff3"); }
+        }
+
+        private PreferedActionEnum action;
+        public PreferedActionEnum Action
+        {
+            get { return action; }
+            set { action = value; OnPropertyChanged("Action"); }
+        }
 
         /// <summary>
         /// Default construtor for DiffFileNode (used in the FilesystemTree).
@@ -51,7 +70,7 @@ namespace DiffIntegration.DiffFilesystemTree
             if (!InfoRemote.Exists)
                 throw new RemoteFileNotFoundException(InfoRemote);
         }
-        
+
         /// <summary>
         /// Construtor for creating diff between three files (used separately).
         /// </summary>

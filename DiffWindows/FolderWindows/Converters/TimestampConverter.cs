@@ -17,7 +17,7 @@ namespace DiffWindows.FolderWindows.Converters
         {
             var v = value as FileInfo;
 
-            if (v == null)
+            if (v == null || !v.Exists)
                 return "";
 
             return v.LastWriteTime.ToString("u");

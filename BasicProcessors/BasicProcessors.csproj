@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Processors\DiffProcessors\BinaryDiffProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CalculateDiffProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\CheckConflictsProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CleanupProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\ExtensionFilterProcessor.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Processors\DiffProcessors\SizeTimeDiffProcessor.cs" />
     <Compile Include="Processors\InteractiveResolveProcessors\InteractiveThreeWayDiffProcessor.cs" />
     <Compile Include="Processors\InteractiveResolveProcessors\InteractiveTwoWayDiffProcessor.cs" />
+    <Compile Include="Processors\MergeProcessors\MergeByLocationsProcessor.cs" />
     <Compile Include="Processors\MergeProcessors\MergeCleanupProcessor.cs" />
     <Compile Include="Processors\MergeProcessors\MergeThreeWayProcessor.cs" />
     <Compile Include="Processors\MergeProcessors\MergeTwoWayProcessor.cs" />

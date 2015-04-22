@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:DiffWindows.FolderWindows.Converters"
              xmlns:diff="clr-namespace:DiffIntegration.DiffFilesystemTree;assembly=DiffIntegration"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="UserControl"
@@ -12,13 +13,17 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="TreeViewTemplate.xaml" />
                 <ResourceDictionary>
-                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                        <EventSetter Event="MouseDoubleClick" Handler="OnItemMouseDoubleClick" />
+                    <Style TargetType="TextBlock" x:Key="FileInfoStyle">
+                        <Setter Property="FontFamily" Value="Consolas" />
+                        <Setter Property="FontSize" Value="13" />
+                        <Setter Property="Padding" Value="6,2,6,2"/>
+                        <Setter Property="TextAlignment" Value="Right" />
                     </Style>
                 </ResourceDictionary>
+                <ResourceDictionary Source="TreeViewTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -64,11 +69,12 @@
             x:Name="TreeView"
             BorderBrush="{x:Null}"
             VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch">
+            HorizontalAlignment="Stretch"
+            SelectedItemChanged="TreeView_OnSelectedItemChanged"
+                  MouseDoubleClick="OnItemMouseDoubleClick">
 
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type diff:DiffDirNode}" ItemsSource="{Binding Path=FilesAndDirectories}">
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
@@ -86,7 +92,6 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Image.Style>
-                                <!--{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}-->
                             </Image>
                             <TextBlock Text="{Binding Path=Info}" FontWeight="Bold" Foreground="Black" FontFamily="Consolas" FontSize="13" ></TextBlock>
                         </StackPanel>
@@ -109,39 +114,113 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/DiffWindows;component/Resources/list.png" Height="13" Margin="0,0,4,0" />
-                                <TextBlock  Text="{Binding Path=Info}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch" Padding="0,2,0,2"></TextBlock>
+                                <TextBlock Text="{Binding Path=Info.Name}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch" Padding="0,2,0,2"></TextBlock>
                             </StackPanel>
 
                             <Border Grid.Column="1" Grid.ColumnSpan="7">
                                 <Border.Background>
-                                    <MultiBinding Converter="{converters:Diff3ToBackgroundConverter}">
+                                    <MultiBinding Converter="{converters:Diff3ToBackgroundConverter}" Mode="TwoWay">
                                         <Binding Path="Location" />
                                         <Binding Path="Differences" />
                                     </MultiBinding>
                                 </Border.Background>
 
                             </Border>
-                            <!--<StackPanel Grid.Column="1" Orientation="Horizontal" >-->
 
-                            <!--<TextBlock  Text="{Binding Path=Info.LastWriteTime}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
                             <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2">
                                 <TextBlock.Text>
-                                    <MultiBinding Converter="{converters:Differences3TextConverter}">
+                                    <MultiBinding Converter="{converters:Differences3TextConverter}" Mode="TwoWay">
                                         <Binding Path="Location" />
                                         <Binding Path="Differences" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <TextBlock Grid.Column="2" Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
-                            <TextBlock Grid.Column="3" Text="{Binding Path=InfoLocal, Converter={converters:TimestampConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
+                            <TextBlock Grid.Column="2" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>1</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <TextBlock Grid.Column="3" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoLocal, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>1</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
 
-                            <TextBlock Grid.Column="4" Text="{Binding Path=InfoBase, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
-                            <TextBlock Grid.Column="5" Text="{Binding Path=InfoBase, Converter={converters:TimestampConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
+                            <TextBlock Grid.Column="4" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoBase, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>2</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <TextBlock Grid.Column="5" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoBase, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>2</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
 
-                            <TextBlock Grid.Column="6" Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
-                            <TextBlock Grid.Column="7" Text="{Binding Path=InfoRemote, Converter={converters:TimestampConverter}}" FontFamily="Consolas" FontSize="13" Padding="6,2,6,2" TextAlignment="Right" />
-                            <!--<TextBlock Grid.Column="1" Text="{Binding Path=Info, Converter={loc:TimeFormatConverter}}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch"></TextBlock>-->
-                            <!--</StackPanel>-->
+                            <TextBlock Grid.Column="6" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>3</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <TextBlock Grid.Column="7" Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoRemote, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                        <Binding Path="Status" />
+                                        <Binding Path="Action" />
+                                        <Binding>
+                                            <Binding.Source>
+                                                <system:Int32>3</system:Int32>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
                         </Grid>
                     </Border>
                 </DataTemplate>

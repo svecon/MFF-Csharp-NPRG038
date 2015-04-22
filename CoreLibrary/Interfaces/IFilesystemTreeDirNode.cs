@@ -68,5 +68,7 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <returns>Size in kB</returns>
         double GetSize();
+
+        IEnumerable<IFilesystemTreeAbstractNode> FilesAndDirectories { get; }
     }
 }

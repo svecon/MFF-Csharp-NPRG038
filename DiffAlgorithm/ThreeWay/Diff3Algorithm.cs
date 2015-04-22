@@ -125,6 +125,18 @@ namespace DiffAlgorithm.ThreeWay
                     else
                         newIterator++;
 
+                    if (wasHis && old.BaseAffectedLines >= lowerDiff.LocalLineStart + lowerDiff.LocalAffectedLines)
+                    {
+                        AddNewDiff3(old);
+                        continue;
+                    }
+
+                    if (!wasHis && old.BaseAffectedLines >= lowerDiff.RemoteLineStart + lowerDiff.RemoteAffectedLines)
+                    {
+                        AddNewDiff3(old);
+                        continue;
+                    }
+
                     // create extended chunk
                     AddNewDiff3(new Diff3Item(
                             old.BaseLineStart,
