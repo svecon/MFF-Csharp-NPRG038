@@ -34,6 +34,9 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (node.Status == NodeStatusEnum.WasMerged)
                 return false;
 
+            if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnAll3)
+                return false;
+
             return base.CheckStatus(node);
         }
 
@@ -45,10 +48,6 @@ namespace BasicProcessors.Processors.MergeProcessors
                 return;
 
             if (dnode.Diff3 == null)
-                return;
-
-            // only continue if all 3 files are present
-            if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnAll3)
                 return;
 
             node.Status = NodeStatusEnum.WasMerged;
