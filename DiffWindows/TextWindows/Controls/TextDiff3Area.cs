@@ -14,8 +14,6 @@ namespace DiffWindows.TextWindows.Controls
 {
     class TextDiff3Area : TextAreaAbstract, IScrollInfo
     {
-        private Dictionary<int, Diff3Item> diffItemsByLine;
-
         public enum TargetFileEnum { Local, Base, Remote }
         private readonly TargetFileEnum target;
 
@@ -83,32 +81,6 @@ namespace DiffWindows.TextWindows.Controls
 
             LinesCount = Lines.Count;
         }
-        private void PrepareDiffItemsByLines()
-        {
-            if (diffItemsByLine == null)
-            {
-                diffItemsByLine = (!IsDiffAvailable())
-                ? new Dictionary<int, Diff3Item>()
-                : new Dictionary<int, Diff3Item>(Node.Diff3.Items.Length);
-            }
-
-            if (!IsDiffAvailable())
-                return;
-
-            foreach (Diff3Item diffItem in Node.Diff3.Items)
-            {
-                switch (target)
-                {
-                    case TargetFileEnum.Local:
-                        diffItemsByLine.Add(diffItem.LocalLineStart, diffItem);
-                        break;
-                    case TargetFileEnum.Remote:
-                        diffItemsByLine.Add(diffItem.RemoteLineStart, diffItem);
-                        break;
-                }
-
-            }
-        }
 
         #region Rendering
 
@@ -158,8 +130,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
-                                   diffItem.PreferedAction != PreferedActionEnum.ApplyLocal)
+                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionThreeWayEnum.ApplyLocal)
                         {
                             textDiscarded = true;
                         }
@@ -173,8 +145,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
-                                   diffItem.PreferedAction != PreferedActionEnum.ApplyRemote)
+                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionThreeWayEnum.ApplyRemote)
                         {
                             textDiscarded = true;
                         }
@@ -188,8 +160,8 @@ namespace DiffWindows.TextWindows.Controls
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.PreferedAction != PreferedActionEnum.Default &&
-                                    diffItem.PreferedAction != PreferedActionEnum.RevertToBase)
+                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
+                                    diffItem.PreferedAction != PreferedActionThreeWayEnum.RevertToBase)
                         {
                             textDiscarded = true;
                         }
@@ -310,13 +282,13 @@ namespace DiffWindows.TextWindows.Controls
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        diffItem.PreferedAction = PreferedActionEnum.ApplyLocal;
+                        diffItem.PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                         break;
                     case TargetFileEnum.Remote:
-                        diffItem.PreferedAction = PreferedActionEnum.ApplyRemote;
+                        diffItem.PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                         break;
                     case TargetFileEnum.Base:
-                        diffItem.PreferedAction = PreferedActionEnum.RevertToBase;
+                        diffItem.PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                         break;
                 }
 

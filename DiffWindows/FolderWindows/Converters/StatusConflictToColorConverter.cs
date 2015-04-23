@@ -19,27 +19,27 @@ namespace DiffWindows.FolderWindows.Converters
             if (value[0].GetType() != typeof(NodeStatusEnum))
                 return new SolidColorBrush { Color = Colors.Gray };
 
-            if (value[1].GetType() != typeof(PreferedActionEnum))
+            if (value[1].GetType() != typeof(PreferedActionThreeWayEnum))
                 return new SolidColorBrush { Color = Colors.Gray };
 
             if (value[2].GetType() != typeof(int))
                 return new SolidColorBrush { Color = Colors.Gray };
 
-            var action = (PreferedActionEnum)value[1];
+            var action = (PreferedActionThreeWayEnum)value[1];
             var status = (NodeStatusEnum)value[0];
             int i = (int)value[2];
 
             switch (action)
             {
-                case PreferedActionEnum.ApplyLocal:
+                case PreferedActionThreeWayEnum.ApplyLocal:
                     if (i == 1)
                         return Brushes.DarkGreen;
                     break;
-                case PreferedActionEnum.RevertToBase:
+                case PreferedActionThreeWayEnum.RevertToBase:
                     if (i == 2)
                         return Brushes.DarkGreen;
                     break;
-                case PreferedActionEnum.ApplyRemote:
+                case PreferedActionThreeWayEnum.ApplyRemote:
                     if (i == 3)
                         return Brushes.DarkGreen;
                     break;

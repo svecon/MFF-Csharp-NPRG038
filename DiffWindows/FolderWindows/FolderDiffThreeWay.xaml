@@ -13,17 +13,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <Style TargetType="TextBlock" x:Key="FileInfoStyle">
-                        <Setter Property="FontFamily" Value="Consolas" />
-                        <Setter Property="FontSize" Value="13" />
-                        <Setter Property="Padding" Value="6,2,6,2"/>
-                        <Setter Property="TextAlignment" Value="Right" />
-                    </Style>
-                </ResourceDictionary>
                 <ResourceDictionary Source="TreeViewTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -71,9 +62,19 @@
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
             SelectedItemChanged="TreeView_OnSelectedItemChanged"
-                  MouseDoubleClick="OnItemMouseDoubleClick">
+            MouseDoubleClick="OnItemMouseDoubleClick">
 
             <TreeView.Resources>
+                <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoLeftStyle">
+                    <Setter Property="FontFamily" Value="Consolas" />
+                    <Setter Property="FontSize" Value="13" />
+                    <Setter Property="Padding" Value="6,2,6,2"/>
+                </Style>
+
+                <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoStyle" BasedOn="{StaticResource FileInfoLeftStyle}">
+                    <Setter Property="TextAlignment" Value="Right" />
+                </Style>
+
                 <HierarchicalDataTemplate DataType="{x:Type diff:DiffDirNode}" ItemsSource="{Binding Path=FilesAndDirectories}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -127,7 +128,7 @@
 
                             </Border>
 
-                            <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13" Padding="30,2,6,2">
+                            <TextBlock Grid.Column="1" Style="{StaticResource FileInfoLeftStyle}" Padding="30,2,6,2">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{converters:Differences3TextConverter}" Mode="TwoWay">
                                         <Binding Path="Location" />

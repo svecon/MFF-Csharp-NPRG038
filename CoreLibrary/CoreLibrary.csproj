@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\PreferedActionEnum.cs" />
+    <Compile Include="Enums\PreferedActionThreeWayEnum.cs" />
     <Compile Include="Helpers\TextFileChecker.cs" />
     <Compile Include="Helpers\ThreeWayDiffHelper.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowMenuAttribute.cs" />

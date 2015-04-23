@@ -2,12 +2,14 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using CoreLibrary.Enums;
 using CoreLibrary.Helpers;
 using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.FolderWindows;
+using DiffWindows.Menus;
 using DiffWindows.TextWindows.Controls;
 using DiffWindows.TextWindows.Controls.LineMarkers;
 
@@ -17,13 +19,14 @@ namespace DiffWindows.TextWindows
     /// Interaction logic for TextDiffTwoWay.xaml
     /// </summary>
     [DiffWindow(100)]
-    public partial class TextDiffTwoWay : UserControl, IDiffWindow<DiffFileNode>
+    public partial class TextDiffTwoWay : UserControl, IDiffWindow<DiffFileNode>, IChangesMenu
     {
         private readonly IDiffWindowManager manager;
         public DiffFileNode DiffNode { get; private set; }
         private readonly TextDiffArea localText;
         private readonly TextDiffArea remoteText;
         private readonly LineMarkersTwoWayElement lineMarkers;
+        public int CurrentDiff { get; internal set; }
 
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffTwoWay));
@@ -47,6 +50,7 @@ namespace DiffWindows.TextWindows
         {
             this.manager = manager;
             DiffNode = (DiffFileNode)diffNode;
+            CurrentDiff = -1;
 
             InitializeComponent();
 
@@ -55,6 +59,12 @@ namespace DiffWindows.TextWindows
 
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
+
+            localText.OnDiffSelected += selected => CurrentDiff = selected;
+            remoteText.OnDiffSelected += selected => CurrentDiff = selected;
+
+            localText.OnDiffChange += InvalidateAllVisual;
+            remoteText.OnDiffChange += InvalidateAllVisual;
 
             localText.OnHorizontalScroll += offset =>
             {
@@ -146,5 +156,29 @@ namespace DiffWindows.TextWindows
                 ? PathHelper.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
                 : DiffWindows.Resources.Diff_No_File_At_Location;
         }
+
+        private void ScrollToLine(int diffIndex)
+        {
+            localText.ScrollToLine(DiffNode.Diff.Items[diffIndex].LocalLineStart - 1);
+            remoteText.ScrollToLine(DiffNode.Diff.Items[diffIndex].RemoteLineStart - 1);
+        }
+
+        #region Custom ChangesMenu commands
+
+        public CommandBinding PreviousCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) => { ScrollToLine(--CurrentDiff); },
+                (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff > 0; });
+        }
+
+        public CommandBinding NextCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) => { ScrollToLine(++CurrentDiff); },
+                (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff < DiffNode.Diff.Items.Length - 1; });
+        }
+
+        #endregion
     }
 }

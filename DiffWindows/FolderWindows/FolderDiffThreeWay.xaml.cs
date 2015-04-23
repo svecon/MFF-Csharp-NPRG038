@@ -104,26 +104,11 @@ namespace DiffWindows.FolderWindows
 
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TreeView)
+            var t = sender as TreeView;
+            if (t != null && t.SelectedItem is IFilesystemTreeFileNode)
             {
-                var t = sender as TreeView;
-                if (t.SelectedItem is DiffFileNode)
-                {
-                    manager.OpenNewTab((AN)t.SelectedItem, this);
-                }
+                manager.OpenNewTab((AN)t.SelectedItem, this);
             }
-
-            var item = sender as TreeViewItem;
-
-            if (item == null)
-                return;
-
-            var newDiffNode = item.Header as DiffFileNode;
-
-            if (newDiffNode == null)
-                return;
-
-            manager.OpenNewTab(newDiffNode, this);
         }
 
         private void FolderDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -133,69 +118,7 @@ namespace DiffWindows.FolderWindows
             BaseFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoBase.FullName, FilePathLabel);
         }
 
-        #region Custom ChangesMenu commands
-
-        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<DiffFileNode, bool> f, ref TreeViewItem previous)
-        {
-            foreach (object item in container.Items)
-            {
-                var itemContainer = (TreeViewItem)container.ItemContainerGenerator.ContainerFromItem(item);
-
-                if (item == itemToSelect)
-                {
-                    return previous;
-                }
-
-                if (item is DiffFileNode && f((DiffFileNode)item))
-                {
-                    previous = itemContainer;
-                }
-
-                if (itemContainer == null || itemContainer.Items.Count <= 0) continue;
-
-                TreeViewItem treeViewItemFound = GetPreviousDiffItem(itemContainer, itemToSelect, f, ref previous);
-
-                if (treeViewItemFound != null)
-                    return treeViewItemFound;
-            }
-
-            return null;
-        }
-
-        public RoutedUICommand PreviousCommand()
-        {
-            return Previous;
-        }
-
-        private static readonly Func<DiffFileNode, bool> NextDiffFunc =
-            node => node.Differences != DifferencesStatusEnum.AllSame;
-
-        public CommandBinding PreviousCommandBinding()
-        {
-            return new CommandBinding(Previous,
-                (sender, args) =>
-                {
-                    TreeViewItem prev = null;
-                    TreeViewItem selectedItem = GetPreviousDiffItem(TreeView, selectedNode, NextDiffFunc, ref prev);
-                    selectedItem.IsSelected = true;
-                    selectedItem.BringIntoView();
-                },
-                (sender, args) =>
-                {
-                    TreeViewItem prev = null;
-                    args.CanExecute = GetPreviousDiffItem(TreeView, selectedNode, NextDiffFunc, ref prev) != null;
-                });
-        }
-
-        public static RoutedUICommand Previous = new RoutedUICommand("Previous", "Previous", typeof(TextDiff3Area),
-                new InputGestureCollection() { new KeyGesture(Key.F7) }
-            );
-
-
-        public RoutedUICommand NextCommand()
-        {
-            return Next;
-        }
+        #region Iterating over TreeView
 
         public TreeViewItem GetItem(ItemsControl container, object itemToSelect)
         {
@@ -213,6 +136,34 @@ namespace DiffWindows.FolderWindows
                 if (treeViewItemFound != null)
                     return treeViewItemFound;
             }
+            return null;
+        }
+
+        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<DiffFileNode, bool> f, ref TreeViewItem previous)
+        {
+            foreach (object item in container.Items)
+            {
+                var itemContainer = (TreeViewItem)container.ItemContainerGenerator.ContainerFromItem(item);
+
+                if (item == itemToSelect)
+                {
+                    return previous;
+                }
+
+                var diffFileNode = item as DiffFileNode;
+                if (diffFileNode != null && f(diffFileNode))
+                {
+                    previous = itemContainer;
+                }
+
+                if (itemContainer == null || itemContainer.Items.Count <= 0) continue;
+
+                TreeViewItem treeViewItemFound = GetPreviousDiffItem(itemContainer, itemToSelect, f, ref previous);
+
+                if (treeViewItemFound != null)
+                    return treeViewItemFound;
+            }
+
             return null;
         }
 
@@ -237,10 +188,33 @@ namespace DiffWindows.FolderWindows
 
             return null;
         }
+        #endregion
 
-        public CommandBinding NextCommandBinding()
+        #region Custom ChangesMenu commands
+
+        private static readonly Func<DiffFileNode, bool> NextDiffFunc =
+            node => node.Differences != DifferencesStatusEnum.AllSame;
+
+        public CommandBinding PreviousCommandBinding(ICommand command)
         {
-            return new CommandBinding(Next,
+            return new CommandBinding(command,
+                (sender, args) =>
+                {
+                    TreeViewItem prev = null;
+                    TreeViewItem selectedItem = GetPreviousDiffItem(TreeView, selectedNode, NextDiffFunc, ref prev);
+                    selectedItem.IsSelected = true;
+                    selectedItem.BringIntoView();
+                },
+                (sender, args) =>
+                {
+                    TreeViewItem prev = null;
+                    args.CanExecute = GetPreviousDiffItem(TreeView, selectedNode, NextDiffFunc, ref prev) != null;
+                });
+        }
+
+        public CommandBinding NextCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
                     bool wasFound = false;
@@ -254,20 +228,13 @@ namespace DiffWindows.FolderWindows
                     args.CanExecute = GetNextDiffItem(TreeView, selectedNode, NextDiffFunc, ref wasFound) != null;
                 });
         }
-
-        public static RoutedUICommand Next = new RoutedUICommand("Next", "Next", typeof(TextDiff3Area),
-                new InputGestureCollection() { new KeyGesture(Key.F8) }
-            );
-
         #endregion
 
         #region Custom MergeMenu commands
 
-        public RoutedUICommand PreviousConflictCommand() { return PreviousConflict; }
-
-        public CommandBinding PreviousConflictCommandBinding()
+        public CommandBinding PreviousConflictCommandBinding(ICommand command)
         {
-            return new CommandBinding(PreviousConflict,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
                     TreeViewItem prev = null;
@@ -282,18 +249,13 @@ namespace DiffWindows.FolderWindows
                 });
         }
 
-        public static RoutedUICommand PreviousConflict = new RoutedUICommand("PreviousConflict", "PreviousConflict", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.D9, ModifierKeys.Control) }
-        );
-
-        public RoutedUICommand NextConflictCommand() { return NextConflict; }
-
         private static readonly Func<DiffFileNode, bool> NextConfFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame && node.Status == NodeStatusEnum.IsConflicting;
 
-        public CommandBinding NextConflictCommandBinding()
+        public CommandBinding NextConflictCommandBinding(ICommand command)
         {
-            return new CommandBinding(NextConflict, (sender, args) =>
+            return new CommandBinding(command,
+                (sender, args) =>
                 {
                     bool wasFound = false;
                     TreeViewItem selectedItem = GetNextDiffItem(TreeView, selectedNode, NextConfFunc, ref wasFound);
@@ -307,20 +269,14 @@ namespace DiffWindows.FolderWindows
                 });
         }
 
-        public static RoutedUICommand NextConflict = new RoutedUICommand("NextConflict", "NextConflict", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.D0, ModifierKeys.Control) }
-        );
-
         private static readonly Func<DiffFileNode, bool> NextNonresolvedDiffFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame
                 && node.Status == NodeStatusEnum.IsConflicting
-                && node.Action == PreferedActionEnum.Default;
+                && node.Action == PreferedActionThreeWayEnum.Default;
 
-        public RoutedUICommand MergeCommand() { return Merge; }
-
-        public CommandBinding MergeCommandBinding()
+        public CommandBinding MergeCommandBinding(ICommand command)
         {
-            return new CommandBinding(Merge,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
                     bool wasFound = false;
@@ -330,6 +286,7 @@ namespace DiffWindows.FolderWindows
                     {
                         selectedItem.IsSelected = true;
                         selectedItem.BringIntoView();
+                        MessageBox.Show(DiffWindows.Resources.Popup_Conflicts_Resolve, DiffWindows.Resources.Popup_Conflicts, MessageBoxButton.OK);
                         return;
                     }
 
@@ -343,58 +300,36 @@ namespace DiffWindows.FolderWindows
             );
         }
 
-        public static RoutedUICommand Merge = new RoutedUICommand("Merge", "Merge", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.M, ModifierKeys.Control) }
-        );
-
-        public RoutedUICommand UseLocalCommand() { return UseLocal; }
-
-        public static RoutedUICommand UseLocal = new RoutedUICommand("UseLocal", "UseLocal", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.I, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseLocalCommandBinding()
+        public CommandBinding UseLocalCommandBinding(ICommand command)
         {
-            return new CommandBinding(UseLocal,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    ((DiffFileNode)selectedNode).Action = PreferedActionEnum.ApplyLocal;
+                    ((DiffFileNode)selectedNode).Action = PreferedActionThreeWayEnum.ApplyLocal;
                 },
                 (sender, args) => args.CanExecute = selectedNode.IsInLocation(LocationCombinationsEnum.OnLocal)
                     && selectedNode is DiffFileNode
             );
         }
 
-        public RoutedUICommand UseBaseCommand() { return UseBase; }
-
-        public static RoutedUICommand UseBase = new RoutedUICommand("UseBase", "UseBase", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseBaseCommandBinding()
+        public CommandBinding UseBaseCommandBinding(ICommand command)
         {
-            return new CommandBinding(UseBase,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    ((DiffFileNode)selectedNode).Action = PreferedActionEnum.RevertToBase;
+                    ((DiffFileNode)selectedNode).Action = PreferedActionThreeWayEnum.RevertToBase;
                 },
                 (sender, args) => args.CanExecute = selectedNode.IsInLocation(LocationCombinationsEnum.OnBase)
                     && selectedNode is DiffFileNode
             );
         }
 
-        public RoutedUICommand UseRemoteCommand() { return UseRemote; }
-
-        public static RoutedUICommand UseRemote = new RoutedUICommand("UseRemote", "UseRemote", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.P, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseRemoteCommandBinding()
+        public CommandBinding UseRemoteCommandBinding(ICommand command)
         {
-            return new CommandBinding(UseRemote,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    ((DiffFileNode)selectedNode).Action = PreferedActionEnum.ApplyRemote;
+                    ((DiffFileNode)selectedNode).Action = PreferedActionThreeWayEnum.ApplyRemote;
                 },
                 (sender, args) => args.CanExecute = selectedNode.IsInLocation(LocationCombinationsEnum.OnRemote)
                     && selectedNode is DiffFileNode

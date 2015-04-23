@@ -3,8 +3,8 @@ namespace CoreLibrary.Enums
     /// <summary>
     /// Which version of diff item should be kept and used?
     /// </summary>
-    public enum PreferedActionTwoWayEnum
+    public enum PreferedActionThreeWayEnum
     {
-        Default, ApplyLocal, ApplyRemote
+        Default, RevertToBase, ApplyLocal, ApplyRemote
     }
 }

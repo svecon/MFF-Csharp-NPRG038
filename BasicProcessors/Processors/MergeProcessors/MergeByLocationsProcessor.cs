@@ -25,20 +25,20 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (diffNode == null)
                 return;
 
-            if (diffNode.Action != PreferedActionEnum.Default)
+            if (diffNode.Action != PreferedActionThreeWayEnum.Default)
                 diffNode.Status = NodeStatusEnum.WasMerged;
 
             switch (diffNode.Action)
             {
-                case PreferedActionEnum.ApplyLocal:
+                case PreferedActionThreeWayEnum.ApplyLocal:
                     ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
                     return;
-                case PreferedActionEnum.ApplyRemote:
+                case PreferedActionThreeWayEnum.ApplyRemote:
                     ((FileInfo)node.InfoRemote).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
                     return;
-                case PreferedActionEnum.RevertToBase:
+                case PreferedActionThreeWayEnum.RevertToBase:
                     ((FileInfo)node.InfoBase).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
                     return;

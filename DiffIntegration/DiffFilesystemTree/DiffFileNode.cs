@@ -35,11 +35,11 @@ namespace DiffIntegration.DiffFilesystemTree
             set { diff3 = value; OnPropertyChanged("Diff3"); }
         }
 
-        private PreferedActionEnum action;
-        public PreferedActionEnum Action
+        private PreferedActionThreeWayEnum action;
+        public PreferedActionThreeWayEnum Action
         {
             get { return action; }
-            set { action = value; OnPropertyChanged("Action"); }
+            set { action = value; OnPropertyChanged("PreferedAction"); }
         }
 
         /// <summary>

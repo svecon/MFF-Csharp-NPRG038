@@ -186,4 +186,10 @@
   <data name="Menu_Merge_UseRemote" xml:space="preserve">
     <value>Use remote version</value>
   </data>
+  <data name="Popup_Conflicts" xml:space="preserve">
+    <value>Unresolved conflicts</value>
+  </data>
+  <data name="Popup_Conflicts_Resolve" xml:space="preserve">
+    <value>Please resolve the remaining conflicts before merging</value>
+  </data>
 </root>

@@ -46,7 +46,7 @@ namespace DiffAlgorithm.ThreeWay
         /// <summary>
         /// Default action to do with this diff.
         /// </summary>
-        public PreferedActionEnum PreferedAction;
+        public PreferedActionThreeWayEnum PreferedAction;
 
         public Diff3Item(int baseLineStart, int localLineStart, int remoteLineStart, int baseAffectedLines,
             int localAffectedLines, int remoteAffectedLines, DifferencesStatusEnum diff)

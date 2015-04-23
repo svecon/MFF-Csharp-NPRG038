@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using CoreLibrary.Enums;
 
 namespace DiffAlgorithm.TwoWay
 {
@@ -28,17 +29,9 @@ namespace DiffAlgorithm.TwoWay
         public readonly int RemoteAffectedLines;
 
         /// <summary>
-        /// Which version of diff item should be kept and used?
-        /// </summary>
-        public enum ActionEnum
-        {
-            Default, RevertToLocal, ApplyRemote
-        }
-
-        /// <summary>
         /// Default action to do with this diff.
         /// </summary>
-        public ActionEnum Action;
+        public PreferedActionTwoWayEnum PreferedAction;
 
         public DiffItem(int localLineStart, int remoteLineStart, int localAffectedLines, int remoteAffectedLines)
         {

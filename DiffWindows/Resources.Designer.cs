@@ -266,5 +266,23 @@ namespace DiffWindows {
                 return ResourceManager.GetString("Menu_Merge_UseRemote", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unresolved conflicts.
+        /// </summary>
+        public static string Popup_Conflicts {
+            get {
+                return ResourceManager.GetString("Popup_Conflicts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please resolve the remaining conflicts before merging.
+        /// </summary>
+        public static string Popup_Conflicts_Resolve {
+            get {
+                return ResourceManager.GetString("Popup_Conflicts_Resolve", resourceCulture);
+            }
+        }
     }
 }

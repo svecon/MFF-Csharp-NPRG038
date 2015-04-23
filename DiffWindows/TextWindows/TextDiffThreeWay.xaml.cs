@@ -159,17 +159,6 @@ namespace DiffWindows.TextWindows
                 = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
-        private void CheckConflicts()
-        {
-            if (DiffNode.Diff3 == null)
-                return;
-
-            bool anyCoflicting = DiffNode.Diff3.Items.Any(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent
-                && diff3Item.PreferedAction == PreferedActionEnum.Default);
-
-            DiffNode.Status = anyCoflicting ? NodeStatusEnum.IsConflicting : NodeStatusEnum.WasDiffed;
-        }
-
         public static bool CanBeApplied(object instance)
         {
             var diffNode = instance as DiffFileNode;
@@ -202,6 +191,17 @@ namespace DiffWindows.TextWindows
         public void OnMergeComplete(Task t)
         {
             InvalidateAllFileContents();
+        }
+
+        private void CheckConflicts()
+        {
+            if (DiffNode.Diff3 == null)
+                return;
+
+            bool anyCoflicting = DiffNode.Diff3.Items.Any(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent
+                && diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default);
+
+            DiffNode.Status = anyCoflicting ? NodeStatusEnum.IsConflicting : NodeStatusEnum.WasDiffed;
         }
 
         private void InvalidateAllFileContents()
@@ -237,7 +237,7 @@ namespace DiffWindows.TextWindows
                 : DiffWindows.Resources.Diff_No_File_At_Location;
         }
 
-        #region Custom ChangesMenu commands
+        #region Iterating over diffs and conflicts
 
         private void ScrollToLine(int diffIndex)
         {
@@ -245,44 +245,6 @@ namespace DiffWindows.TextWindows
             baseText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].BaseLineStart - 1);
             remoteText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].RemoteLineStart - 1);
         }
-
-        public RoutedUICommand PreviousCommand()
-        {
-            return Previous;
-        }
-
-        public CommandBinding PreviousCommandBinding()
-        {
-            return new CommandBinding(Previous,
-                (sender, args) => { ScrollToLine(--CurrentDiff); },
-                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff > 0; });
-        }
-
-        public static RoutedUICommand Previous = new RoutedUICommand("Previous", "Previous", typeof(TextDiff3Area),
-                new InputGestureCollection() { new KeyGesture(Key.F7) }
-            );
-
-        public RoutedUICommand NextCommand()
-        {
-            return Next;
-        }
-
-        public CommandBinding NextCommandBinding()
-        {
-            return new CommandBinding(Next,
-                (sender, args) => { ScrollToLine(++CurrentDiff); },
-                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < DiffNode.Diff3.Items.Length - 1; });
-        }
-
-        public static RoutedUICommand Next = new RoutedUICommand("Next", "Next", typeof(TextDiff3Area),
-                new InputGestureCollection() { new KeyGesture(Key.F8) }
-            );
-
-        #endregion
-
-        #region Custom MergeMenu commands
-
-        public RoutedUICommand PreviousConflictCommand() { return PreviousConflict; }
 
         private int FindPreviousConflict()
         {
@@ -294,25 +256,6 @@ namespace DiffWindows.TextWindows
 
             return -1;
         }
-
-        public CommandBinding PreviousConflictCommandBinding()
-        {
-            return new CommandBinding(PreviousConflict,
-                (sender, args) =>
-                {
-                    ScrollToLine(CurrentDiff = FindPreviousConflict());
-                },
-                (sender, args) =>
-                {
-                    args.CanExecute = DiffNode.Diff3 != null && FindPreviousConflict() != -1;
-                });
-        }
-
-        public static RoutedUICommand PreviousConflict = new RoutedUICommand("PreviousConflict", "PreviousConflict", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.D9, ModifierKeys.Control) }
-        );
-
-        public RoutedUICommand NextConflictCommand() { return NextConflict; }
 
         private int FindNextConflict(int start)
         {
@@ -333,16 +276,56 @@ namespace DiffWindows.TextWindows
                 if (next == -1)
                     break;
 
-                if (DiffNode.Diff3.Items[next].PreferedAction == PreferedActionEnum.Default)
+                if (DiffNode.Diff3.Items[next].PreferedAction == PreferedActionThreeWayEnum.Default)
                     return next;
             }
 
             return -1;
         }
 
-        public CommandBinding NextConflictCommandBinding()
+        private bool CurrentDiffAvailable()
         {
-            return new CommandBinding(NextConflict, (sender, args) =>
+            return DiffNode.Diff3 != null && 0 <= CurrentDiff && CurrentDiff < DiffNode.Diff3.Items.Length;
+        }
+
+        #endregion
+
+        #region Custom ChangesMenu commands
+
+        public CommandBinding PreviousCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) => { ScrollToLine(--CurrentDiff); },
+                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff > 0; });
+        }
+
+        public CommandBinding NextCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) => { ScrollToLine(++CurrentDiff); },
+                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < DiffNode.Diff3.Items.Length - 1; });
+        }
+
+        #endregion
+
+        #region Custom MergeMenu commands
+
+        public CommandBinding PreviousConflictCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) =>
+                {
+                    ScrollToLine(CurrentDiff = FindPreviousConflict());
+                },
+                (sender, args) =>
+                {
+                    args.CanExecute = DiffNode.Diff3 != null && FindPreviousConflict() != -1;
+                });
+        }
+
+        public CommandBinding NextConflictCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command, (sender, args) =>
             {
                 ScrollToLine(CurrentDiff = FindNextConflict(CurrentDiff + 1));
             }, (sender, args) =>
@@ -351,21 +334,16 @@ namespace DiffWindows.TextWindows
             });
         }
 
-        public static RoutedUICommand NextConflict = new RoutedUICommand("NextConflict", "NextConflict", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.D0, ModifierKeys.Control) }
-        );
-
-        public RoutedUICommand MergeCommand() { return Merge; }
-
-        public CommandBinding MergeCommandBinding()
+        public CommandBinding MergeCommandBinding(ICommand command)
         {
-            return new CommandBinding(Merge,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
                     CurrentDiff = FindUnresolvedConflict(0);
                     if (CurrentDiff != -1)
                     {
                         ScrollToLine(CurrentDiff);
+                        MessageBox.Show(DiffWindows.Resources.Popup_Conflicts_Resolve, DiffWindows.Resources.Popup_Conflicts, MessageBoxButton.OK);
                     } else
                     {
                         manager.RequestMerge(this);
@@ -375,63 +353,36 @@ namespace DiffWindows.TextWindows
             );
         }
 
-        public static RoutedUICommand Merge = new RoutedUICommand("Merge", "Merge", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.M, ModifierKeys.Control) }
-        );
-
-        private bool CurrentDiffAvailable()
+        public CommandBinding UseLocalCommandBinding(ICommand command)
         {
-            return DiffNode.Diff3 != null && 0 <= CurrentDiff && CurrentDiff < DiffNode.Diff3.Items.Length;
-        }
-
-        public RoutedUICommand UseLocalCommand() { return UseLocal; }
-
-        public static RoutedUICommand UseLocal = new RoutedUICommand("UseLocal", "UseLocal", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.I, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseLocalCommandBinding()
-        {
-            return new CommandBinding(UseLocal,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionEnum.ApplyLocal;
+                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()
             );
         }
 
-        public RoutedUICommand UseBaseCommand() { return UseBase; }
-
-        public static RoutedUICommand UseBase = new RoutedUICommand("UseBase", "UseBase", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.O, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseBaseCommandBinding()
+        public CommandBinding UseBaseCommandBinding(ICommand command)
         {
-            return new CommandBinding(UseBase,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionEnum.RevertToBase;
+                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()
             );
         }
 
-        public RoutedUICommand UseRemoteCommand() { return UseRemote; }
-
-        public static RoutedUICommand UseRemote = new RoutedUICommand("UseRemote", "UseRemote", typeof(TextDiff3Area),
-            new InputGestureCollection() { new KeyGesture(Key.P, ModifierKeys.Control) }
-        );
-
-        public CommandBinding UseRemoteCommandBinding()
+        public CommandBinding UseRemoteCommandBinding(ICommand command)
         {
-            return new CommandBinding(UseRemote,
+            return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionEnum.ApplyRemote;
+                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()

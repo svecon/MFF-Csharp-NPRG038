@@ -24,9 +24,9 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
         public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
-        public PreferedActionEnum DefaultPreferedAction = PreferedActionEnum.Default;
+        public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;
 
-        private PreferedActionEnum defaultFilePreferedAction;
+        private PreferedActionThreeWayEnum defaultFilePreferedAction;
 
         private bool applyToFile;
 
@@ -106,21 +106,21 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
                 return;
             }
 
-            PreferedActionEnum chosenPreferedAction = defaultFilePreferedAction;
+            PreferedActionThreeWayEnum chosenPreferedAction = defaultFilePreferedAction;
             switch (input.Substring(0, 1).ToUpperInvariant())
             {
                 case "B":
-                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.RevertToBase;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                     input = input.Substring(0, 1);
                     break;
 
                 case "L":
-                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.ApplyLocal;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                     input = input.Substring(0, 1);
                     break;
 
                 case "R":
-                    diff.PreferedAction = chosenPreferedAction = PreferedActionEnum.ApplyRemote;
+                    diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                     input = input.Substring(0, 1);
                     break;
             }

@@ -77,7 +77,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                 foreach (Diff3Item diff in dnode.Diff3.Items)
                 {
                     // change default action depending on processor settings
-                    if (diff.PreferedAction == PreferedActionEnum.Default)
+                    if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                     {
                         switch (DefaultAction)
                         {
@@ -85,13 +85,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 // keep default
                                 break;
                             case DefaultActionEnum.RevertToBase:
-                                diff.PreferedAction = PreferedActionEnum.RevertToBase;
+                                diff.PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                                 break;
                             case DefaultActionEnum.ApplyLocal:
-                                diff.PreferedAction = PreferedActionEnum.ApplyLocal;
+                                diff.PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                                 break;
                             case DefaultActionEnum.ApplyRemote:
-                                diff.PreferedAction = PreferedActionEnum.ApplyRemote;
+                                diff.PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                                 break;
                         }
                     }
@@ -102,13 +102,13 @@ namespace BasicProcessors.Processors.MergeProcessors
                     for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
                     // if there is an action asociated:
-                    if (diff.PreferedAction != PreferedActionEnum.Default)
+                    if (diff.PreferedAction != PreferedActionThreeWayEnum.Default)
                     {
                         for (int p = 0; p < diff.LocalAffectedLines; p++)
                         {
                             m++;
 
-                            if (diff.PreferedAction == PreferedActionEnum.ApplyLocal)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal)
                                 writer.WriteLine(localStream.ReadLine());
                             else
                                 localStream.ReadLine();
@@ -117,7 +117,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                         {
                             o++;
 
-                            if (diff.PreferedAction == PreferedActionEnum.RevertToBase)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.RevertToBase)
                                 writer.WriteLine(baseStream.ReadLine());
                             else
                                 baseStream.ReadLine();
@@ -127,7 +127,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                         {
                             n++;
 
-                            if (diff.PreferedAction == PreferedActionEnum.ApplyRemote)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote)
                                 writer.WriteLine(remoteStream.ReadLine());
                             else
                                 remoteStream.ReadLine();
@@ -156,7 +156,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                             break;
                         case DifferencesStatusEnum.AllDifferent:
 
-                            if (diff.PreferedAction == PreferedActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                             {
                                 node.Status = NodeStatusEnum.HasConflicts;
                                 writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
@@ -165,8 +165,8 @@ namespace BasicProcessors.Processors.MergeProcessors
 
                             for (int p = 0; p < diff.LocalAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionEnum.ApplyLocal
-                                    || diff.PreferedAction == PreferedActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal
+                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(localStream.ReadLine());
                                 } else
@@ -176,14 +176,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 m++;
                             }
 
-                            if (diff.PreferedAction == PreferedActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine("||||||| " + dnode.InfoBase.FullName);
 
 
                             for (int p = 0; p < diff.BaseAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionEnum.RevertToBase
-                                    || diff.PreferedAction == PreferedActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionThreeWayEnum.RevertToBase
+                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(baseStream.ReadLine());
                                 } else
@@ -193,14 +193,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 o++;
                             }
 
-                            if (diff.PreferedAction == PreferedActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine("=======");
 
 
                             for (int p = 0; p < diff.RemoteAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionEnum.ApplyRemote
-                                    || diff.PreferedAction == PreferedActionEnum.Default)
+                                if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote
+                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(remoteStream.ReadLine());
                                 } else
@@ -211,7 +211,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                             }
 
 
-                            if (diff.PreferedAction == PreferedActionEnum.Default)
+                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
 
                             break;

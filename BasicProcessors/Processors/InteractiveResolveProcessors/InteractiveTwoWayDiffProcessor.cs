@@ -24,9 +24,9 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
         public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "2interactive-default")]
-        public DiffItem.ActionEnum DefaultAction = DiffItem.ActionEnum.ApplyRemote;
+        public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
 
-        private DiffItem.ActionEnum defaultFileAction;
+        private PreferedActionTwoWayEnum defaultFileAction;
 
         private bool applyToFile;
 
@@ -92,7 +92,7 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
         {
             if (applyToFile)
             {
-                diff.Action = defaultFileAction;
+                diff.PreferedAction = defaultFileAction;
                 return;
             }
 
@@ -111,20 +111,20 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
 
             if (string.IsNullOrEmpty(input))
             {
-                diff.Action = defaultFileAction;
+                diff.PreferedAction = defaultFileAction;
                 return;
             }
 
-            DiffItem.ActionEnum chosenAction = defaultFileAction;
+            PreferedActionTwoWayEnum chosenAction = defaultFileAction;
             switch (input.Substring(0, 1).ToUpperInvariant())
             {
                 case "R":
-                    diff.Action = chosenAction = DiffItem.ActionEnum.RevertToLocal;
+                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyLocal;
                     input = input.Substring(0, 1);
                     break;
 
                 case "K":
-                    diff.Action = chosenAction = DiffItem.ActionEnum.ApplyRemote;
+                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyRemote;
                     input = input.Substring(0, 1);
                     break;
             }
