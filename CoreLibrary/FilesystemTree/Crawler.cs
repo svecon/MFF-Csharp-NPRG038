@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.Exceptions.NotFound;
-using CoreLibrary.Interfaces;
 
 namespace CoreLibrary.FilesystemTree
 {

@@ -205,6 +205,15 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Processors and their settings.
+        /// </summary>
+        public static string Menu_Processors {
+            get {
+                return ResourceManager.GetString("Menu_Processors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory....
         /// </summary>
         public static string NewWindow_Button_DirectoryDialog {
@@ -264,6 +273,33 @@ namespace Sverge.Properties {
         public static string NewWindow_Title {
             get {
                 return ResourceManager.GetString("NewWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings found for this processor..
+        /// </summary>
+        public static string ProcessorSettings_NoSettingsFound {
+            get {
+                return ResourceManager.GetString("ProcessorSettings_NoSettingsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save processors&apos; settings.
+        /// </summary>
+        public static string ProcessorSettings_Save {
+            get {
+                return ResourceManager.GetString("ProcessorSettings_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processors and their settings.
+        /// </summary>
+        public static string ProcessorSettings_Title {
+            get {
+                return ResourceManager.GetString("ProcessorSettings_Title", resourceCulture);
             }
         }
     }

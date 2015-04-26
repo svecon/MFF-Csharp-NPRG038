@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.FilesystemTree;
+using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.DiffOutput.TwoWay;

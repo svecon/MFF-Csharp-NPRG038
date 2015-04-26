@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Settings.Types;
+using CoreLibrary.Plugins.Processors.Settings.Types;
 
-namespace CoreLibrary.Settings
+namespace CoreLibrary.Plugins.Processors.Settings
 {
     /// <summary>
     /// Prints all available settings on a Console into a well-arranged column layout.

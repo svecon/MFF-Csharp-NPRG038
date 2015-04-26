@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.Processors.Settings
 {
     /// <summary>
     /// ISettings is a base interface for a Processor's Setting.
@@ -47,6 +47,8 @@ namespace CoreLibrary.Interfaces
         /// </summary>
         /// <param name="value">String arguments to be parsed.</param>
         void SetValue(params string[] value);
+
+        object GetValue();
 
         /// <summary>
         /// An object instance that this setting is for.

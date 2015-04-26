@@ -1,7 +1,7 @@
 ﻿using System;
 using CoreLibrary.Enums;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Plugins.Processors
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ProcessorAttribute : Attribute

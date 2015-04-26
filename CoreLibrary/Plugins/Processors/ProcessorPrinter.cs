@@ -1,8 +1,7 @@
 ﻿using System;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Settings;
+using CoreLibrary.Plugins.Processors.Settings;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// Class for printing loaded processors and their corresponding settings.

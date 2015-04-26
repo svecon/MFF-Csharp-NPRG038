@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
-using CoreLibrary.Interfaces;
 
 namespace DiffIntegration.DiffFilesystemTree
 {

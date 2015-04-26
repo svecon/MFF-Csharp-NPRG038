@@ -1,7 +1,7 @@
 ﻿
-using CoreLibrary.Processors;
+using CoreLibrary.FilesystemTree;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// Processor interface that can process nodes from FilesystemTree.

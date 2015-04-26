@@ -1,6 +1,5 @@
 ﻿using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
-using CoreLibrary.Interfaces;
 
 namespace DiffIntegration.DiffFilesystemTree
 {

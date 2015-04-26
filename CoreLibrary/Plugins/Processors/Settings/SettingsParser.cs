@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CoreLibrary.Exceptions;
-using CoreLibrary.Interfaces;
 
-namespace CoreLibrary.Settings
+namespace CoreLibrary.Plugins.Processors.Settings
 {
     /// <summary>
     /// Parses the string arguments and tries to find setting triggers in them.

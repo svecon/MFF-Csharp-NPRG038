@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.Processors;
 
 namespace CoreLibrary.FilesystemTree.Visitors
 {

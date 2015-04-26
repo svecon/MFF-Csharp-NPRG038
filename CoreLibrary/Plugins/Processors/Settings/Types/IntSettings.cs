@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
-namespace CoreLibrary.Settings.Types
+namespace CoreLibrary.Plugins.Processors.Settings.Types
 {
     public class IntSettings : SettingsAbstract
     {

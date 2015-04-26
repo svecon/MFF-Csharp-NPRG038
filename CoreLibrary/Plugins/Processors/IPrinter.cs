@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// Interface for classes that print something.

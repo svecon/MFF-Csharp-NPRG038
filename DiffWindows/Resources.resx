@@ -192,4 +192,7 @@
   <data name="Popup_Conflicts_Resolve" xml:space="preserve">
     <value>Please resolve the remaining conflicts before merging</value>
   </data>
+  <data name="Menu_Changes_Recalculate" xml:space="preserve">
+    <value>Recalculate diff</value>
+  </data>
 </root>

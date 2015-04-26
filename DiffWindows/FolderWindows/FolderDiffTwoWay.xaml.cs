@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.Menus;
@@ -23,6 +23,7 @@ namespace DiffWindows.FolderWindows
         public DiffFilesystemTree DiffNode { get; private set; }
         private readonly IDiffWindowManager manager;
         private AN selectedNode;
+        private bool isBusy = true;
 
         public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
 
@@ -78,14 +79,20 @@ namespace DiffWindows.FolderWindows
 
         public void OnDiffComplete(Task t)
         {
-            TreeView.Items.Refresh();
-            TreeView.InvalidateVisual();
+            isBusy = false;
+
+            // Items use IPropertyChanged 
+            //TreeView.Items.Refresh();
+            //TreeView.InvalidateVisual();
         }
 
         public void OnMergeComplete(Task t)
         {
-            TreeView.Items.Refresh();
-            TreeView.InvalidateVisual();
+            isBusy = false;
+
+            // Items use IPropertyChanged 
+            //TreeView.Items.Refresh();
+            //TreeView.InvalidateVisual();
         }
 
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -217,6 +224,17 @@ namespace DiffWindows.FolderWindows
                     bool wasFound = false;
                     args.CanExecute = GetNextDiffItem(TreeView, selectedNode, NextDiffFunc, ref wasFound) != null;
                 });
+        }
+
+        public CommandBinding RecalculateCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) =>
+                {
+                    isBusy = true;
+                    manager.RequestDiff(this);
+                },
+                (sender, args) => args.CanExecute = !isBusy);
         }
         #endregion
 

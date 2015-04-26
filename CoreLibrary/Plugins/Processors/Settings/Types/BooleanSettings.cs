@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
-namespace CoreLibrary.Settings.Types
+namespace CoreLibrary.Plugins.Processors.Settings.Types
 {
     public class BooleanSettings : SettingsAbstract
     {
@@ -17,7 +17,14 @@ namespace CoreLibrary.Settings.Types
 
         public override void SetValue(params string[] value)
         {
-            Field.SetValue(Instance, !(bool)Field.GetValue(Instance));
+            if (value.Length == 0)
+            {
+                Field.SetValue(Instance, !(bool)Field.GetValue(Instance));
+            } else
+            {
+                Field.SetValue(Instance, bool.Parse(value[0]));
+            }
+
             WasSet = true;
         }
     }

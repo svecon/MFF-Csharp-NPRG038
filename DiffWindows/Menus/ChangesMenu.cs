@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 
 namespace DiffWindows.Menus
@@ -16,6 +15,8 @@ namespace DiffWindows.Menus
 
         private readonly ICommand next;
 
+        private readonly ICommand recalculate;
+
         public ChangesMenu(object instance)
         {
             window = instance as IChangesMenu;
@@ -24,11 +25,15 @@ namespace DiffWindows.Menus
                 throw new ArgumentException("Instance must implement menu interface.");
 
             previous = new RoutedUICommand("Previous", "Previous", window.GetType(),
-                new InputGestureCollection() { new KeyGesture(Key.F7) }
+                new InputGestureCollection() { new KeyGesture(Key.F8) }
             );
 
             next = new RoutedUICommand("Next", "Next", window.GetType(),
-                new InputGestureCollection() { new KeyGesture(Key.F8) }
+                new InputGestureCollection() { new KeyGesture(Key.F9) }
+            );
+
+            recalculate = new RoutedUICommand("Recalculate diff", "Recalculate diff", window.GetType(),
+                new InputGestureCollection() { new KeyGesture(Key.F5, ModifierKeys.Control) }
             );
         }
 
@@ -45,8 +50,14 @@ namespace DiffWindows.Menus
 
             var menuNext = new MenuItem { Header = Resources.Menu_Changes_Next, Command = next };
 
+            var menuRecalcualte = new MenuItem { Header = Resources.Menu_Changes_Recalculate, Command = recalculate };
+
             menu.Items.Add(menuPrevious);
             menu.Items.Add(menuNext);
+
+            menu.Items.Add(new Separator());
+
+            menu.Items.Add(menuRecalcualte);
 
             return menu;
         }
@@ -55,6 +66,7 @@ namespace DiffWindows.Menus
         {
             yield return window.PreviousCommandBinding(previous);
             yield return window.NextCommandBinding(next);
+            yield return window.RecalculateCommandBinding(recalculate);
         }
     }
 }

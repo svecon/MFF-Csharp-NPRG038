@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoreLibrary.Settings.Attributes
+namespace CoreLibrary.Plugins.Processors.Settings.Attributes
 {
     /// <summary>
     /// Attribute for processor settings.

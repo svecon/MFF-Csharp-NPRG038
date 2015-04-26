@@ -1,9 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Visitors;
-using CoreLibrary.Interfaces;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Plugins.Processors
 {
     public class ProcessorRunner
     {
@@ -18,7 +17,7 @@ namespace CoreLibrary.Processors
         {
             diffVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Diff));
             mergeVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Merge));
-            interactiveVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.InteractiveResolving));
+            interactiveVisitor = new ExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.InteractiveResolving));
         }
 
         public async Task RunDiff(IFilesystemTreeVisitable diffTree)

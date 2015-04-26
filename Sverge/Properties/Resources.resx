@@ -186,4 +186,16 @@
   <data name="Menu_NewComparison" xml:space="preserve">
     <value>Start a new comparison</value>
   </data>
+  <data name="Menu_Processors" xml:space="preserve">
+    <value>Processors and their settings</value>
+  </data>
+  <data name="ProcessorSettings_NoSettingsFound" xml:space="preserve">
+    <value>No settings found for this processor.</value>
+  </data>
+  <data name="ProcessorSettings_Save" xml:space="preserve">
+    <value>Save processors' settings</value>
+  </data>
+  <data name="ProcessorSettings_Title" xml:space="preserve">
+    <value>Processors and their settings</value>
+  </data>
 </root>

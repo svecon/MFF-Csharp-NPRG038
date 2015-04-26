@@ -4,12 +4,12 @@ using System.IO;
 using System.Reflection;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Exceptions.NotFound;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Visitors;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins;
-using CoreLibrary.Processors;
-using CoreLibrary.Settings;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace SvergeConsole

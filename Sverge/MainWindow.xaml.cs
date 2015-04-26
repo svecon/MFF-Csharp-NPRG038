@@ -8,8 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CoreLibrary.Exceptions.NotFound;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
+using CoreLibrary.FilesystemTree;
+using CoreLibrary.Plugins.DiffWindow;
+using CoreLibrary.Plugins.Processors;
 using DiffIntegration.DiffFilesystemTree;
 using Sverge.DiffWindows;
 
@@ -24,6 +25,7 @@ namespace Sverge
     public partial class MainWindow : Window, IDiffWindowManager
     {
         private readonly ProcessorRunner runner;
+        private readonly IProcessorLoader loader;
         private readonly DiffWindowLoader windowLoader;
         private readonly Dictionary<TV, int> tabsPositions;
         private readonly Dictionary<DW, DW> parentWindows;
@@ -32,6 +34,7 @@ namespace Sverge
 
         public MainWindow(IProcessorLoader processorLoader)
         {
+            loader = processorLoader;
             runner = new ProcessorRunner(processorLoader);
 
             windowLoader = new DiffWindowLoader(this);
@@ -352,6 +355,19 @@ namespace Sverge
                     windowMenusBindingsAdded++;
                 }
             }
+        }
+
+        public static readonly RoutedUICommand ProcessorSettings = new RoutedUICommand(
+            "ProcessorSettings", "ProcessorSettings",
+            typeof(MainWindow),
+            new InputGestureCollection() {
+            }
+        );
+
+        private void ProcessorSettings_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var window = new ProcessorSettingsWindow(loader);
+            window.ShowDialog();
         }
     }
 }

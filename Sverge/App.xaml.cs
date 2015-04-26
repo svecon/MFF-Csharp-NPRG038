@@ -5,10 +5,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
 using CoreLibrary.Exceptions;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins;
-using CoreLibrary.Processors;
-using CoreLibrary.Settings;
+using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings;
 
 //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt"
 //"C:\Users\svecon\Downloads\DiffAlgorithm.cs" "C:\Users\svecon\Downloads\DiffAlgorithmB.cs" "C:\Users\svecon\Downloads\DiffAlgorithmR.cs"

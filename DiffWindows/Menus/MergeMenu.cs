@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 
 namespace DiffWindows.Menus

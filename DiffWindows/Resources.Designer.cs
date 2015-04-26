@@ -205,6 +205,15 @@ namespace DiffWindows {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recalculate diff.
+        /// </summary>
+        public static string Menu_Changes_Recalculate {
+            get {
+                return ResourceManager.GetString("Menu_Changes_Recalculate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Merge.
         /// </summary>
         public static string Menu_Merge {

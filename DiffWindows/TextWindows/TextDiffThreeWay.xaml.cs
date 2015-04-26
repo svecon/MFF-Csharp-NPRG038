@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.Helpers;
-using CoreLibrary.Interfaces;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffAlgorithm.ThreeWay;
 using DiffIntegration.DiffFilesystemTree;
@@ -304,6 +304,13 @@ namespace DiffWindows.TextWindows
             return new CommandBinding(command,
                 (sender, args) => { ScrollToLine(++CurrentDiff); },
                 (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < DiffNode.Diff3.Items.Length - 1; });
+        }
+
+        public CommandBinding RecalculateCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) => manager.RequestDiff(this),
+                (sender, args) => args.CanExecute = true);
         }
 
         #endregion

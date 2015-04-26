@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CoreLibrary.Exceptions;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// ProcessorLoader is a container for all processors.
@@ -204,9 +204,14 @@ namespace CoreLibrary.Processors
             return SettingsByProcessor.Values.SelectMany(settings => settings);
         }
 
-        public IEnumerable<ISettings> GetSettingsByProcessor(string processorName)
+        public IEnumerable<ISettings> GetSettingsByProcessor(IProcessor processor)
         {
-            return SettingsByProcessor[processorName];
+            return SettingsByProcessor[processor.GetType().ToString()];
+        }
+
+        public IEnumerable<ISettings> GetSettingsByProcessor(string processor)
+        {
+            return SettingsByProcessor[processor];
         }
     }
 }

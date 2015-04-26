@@ -2,7 +2,7 @@
 using System.IO;
 using CoreLibrary.Enums;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
     /// Abstract node in FilesystemTree.

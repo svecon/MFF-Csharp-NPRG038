@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.FilesystemTree;
+using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
 namespace BasicProcessors.Processors.DiffProcessors
 {
@@ -45,13 +45,14 @@ namespace BasicProcessors.Processors.DiffProcessors
         protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
             // default settings -- all pass
-            if (FileType == FileTypesEnum.All && ExcludeFilter == null && IncludeFilter == null)
+            if (FileType == FileTypesEnum.All && (ExcludeFilter == null || ExcludeFilter.Length == 0)
+                && (IncludeFilter == null || IncludeFilter.Length == 0))
                 return;
 
             string ext = node.Info.Extension.ToLowerInvariant();
 
             // some settings were specified and this files does not have extension => exclude it
-            if (ext == "")
+            if (string.IsNullOrEmpty(ext))
             {
                 node.Status = NodeStatusEnum.IsIgnored;
                 return;

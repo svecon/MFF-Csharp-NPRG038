@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Reflection;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree;
 
-namespace CoreLibrary.Processors
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// ProcessorAbstract is a base class for all types of processors.

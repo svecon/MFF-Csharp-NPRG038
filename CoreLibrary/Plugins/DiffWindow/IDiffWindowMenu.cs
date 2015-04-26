@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.DiffWindow
 {
     public interface IDiffWindowMenu
     {

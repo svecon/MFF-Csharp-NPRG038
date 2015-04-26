@@ -1,4 +1,6 @@
-﻿namespace CoreLibrary.Interfaces
+﻿using CoreLibrary.FilesystemTree;
+
+namespace CoreLibrary.Plugins.DiffWindow
 {
     using TV = IFilesystemTreeVisitable;
 

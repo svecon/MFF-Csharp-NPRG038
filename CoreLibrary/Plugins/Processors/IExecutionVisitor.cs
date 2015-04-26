@@ -1,5 +1,7 @@
 ﻿
-namespace CoreLibrary.Interfaces
+using CoreLibrary.FilesystemTree.Visitors;
+
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// Interface for a FilesystemTree Execution visitor.

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.Menus;
@@ -227,6 +227,17 @@ namespace DiffWindows.FolderWindows
                     bool wasFound = false;
                     args.CanExecute = GetNextDiffItem(TreeView, selectedNode, NextDiffFunc, ref wasFound) != null;
                 });
+        }
+
+        public CommandBinding RecalculateCommandBinding(ICommand command)
+        {
+            return new CommandBinding(command,
+                (sender, args) =>
+                {
+                    isBusy = true;
+                    manager.RequestDiff(this);
+                },
+                (sender, args) => args.CanExecute = !isBusy);
         }
         #endregion
 

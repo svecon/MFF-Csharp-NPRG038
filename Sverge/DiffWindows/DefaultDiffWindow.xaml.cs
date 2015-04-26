@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Controls;
-using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 
 namespace Sverge.DiffWindows
@@ -11,7 +11,7 @@ namespace Sverge.DiffWindows
     /// Interaction logic for DefaultDiffWindow.xaml
     /// </summary>
     [DiffWindow(int.MaxValue)]
-    public partial class DefaultDiffWindow : UserControl, DW
+    public partial class DefaultDiffWindow : UserControl, IDiffWindow<IFilesystemTreeVisitable>
     {
         private readonly IDiffWindowManager manager;
         public IFilesystemTreeVisitable DiffNode { get; private set; }

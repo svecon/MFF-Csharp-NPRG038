@@ -1,4 +1,4 @@
-﻿namespace CoreLibrary.Processors
+﻿namespace CoreLibrary.Plugins.Processors
 {
     public enum ProcessorTypeEnum
     {

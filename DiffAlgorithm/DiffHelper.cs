@@ -293,13 +293,9 @@ namespace DiffAlgorithm
         /// Method for applying all different settings and modifications to a text before it is diffed.
         /// </summary>
         /// <param name="s">String to be modified.</param>
-        /// <param name="trimSpace">Trim white-space?</param>
-        /// <param name="ignoreSpace">Ignore all white-space?</param>
-        /// <param name="ignoreCase">Case-insensitive?</param>
         /// <returns>Modified string</returns>
         private string ApplyTransformations(string s)
         {
-            // TODO: GLOBAL CONFIG???????
             if (trimSpace)
                 s = s.Trim();
 
@@ -320,7 +316,7 @@ namespace DiffAlgorithm
         private string RemoveAllBlanks(string s)
         {
             // TODO: optimization: faster blank removal.
-            return Regex.Replace(s, "\\s+", " ");
+            return Regex.Replace(s, "\\s+", "");
         }
 
     }

@@ -2,7 +2,6 @@
 using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
-using CoreLibrary.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CoreLibraryTests

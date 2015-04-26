@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
     /// Interface for Crawlers who traverse directories and create FilesystemTree

@@ -6,5 +6,6 @@ namespace DiffWindows.Menus
     {
         CommandBinding PreviousCommandBinding(ICommand command);
         CommandBinding NextCommandBinding(ICommand command);
+        CommandBinding RecalculateCommandBinding(ICommand next);
     }
 }

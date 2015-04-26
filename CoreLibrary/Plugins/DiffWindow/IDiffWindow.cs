@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using CoreLibrary.FilesystemTree;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.DiffWindow
 {
     public interface IDiffWindow<out TNode> where TNode : IFilesystemTreeVisitable
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoreLibrary.Interfaces;
+using CoreLibrary.Plugins.DiffWindow;
 using Microsoft.Win32;
 using f = System.Windows.Forms;
 

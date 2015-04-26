@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
     /// File node of FilesystemTree

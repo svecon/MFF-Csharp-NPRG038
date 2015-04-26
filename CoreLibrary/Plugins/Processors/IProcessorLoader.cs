@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CoreLibrary.Processors;
+using CoreLibrary.Plugins.Processors.Settings;
 
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
     /// ProcessorLoader tries to load all available Processors in loaded assemblies and can iterate over them.
@@ -42,9 +42,11 @@ namespace CoreLibrary.Interfaces
         /// <summary>
         /// Iterator over ISettings for given processor name (GetType()).
         /// </summary>
-        /// <param name="processorName"></param>
+        /// <param name="processor">Processor to get the settings from.</param>
         /// <returns>IEnumerable</returns>
-        IEnumerable<ISettings> GetSettingsByProcessor(string processorName);
+        IEnumerable<ISettings> GetSettingsByProcessor(IProcessor processor);
+
+        IEnumerable<ISettings> GetSettingsByProcessor(string processor);
 
         IProcessorLoader SplitLoaderByType(ProcessorTypeEnum processorType);
     }

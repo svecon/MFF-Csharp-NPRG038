@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Interfaces
+namespace CoreLibrary.FilesystemTree.Visitors
 {
     /// <summary>
     /// Interface for a visitor that can traverse FilesystemTree.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
+using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree
 {

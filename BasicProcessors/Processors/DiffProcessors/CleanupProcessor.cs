@@ -1,6 +1,6 @@
 ﻿using CoreLibrary.Enums;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Processors;
+using CoreLibrary.FilesystemTree;
+using CoreLibrary.Plugins.Processors;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace BasicProcessors.Processors.DiffProcessors
@@ -23,6 +23,9 @@ namespace BasicProcessors.Processors.DiffProcessors
             diffNode.Diff3 = null;
             diffNode.Differences = DifferencesStatusEnum.Initial;
             diffNode.Status = NodeStatusEnum.Initial;
+            if (diffNode.InfoBase != null) diffNode.InfoBase.Refresh();
+            if (diffNode.InfoLocal != null) diffNode.InfoLocal.Refresh();
+            if (diffNode.InfoRemote != null) diffNode.InfoRemote.Refresh();
         }
 
     }

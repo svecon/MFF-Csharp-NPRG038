@@ -10,6 +10,7 @@
         <CommandBinding Command="New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed" />
         <CommandBinding Command="local:MainWindow.CloseWindow" CanExecute="CloseCommand_CanExecute" Executed="CloseCommand_Executed" />
         <CommandBinding Command="local:MainWindow.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="local:MainWindow.ProcessorSettings" Executed="ProcessorSettings_Executed" />
     </Window.CommandBindings>
 
     <Window.Resources>
@@ -110,6 +111,10 @@
             <MenuItem Header="File">
                 <MenuItem Header="{x:Static p:Resources.Menu_NewComparison}" Command="New" />
                 <MenuItem Header="{x:Static p:Resources.Menu_CloseComparison}" Command="local:MainWindow.CloseWindow" />
+
+                <Separator />
+
+                <MenuItem Header="{x:Static p:Resources.Menu_Processors}" Command="local:MainWindow.ProcessorSettings" />
 
                 <Separator />
 

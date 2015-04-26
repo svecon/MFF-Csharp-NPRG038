@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
-using CoreLibrary.Interfaces;
-using CoreLibrary.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
-namespace CoreLibrary.Settings
+namespace CoreLibrary.Plugins.Processors.Settings
 {
     /// <summary>
     /// Abstract class for Processor's settings.
@@ -46,6 +45,11 @@ namespace CoreLibrary.Settings
 
         public abstract void SetValue(params string[] value);
 
+        public object GetValue()
+        {
+            return Field.GetValue(Instance);
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -53,8 +57,7 @@ namespace CoreLibrary.Settings
             if (ArgumentShortcut != null)
             {
                 sb.AppendFormat("  -{0, -2}", ArgumentShortcut);
-            }
-            else
+            } else
             {
                 sb.AppendFormat("{0,5}", "");
             }
