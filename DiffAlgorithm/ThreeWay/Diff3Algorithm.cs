@@ -25,7 +25,7 @@ namespace DiffAlgorithm.ThreeWay
         private readonly DiffItem[] diffBaseRemote;
 
         /// <summary>
-        /// Hashed new file.
+        /// Hashed local file.
         /// 
         /// Used in checking conflicts.
         /// </summary>
@@ -37,6 +37,13 @@ namespace DiffAlgorithm.ThreeWay
         /// Used in checking conflicts.
         /// </summary>
         private readonly int[] remoteFile;
+
+        /// <summary>
+        /// Hashed base file.
+        /// 
+        /// Used in checking conflicts.
+        /// </summary>
+        private readonly int[] baseFile;
 
         /// <summary>
         /// Temporary container for Diff3Items
@@ -83,13 +90,14 @@ namespace DiffAlgorithm.ThreeWay
         /// <param name="diffBaseRemote">Two-way diff between old and his file.</param>
         /// <param name="localFile">Hashed new file.</param>
         /// <param name="remoteFile">Hashed his file.</param>
-        public Diff3Algorithm(DiffItem[] diffBaseLocal, DiffItem[] diffBaseRemote, int[] localFile, int[] remoteFile)
+        public Diff3Algorithm(DiffItem[] diffBaseLocal, DiffItem[] diffBaseRemote, int[] localFile, int[] remoteFile, int[] baseFile)
         {
             this.diffBaseLocal = diffBaseLocal;
             this.diffBaseRemote = diffBaseRemote;
 
             this.localFile = localFile;
             this.remoteFile = remoteFile;
+            this.baseFile = baseFile;
         }
 
         /// <summary>
@@ -142,9 +150,12 @@ namespace DiffAlgorithm.ThreeWay
                             old.BaseLineStart,
                             old.LocalLineStart,
                             old.RemoteLineStart,
-                            old.BaseAffectedLines + lowerDiff.LocalAffectedLines,
-                            old.LocalAffectedLines + (wasHis ? lowerDiff.LocalAffectedLines : lowerDiff.RemoteAffectedLines),
-                            old.RemoteAffectedLines + (wasHis ? lowerDiff.RemoteAffectedLines : lowerDiff.LocalAffectedLines),
+                            Math.Min(old.BaseAffectedLines + lowerDiff.LocalAffectedLines, 
+                                baseFile.Length - old.BaseLineStart),
+                            Math.Min(old.LocalAffectedLines + (wasHis ? lowerDiff.LocalAffectedLines : lowerDiff.RemoteAffectedLines),
+                                localFile.Length - old.LocalLineStart),
+                            Math.Min(old.RemoteAffectedLines + (wasHis ? lowerDiff.RemoteAffectedLines : lowerDiff.LocalAffectedLines),
+                                remoteFile.Length - old.RemoteLineStart),
                             DifferencesStatusEnum.AllDifferent
                         ));
 

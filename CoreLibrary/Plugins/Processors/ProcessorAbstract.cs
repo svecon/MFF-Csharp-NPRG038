@@ -12,7 +12,7 @@ namespace CoreLibrary.Plugins.Processors
     /// </summary>
     public abstract class ProcessorAbstract : IProcessor
     {
-        public ProcessorAttribute Attribute { get; private set; }
+        ProcessorAttribute Attribute { get; set; }
 
         protected ProcessorAbstract()
         {

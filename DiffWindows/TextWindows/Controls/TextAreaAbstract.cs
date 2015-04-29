@@ -222,9 +222,21 @@ namespace DiffWindows.TextWindows.Controls
         public void InvalidateFileContents()
         {
             if (Lines == null) return;
-            
+
             Lines.Clear();
             Lines = null;
+        }
+
+        protected string GetLine(int lineNumber)
+        {
+            if (0 > lineNumber || lineNumber >= Lines.Count)
+            {
+                InvalidateFileContents();
+                InvalidateVisual();
+                return string.Empty;
+            }
+
+            return Lines[lineNumber];
         }
 
         protected abstract void PreloadFileToMemory();
@@ -345,7 +357,7 @@ namespace DiffWindows.TextWindows.Controls
                 }
 
                 // print text
-                FormattedText oneLine = CreateFormattedText(Lines[i]);
+                FormattedText oneLine = CreateFormattedText(GetLine(i));
                 dc.DrawText(oneLine, new Point(PositionX(), PositionY(i)));
             }
         }

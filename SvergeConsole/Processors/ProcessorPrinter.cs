@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using CoreLibrary.Plugins.Processors.Settings;
 
 namespace CoreLibrary.Plugins.Processors
@@ -24,7 +25,11 @@ namespace CoreLibrary.Plugins.Processors
 
         private void PrintProcessorInfo(IProcessor processor)
         {
-            Console.WriteLine("{0,10} {1} in {2}", processor.Attribute.Priority, processor.GetType().Name,
+            var attr = (ProcessorAttribute)processor.GetType().GetCustomAttribute(typeof(ProcessorAttribute));
+
+            Console.WriteLine("{0,10} {1} in {2}",
+                attr == null ? string.Empty : attr.Priority.ToString(),
+                processor.GetType().Name,
                 processor.GetType().Namespace);
 
             if (!printSettings)

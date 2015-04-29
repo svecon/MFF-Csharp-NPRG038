@@ -165,7 +165,7 @@ namespace DiffAlgorithm
             var da = new TwoWay.DiffAlgorithm(oldData, newData);
             var da2 = new TwoWay.DiffAlgorithm(oldData, hisData);
 
-            var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
+            var d3A = new Diff3Algorithm(da.RunAndCreateDiffs(), da2.RunAndCreateDiffs(true), newData.Data, hisData.Data, oldData.Data);
 
             return d3A.MergeIntoDiff3Chunks();
         }
@@ -228,7 +228,7 @@ namespace DiffAlgorithm
 
             var d3A = new Diff3Algorithm(
                 oldFile == null || newFile == null ? new DiffItem[0] : da.RunAndCreateDiffs(),
-                newFile == null || hisFile == null ? new DiffItem[0] : da2.RunAndCreateDiffs(true), newData.Data, hisData.Data);
+                newFile == null || hisFile == null ? new DiffItem[0] : da2.RunAndCreateDiffs(true), newData.Data, hisData.Data, oldData.Data);
             diff.SetDiffItems(d3A.MergeIntoDiff3Chunks());
 
             return diff;

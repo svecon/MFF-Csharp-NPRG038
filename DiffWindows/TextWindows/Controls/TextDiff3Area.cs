@@ -80,6 +80,7 @@ namespace DiffWindows.TextWindows.Controls
             }
 
             LinesCount = Lines.Count;
+            InvalidateMeasure();
         }
 
         #region Rendering
@@ -91,10 +92,16 @@ namespace DiffWindows.TextWindows.Controls
                 PreloadFileToMemory();
             }
 
-            DrawBackground(dc);
-            DrawDiffs(dc);
-            DrawText(dc);
-            DrawBorders(dc);
+            try
+            {
+                DrawBackground(dc);
+                DrawDiffs(dc);
+                DrawText(dc);
+                DrawBorders(dc);
+            } catch (Exception)
+            {
+                // ignore exceptions during rendering
+            }
         }
 
         protected override void DrawText(DrawingContext dc)
@@ -194,14 +201,14 @@ namespace DiffWindows.TextWindows.Controls
                 for (; textLineToBePrinted < diffStartLine; textLineToBePrinted++)
                 {
                     // print text between diffs
-                    FormattedText oneLine = CreateFormattedText(Lines[textLineToBePrinted]);
+                    FormattedText oneLine = CreateFormattedText(GetLine(textLineToBePrinted));
                     dc.DrawText(oneLine, new Point(PositionX(), PositionY(textLineToBePrinted)));
                 }
 
                 for (; textLineToBePrinted < diffStartLine + diffAffectedLines; textLineToBePrinted++)
                 {
                     // print text on diff
-                    FormattedText oneLine = CreateFormattedText(Lines[textLineToBePrinted]);
+                    FormattedText oneLine = CreateFormattedText(GetLine(textLineToBePrinted));
                     if (textDiscarded && diffHovered)
                     {
                         oneLine.SetForegroundBrush(Brushes.White);
@@ -216,7 +223,7 @@ namespace DiffWindows.TextWindows.Controls
             for (; textLineToBePrinted < EndsOnLine; textLineToBePrinted++)
             {
                 // print text
-                FormattedText oneLine = CreateFormattedText(Lines[textLineToBePrinted]);
+                FormattedText oneLine = CreateFormattedText(GetLine(textLineToBePrinted));
                 dc.DrawText(oneLine, new Point(PositionX(), PositionY(textLineToBePrinted)));
             }
         }

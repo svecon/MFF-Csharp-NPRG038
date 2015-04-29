@@ -114,7 +114,7 @@
       <Name>CoreLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiffAlgorithm\DiffAlgorithm.csproj">
-      <Project>{03ee01e0-b64c-4ab9-ae6b-354b6a8b5bdb}</Project>
+      <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
       <Name>DiffAlgorithm</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">

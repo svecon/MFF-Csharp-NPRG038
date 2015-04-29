@@ -185,7 +185,7 @@ namespace DiffWindows.TextWindows
 
         public void OnDiffComplete(Task t)
         {
-            InvalidateAllVisual();
+            InvalidateAllFileContents();
         }
 
         public void OnMergeComplete(Task t)
@@ -210,9 +210,7 @@ namespace DiffWindows.TextWindows
             remoteText.InvalidateFileContents();
             baseText.InvalidateFileContents();
 
-            localText.InvalidateVisual();
-            remoteText.InvalidateVisual();
-            baseText.InvalidateVisual();
+            InvalidateAllVisual();
         }
 
         private void InvalidateAllVisual()

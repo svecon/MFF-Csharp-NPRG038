@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using CoreLibrary.Exceptions;
@@ -159,21 +160,38 @@ namespace CoreLibrary.Plugins.Processors
 
         public void AddProcessor(IProcessor processor)
         {
+            var attr = (ProcessorAttribute)processor.GetType().GetCustomAttribute(typeof(ProcessorAttribute));
+
+            if (attr == null)
+            {
+#if DEBUG
+                throw new ConstraintException("Every processor must implement ProcessorAttribute.");
+#endif
+#pragma warning disable 162
+                return;
+#pragma warning restore 162
+            }
+
             SortedList<int, IProcessor> list;
-            if (!ProcessorsDictionary.TryGetValue(processor.Attribute.ProcessorType, out list))
+            if (!ProcessorsDictionary.TryGetValue(attr.ProcessorType, out list))
             {
                 list = new SortedList<int, IProcessor>();
-                ProcessorsDictionary.Add(processor.Attribute.ProcessorType, list);
+                ProcessorsDictionary.Add(attr.ProcessorType, list);
             }
 
             try
             {
-                list.Add(processor.Attribute.Priority, processor);
+                list.Add(attr.Priority, processor);
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
             } catch (ArgumentException e)
             {
 #if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
+#endif
+            } catch (Exception)
+            {
+#if DEBUG
+                throw;
 #endif
             }
         }

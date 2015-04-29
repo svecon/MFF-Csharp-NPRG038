@@ -73,13 +73,13 @@ namespace CoreLibrary.FilesystemTree
                 {
                     return InfoBase;
                 }
-                if (InfoLocal != null)
-                {
-                    return InfoLocal;
-                }
                 if (InfoRemote != null)
                 {
                     return InfoRemote;
+                }
+                if (InfoLocal != null)
+                {
+                    return InfoLocal;
                 }
 
                 throw new InvalidDataException("At least one FileSystemInfo can not be null.");

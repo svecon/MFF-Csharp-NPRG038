@@ -21,7 +21,5 @@ namespace CoreLibrary.Plugins.Processors
         /// </summary>
         /// <param name="node">File node from the FilesystemTree</param>
         void Process(IFilesystemTreeFileNode node);
-
-        ProcessorAttribute Attribute { get; }
     }
 }

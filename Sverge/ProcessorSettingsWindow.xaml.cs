@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using CoreLibrary.Plugins.Processors;
@@ -32,14 +34,24 @@ namespace Sverge
             {
                 int i = 0;
 
-                var box = new GroupBox {
-                    Header = string.Format("{0}: {1} [{2}: {3}]",
-                        processor.Attribute.Priority,
-                        processor.GetType().Name,
-                        processor.Attribute.ProcessorType,
-                        processor.Attribute.Mode
-                        )
-                };
+                var attr = (ProcessorAttribute)processor.GetType().GetCustomAttribute(typeof(ProcessorAttribute));
+
+                GroupBox box;
+                if (attr == null)
+                {
+                    box = new GroupBox { Header = processor.GetType().Name };
+                } else
+                {
+                    box = new GroupBox {
+                        Header = string.Format("{0}: {1} [{2}: {3}]",
+                            attr.Priority,
+                            processor.GetType().Name,
+                            attr.ProcessorType,
+                            attr.Mode
+                            )
+                    };
+                }
+
                 var boxContent = new Grid();
                 boxContent.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(200) });
                 boxContent.ColumnDefinitions.Add(new ColumnDefinition());
