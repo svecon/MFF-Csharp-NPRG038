@@ -3,7 +3,7 @@ using System.IO;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings;
 using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 using DiffIntegration.DiffOutput.TwoWay;

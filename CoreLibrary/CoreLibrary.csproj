@@ -48,6 +48,7 @@
     <Compile Include="Enums\PreferedActionThreeWayEnum.cs" />
     <Compile Include="Helpers\TextFileChecker.cs" />
     <Compile Include="Helpers\ThreeWayDiffHelper.cs" />
+    <Compile Include="Plugins\DiffWindow\DiffWindowLoader.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowMenuAttribute.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowAttribute.cs" />
     <Compile Include="Enums\DifferencesStatusEnum.cs" />
@@ -66,7 +67,6 @@
     <Compile Include="FilesystemTree\FileNode.cs" />
     <Compile Include="FilesystemTree\Visitors\ExecutionVisitor.cs" />
     <Compile Include="FilesystemTree\Visitors\ParallelExecutionVisitor.cs" />
-    <Compile Include="FilesystemTree\Visitors\PrinterVisitor.cs" />
     <Compile Include="FilesystemTree\FilesystemTree.cs" />
     <Compile Include="FilesystemTree\Crawler.cs" />
     <Compile Include="Enums\DiffModeEnum.cs" />
@@ -93,7 +93,6 @@
     <Compile Include="Plugins\DiffWindow\IDiffWindowManager.cs" />
     <Compile Include="Plugins\PluginsLoader.cs" />
     <Compile Include="Plugins\Processors\ProcessorAbstract.cs" />
-    <Compile Include="Plugins\Processors\ProcessorPrinter.cs" />
     <Compile Include="Plugins\Processors\ProcessorRunner.cs" />
     <Compile Include="Plugins\Processors\ProcessorAttribute.cs" />
     <Compile Include="Plugins\Processors\ProcessorTypeEnum.cs" />
@@ -105,10 +104,9 @@
     <Compile Include="Plugins\Processors\Settings\Types\StringSettings.cs" />
     <Compile Include="Plugins\Processors\Settings\Types\EnumSettings.cs" />
     <Compile Include="Plugins\Processors\Settings\Types\BooleanSettings.cs" />
-    <Compile Include="Plugins\Processors\Settings\Attributes\SettingsAttribute.cs" />
+    <Compile Include="Plugins\Processors\Settings\SettingsAttribute.cs" />
     <Compile Include="Plugins\Processors\Settings\SettingsAbstract.cs" />
     <Compile Include="Plugins\Processors\Settings\SettingsParser.cs" />
-    <Compile Include="Plugins\Processors\Settings\SettingsPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

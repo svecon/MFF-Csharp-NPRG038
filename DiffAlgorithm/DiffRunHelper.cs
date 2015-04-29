@@ -11,9 +11,9 @@ using DiffAlgorithm.TwoWay;
 namespace DiffAlgorithm
 {
     /// <summary>
-    /// DiffHelper class makes it easier to diff whole files.
+    /// DiffRunHelper class makes it easier to diff whole files.
     /// </summary>
-    public class DiffHelper
+    public class DiffRunHelper
     {
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace DiffAlgorithm
         /// <param name="trimSpace">Trim white-space?</param>
         /// <param name="ignoreSpace">Ignore all white-space?</param>
         /// <param name="ignoreCase">Case-insensitive?</param>
-        public DiffHelper(bool trimSpace = false, bool ignoreSpace = false, bool ignoreCase = false)
+        public DiffRunHelper(bool trimSpace = false, bool ignoreSpace = false, bool ignoreCase = false)
         {
             this.trimSpace = trimSpace;
             this.ignoreCase = ignoreCase;

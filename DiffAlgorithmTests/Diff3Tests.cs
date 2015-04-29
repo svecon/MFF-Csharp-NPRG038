@@ -17,7 +17,7 @@ namespace DiffAlgorithmTests
         public void Diff3AllSame()
         {
             string a = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 a,
@@ -30,7 +30,7 @@ namespace DiffAlgorithmTests
         {
             string o = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
             string l = "a,b,c,inserted new line,another inserted,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -43,7 +43,7 @@ namespace DiffAlgorithmTests
         {
             string o = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
             string l = "a,b,c,inserted new line,another inserted,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -57,7 +57,7 @@ namespace DiffAlgorithmTests
             string o = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
             string l = "a,b,c,inserted left1,another inserted left,d,e,f,g,h,i,j,inserted left3,k,l".Replace(',', '\n');
             string r = "a,b,c,d,e,f,another inserted right,right2,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -70,7 +70,7 @@ namespace DiffAlgorithmTests
         {
             string o = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
             string l = "a,b,line3,line4,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -83,7 +83,7 @@ namespace DiffAlgorithmTests
         {
             string o = "a,b,c,d,e,f,g,h,i,j,k,l".Replace(',', '\n');
             string l = "a,b,line3,line4,e,f,g,h,i,j,k,l".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -97,7 +97,7 @@ namespace DiffAlgorithmTests
             string o = "a, tento radek se zmeni, c, tento radek se smazal, a tennto se taky smazal, d, e, f, g, h, i, j, k".Replace(',', '\n');
             string l = "a, zmeneny radek, c, d, muj novy radek prvni, muj novy radek druhy, e, f, tento radek pribyl, g, h, muj novy radek, i, j, k".Replace(',', '\n');
             string r = "a, zmeneny radek, c, d, e, f, tento radek pribyl s konfliktem, g, h, i, j, jeho novy radek, jedo druhy radek, k".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -111,7 +111,7 @@ namespace DiffAlgorithmTests
             string o = "a,b,c,d,e,f,g,h,i,j,k".Replace(',', '\n');
             string l = "a,b,i1,i2,c,d,echange,fchange,g,h,i,j,k".Replace(',', '\n');
             string r = "a,b,d,e,f,gchange,h,i,j,k".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,
@@ -125,7 +125,7 @@ namespace DiffAlgorithmTests
             string o = "a,b,c,d,e,f,g,h,i,j,k".Replace(',', '\n');
             string l = "a,b,i1,i2,c,d,echange,fchange,g,hchange,inserted row,i,j,k".Replace(',', '\n');
             string r = "a,b,d,e,f,gchange,h,ichange,jchange,k".Replace(',', '\n');
-            var d = new DiffHelper();
+            var d = new DiffRunHelper();
 
             Assert.AreEqual(J(d.DiffText(
                 o,

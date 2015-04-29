@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CoreLibrary.FilesystemTree;
-using CoreLibrary.Plugins.DiffWindow;
 
-namespace Sverge.DiffWindows
+namespace CoreLibrary.Plugins.DiffWindow
 {
     using DW = IDiffWindow<IFilesystemTreeVisitable>;
 
-    class DiffWindowLoader
+    public class DiffWindowLoader
     {
         private readonly SortedList<int, Type> availableWindows;
         private readonly SortedList<int, Type> availableWindowMenus;
-        private readonly MainWindow manager;
+        private readonly IDiffWindowManager manager;
 
-        public DiffWindowLoader(MainWindow diffManager)
+        public DiffWindowLoader(IDiffWindowManager diffManager)
         {
             manager = diffManager;
             availableWindows = new SortedList<int, Type>();

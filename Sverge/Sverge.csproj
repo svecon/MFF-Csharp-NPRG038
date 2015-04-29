@@ -58,7 +58,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DiffWindows\DiffWindowLoader.cs" />
     <Compile Include="DiffWindows\DefaultDiffWindow.xaml.cs">
       <DependentUpon>DefaultDiffWindow.xaml</DependentUpon>
     </Compile>

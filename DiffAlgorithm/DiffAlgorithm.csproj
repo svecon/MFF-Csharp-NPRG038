@@ -49,7 +49,7 @@
     <Compile Include="ThreeWay\Diff3Algorithm.cs" />
     <Compile Include="ThreeWay\Diff3Item.cs" />
     <Compile Include="TwoWay\DiffAlgorithm.cs" />
-    <Compile Include="DiffHelper.cs" />
+    <Compile Include="DiffRunHelper.cs" />
     <Compile Include="TwoWay\DiffItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

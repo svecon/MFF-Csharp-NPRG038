@@ -4,7 +4,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
+using CoreLibrary.Plugins.Processors.Settings;
 
 namespace BasicProcessors.Processors.DiffProcessors
 {

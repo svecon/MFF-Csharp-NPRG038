@@ -4,7 +4,7 @@ namespace CoreLibrary.Plugins.Processors
     /// <summary>
     /// Interface for classes that print something.
     /// </summary>
-    interface IPrinter
+    public interface IPrinter
     {
         /// <summary>
         /// Print something.

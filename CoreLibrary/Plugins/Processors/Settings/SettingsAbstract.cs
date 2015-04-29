@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Text;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
 namespace CoreLibrary.Plugins.Processors.Settings
 {

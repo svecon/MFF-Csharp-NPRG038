@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Plugins.Processors.Settings;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
 namespace CoreLibrary.Plugins.Processors
 {

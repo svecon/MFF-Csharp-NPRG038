@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
 
 namespace CoreLibrary.Plugins.Processors.Settings.Types
 {

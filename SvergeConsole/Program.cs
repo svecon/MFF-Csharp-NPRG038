@@ -9,7 +9,6 @@ using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Plugins;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
-using CoreLibrary.Plugins.Processors.Settings.Attributes;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace SvergeConsole

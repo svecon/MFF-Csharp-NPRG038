@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Processors\DiffProcessors\BinaryDiffProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\CalculateDiffProcessor.cs" />
+    <Compile Include="Processors\DiffProcessors\TextDiffProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CheckConflictsProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CleanupProcessor.cs" />
     <Compile Include="Processors\DiffProcessors\CsharpSourcesFilterProcessor.cs" />
