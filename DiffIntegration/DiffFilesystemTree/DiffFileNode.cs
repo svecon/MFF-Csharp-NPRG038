@@ -12,23 +12,23 @@ namespace DiffIntegration.DiffFilesystemTree
     /// </summary>
     public class DiffFileNode : FileNode
     {
-        private Diff diff;
+        private object diff;
 
         /// <summary>
         /// Diff contains all information about a 2-way diff.
         /// </summary>
-        public Diff Diff
+        public object Diff
         {
             get { return diff; }
             set { diff = value; OnPropertyChanged("Diff"); }
         }
 
-        private Diff3 diff3;
+        private object diff3;
 
         /// <summary>
         /// Diff3 contains all information about a 3-way diff.
         /// </summary>
-        public Diff3 Diff3
+        public object Diff3
         {
             get { return diff3; }
             set { diff3 = value; OnPropertyChanged("Diff3"); }

@@ -63,6 +63,11 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (dnode == null)
                 return;
 
+            var diff = dnode.Diff as Diff;
+
+            if (diff == null)
+                return;
+
             node.Status = NodeStatusEnum.WasMerged;
 
             if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote
@@ -91,10 +96,10 @@ namespace BasicProcessors.Processors.MergeProcessors
                 int n = 0;
                 int m = 0;
 
-                foreach (DiffItem diff in dnode.Diff.Items)
+                foreach (DiffItem diffItem in diff.Items)
                 {
                     // change default action depending on processor settings
-                    if (diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                    if (diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                     {
                         switch (DefaultAction)
                         {
@@ -102,30 +107,30 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 // keep default
                                 break;
                             case DefaultActionEnum.RevertToLocal:
-                                diff.PreferedAction = PreferedActionTwoWayEnum.ApplyLocal;
+                                diffItem.PreferedAction = PreferedActionTwoWayEnum.ApplyLocal;
                                 break;
                             case DefaultActionEnum.ApplyRemote:
-                                diff.PreferedAction = PreferedActionTwoWayEnum.ApplyRemote;
+                                diffItem.PreferedAction = PreferedActionTwoWayEnum.ApplyRemote;
                                 break;
                         }
                     }
 
                     // same
-                    for (; n < diff.LocalLineStart; n++) { writer.WriteLine(localStream.ReadLine()); }
-                    for (; m < diff.RemoteLineStart; m++) { remoteStream.ReadLine(); }
+                    for (; n < diffItem.LocalLineStart; n++) { writer.WriteLine(localStream.ReadLine()); }
+                    for (; m < diffItem.RemoteLineStart; m++) { remoteStream.ReadLine(); }
 
 
-                    if (diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                    if (diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                     {
                         writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
                         node.Status = NodeStatusEnum.HasConflicts;
                     }
 
                     // deleted
-                    for (int p = 0; p < diff.LocalAffectedLines; p++)
+                    for (int p = 0; p < diffItem.LocalAffectedLines; p++)
                     {
-                        if (diff.PreferedAction == PreferedActionTwoWayEnum.ApplyLocal
-                            || diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                        if (diffItem.PreferedAction == PreferedActionTwoWayEnum.ApplyLocal
+                            || diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                         {
                             writer.WriteLine(localStream.ReadLine());
                         } else
@@ -135,14 +140,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                         n++;
                     }
 
-                    if (diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                    if (diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                         writer.WriteLine("=======");
 
                     // inserted
-                    for (int p = 0; p < diff.RemoteAffectedLines; p++)
+                    for (int p = 0; p < diffItem.RemoteAffectedLines; p++)
                     {
-                        if (diff.PreferedAction == PreferedActionTwoWayEnum.ApplyRemote
-                            || diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                        if (diffItem.PreferedAction == PreferedActionTwoWayEnum.ApplyRemote
+                            || diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                         {
                             writer.WriteLine(remoteStream.ReadLine());
                         }
@@ -150,12 +155,12 @@ namespace BasicProcessors.Processors.MergeProcessors
                         m++;
                     }
 
-                    if (diff.PreferedAction == PreferedActionTwoWayEnum.Default)
+                    if (diffItem.PreferedAction == PreferedActionTwoWayEnum.Default)
                         writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
                 }
 
                 // same
-                for (; n < dnode.Diff.FilesLineCount.Local; n++) { writer.WriteLine(localStream.ReadLine()); }
+                for (; n < diff.FilesLineCount.Local; n++) { writer.WriteLine(localStream.ReadLine()); }
                 //for (; m < dnode.Diff.FilesLineCount.Remote; m++) { remoteStream.ReadLine(); }
             }
 

@@ -107,7 +107,7 @@ namespace DiffWindows.TextWindows
                 int differenceToRemote = 0;
 
                 if (DiffNode.Diff3 != null)
-                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                    foreach (Diff3Item diffItem in ((Diff3)DiffNode.Diff3).Items
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
                     {
                         differenceToBase += (diffItem.BaseAffectedLines - diffItem.LocalAffectedLines);
@@ -124,7 +124,7 @@ namespace DiffWindows.TextWindows
                 int differenceToLocal = 0;
 
                 if (DiffNode.Diff3 != null)
-                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                    foreach (Diff3Item diffItem in ((Diff3)DiffNode.Diff3).Items
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
                     {
                         differenceToBase += (diffItem.BaseAffectedLines - diffItem.RemoteAffectedLines);
@@ -141,7 +141,7 @@ namespace DiffWindows.TextWindows
                 int differenceToLocal = 0;
 
                 if (DiffNode.Diff3 != null)
-                    foreach (Diff3Item diffItem in DiffNode.Diff3.Items
+                    foreach (Diff3Item diffItem in ((Diff3)DiffNode.Diff3).Items
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine))
                     {
                         differenceToRemote += (diffItem.RemoteAffectedLines - diffItem.BaseAffectedLines);
@@ -198,7 +198,8 @@ namespace DiffWindows.TextWindows
             if (DiffNode.Diff3 == null)
                 return;
 
-            bool anyCoflicting = DiffNode.Diff3.Items.Any(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent
+            bool anyCoflicting = ((Diff3)DiffNode.Diff3).Items.Any(diff3Item =>
+                diff3Item.Differeces == DifferencesStatusEnum.AllDifferent
                 && diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default);
 
             DiffNode.Status = anyCoflicting ? NodeStatusEnum.IsConflicting : NodeStatusEnum.WasDiffed;
@@ -239,16 +240,17 @@ namespace DiffWindows.TextWindows
 
         private void ScrollToLine(int diffIndex)
         {
-            localText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].LocalLineStart - 1);
-            baseText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].BaseLineStart - 1);
-            remoteText.ScrollToLine(DiffNode.Diff3.Items[diffIndex].RemoteLineStart - 1);
+            var diff = ((Diff3)DiffNode.Diff3);
+            localText.ScrollToLine(diff.Items[diffIndex].LocalLineStart - 1);
+            baseText.ScrollToLine(diff.Items[diffIndex].BaseLineStart - 1);
+            remoteText.ScrollToLine(diff.Items[diffIndex].RemoteLineStart - 1);
         }
 
         private int FindPreviousConflict()
         {
             for (int i = CurrentDiff - 1; i >= 0; i--)
             {
-                if (DiffNode.Diff3.Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
+                if (((Diff3)DiffNode.Diff3).Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
                     return i;
             }
 
@@ -257,9 +259,9 @@ namespace DiffWindows.TextWindows
 
         private int FindNextConflict(int start)
         {
-            for (int i = start; i < DiffNode.Diff3.Items.Length; i++)
+            for (int i = start; i < ((Diff3)DiffNode.Diff3).Items.Length; i++)
             {
-                if (DiffNode.Diff3.Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
+                if (((Diff3)DiffNode.Diff3).Items[i].Differeces == DifferencesStatusEnum.AllDifferent)
                     return i;
             }
 
@@ -274,7 +276,7 @@ namespace DiffWindows.TextWindows
                 if (next == -1)
                     break;
 
-                if (DiffNode.Diff3.Items[next].PreferedAction == PreferedActionThreeWayEnum.Default)
+                if (((Diff3)DiffNode.Diff3).Items[next].PreferedAction == PreferedActionThreeWayEnum.Default)
                     return next;
             }
 
@@ -283,7 +285,7 @@ namespace DiffWindows.TextWindows
 
         private bool CurrentDiffAvailable()
         {
-            return DiffNode.Diff3 != null && 0 <= CurrentDiff && CurrentDiff < DiffNode.Diff3.Items.Length;
+            return DiffNode.Diff3 != null && 0 <= CurrentDiff && CurrentDiff < ((Diff3)DiffNode.Diff3).Items.Length;
         }
 
         #endregion
@@ -301,7 +303,7 @@ namespace DiffWindows.TextWindows
         {
             return new CommandBinding(command,
                 (sender, args) => { ScrollToLine(++CurrentDiff); },
-                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < DiffNode.Diff3.Items.Length - 1; });
+                (sender, args) => { args.CanExecute = DiffNode.Diff3 != null && CurrentDiff < ((Diff3)DiffNode.Diff3).Items.Length - 1; });
         }
 
         public CommandBinding RecalculateCommandBinding(ICommand command)
@@ -363,7 +365,7 @@ namespace DiffWindows.TextWindows
             return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
+                    ((Diff3)DiffNode.Diff3).Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()
@@ -375,7 +377,7 @@ namespace DiffWindows.TextWindows
             return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
+                    ((Diff3)DiffNode.Diff3).Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()
@@ -387,7 +389,7 @@ namespace DiffWindows.TextWindows
             return new CommandBinding(command,
                 (sender, args) =>
                 {
-                    DiffNode.Diff3.Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
+                    ((Diff3)DiffNode.Diff3).Items[CurrentDiff].PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                     InvalidateAllVisual();
                 },
                 (sender, args) => args.CanExecute = CurrentDiffAvailable()

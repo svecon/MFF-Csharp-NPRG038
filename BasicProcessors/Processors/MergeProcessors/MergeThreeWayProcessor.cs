@@ -47,7 +47,9 @@ namespace BasicProcessors.Processors.MergeProcessors
             if (dnode == null)
                 return;
 
-            if (dnode.Diff3 == null)
+            var diff = dnode.Diff3 as Diff3;
+
+            if (diff == null)
                 return;
 
             node.Status = NodeStatusEnum.WasMerged;
@@ -73,10 +75,10 @@ namespace BasicProcessors.Processors.MergeProcessors
                 int n = 0;
                 int o = 0;
 
-                foreach (Diff3Item diff in dnode.Diff3.Items)
+                foreach (Diff3Item diff3Item in diff.Items)
                 {
                     // change default action depending on processor settings
-                    if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                    if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                     {
                         switch (DefaultAction)
                         {
@@ -84,49 +86,49 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 // keep default
                                 break;
                             case DefaultActionEnum.RevertToBase:
-                                diff.PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
+                                diff3Item.PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
                                 break;
                             case DefaultActionEnum.ApplyLocal:
-                                diff.PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
+                                diff3Item.PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
                                 break;
                             case DefaultActionEnum.ApplyRemote:
-                                diff.PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
+                                diff3Item.PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
                                 break;
                         }
                     }
 
                     // print between diffs
-                    for (; o < diff.BaseLineStart; o++) { writer.WriteLine(baseStream.ReadLine()); }
-                    for (; m < diff.LocalLineStart; m++) { localStream.ReadLine(); }
-                    for (; n < diff.RemoteLineStart; n++) { remoteStream.ReadLine(); }
+                    for (; o < diff3Item.BaseLineStart; o++) { writer.WriteLine(baseStream.ReadLine()); }
+                    for (; m < diff3Item.LocalLineStart; m++) { localStream.ReadLine(); }
+                    for (; n < diff3Item.RemoteLineStart; n++) { remoteStream.ReadLine(); }
 
                     // if there is an action asociated:
-                    if (diff.PreferedAction != PreferedActionThreeWayEnum.Default)
+                    if (diff3Item.PreferedAction != PreferedActionThreeWayEnum.Default)
                     {
-                        for (int p = 0; p < diff.LocalAffectedLines; p++)
+                        for (int p = 0; p < diff3Item.LocalAffectedLines; p++)
                         {
                             m++;
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal)
                                 writer.WriteLine(localStream.ReadLine());
                             else
                                 localStream.ReadLine();
                         }
-                        for (int p = 0; p < diff.BaseAffectedLines; p++)
+                        for (int p = 0; p < diff3Item.BaseAffectedLines; p++)
                         {
                             o++;
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.RevertToBase)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.RevertToBase)
                                 writer.WriteLine(baseStream.ReadLine());
                             else
                                 baseStream.ReadLine();
 
                         }
-                        for (int p = 0; p < diff.RemoteAffectedLines; p++)
+                        for (int p = 0; p < diff3Item.RemoteAffectedLines; p++)
                         {
                             n++;
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote)
                                 writer.WriteLine(remoteStream.ReadLine());
                             else
                                 remoteStream.ReadLine();
@@ -136,36 +138,36 @@ namespace BasicProcessors.Processors.MergeProcessors
                     }
 
                     // print diffs
-                    switch (diff.Differeces)
+                    switch (diff3Item.Differeces)
                     {
                         case DifferencesStatusEnum.BaseLocalSame:
-                            for (int p = 0; p < diff.LocalAffectedLines; p++) { localStream.ReadLine(); m++; }
-                            for (int p = 0; p < diff.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
-                            for (int p = 0; p < diff.RemoteAffectedLines; p++) { writer.WriteLine(remoteStream.ReadLine()); n++; }
+                            for (int p = 0; p < diff3Item.LocalAffectedLines; p++) { localStream.ReadLine(); m++; }
+                            for (int p = 0; p < diff3Item.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
+                            for (int p = 0; p < diff3Item.RemoteAffectedLines; p++) { writer.WriteLine(remoteStream.ReadLine()); n++; }
                             break;
                         case DifferencesStatusEnum.BaseRemoteSame:
-                            for (int p = 0; p < diff.LocalAffectedLines; p++) { writer.WriteLine(localStream.ReadLine()); m++; }
-                            for (int p = 0; p < diff.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
-                            for (int p = 0; p < diff.RemoteAffectedLines; p++) { remoteStream.ReadLine(); n++; }
+                            for (int p = 0; p < diff3Item.LocalAffectedLines; p++) { writer.WriteLine(localStream.ReadLine()); m++; }
+                            for (int p = 0; p < diff3Item.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
+                            for (int p = 0; p < diff3Item.RemoteAffectedLines; p++) { remoteStream.ReadLine(); n++; }
                             break;
                         case DifferencesStatusEnum.LocalRemoteSame:
-                            for (int p = 0; p < diff.LocalAffectedLines; p++) { writer.WriteLine(localStream.ReadLine()); m++; }
-                            for (int p = 0; p < diff.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
-                            for (int p = 0; p < diff.RemoteAffectedLines; p++) { remoteStream.ReadLine(); n++; }
+                            for (int p = 0; p < diff3Item.LocalAffectedLines; p++) { writer.WriteLine(localStream.ReadLine()); m++; }
+                            for (int p = 0; p < diff3Item.BaseAffectedLines; p++) { baseStream.ReadLine(); o++; }
+                            for (int p = 0; p < diff3Item.RemoteAffectedLines; p++) { remoteStream.ReadLine(); n++; }
                             break;
                         case DifferencesStatusEnum.AllDifferent:
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                             {
                                 node.Status = NodeStatusEnum.HasConflicts;
                                 writer.WriteLine("<<<<<<< " + dnode.InfoLocal.FullName);
                             }
 
 
-                            for (int p = 0; p < diff.LocalAffectedLines; p++)
+                            for (int p = 0; p < diff3Item.LocalAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal
-                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                                if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.ApplyLocal
+                                    || diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(localStream.ReadLine());
                                 } else
@@ -175,14 +177,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 m++;
                             }
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine("||||||| " + dnode.InfoBase.FullName);
 
 
-                            for (int p = 0; p < diff.BaseAffectedLines; p++)
+                            for (int p = 0; p < diff3Item.BaseAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionThreeWayEnum.RevertToBase
-                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                                if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.RevertToBase
+                                    || diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(baseStream.ReadLine());
                                 } else
@@ -192,14 +194,14 @@ namespace BasicProcessors.Processors.MergeProcessors
                                 o++;
                             }
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine("=======");
 
 
-                            for (int p = 0; p < diff.RemoteAffectedLines; p++)
+                            for (int p = 0; p < diff3Item.RemoteAffectedLines; p++)
                             {
-                                if (diff.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote
-                                    || diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                                if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.ApplyRemote
+                                    || diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 {
                                     writer.WriteLine(remoteStream.ReadLine());
                                 } else
@@ -210,7 +212,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                             }
 
 
-                            if (diff.PreferedAction == PreferedActionThreeWayEnum.Default)
+                            if (diff3Item.PreferedAction == PreferedActionThreeWayEnum.Default)
                                 writer.WriteLine(">>>>>>> " + dnode.InfoRemote.FullName);
 
                             break;
@@ -218,7 +220,7 @@ namespace BasicProcessors.Processors.MergeProcessors
                 }
 
                 // print end
-                for (; o < dnode.Diff3.FilesLineCount.Base; o++) { writer.WriteLine(baseStream.ReadLine()); }
+                for (; o < diff.FilesLineCount.Base; o++) { writer.WriteLine(baseStream.ReadLine()); }
                 //for (; m < dnode.Diff3.FilesLineCount.Local; m++) { localStream.ReadLine(); }
                 //for (; n < dnode.Diff3.FilesLineCount.Remote; n++) { remoteStream.ReadLine(); }
             }

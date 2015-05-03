@@ -66,7 +66,7 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
                 defaultFileAction = DefaultAction;
             }
 
-            var output = new UnifiedDiffOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoRemote, dnode.Diff, 4);
+            var output = new UnifiedDiffOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoRemote, (Diff)dnode.Diff, 4);
 
             DiffItem currentDiffItem = null;
 

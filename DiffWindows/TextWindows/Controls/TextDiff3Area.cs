@@ -41,7 +41,7 @@ namespace DiffWindows.TextWindows.Controls
 
         protected override bool IsDiffAvailable()
         {
-            return Node.Diff3 != null;
+            return Node.Diff3 is Diff3;
         }
 
         protected override void PreloadFileToMemory()
@@ -51,16 +51,18 @@ namespace DiffWindows.TextWindows.Controls
                 Lines = new List<string>();
             } else
             {
+                var diff = (Diff3)Node.Diff3;
+
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        Lines = new List<string>(Node.Diff3.FilesLineCount.Local);
+                        Lines = new List<string>(diff.FilesLineCount.Local);
                         break;
                     case TargetFileEnum.Remote:
-                        Lines = new List<string>(Node.Diff3.FilesLineCount.Remote);
+                        Lines = new List<string>(diff.FilesLineCount.Remote);
                         break;
                     case TargetFileEnum.Base:
-                        Lines = new List<string>(Node.Diff3.FilesLineCount.Base);
+                        Lines = new List<string>(diff.FilesLineCount.Base);
                         break;
                 }
             }
@@ -240,17 +242,17 @@ namespace DiffWindows.TextWindows.Controls
             switch (target)
             {
                 case TargetFileEnum.Local:
-                    return Node.Diff3.Items
+                    return ((Diff3)Node.Diff3).Items
                         .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.LocalAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Remote:
-                    return Node.Diff3.Items
+                    return ((Diff3)Node.Diff3).Items
                         .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.RemoteAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.RemoteLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Base:
-                    return Node.Diff3.Items
+                    return ((Diff3)Node.Diff3).Items
                         .SkipWhile(diffItem => diffItem.BaseLineStart + diffItem.BaseAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.BaseLineStart <= EndsOnLine);
             }
@@ -303,7 +305,7 @@ namespace DiffWindows.TextWindows.Controls
                     OnDiffChange();
 
                 if (OnDiffSelected != null)
-                    OnDiffSelected(Array.FindIndex(Node.Diff3.Items, item => item == diffItem));
+                    OnDiffSelected(Array.FindIndex(((Diff3)Node.Diff3).Items, item => item == diffItem));
 
                 break;
             }

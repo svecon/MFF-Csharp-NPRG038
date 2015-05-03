@@ -17,7 +17,7 @@ namespace DiffWindows.TextWindows.Controls.LineMarkers
             if (Node.Diff == null)
                 yield break;
 
-            foreach (DiffItem diffItem in Node.Diff.Items)
+            foreach (DiffItem diffItem in ((Diff)Node.Diff).Items)
             {
                 if (diffItem.LocalLineStart + diffItem.LocalAffectedLines < PositionToLine(LeftOffset)
                     && diffItem.RemoteLineStart + diffItem.RemoteAffectedLines < PositionToLine(RightOffset))

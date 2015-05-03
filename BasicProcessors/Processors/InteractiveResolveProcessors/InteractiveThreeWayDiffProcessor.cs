@@ -57,7 +57,7 @@ namespace BasicProcessors.Processors.InteractiveResolveProcessors
                 defaultFilePreferedAction = DefaultPreferedAction;
             }
 
-            var output = new Diff3NormalOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoBase, (FileInfo)node.InfoRemote, dnode.Diff3);
+            var output = new Diff3NormalOutput((FileInfo)node.InfoLocal, (FileInfo)node.InfoBase, (FileInfo)node.InfoRemote, (Diff3)dnode.Diff3);
 
             Diff3Item currentDiffItem = null;
 

@@ -7,6 +7,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.DiffWindow;
+using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 using DiffWindows.FolderWindows;
 using DiffWindows.Menus;
@@ -78,7 +79,7 @@ namespace DiffWindows.TextWindows
 
             localText.OnVerticalScrollSynchronization += offset =>
             {
-                int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
+                int difference = DiffNode.Diff == null ? 0 : ((Diff)DiffNode.Diff).Items
                     .TakeWhile(diffItem => diffItem.LocalLineStart <= localText.StartsOnLine)
                     .Sum(diffItem => diffItem.RemoteAffectedLines - diffItem.LocalAffectedLines);
 
@@ -87,7 +88,7 @@ namespace DiffWindows.TextWindows
 
             remoteText.OnVerticalScrollSynchronization += offset =>
             {
-                int difference = DiffNode.Diff == null ? 0 : DiffNode.Diff.Items
+                int difference = DiffNode.Diff == null ? 0 : ((Diff)DiffNode.Diff).Items
                     .TakeWhile(diffItem => diffItem.RemoteLineStart <= remoteText.StartsOnLine)
                     .Sum(diffItem => diffItem.LocalAffectedLines - diffItem.RemoteAffectedLines);
 
@@ -158,8 +159,8 @@ namespace DiffWindows.TextWindows
 
         private void ScrollToLine(int diffIndex)
         {
-            localText.ScrollToLine(DiffNode.Diff.Items[diffIndex].LocalLineStart - 1);
-            remoteText.ScrollToLine(DiffNode.Diff.Items[diffIndex].RemoteLineStart - 1);
+            localText.ScrollToLine(((Diff)DiffNode.Diff).Items[diffIndex].LocalLineStart - 1);
+            remoteText.ScrollToLine(((Diff)DiffNode.Diff).Items[diffIndex].RemoteLineStart - 1);
         }
 
         #region Custom ChangesMenu commands
@@ -175,7 +176,7 @@ namespace DiffWindows.TextWindows
         {
             return new CommandBinding(command,
                 (sender, args) => { ScrollToLine(++CurrentDiff); },
-                (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff < DiffNode.Diff.Items.Length - 1; });
+                (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff < ((Diff)DiffNode.Diff).Items.Length - 1; });
         }
 
         public CommandBinding RecalculateCommandBinding(ICommand command)

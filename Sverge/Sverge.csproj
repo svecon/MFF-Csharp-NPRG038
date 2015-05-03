@@ -125,6 +125,10 @@
       <Project>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</Project>
       <Name>CoreLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
+      <Project>{0525DB80-454E-4D32-87AE-4A48972877FE}</Project>
+      <Name>DiffIntegration</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\close.png">

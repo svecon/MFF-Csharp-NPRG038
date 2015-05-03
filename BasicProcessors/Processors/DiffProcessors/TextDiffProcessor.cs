@@ -6,6 +6,7 @@ using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using DiffAlgorithm;
 using DiffAlgorithm.ThreeWay;
+using DiffAlgorithm.TwoWay;
 using DiffIntegration.DiffFilesystemTree;
 
 namespace BasicProcessors.Processors.DiffProcessors
@@ -47,7 +48,7 @@ namespace BasicProcessors.Processors.DiffProcessors
             if (dnode == null)
                 return;
 
-            var diff = new DiffRunHelper(TrimSpace, IgnoreWhitespace, IgnoreCase);
+            var diffRunHelper = new DiffRunHelper(TrimSpace, IgnoreWhitespace, IgnoreCase);
 
             switch ((LocationCombinationsEnum)node.Location)
             {
@@ -58,31 +59,33 @@ namespace BasicProcessors.Processors.DiffProcessors
                 case LocationCombinationsEnum.OnLocalRemote:
                     if (node.Mode == DiffModeEnum.TwoWay)
                     {
-                        dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+                        dnode.Diff = diffRunHelper.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
                     }
                     break;
                 default:
                     switch (node.Mode)
                     {
                         case DiffModeEnum.TwoWay:
-                            dnode.Diff = diff.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+                            dnode.Diff = diffRunHelper.DiffFiles((FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
                             break;
                         case DiffModeEnum.ThreeWay:
-                            dnode.Diff3 = diff.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
+                            dnode.Diff3 = diffRunHelper.DiffFiles((FileInfo)dnode.InfoBase, (FileInfo)dnode.InfoLocal, (FileInfo)dnode.InfoRemote);
                             break; // do nothing
                     }
                     break;
             }
 
-            if (dnode.Diff != null && dnode.Diff.Items.Length == 0)
+            Diff diff = dnode.Diff as Diff;
+            if (diff != null && diff.Items.Length == 0)
                 dnode.Differences = DifferencesStatusEnum.AllSame;
 
-            if (dnode.Diff3 != null && dnode.Diff3.Items.Length == 0)
+            Diff3 diff3 = dnode.Diff3 as Diff3;
+            if (diff3 != null && diff3.Items.Length == 0)
                 dnode.Differences = DifferencesStatusEnum.AllSame;
 
             if (dnode.Diff3 == null) return;
 
-            foreach (Diff3Item diff3Item in dnode.Diff3.Items
+            foreach (Diff3Item diff3Item in ((Diff3)dnode.Diff3).Items
                 .Where(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent))
             {
                 dnode.Status = NodeStatusEnum.IsConflicting;

@@ -29,7 +29,7 @@ namespace DiffWindows.TextWindows.Controls.LineMarkers
             if (type == MarkerTypeEnum.BaseRight && !Node.IsInLocation(LocationCombinationsEnum.OnBaseRemote))
                 yield break;
 
-            foreach (Diff3Item diffItem in Node.Diff3.Items)
+            foreach (Diff3Item diffItem in ((Diff3)Node.Diff3).Items)
             {
                 if (type == MarkerTypeEnum.BaseLeft)
                 {
