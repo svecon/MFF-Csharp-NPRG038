@@ -125,20 +125,6 @@
       <Project>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</Project>
       <Name>CoreLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DiffAlgorithm\DiffAlgorithm.csproj">
-      <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
-      <Name>DiffAlgorithm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
-      <Project>{0525DB80-454E-4D32-87AE-4A48972877FE}</Project>
-      <Name>DiffIntegration</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DiffWindows\DiffWindows.csproj">
-      <Project>{D39D9ECE-1B05-4877-A197-949A0623FD3C}</Project>
-      <Name>DiffWindows</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\close.png">

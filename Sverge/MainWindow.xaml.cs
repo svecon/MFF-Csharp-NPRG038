@@ -12,7 +12,6 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 using CoreLibrary.Plugins.Processors;
 using DiffIntegration.DiffFilesystemTree;
-using Sverge.DiffWindows;
 
 namespace Sverge
 {

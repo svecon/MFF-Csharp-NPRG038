@@ -9,6 +9,6 @@ namespace CoreLibrary.Plugins.DiffWindow
 
         void OnDiffComplete(Task task);
 
-        void OnMergeComplete(Task t);
+        void OnMergeComplete(Task task);
     }
 }
