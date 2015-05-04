@@ -44,8 +44,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilesystemDiffTree\DiffCrawler.cs" />
+    <Compile Include="FilesystemDiffTree\DirDiffNode.cs" />
+    <Compile Include="FilesystemDiffTree\FileDiffNode.cs" />
+    <Compile Include="FilesystemDiffTree\FilesystemDiffTree.cs" />
     <Compile Include="Enums\PreferedActionEnum.cs" />
     <Compile Include="Enums\PreferedActionThreeWayEnum.cs" />
+    <Compile Include="Helpers\PathHelper.cs" />
     <Compile Include="Helpers\TextFileChecker.cs" />
     <Compile Include="Helpers\ThreeWayDiffHelper.cs" />
     <Compile Include="Plugins\DiffWindow\DiffWindowLoader.cs" />

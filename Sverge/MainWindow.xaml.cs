@@ -8,10 +8,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CoreLibrary.Exceptions.NotFound;
+using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 using CoreLibrary.Plugins.Processors;
-using DiffIntegration.DiffFilesystemTree;
 
 namespace Sverge
 {
@@ -98,10 +98,10 @@ namespace Sverge
             {
                 if (args.Length == 2 && areArgsFiles > 0)
                 {
-                    diffTree = new DiffFileNode(args[0], args[1]);
+                    diffTree = new FileDiffNode(args[0], args[1]);
                 } else if (args.Length == 3 && areArgsFiles > 0)
                 {
-                    diffTree = new DiffFileNode(args[0], args[1], args[2]);
+                    diffTree = new FileDiffNode(args[0], args[1], args[2]);
                 } else if (args.Length == 2 && areArgsFiles == 0)
                 {
                     diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();

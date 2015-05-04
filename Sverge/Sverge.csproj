@@ -34,7 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -124,10 +123,6 @@
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
       <Project>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</Project>
       <Name>CoreLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiffIntegration\DiffIntegration.csproj">
-      <Project>{0525DB80-454E-4D32-87AE-4A48972877FE}</Project>
-      <Name>DiffIntegration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

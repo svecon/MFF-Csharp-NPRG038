@@ -4,12 +4,12 @@ using System.IO;
 using System.Reflection;
 using CoreLibrary.Exceptions;
 using CoreLibrary.Exceptions.NotFound;
+using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Plugins;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
-using DiffIntegration.DiffFilesystemTree;
 
 namespace SvergeConsole
 {
@@ -106,10 +106,10 @@ namespace SvergeConsole
             {
                 if (args.Length == 2 && areArgsFiles > 0)
                 {
-                    _diffTree = new DiffFileNode(args[0], args[1]);
+                    _diffTree = new FileDiffNode(args[0], args[1]);
                 } else if (args.Length == 3 && areArgsFiles > 0)
                 {
-                    _diffTree = new DiffFileNode(args[0], args[1], args[2]);
+                    _diffTree = new FileDiffNode(args[0], args[1], args[2]);
                 } else if (args.Length == 2 && areArgsFiles == 0)
                 {
                     _diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();

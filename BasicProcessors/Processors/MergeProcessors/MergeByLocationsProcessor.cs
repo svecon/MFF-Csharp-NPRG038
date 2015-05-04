@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
+using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
-using DiffIntegration.DiffFilesystemTree;
 
 namespace BasicProcessors.Processors.MergeProcessors
 {
@@ -19,7 +19,7 @@ namespace BasicProcessors.Processors.MergeProcessors
 
         protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
-            var diffNode = node as DiffFileNode;
+            var diffNode = node as FileDiffNode;
 
             if (diffNode == null)
                 return;

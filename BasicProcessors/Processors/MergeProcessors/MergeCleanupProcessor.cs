@@ -1,7 +1,7 @@
 ﻿using CoreLibrary.Enums;
+using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
-using DiffIntegration.DiffFilesystemTree;
 
 namespace BasicProcessors.Processors.MergeProcessors
 {
@@ -14,13 +14,13 @@ namespace BasicProcessors.Processors.MergeProcessors
 
         protected override void ProcessChecked(IFilesystemTreeFileNode node)
         {
-            var diffNode = node as DiffFileNode;
+            var diffNode = node as FileDiffNode;
 
             if (diffNode == null)
                 return;
 
             diffNode.Diff = null;
-            diffNode.Diff3 = null;
+            diffNode.Diff = null;
             diffNode.Differences = DifferencesStatusEnum.Initial;
             if (diffNode.InfoBase != null) diffNode.InfoBase.Refresh();
             if (diffNode.InfoLocal != null) diffNode.InfoLocal.Refresh();

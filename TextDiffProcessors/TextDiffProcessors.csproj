@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B74986F2-E4B6-47FE-A9F9-7C7C83465CCA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{243A732A-1C31-4A0B-B7A3-DA070A5821B9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SvergeConsole</RootNamespace>
-    <AssemblyName>SvergeConsole</AssemblyName>
+    <RootNamespace>TextDiffProcessors</RootNamespace>
+    <AssemblyName>TextDiffProcessors</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,22 +39,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrinterVisitor.cs" />
-    <Compile Include="Processors\ProcessorPrinter.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="DiffOutput\DiffChunk.cs" />
+    <Compile Include="DiffOutput\DiffOutputAbstract.cs" />
+    <Compile Include="DiffOutput\IDiffOutput.cs" />
+    <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
+    <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
+    <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
+    <Compile Include="DiffProcessors\CheckConflictsProcessor.cs" />
+    <Compile Include="DiffProcessors\TextDiffProcessor.cs" />
+    <Compile Include="InteractiveResolveProcessors\InteractiveThreeWayDiffProcessor.cs" />
+    <Compile Include="InteractiveResolveProcessors\InteractiveTwoWayDiffProcessor.cs" />
+    <Compile Include="MergeProcessors\MergeThreeWayProcessor.cs" />
+    <Compile Include="MergeProcessors\MergeTwoWayProcessor.cs" />
+    <Compile Include="MergeProcessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Processors\SettingsPrinter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
-      <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
+      <Project>{9D240F37-62CE-4E9D-9A17-90A1C3BF19D7}</Project>
       <Name>CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextDiffAlgorithm\TextDiffAlgorithm.csproj">
+      <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
+      <Name>TextDiffAlgorithm</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"
+echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)SvergeConsole\$(OutDir)plugins\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -15,7 +15,7 @@ namespace CoreLibrary.Plugins
 
             foreach (string file in Directory.GetFiles(path, "*.dll"))
             {
-                Assembly.LoadFile(file);
+                Assembly.LoadFrom(file);
             }
         }
     }
