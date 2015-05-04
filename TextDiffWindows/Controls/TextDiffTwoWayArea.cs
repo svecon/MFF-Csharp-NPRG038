@@ -8,40 +8,31 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
-using TextDiffAlgorithm.ThreeWay;
+using TextDiffAlgorithm.TwoWay;
 
 namespace TextDiffWindows.Controls
 {
-    class TextDiff3Area : TextAreaAbstract, IScrollInfo
+    class TextDiffTwoWayArea : TextAreaAbstract, IScrollInfo
     {
-        public enum TargetFileEnum { Local, Base, Remote }
-        private readonly TargetFileEnum target;
-
         public delegate void OnDiffChangeDelegate(); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
         public OnDiffChangeDelegate OnDiffChange;
 
         public delegate void OnDiffSelectedDelegate(int selected); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
         public OnDiffSelectedDelegate OnDiffSelected;
 
-        public TextDiff3Area(FileDiffNode node, TargetFileEnum targetFile)
+        public enum TargetFileEnum { Local, Remote }
+        private readonly TargetFileEnum target;
+
+        public TextDiffTwoWayArea(FileDiffNode node, TargetFileEnum targetFile)
             : base(node)
         {
             target = targetFile;
-
-            switch (target)
-            {
-                case TargetFileEnum.Local: Info = (FileInfo)Node.InfoLocal;
-                    break;
-                case TargetFileEnum.Remote: Info = (FileInfo)Node.InfoRemote;
-                    break;
-                case TargetFileEnum.Base: Info = (FileInfo)Node.InfoBase;
-                    break;
-            }
+            Info = (FileInfo)(target == TargetFileEnum.Local ? node.InfoLocal : node.InfoRemote);
         }
 
         protected override bool IsDiffAvailable()
         {
-            return Node.Diff is Diff3;
+            return Node.Diff is Diff;
         }
 
         protected override void PreloadFileToMemory()
@@ -51,20 +42,9 @@ namespace TextDiffWindows.Controls
                 Lines = new List<string>();
             } else
             {
-                var diff = (Diff3)Node.Diff;
-
-                switch (target)
-                {
-                    case TargetFileEnum.Local:
-                        Lines = new List<string>(diff.FilesLineCount.Local);
-                        break;
-                    case TargetFileEnum.Remote:
-                        Lines = new List<string>(diff.FilesLineCount.Remote);
-                        break;
-                    case TargetFileEnum.Base:
-                        Lines = new List<string>(diff.FilesLineCount.Base);
-                        break;
-                }
+                Lines = (target == TargetFileEnum.Local)
+                    ? new List<string>(((Diff)Node.Diff).FilesLineCount.Local)
+                    : new List<string>(((Diff)Node.Diff).FilesLineCount.Remote);
             }
 
             using (StreamReader reader = Info.OpenText())
@@ -124,23 +104,24 @@ namespace TextDiffWindows.Controls
 
             int textLineToBePrinted = StartsOnLine;
 
-            foreach (Diff3Item diffItem in VisibleDiffItems())
+            foreach (DiffItem diffItem in VisibleDiffItems())
             {
                 int diffStartLine = -1;
                 int diffAffectedLines = 0;
                 bool textDiscarded = false;
                 bool diffHovered = false;
-                Color diffColor = (diffItem.Differeces == DifferencesStatusEnum.AllDifferent) ? Colors.MediumVioletRed : Colors.MediumPurple;
+                Color diffColor = Colors.MediumPurple;
 
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        if (diffItem.BaseAffectedLines == 0 && diffItem.RemoteAffectedLines == 0)
+                        if (diffItem.RemoteAffectedLines == 0)
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
-                                   diffItem.PreferedAction != PreferedActionThreeWayEnum.ApplyLocal)
+
+                        if (diffItem.PreferedAction != PreferedActionTwoWayEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionTwoWayEnum.ApplyLocal)
                         {
                             textDiscarded = true;
                         }
@@ -150,33 +131,19 @@ namespace TextDiffWindows.Controls
 
                         break;
                     case TargetFileEnum.Remote:
-                        if (diffItem.BaseAffectedLines == 0 && diffItem.LocalAffectedLines == 0)
+                        if (diffItem.LocalAffectedLines == 0)
                         {
                             diffColor = Colors.LimeGreen;
                         }
-                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
-                                   diffItem.PreferedAction != PreferedActionThreeWayEnum.ApplyRemote)
+
+                        if (diffItem.PreferedAction != PreferedActionTwoWayEnum.Default &&
+                                   diffItem.PreferedAction != PreferedActionTwoWayEnum.ApplyRemote)
                         {
                             textDiscarded = true;
                         }
 
                         diffStartLine = diffItem.RemoteLineStart;
                         diffAffectedLines = diffItem.RemoteAffectedLines;
-
-                        break;
-                    case TargetFileEnum.Base:
-                        if (diffItem.LocalAffectedLines == 0 && diffItem.RemoteAffectedLines == 0)
-                        {
-                            diffColor = Colors.LimeGreen;
-                        }
-                        if (diffItem.PreferedAction != PreferedActionThreeWayEnum.Default &&
-                                    diffItem.PreferedAction != PreferedActionThreeWayEnum.RevertToBase)
-                        {
-                            textDiscarded = true;
-                        }
-
-                        diffStartLine = diffItem.BaseLineStart;
-                        diffAffectedLines = diffItem.BaseAffectedLines;
 
                         break;
                 }
@@ -186,16 +153,16 @@ namespace TextDiffWindows.Controls
                     diffColor = Colors.LightSlateGray;
                 }
 
-                Brush b = new SolidColorBrush(diffColor) { Opacity = .33 };
+                Brush diffBackgroundBrush = new SolidColorBrush(diffColor) { Opacity = .33 };
 
                 if (diffStartLine <= PositionToLine(MouseArgs) && PositionToLine(MouseArgs) < diffStartLine + diffAffectedLines)
                 {
                     diffHovered = true;
-                    b.Opacity = 1;
+                    diffBackgroundBrush.Opacity = 1;
                     Cursor = Cursors.Hand;
                 }
 
-                dc.DrawRectangle(b, null, new Rect(new Point(BORDER_SIZE, PositionY(diffStartLine)), new Size(ActualWidth - 2 * BORDER_SIZE, LineHeight * diffAffectedLines)));
+                dc.DrawRectangle(diffBackgroundBrush, null, new Rect(new Point(BORDER_SIZE, PositionY(diffStartLine)), new Size(ActualWidth, LineHeight * diffAffectedLines)));
 
                 DrawHorizontalLine(dc, PositionY(diffStartLine), 0.0, ActualWidth, DiffLinePen);
                 DrawHorizontalLine(dc, PositionY(diffStartLine + diffAffectedLines), 0.0, ActualWidth, DiffLinePen);
@@ -232,39 +199,34 @@ namespace TextDiffWindows.Controls
 
         #endregion
 
-        private IEnumerable<Diff3Item> VisibleDiffItems()
+        private IEnumerable<DiffItem> VisibleDiffItems()
         {
-            if (!IsDiffAvailable())
+            if (Node.Diff == null)
             {
-                return Enumerable.Empty<Diff3Item>();
+                return Enumerable.Empty<DiffItem>();
             }
 
             switch (target)
             {
                 case TargetFileEnum.Local:
-                    return ((Diff3)Node.Diff).Items
+                    return ((Diff)Node.Diff).Items
                         .SkipWhile(diffItem => diffItem.LocalLineStart + diffItem.LocalAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.LocalLineStart <= EndsOnLine);
 
                 case TargetFileEnum.Remote:
-                    return ((Diff3)Node.Diff).Items
+                    return ((Diff)Node.Diff).Items
                         .SkipWhile(diffItem => diffItem.RemoteLineStart + diffItem.RemoteAffectedLines < StartsOnLine)
                         .TakeWhile(diffItem => diffItem.RemoteLineStart <= EndsOnLine);
-
-                case TargetFileEnum.Base:
-                    return ((Diff3)Node.Diff).Items
-                        .SkipWhile(diffItem => diffItem.BaseLineStart + diffItem.BaseAffectedLines < StartsOnLine)
-                        .TakeWhile(diffItem => diffItem.BaseLineStart <= EndsOnLine);
             }
 
-            return Enumerable.Empty<Diff3Item>();
+            return Enumerable.Empty<DiffItem>();
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
 
-            foreach (Diff3Item diffItem in VisibleDiffItems())
+            foreach (DiffItem diffItem in VisibleDiffItems())
             {
                 int diffStartLine = -1;
                 int diffAffectedLines = 0;
@@ -279,10 +241,6 @@ namespace TextDiffWindows.Controls
                         diffStartLine = diffItem.RemoteLineStart;
                         diffAffectedLines = diffItem.RemoteAffectedLines;
                         break;
-                    case TargetFileEnum.Base:
-                        diffStartLine = diffItem.BaseLineStart;
-                        diffAffectedLines = diffItem.BaseAffectedLines;
-                        break;
                 }
 
                 if (diffStartLine > PositionToLine(e) || PositionToLine(e) >= diffStartLine + diffAffectedLines)
@@ -291,13 +249,10 @@ namespace TextDiffWindows.Controls
                 switch (target)
                 {
                     case TargetFileEnum.Local:
-                        diffItem.PreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
+                        diffItem.PreferedAction = PreferedActionTwoWayEnum.ApplyLocal;
                         break;
                     case TargetFileEnum.Remote:
-                        diffItem.PreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
-                        break;
-                    case TargetFileEnum.Base:
-                        diffItem.PreferedAction = PreferedActionThreeWayEnum.RevertToBase;
+                        diffItem.PreferedAction = PreferedActionTwoWayEnum.ApplyRemote;
                         break;
                 }
 
@@ -305,7 +260,7 @@ namespace TextDiffWindows.Controls
                     OnDiffChange();
 
                 if (OnDiffSelected != null)
-                    OnDiffSelected(Array.FindIndex(((Diff3)Node.Diff).Items, item => item == diffItem));
+                    OnDiffSelected(Array.FindIndex(((Diff)Node.Diff).Items, item => item == diffItem));
 
                 break;
             }

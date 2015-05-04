@@ -17,16 +17,16 @@ namespace DirectoryDiffWindows
     using AN = IFilesystemTreeAbstractNode;
 
     /// <summary>
-    /// Interaction logic for FolderDiffThreeWay.xaml
+    /// Interaction logic for DirectoryDiffThreeWay.xaml
     /// </summary>
     [DiffWindow(1100)]
-    public partial class FolderDiffThreeWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu, IMergeMenu
+    public partial class DirectoryDiffThreeWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu, IMergeMenu
     {
         public FilesystemDiffTree DiffNode { get; private set; }
         private readonly IDiffWindowManager manager;
 
         public static readonly DependencyProperty LocalFolderLocationProperty
-            = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffThreeWay));
+            = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
         public string LocalFolderLocation
         {
@@ -35,7 +35,7 @@ namespace DirectoryDiffWindows
         }
 
         public static readonly DependencyProperty RemoteFolderLocationProperty
-            = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(FolderDiffThreeWay));
+            = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
         public string RemoteFolderLocation
         {
@@ -44,7 +44,7 @@ namespace DirectoryDiffWindows
         }
 
         public static readonly DependencyProperty BaseFolderLocationProperty
-            = DependencyProperty.Register("BaseFolderLocation", typeof(string), typeof(FolderDiffThreeWay));
+            = DependencyProperty.Register("BaseFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
         public string BaseFolderLocation
         {
@@ -56,7 +56,7 @@ namespace DirectoryDiffWindows
 
         private bool isBusy = false;
 
-        public FolderDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public DirectoryDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
             this.manager = manager;
@@ -114,9 +114,9 @@ namespace DirectoryDiffWindows
 
         private void FolderDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            LocalFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLabel);
-            RemoteFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathLabel);
-            BaseFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoBase.FullName, FilePathLabel);
+            LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLabel);
+            RemoteFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathLabel);
+            BaseFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoBase.FullName, FilePathLabel);
         }
 
         #region Iterating over TreeView

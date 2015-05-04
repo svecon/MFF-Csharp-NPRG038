@@ -27,9 +27,9 @@ namespace TextDiffWindows
 
         public int CurrentDiff { get; internal set; }
 
-        private readonly TextDiff3Area localText;
-        private readonly TextDiff3Area baseText;
-        private readonly TextDiff3Area remoteText;
+        private readonly TextDiffThreeWayArea localText;
+        private readonly TextDiffThreeWayArea baseText;
+        private readonly TextDiffThreeWayArea remoteText;
         private readonly LineMarkersThreeWayElement lineMarkersLeft;
         private readonly LineMarkersThreeWayElement lineMarkersRight;
 
@@ -73,9 +73,9 @@ namespace TextDiffWindows
 
             InitializeComponent();
 
-            localText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Local);
-            remoteText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Remote);
-            baseText = new TextDiff3Area(DiffNode, TextDiff3Area.TargetFileEnum.Base);
+            localText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Local);
+            remoteText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Remote);
+            baseText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Base);
 
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
@@ -226,13 +226,13 @@ namespace TextDiffWindows
         private void TextDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
-                ? PathHelper.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
+                ? PathShortener.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
             RemoteFileLocation = DiffNode.IsInLocation(LocationEnum.OnRemote)
-                ? PathHelper.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
+                ? PathShortener.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
             BaseFileLocation = DiffNode.IsInLocation(LocationEnum.OnBase)
-                ? PathHelper.TrimPath(DiffNode.InfoBase.FullName, FilePathLabel)
+                ? PathShortener.TrimPath(DiffNode.InfoBase.FullName, FilePathLabel)
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
         }
 

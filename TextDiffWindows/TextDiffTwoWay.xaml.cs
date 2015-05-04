@@ -23,8 +23,8 @@ namespace TextDiffWindows
     {
         private readonly IDiffWindowManager manager;
         public FileDiffNode DiffNode { get; private set; }
-        private readonly TextDiffArea localText;
-        private readonly TextDiffArea remoteText;
+        private readonly TextDiffTwoWayArea localText;
+        private readonly TextDiffTwoWayArea remoteText;
         private readonly LineMarkersTwoWayElement lineMarkers;
         public int CurrentDiff { get; internal set; }
 
@@ -54,8 +54,8 @@ namespace TextDiffWindows
 
             InitializeComponent();
 
-            localText = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Local);
-            remoteText = new TextDiffArea(DiffNode, TextDiffArea.TargetFileEnum.Remote);
+            localText = new TextDiffTwoWayArea(DiffNode, TextDiffTwoWayArea.TargetFileEnum.Local);
+            remoteText = new TextDiffTwoWayArea(DiffNode, TextDiffTwoWayArea.TargetFileEnum.Remote);
 
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
@@ -149,10 +149,10 @@ namespace TextDiffWindows
         private void TextDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
-                ? PathHelper.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
+                ? PathShortener.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
             RemoteFileLocation = DiffNode.IsInLocation(LocationEnum.OnRemote)
-                ? PathHelper.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
+                ? PathShortener.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
         }
 

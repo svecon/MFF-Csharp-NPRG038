@@ -16,17 +16,17 @@ namespace DirectoryDiffWindows
     using AN = IFilesystemTreeAbstractNode;
 
     /// <summary>
-    /// Interaction logic for FolderDiffTwoWay.xaml
+    /// Interaction logic for DirectoryDiffTwoWay.xaml
     /// </summary>
     [DiffWindow(1000)]
-    public partial class FolderDiffTwoWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu
+    public partial class DirectoryDiffTwoWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu
     {
         public FilesystemDiffTree DiffNode { get; private set; }
         private readonly IDiffWindowManager manager;
         private AN selectedNode;
         private bool isBusy = true;
 
-        public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
+        public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
 
         public string LocalFolderLocation
         {
@@ -37,7 +37,7 @@ namespace DirectoryDiffWindows
             set { SetValue(LocalFolderLocationProperty, value); }
         }
 
-        public static readonly DependencyProperty RemoteFolderLocationProperty = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(FolderDiffTwoWay));
+        public static readonly DependencyProperty RemoteFolderLocationProperty = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
 
         public string RemoteFolderLocation
         {
@@ -45,7 +45,7 @@ namespace DirectoryDiffWindows
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
-        public FolderDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public DirectoryDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
             this.manager = manager;
@@ -112,8 +112,8 @@ namespace DirectoryDiffWindows
 
         private void FolderDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            LocalFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLabel);
-            RemoteFolderLocation = PathHelper.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathLabel);
+            LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLabel);
+            RemoteFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathLabel);
         }
 
         #region Iterating over TreeView

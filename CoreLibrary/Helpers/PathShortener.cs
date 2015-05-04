@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace CoreLibrary.Helpers
 {
-    public static class PathHelper
+    public static class PathShortener
     {
         public static string TrimPath(string path, Label filePathLabel, string ellipsis = "...")
         {

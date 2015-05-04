@@ -52,11 +52,11 @@
     <Compile Include="Converters\Diff3ToBackgroundConverter.cs" />
     <Compile Include="Converters\StatusConflictToColorConverter.cs" />
     <Compile Include="Converters\TimestampConverter.cs" />
-    <Compile Include="FolderDiffThreeWay.xaml.cs">
-      <DependentUpon>FolderDiffThreeWay.xaml</DependentUpon>
+    <Compile Include="DirectoryDiffThreeWay.xaml.cs">
+      <DependentUpon>DirectoryDiffThreeWay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FolderDiffTwoWay.xaml.cs">
-      <DependentUpon>FolderDiffTwoWay.xaml</DependentUpon>
+    <Compile Include="DirectoryDiffTwoWay.xaml.cs">
+      <DependentUpon>DirectoryDiffTwoWay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DifferencesTextConverter.cs" />
     <Compile Include="Converters\DiffToBackgroundConverter.cs" />
@@ -69,11 +69,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="FolderDiffThreeWay.xaml">
+    <Page Include="DirectoryDiffThreeWay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FolderDiffTwoWay.xaml">
+    <Page Include="DirectoryDiffTwoWay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
