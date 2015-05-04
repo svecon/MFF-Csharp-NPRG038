@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DiffWindows.TextWindows.Controls
+namespace TextDiffWindows.Controls
 {
     abstract class PositioningAreaAbstract : FrameworkElement
     {

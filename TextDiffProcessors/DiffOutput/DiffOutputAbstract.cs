@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace DiffIntegration.DiffOutput
+namespace TextDiffProcessors.DiffOutput
 {
     /// <summary>
     /// Base implementation for 2-way diff outputs.

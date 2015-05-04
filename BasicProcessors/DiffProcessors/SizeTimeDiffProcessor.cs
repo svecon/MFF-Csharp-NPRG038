@@ -6,7 +6,7 @@ using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.

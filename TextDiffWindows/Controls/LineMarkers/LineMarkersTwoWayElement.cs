@@ -2,7 +2,7 @@
 using CoreLibrary.FilesystemDiffTree;
 using TextDiffAlgorithm.TwoWay;
 
-namespace DiffWindows.TextWindows.Controls.LineMarkers
+namespace TextDiffWindows.Controls.LineMarkers
 {
     class LineMarkersTwoWayElement : LineMarkersElementAbstract<DiffItem>
     {

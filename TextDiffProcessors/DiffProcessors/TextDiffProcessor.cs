@@ -9,7 +9,7 @@ using TextDiffAlgorithm;
 using TextDiffAlgorithm.ThreeWay;
 using TextDiffAlgorithm.TwoWay;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace TextDiffProcessors.DiffProcessors
 {
     /// <summary>
     /// TextDiffProcessor calculates diff between files that we know are different

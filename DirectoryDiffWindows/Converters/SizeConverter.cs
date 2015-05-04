@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace DiffWindows.FolderWindows.Converters
+namespace DirectoryDiffWindows.Converters
 {
     [ValueConversion(typeof(object), typeof(string))]
     class SizeConverter : MarkupExtension, IValueConverter

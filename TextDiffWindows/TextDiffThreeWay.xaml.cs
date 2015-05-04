@@ -3,18 +3,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using BasicMenus.ChangesMenu;
+using BasicMenus.MergeMenu;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.DiffWindow;
-using DiffWindows.FolderWindows;
-using DiffWindows.Menus;
-using DiffWindows.TextWindows.Controls;
-using DiffWindows.TextWindows.Controls.LineMarkers;
 using TextDiffAlgorithm.ThreeWay;
+using TextDiffWindows.Controls;
+using TextDiffWindows.Controls.LineMarkers;
 
-namespace DiffWindows.TextWindows
+namespace TextDiffWindows
 {
     /// <summary>
     /// Interaction logic for TextDiffThreeWay.xaml

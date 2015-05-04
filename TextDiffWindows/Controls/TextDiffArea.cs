@@ -10,7 +10,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using TextDiffAlgorithm.TwoWay;
 
-namespace DiffWindows.TextWindows.Controls
+namespace TextDiffWindows.Controls
 {
     class TextDiffArea : TextAreaAbstract, IScrollInfo
     {

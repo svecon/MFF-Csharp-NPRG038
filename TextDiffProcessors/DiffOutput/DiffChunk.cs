@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TextDiffAlgorithm.TwoWay;
 
-namespace DiffIntegration.DiffOutput
+namespace TextDiffProcessors.DiffOutput
 {
     /// <summary>
     /// DiffChunk is a container for diff changes that are very near to each other (in terms of line numbers).

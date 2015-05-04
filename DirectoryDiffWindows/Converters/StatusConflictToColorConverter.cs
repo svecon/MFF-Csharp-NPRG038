@@ -5,7 +5,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using CoreLibrary.Enums;
 
-namespace DiffWindows.FolderWindows.Converters
+namespace DirectoryDiffWindows.Converters
 {
     class StatusConflictToColorConverter : MarkupExtension, IMultiValueConverter
     {

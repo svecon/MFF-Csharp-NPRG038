@@ -4,9 +4,8 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using CoreLibrary.Enums;
-using DirectoryDiffWindows;
 
-namespace DiffWindows.FolderWindows.Converters
+namespace DirectoryDiffWindows.Converters
 {
     class Differences3TextConverter : MarkupExtension, IMultiValueConverter
     {

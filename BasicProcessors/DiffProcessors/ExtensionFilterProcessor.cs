@@ -5,7 +5,7 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
     /// Filteres files by an extension or by an extension type/group.

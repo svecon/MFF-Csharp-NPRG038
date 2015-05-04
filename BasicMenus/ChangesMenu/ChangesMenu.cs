@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using BasicMenus;
 using CoreLibrary.Plugins.DiffWindow;
 
-namespace DiffWindows.Menus
+namespace BasicMenus.ChangesMenu
 {
     [DiffWindowMenu(100)]
     public class ChangesMenu : IDiffWindowMenu

@@ -4,7 +4,7 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace BasicProcessors.Processors.MergeProcessors
+namespace TextDiffProcessors.MergeProcessors
 {
     /// <summary>
     /// This processor synchronizes two folders based on chosen method.

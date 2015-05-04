@@ -5,10 +5,10 @@ using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
-using DiffIntegration.DiffOutput.TwoWay;
 using TextDiffAlgorithm.TwoWay;
+using TextDiffProcessors.DiffOutput.TwoWay;
 
-namespace BasicProcessors.Processors.InteractiveResolveProcessors
+namespace TextDiffProcessors.InteractiveResolveProcessors
 {
     /// <summary>
     /// InteractiveTwoWayDiffProcessor is a console interface for choosing which version 

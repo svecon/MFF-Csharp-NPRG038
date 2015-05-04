@@ -5,7 +5,7 @@ using System.Text;
 using CoreLibrary.Enums;
 using TextDiffAlgorithm.ThreeWay;
 
-namespace DiffIntegration.DiffOutput.ThreeWay
+namespace TextDiffProcessors.DiffOutput.ThreeWay
 {
     /// <summary>
     /// Prints differences between 3 files in Diff Normal Output.

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using CoreLibrary.FilesystemDiffTree;
 
-namespace DiffWindows.TextWindows.Controls.LineMarkers
+namespace TextDiffWindows.Controls.LineMarkers
 {
     abstract class LineMarkersElementAbstract<TU> : PositioningAreaAbstract
     {

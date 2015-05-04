@@ -6,7 +6,7 @@ using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.ThreeWay;
 
-namespace BasicProcessors.Processors.MergeProcessors
+namespace TextDiffProcessors.MergeProcessors
 {
     /// <summary>
     /// Processor for merging 3-way diffed files.

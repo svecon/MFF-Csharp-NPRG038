@@ -6,7 +6,7 @@ using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.

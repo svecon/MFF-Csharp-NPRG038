@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using BasicMenus.ChangesMenu;
 using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.DiffWindow;
-using DiffWindows.Menus;
 
-namespace DiffWindows.FolderWindows
+namespace DirectoryDiffWindows
 {
     using FN = IFilesystemTreeFileNode;
     using AN = IFilesystemTreeAbstractNode;

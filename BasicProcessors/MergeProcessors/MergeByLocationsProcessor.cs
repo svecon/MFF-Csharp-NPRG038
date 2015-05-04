@@ -5,7 +5,7 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace BasicProcessors.Processors.MergeProcessors
+namespace BasicProcessors.MergeProcessors
 {
     [Processor(ProcessorTypeEnum.Merge, 10, DiffModeEnum.ThreeWay)]
     public class MergeByLocationsProcessor : ProcessorAbstract

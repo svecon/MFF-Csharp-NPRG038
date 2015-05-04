@@ -3,7 +3,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using TextDiffAlgorithm.ThreeWay;
 
-namespace DiffWindows.TextWindows.Controls.LineMarkers
+namespace TextDiffWindows.Controls.LineMarkers
 {
     class LineMarkersThreeWayElement : LineMarkersElementAbstract<Diff3Item>
     {

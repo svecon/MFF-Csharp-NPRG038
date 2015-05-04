@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CoreLibrary.FilesystemDiffTree;
 
-namespace DiffWindows.TextWindows.Controls
+namespace TextDiffWindows.Controls
 {
     abstract class TextAreaAbstract : PositioningAreaAbstract
     {

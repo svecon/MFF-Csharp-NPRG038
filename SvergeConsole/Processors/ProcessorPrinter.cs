@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using CoreLibrary.Plugins.Processors.Settings;
+using CoreLibrary.Plugins.Processors;
 
-namespace CoreLibrary.Plugins.Processors
+namespace SvergeConsole.Processors
 {
     /// <summary>
     /// Class for printing loaded processors and their corresponding settings.

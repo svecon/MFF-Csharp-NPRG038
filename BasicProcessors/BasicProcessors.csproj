@@ -39,15 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Processors\DiffProcessors\BinaryDiffProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\CleanupProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\CsharpSourcesFilterProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\ExtensionFilterProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\FileTypeProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\RegexFilterProcessor.cs" />
-    <Compile Include="Processors\DiffProcessors\SizeTimeDiffProcessor.cs" />
-    <Compile Include="Processors\MergeProcessors\MergeByLocationsProcessor.cs" />
-    <Compile Include="Processors\MergeProcessors\MergeCleanupProcessor.cs" />
+    <Compile Include="DiffProcessors\BinaryDiffProcessor.cs" />
+    <Compile Include="DiffProcessors\CleanupProcessor.cs" />
+    <Compile Include="DiffProcessors\CsharpSourcesFilterProcessor.cs" />
+    <Compile Include="DiffProcessors\ExtensionFilterProcessor.cs" />
+    <Compile Include="DiffProcessors\FileTypeProcessor.cs" />
+    <Compile Include="DiffProcessors\RegexFilterProcessor.cs" />
+    <Compile Include="DiffProcessors\SizeTimeDiffProcessor.cs" />
+    <Compile Include="MergeProcessors\MergeByLocationsProcessor.cs" />
+    <Compile Include="MergeProcessors\MergeCleanupProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

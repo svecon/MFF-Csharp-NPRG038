@@ -3,7 +3,7 @@ using CoreLibrary.FilesystemTree;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
     /// Filter for C# source codes (manually typed ones).

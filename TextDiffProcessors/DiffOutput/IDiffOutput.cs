@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace DiffIntegration.DiffOutput
+namespace TextDiffProcessors.DiffOutput
 {
     /// <summary>
     /// Interface for output differs.

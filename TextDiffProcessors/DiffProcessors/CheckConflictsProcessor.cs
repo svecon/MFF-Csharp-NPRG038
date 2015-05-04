@@ -3,7 +3,7 @@ using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 
-namespace BasicProcessors.Processors.DiffProcessors
+namespace TextDiffProcessors.DiffProcessors
 {
     [Processor(ProcessorTypeEnum.Diff, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CheckConflictsProcessor : ProcessorAbstract

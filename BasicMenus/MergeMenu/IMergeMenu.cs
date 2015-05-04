@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace DiffWindows.Menus
+namespace BasicMenus.MergeMenu
 {
     public interface IMergeMenu
     {

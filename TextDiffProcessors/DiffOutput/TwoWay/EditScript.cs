@@ -2,7 +2,7 @@
 using System.IO;
 using TextDiffAlgorithm.TwoWay;
 
-namespace DiffIntegration.DiffOutput.TwoWay
+namespace TextDiffProcessors.DiffOutput.TwoWay
 {
     /// <summary>
     /// Processor for printing out edit script between two files.

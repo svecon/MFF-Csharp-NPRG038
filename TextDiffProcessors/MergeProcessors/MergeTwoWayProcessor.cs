@@ -6,7 +6,7 @@ using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.TwoWay;
 
-namespace BasicProcessors.Processors.MergeProcessors
+namespace TextDiffProcessors.MergeProcessors
 {
     /// <summary>
     /// Processor for merging 2-way diffed files.

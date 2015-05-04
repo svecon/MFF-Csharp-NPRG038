@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings;
 using CoreLibrary.Plugins.Processors.Settings.Types;
 
-namespace CoreLibrary.Plugins.Processors.Settings
+namespace SvergeConsole.Processors
 {
     /// <summary>
     /// Prints all available settings on a Console into a well-arranged column layout.

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using TextDiffAlgorithm.TwoWay;
 
-namespace DiffIntegration.DiffOutput.TwoWay
+namespace TextDiffProcessors.DiffOutput.TwoWay
 {
     /// <summary>
     /// Prints differences between two files in Unified Diff Output

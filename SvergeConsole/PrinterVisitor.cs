@@ -1,7 +1,9 @@
 ﻿using System;
 using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Visitors;
 
-namespace CoreLibrary.FilesystemTree.Visitors
+namespace SvergeConsole
 {
     /// <summary>
     /// Prints FilesystemTree on the console. 
