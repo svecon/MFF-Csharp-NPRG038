@@ -2,6 +2,6 @@
 {
     public enum ProcessorTypeEnum
     {
-        Diff, InteractiveResolving, Merge
+        Diff, Interactive, Merge
     }
 }

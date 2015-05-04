@@ -8,20 +8,20 @@ using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.TwoWay;
 using TextDiffProcessors.DiffOutput.TwoWay;
 
-namespace TextDiffProcessors.InteractiveResolveProcessors
+namespace TextDiffProcessors.InteractiveProcessors
 {
     /// <summary>
     /// InteractiveTwoWayDiffProcessor is a console interface for choosing which version 
     /// of the file (local / remote) you want to keep.
     /// </summary>
-    [Processor(ProcessorTypeEnum.InteractiveResolving, 100, DiffModeEnum.TwoWay)]
+    [Processor(ProcessorTypeEnum.Interactive, 100, DiffModeEnum.TwoWay)]
     public class InteractiveTwoWayDiffProcessor : ProcessorAbstract
     {
-        [Settings("Interactive console differ.", "interactive", "i")]
-        public bool IsEnabled = false;
+        //[Settings("Interactive console differ.", "interactive", "i")]
+        //public bool IsEnabled = false;
 
         [Settings("Show help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = true;
+        public bool ShowHelp = false;
 
         [Settings("Default action for interactive diff.", "2interactive-default")]
         public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
@@ -38,8 +38,8 @@ namespace TextDiffProcessors.InteractiveResolveProcessors
 
         protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            if (!IsEnabled)
-                return false;
+            //if (!IsEnabled)
+            //    return false;
 
             if (node.Differences == DifferencesStatusEnum.AllSame)
                 return false;
@@ -120,12 +120,12 @@ namespace TextDiffProcessors.InteractiveResolveProcessors
             {
                 case "R":
                     diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyLocal;
-                    input = input.Substring(0, 1);
+                    input = input.Substring(1);
                     break;
 
                 case "K":
                     diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyRemote;
-                    input = input.Substring(0, 1);
+                    input = input.Substring(1);
                     break;
             }
 

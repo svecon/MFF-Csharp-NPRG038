@@ -17,6 +17,7 @@ namespace SvergeConsole
 
     //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt" -m -o "C:\Users\svecon\Downloads\temp2" -i
     //"C:\Users\svecon\Downloads\temp" "C:\csharp\Merge" -m -o "C:\Users\svecon\Downloads\temp2" -C# -2d ApplyRemote
+    //"C:\Users\svecon\Downloads\temp" "C:\csharp\Merge" -o "C:\Users\svecon\Downloads\temp2" -C# -2d ApplyRemote
     class Program
     {
         [Settings("Show help about using the console.", "help", "h")]
@@ -78,7 +79,7 @@ namespace SvergeConsole
             #region Wrong number of arguments
             if (args.Length != 2 && args.Length != 3)
             {
-                Console.WriteLine("You need to specify 2 or 3 arguments.");
+                Console.WriteLine("You need to run the program with 2 or 3 paths as arguments.");
                 Console.WriteLine("Show more information using '--help' option.");
                 return;
             }
@@ -160,13 +161,16 @@ namespace SvergeConsole
             // print the filesystem tree
             _diffTree.Accept(new PrinterVisitor());
 
-            Console.WriteLine("\nDo you want to run merging processors? [Y/n]");
+            Console.WriteLine("\nDo you want to run interactive processors? [Y/n]");
             string input = Console.ReadLine();
-
             if (input == null || input.Trim().ToUpperInvariant() != "Y") return;
 
             // run interactive diffing
             _runner.RunInteractiveResolving(_diffTree);
+
+            Console.WriteLine("\nDo you want to run merging processors? [Y/n]");
+            input = Console.ReadLine();
+            if (input == null || input.Trim().ToUpperInvariant() != "Y") return;
 
             // run merging and syncing in parallel
             _runner.RunMerge(_diffTree).Wait();

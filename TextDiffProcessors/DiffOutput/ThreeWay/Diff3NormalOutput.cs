@@ -44,51 +44,63 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
                     // DifferencesStatusEnum.LocalRemoteSame has a different order of blocks
                     if (diffItem.Differeces == DifferencesStatusEnum.LocalRemoteSame)
                     {
-                        yield return PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
-                            ref m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local, false);
+                        foreach (string l in PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
+                            m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local, false))
+                            yield return l;
 
-                        yield return PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
-                            ref n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote);
+                        foreach (string l in PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
+                            n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote))
+                            yield return l;
 
-                        yield return PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
-                            ref o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base);
+                        foreach (string l in PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
+                            o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base))
+                            yield return l;
                     } else
                     {
-                        yield return PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
-                            ref m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local,
-                                diffItem.Differeces != DifferencesStatusEnum.BaseLocalSame);
+                        foreach (string l in PrintSection("1", diffItem.LocalLineStart, diffItem.LocalAffectedLines,
+                            m, localStream, Diff.FilesLineCount.Local, Diff.FilesEndsWithNewLine.Local,
+                                diffItem.Differeces != DifferencesStatusEnum.BaseLocalSame))
+                            yield return l;
 
-                        yield return PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
-                            ref o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base,
-                                diffItem.Differeces != DifferencesStatusEnum.BaseRemoteSame);
+                        foreach (string l in PrintSection("2", diffItem.BaseLineStart, diffItem.BaseAffectedLines,
+                            o, baseStream, Diff.FilesLineCount.Base, Diff.FilesEndsWithNewLine.Base,
+                                diffItem.Differeces != DifferencesStatusEnum.BaseRemoteSame))
+                            yield return l;
 
-                        yield return PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
-                            ref n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote);
+                        foreach (string l in PrintSection("3", diffItem.RemoteLineStart, diffItem.RemoteAffectedLines,
+                            n, remoteStream, Diff.FilesLineCount.Remote, Diff.FilesEndsWithNewLine.Remote))
+                            yield return l;
                     }
+
+                    m += diffItem.LocalAffectedLines;
+                    n += diffItem.RemoteAffectedLines;
+                    o += diffItem.BaseAffectedLines;
 
                     DiffHasEnded = true;
                 }
             }
         }
 
-        private string PrintSection(string fileMark, int lineStart, int affectedLines,
-            ref int c, TextReader stream,
-            int fileLinesCount, bool endsNewLine, bool printLines = true)
+        private IEnumerable<string> PrintSection(string fileMark, int lineStart, int affectedLines,
+            int c, TextReader stream, int fileLinesCount, bool endsNewLine, bool printLines = true)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(FileHeader(fileMark, lineStart, affectedLines));
+            yield return FileHeader(fileMark, lineStart, affectedLines);
 
-            if (printLines)
-                for (int p = 0; p < affectedLines; p++)
+            for (int p = 0; p < affectedLines; p++)
+            {
+                if (printLines)
                 {
-                    sb.AppendLine("  " + stream.ReadLine());
-                    c++;
+                    yield return "  " + stream.ReadLine();
+                } else
+                {
+                    stream.ReadLine();
                 }
+                c++;
+            }
+
 
             if (c == fileLinesCount && !endsNewLine)
-                sb.AppendLine("\\ No newline at end of file");
-
-            return sb.ToString();
+                yield return "\\ No newline at end of file";
         }
 
         /// <summary>

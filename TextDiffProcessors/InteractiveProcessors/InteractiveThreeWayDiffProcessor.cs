@@ -8,20 +8,20 @@ using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.ThreeWay;
 using TextDiffProcessors.DiffOutput.ThreeWay;
 
-namespace TextDiffProcessors.InteractiveResolveProcessors
+namespace TextDiffProcessors.InteractiveProcessors
 {
     /// <summary>
     /// InteractiveTwoWayDiffProcessor is a console interface for choosing which version 
     /// of the file (local / remote) you want to keep.
     /// </summary>
-    [Processor(ProcessorTypeEnum.InteractiveResolving, 200, DiffModeEnum.ThreeWay)]
+    [Processor(ProcessorTypeEnum.Interactive, 200, DiffModeEnum.ThreeWay)]
     public class InteractiveThreeWayDiffProcessor : ProcessorAbstract
     {
-        [Settings("Interactive console differ.", "interactive", "i")]
-        public bool IsEnabled = false;
+        //[Settings("Interactive console differ.", "interactive", "i")]
+        //public bool IsEnabled = false;
 
         [Settings("Show help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = true;
+        public bool ShowHelp = false;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;
@@ -38,7 +38,7 @@ namespace TextDiffProcessors.InteractiveResolveProcessors
 
         protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            return base.CheckStatus(node) && IsEnabled && node.Differences != DifferencesStatusEnum.AllSame;
+            return base.CheckStatus(node) && node.Differences != DifferencesStatusEnum.AllSame;
         }
 
         protected override void ProcessChecked(IFilesystemTreeFileNode node)
@@ -48,7 +48,7 @@ namespace TextDiffProcessors.InteractiveResolveProcessors
             if (dnode == null)
                 return;
 
-            if (dnode.Diff == null)
+            if (!(dnode.Diff is Diff3))
                 return;
 
             if (!applyToAll)
@@ -111,17 +111,17 @@ namespace TextDiffProcessors.InteractiveResolveProcessors
             {
                 case "B":
                     diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.RevertToBase;
-                    input = input.Substring(0, 1);
+                    input = input.Substring(1);
                     break;
 
                 case "L":
                     diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.ApplyLocal;
-                    input = input.Substring(0, 1);
+                    input = input.Substring(1);
                     break;
 
                 case "R":
                     diff.PreferedAction = chosenPreferedAction = PreferedActionThreeWayEnum.ApplyRemote;
-                    input = input.Substring(0, 1);
+                    input = input.Substring(1);
                     break;
             }
 

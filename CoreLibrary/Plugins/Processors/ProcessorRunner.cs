@@ -17,7 +17,7 @@ namespace CoreLibrary.Plugins.Processors
         {
             diffVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Diff));
             mergeVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Merge));
-            interactiveVisitor = new ExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.InteractiveResolving));
+            interactiveVisitor = new ExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Interactive));
         }
 
         public async Task RunDiff(IFilesystemTreeVisitable diffTree)

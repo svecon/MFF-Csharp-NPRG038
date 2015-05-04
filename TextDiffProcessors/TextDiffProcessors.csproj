@@ -47,8 +47,8 @@
     <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
     <Compile Include="DiffProcessors\CheckConflictsProcessor.cs" />
     <Compile Include="DiffProcessors\TextDiffProcessor.cs" />
-    <Compile Include="InteractiveResolveProcessors\InteractiveThreeWayDiffProcessor.cs" />
-    <Compile Include="InteractiveResolveProcessors\InteractiveTwoWayDiffProcessor.cs" />
+    <Compile Include="InteractiveProcessors\InteractiveThreeWayDiffProcessor.cs" />
+    <Compile Include="InteractiveProcessors\InteractiveTwoWayDiffProcessor.cs" />
     <Compile Include="MergeProcessors\MergeThreeWayProcessor.cs" />
     <Compile Include="MergeProcessors\MergeTwoWayProcessor.cs" />
     <Compile Include="MergeProcessors\SyncTwoWayProcessor.cs" />
