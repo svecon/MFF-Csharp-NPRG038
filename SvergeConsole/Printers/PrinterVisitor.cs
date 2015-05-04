@@ -3,7 +3,7 @@ using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Visitors;
 
-namespace SvergeConsole
+namespace SvergeConsole.Printers
 {
     /// <summary>
     /// Prints FilesystemTree on the console. 
@@ -21,8 +21,12 @@ namespace SvergeConsole
 
         private bool firstDirectoryVisit;
 
+        private bool isOnlyFileNode = true;
+
         public void Visit(IFilesystemTreeDirNode node)
         {
+            isOnlyFileNode = false;
+
             // Root directory
             if (node.RelativePath == "")
             {
@@ -83,7 +87,7 @@ namespace SvergeConsole
                     switch (node.Differences)
                     {
                         case DifferencesStatusEnum.Initial:
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.ResetColor();
                             break;
                         case DifferencesStatusEnum.AllDifferent:
                             Console.ForegroundColor = ConsoleColor.Red;
@@ -98,10 +102,11 @@ namespace SvergeConsole
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             break;
                         case DifferencesStatusEnum.AllSame:
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.ResetColor();
                             break;
                         default:
-                            throw new NotImplementedException("This difference type was not implemented.");
+                            Console.ResetColor();
+                            break;
                     }
                     break;
             }
@@ -111,10 +116,34 @@ namespace SvergeConsole
                 Console.Write("|  ");
             }
 
-            Console.WriteLine("+- " + node.Info.Name
-                + ": " + (LocationCombinationsEnum)node.Location
-                + " # " + node.Differences
-                + " # " + node.Status);
+            if (!isOnlyFileNode)
+            {
+                Console.Write("+- ");
+            }
+
+            if (node.InfoLocal != null && node.InfoBase != null && node.InfoRemote != null && node.InfoLocal.Name != node.InfoBase.Name && node.InfoLocal.Name != node.InfoRemote.Name)
+            {
+                Console.WriteLine("{0} / {1} / {2}: {3}, {4}, {5}", node.InfoLocal.Name, node.InfoBase.Name, node.InfoRemote.Name,
+                (LocationCombinationsEnum)node.Location, node.Differences, node.Status);
+            } else if (node.InfoLocal != null && node.InfoRemote != null && node.InfoLocal.Name != node.InfoRemote.Name)
+            {
+                Console.WriteLine("{0} / {1}: {2}, {3}, {4}", node.InfoLocal.Name, node.InfoRemote.Name,
+                (LocationCombinationsEnum)node.Location, node.Differences, node.Status);
+            } else if (node.InfoLocal != null && node.InfoBase != null && node.InfoLocal.Name != node.InfoBase.Name)
+            {
+                Console.WriteLine("{0} / {1}: {2}, {3}, {4}", node.InfoLocal.Name, node.InfoBase.Name,
+                (LocationCombinationsEnum)node.Location, node.Differences, node.Status);
+            } else if (node.InfoBase != null && node.InfoRemote != null && node.InfoBase.Name != node.InfoRemote.Name)
+            {
+                Console.WriteLine("{0} / {1}: {2}, {3}, {4}", node.InfoBase.Name, node.InfoRemote.Name,
+                (LocationCombinationsEnum)node.Location, node.Differences, node.Status);
+            } else
+            {
+                Console.WriteLine("{0}: {1}, {2}, {3}", node.Info.Name,
+                (LocationCombinationsEnum)node.Location, node.Differences, node.Status);
+            }
+
+
 
 #if DEBUG
             if (node.Status == NodeStatusEnum.HasError)

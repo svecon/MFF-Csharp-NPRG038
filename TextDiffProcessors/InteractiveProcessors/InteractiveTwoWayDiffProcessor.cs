@@ -20,8 +20,8 @@ namespace TextDiffProcessors.InteractiveProcessors
         //[Settings("Interactive console differ.", "interactive", "i")]
         //public bool IsEnabled = false;
 
-        [Settings("Show help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = false;
+        [Settings("Hide help during the interactive process.", "interactive-help")]
+        public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "2interactive-default")]
         public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
@@ -86,6 +86,8 @@ namespace TextDiffProcessors.InteractiveProcessors
             {
                 ParseUserInput(output.CurrentDiffItem);
             }
+
+            node.Status = NodeStatusEnum.WasDiffed;
         }
 
         private void ParseUserInput(DiffItem diff)
@@ -101,9 +103,9 @@ namespace TextDiffProcessors.InteractiveProcessors
 
             if (ShowHelp)
             {
-                Console.WriteLine("[R] to revert and [K] to keep changes. Enter nothing to keep default action.");
-                Console.WriteLine("[RFILE] to revert and [KFILE] to keep changes in this file.");
-                Console.WriteLine("[RALL] to revert and [KALL] to keep all changes across all files.");
+                Console.WriteLine("[R] to select remote file or [L] to select local file. Enter nothing to keep default action.");
+                Console.WriteLine("Append FILE to the option to apply that option for the whole file. [FILE|BFILE|LFILE|RFILE]");
+                Console.WriteLine("Append ALL  to the option to apply that option for all files. [ALL|BALL|LALL|RALL]");
             }
 
             string input = Console.ReadLine();
@@ -119,12 +121,12 @@ namespace TextDiffProcessors.InteractiveProcessors
             switch (input.Substring(0, 1).ToUpperInvariant())
             {
                 case "R":
-                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyLocal;
+                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyRemote;
                     input = input.Substring(1);
                     break;
 
-                case "K":
-                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyRemote;
+                case "L":
+                    diff.PreferedAction = chosenAction = PreferedActionTwoWayEnum.ApplyLocal;
                     input = input.Substring(1);
                     break;
             }

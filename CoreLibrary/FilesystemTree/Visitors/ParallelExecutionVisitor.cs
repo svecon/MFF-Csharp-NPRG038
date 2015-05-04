@@ -38,10 +38,17 @@ namespace CoreLibrary.FilesystemTree.Visitors
             Task task = Task.FromResult(false);
 
             foreach (IProcessor processor in processors)
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
+                task = task.ContinueWith(_ =>
+                {
+                    try
+                    {
+                        processor.Process(node);
+                    } catch (Exception e)
+                    {
+                        HandleError(node, e);
+                    }
+                }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
-            // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
 
@@ -58,18 +65,25 @@ namespace CoreLibrary.FilesystemTree.Visitors
             Task task = Task.FromResult(false);
 
             foreach (IProcessor processor in processors)
-                task = task.ContinueWith(_ => processor.Process(node), tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
+                task = task.ContinueWith(_ =>
+                {
+                    try
+                    {
+                        processor.Process(node);
+                    } catch (Exception e)
+                    {
+                        HandleError(node, e);
+                    }
+                }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
 
-            // add task which runs when there is an error
-            tasks.Add(task.ContinueWith(_ => HandleError(node, _), TaskContinuationOptions.NotOnRanToCompletion));
             // add task with processors
             tasks.Add(task);
         }
 
-        private static void HandleError(IFilesystemTreeAbstractNode node, Task task)
+        private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
         {
             node.Status = NodeStatusEnum.HasError;
-            node.Exception = task.Exception;
+            node.Exception = e;
         }
 
         /// <summary>

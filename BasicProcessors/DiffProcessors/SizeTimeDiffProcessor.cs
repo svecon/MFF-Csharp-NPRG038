@@ -75,7 +75,9 @@ namespace BasicProcessors.DiffProcessors
                 threeWay.CheckCombinationLeftRight(infoLeft.LastWriteTime != infoRight.LastWriteTime);
 
             node.Differences = (DifferencesStatusEnum)threeWay.GetSameFiles();
-            node.Status = NodeStatusEnum.WasDiffed;
+            node.Status = IsConflictingHelper.IsConflicting(node)
+                ? NodeStatusEnum.IsConflicting 
+                : NodeStatusEnum.WasDiffed;
         }
     }
 }

@@ -110,7 +110,9 @@ namespace BasicProcessors.DiffProcessors
                 }
 
                 node.Differences = (DifferencesStatusEnum)(threeWay.GetSameFiles());
-                node.Status = NodeStatusEnum.WasDiffed;
+                node.Status = IsConflictingHelper.IsConflicting(node)
+                    ? NodeStatusEnum.IsConflicting
+                    : NodeStatusEnum.WasDiffed;
 
             } finally
             {

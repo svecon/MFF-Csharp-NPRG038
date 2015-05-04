@@ -20,8 +20,8 @@ namespace TextDiffProcessors.InteractiveProcessors
         //[Settings("Interactive console differ.", "interactive", "i")]
         //public bool IsEnabled = false;
 
-        [Settings("Show help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = false;
+        [Settings("Hide help during the interactive process.", "interactive-help")]
+        public bool ShowHelp = true;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;
@@ -77,6 +77,8 @@ namespace TextDiffProcessors.InteractiveProcessors
             {
                 ParseUserInput(output.CurrentDiffItem);
             }
+
+            node.Status = NodeStatusEnum.WasDiffed;
         }
 
         private void ParseUserInput(Diff3Item diff)

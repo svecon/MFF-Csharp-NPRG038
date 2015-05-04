@@ -51,7 +51,6 @@
     <Compile Include="InteractiveProcessors\InteractiveTwoWayDiffProcessor.cs" />
     <Compile Include="MergeProcessors\MergeThreeWayProcessor.cs" />
     <Compile Include="MergeProcessors\MergeTwoWayProcessor.cs" />
-    <Compile Include="MergeProcessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

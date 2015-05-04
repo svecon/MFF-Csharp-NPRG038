@@ -1,17 +1,18 @@
 ﻿using System.IO;
 using CoreLibrary.Enums;
+using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-namespace TextDiffProcessors.MergeProcessors
+namespace BasicProcessors.MergeProcessors
 {
     /// <summary>
     /// This processor synchronizes two folders based on chosen method.
     /// 
     /// Default method is Modification time of the file.
     /// </summary>
-    [Processor(ProcessorTypeEnum.Merge, 500, DiffModeEnum.TwoWay)]
+    [Processor(ProcessorTypeEnum.Merge, 5000, DiffModeEnum.TwoWay)]
     public class SyncTwoWayProcessor : ProcessorAbstract
     {
         public enum CompareOnEnum { Size = 1, Modification = 2 }
@@ -32,7 +33,10 @@ namespace TextDiffProcessors.MergeProcessors
 
         protected override bool CheckStatus(IFilesystemTreeFileNode node)
         {
-            return base.CheckStatus(node) && IsEnabled && node.Differences != DifferencesStatusEnum.AllSame;
+            return base.CheckStatus(node)
+                && IsEnabled
+                && node.Differences != DifferencesStatusEnum.AllSame
+                && node.Status != NodeStatusEnum.WasMerged;
         }
 
         protected override void ProcessChecked(IFilesystemTreeDirNode node)
@@ -56,6 +60,7 @@ namespace TextDiffProcessors.MergeProcessors
         {
             FileInfo from = null;
             string to = null;
+            LocationEnum toLocationEnum;
 
             // one file is missing
             if (node.Location < (int)LocationCombinationsEnum.OnLocalRemote)
@@ -64,11 +69,13 @@ namespace TextDiffProcessors.MergeProcessors
                 {
                     from = (FileInfo)node.InfoLocal;
                     to = node.GetAbsolutePath(LocationEnum.OnRemote);
+                    toLocationEnum = LocationEnum.OnRemote;
 
                 } else if (node.IsInLocation(LocationEnum.OnRemote))
                 {
                     from = (FileInfo)node.InfoRemote;
                     to = node.GetAbsolutePath(LocationEnum.OnLocal);
+                    toLocationEnum = LocationEnum.OnLocal;
 
                 } else
                 {
@@ -77,12 +84,29 @@ namespace TextDiffProcessors.MergeProcessors
 
                 CheckAndCreateDirectoryFromFilename(to);
                 from.CopyTo(to);
+                node.AddInfoFromLocation(new FileInfo(to), toLocationEnum);
                 node.Status = NodeStatusEnum.WasMerged;
                 return;
             }
 
-            // both files are present
+            // both files are present and action is set
+            var dnode = node as FileDiffNode;
+            if (dnode != null && dnode.Action != PreferedActionThreeWayEnum.Default)
+            {
+                if (dnode.Action == PreferedActionThreeWayEnum.ApplyLocal)
+                {
+                    File.Copy(dnode.InfoLocal.FullName, dnode.InfoRemote.FullName, true);
+                    node.AddInfoFromLocation(new FileInfo(dnode.InfoRemote.FullName), LocationEnum.OnRemote);
+                } else
+                {
+                    File.Copy(dnode.InfoRemote.FullName, dnode.InfoLocal.FullName, true);
+                    node.AddInfoFromLocation(new FileInfo(dnode.InfoLocal.FullName), LocationEnum.OnLocal);
+                }
+                node.Status = NodeStatusEnum.WasMerged;
+                return;
+            }
 
+            // decide on size and modification
             int comparison = 0;
             switch (CompareOn)
             {

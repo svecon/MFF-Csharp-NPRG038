@@ -75,15 +75,15 @@ namespace TextDiffProcessors.DiffProcessors
                     break;
             }
 
-            Diff diff = dnode.Diff as Diff;
+            var diff = dnode.Diff as Diff;
             if (diff != null && diff.Items.Length == 0)
                 dnode.Differences = DifferencesStatusEnum.AllSame;
 
-            Diff3 diff3 = dnode.Diff as Diff3;
+            var diff3 = dnode.Diff as Diff3;
             if (diff3 != null && diff3.Items.Length == 0)
                 dnode.Differences = DifferencesStatusEnum.AllSame;
 
-            if (dnode.Diff == null) return;
+            if (diff3 == null) return;
 
             foreach (Diff3Item diff3Item in ((Diff3)dnode.Diff).Items
                 .Where(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent))

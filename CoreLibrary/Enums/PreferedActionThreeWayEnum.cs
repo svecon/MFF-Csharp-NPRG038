@@ -5,6 +5,6 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum PreferedActionThreeWayEnum
     {
-        Default, RevertToBase, ApplyLocal, ApplyRemote
+        Default, ApplyLocal, ApplyRemote, RevertToBase
     }
 }

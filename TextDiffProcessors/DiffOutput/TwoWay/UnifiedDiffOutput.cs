@@ -22,7 +22,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
         public override IEnumerable<string> Print()
         {
             // print headers
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             yield return "--- " + CreateHeader(InfoLocal.FullName, InfoLocal.LastWriteTime);
             yield return "+++ " + CreateHeader(InfoRemote.FullName, InfoRemote.LastWriteTime);
             Console.ResetColor();
@@ -48,7 +48,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
                 {
                     CurrentDiffItem = chunk.CurrentDiff();
 
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     yield return chunk.Header();
                     Console.ResetColor();
 
@@ -68,7 +68,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
                         }
 
                         // deleted
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         for (int p = 0; p < chunk.CurrentDiff().LocalAffectedLines; p++) { yield return "-" + localStream.ReadLine(); n++; }
                         Console.ResetColor();
 

@@ -10,6 +10,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Plugins;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
+using SvergeConsole.Printers;
 using SvergeConsole.Processors;
 
 namespace SvergeConsole
@@ -67,9 +68,12 @@ namespace SvergeConsole
             if (ShowHelp)
             {
                 Console.WriteLine("Sverge – A Flexible Tool for Comparing & Merging [{0}]", GetVersion());
-                Console.WriteLine("Usage: [OPTION]... <LOCAL> [BASE] <REMOTE>");
+                Console.WriteLine("Usage: [OPTIONS]* <LOCAL> [BASE] <REMOTE>");
+                Console.WriteLine("LOCAL, BASE, REMOTE must be paths to files or directories.");
+                Console.WriteLine("BASE is optional.");
 
-                Console.WriteLine("\nListing all found Processors and their parameters:");
+                Console.WriteLine();
+                Console.WriteLine("Listing all found Processors and their parameters:");
                 var processorPrinter = new ProcessorPrinter(_loader, true);
                 processorPrinter.Print();
                 return;
@@ -174,6 +178,8 @@ namespace SvergeConsole
 
             // run merging and syncing in parallel
             _runner.RunMerge(_diffTree).Wait();
+
+            _runner.RunDiff(_diffTree).Wait();
 
             // print the filesystem tree
             _diffTree.Accept(new PrinterVisitor());

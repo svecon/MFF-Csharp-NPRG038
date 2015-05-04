@@ -46,8 +46,11 @@
     <Compile Include="DiffProcessors\FileTypeProcessor.cs" />
     <Compile Include="DiffProcessors\RegexFilterProcessor.cs" />
     <Compile Include="DiffProcessors\SizeTimeDiffProcessor.cs" />
+    <Compile Include="InteractiveProcessors\InteractiveThreeWayActionProcessor.cs" />
+    <Compile Include="InteractiveProcessors\InteractiveTwoWayActionProcessor.cs" />
     <Compile Include="MergeProcessors\MergeByLocationsProcessor.cs" />
     <Compile Include="MergeProcessors\MergeCleanupProcessor.cs" />
+    <Compile Include="MergeProcessors\SyncTwoWayProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +59,7 @@
       <Name>CoreLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo f | xcopy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Sverge\$(OutDir)plugins\$(TargetFileName)"
