@@ -20,8 +20,8 @@ namespace TextDiffProcessors.InteractiveProcessors
         //[Settings("Interactive console differ.", "interactive", "i")]
         //public bool IsEnabled = false;
 
-        [Settings("Hide help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = true;
+        [Settings("Show help during the interactive process.", "interactive-help")]
+        public bool ShowHelp = false;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;

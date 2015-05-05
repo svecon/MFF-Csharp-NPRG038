@@ -77,11 +77,11 @@ namespace TextDiffProcessors.DiffProcessors
 
             var diff = dnode.Diff as Diff;
             if (diff != null && diff.Items.Length == 0)
-                dnode.Differences = DifferencesStatusEnum.AllSame;
+                dnode.Differences = (DifferencesStatusEnum)dnode.Location;
 
             var diff3 = dnode.Diff as Diff3;
             if (diff3 != null && diff3.Items.Length == 0)
-                dnode.Differences = DifferencesStatusEnum.AllSame;
+                dnode.Differences = (DifferencesStatusEnum)dnode.Location;
 
             if (diff3 == null) return;
 

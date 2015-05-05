@@ -30,7 +30,7 @@ namespace SvergeConsole.Printers
             // Root directory
             if (node.RelativePath == "")
             {
-                Console.WriteLine(@"+- \{0} ({1:0.00}kB)", node.Info.FullName, node.GetSize());
+                Console.WriteLine(@"+- {0} ({1:0.00}kB)", node.Info.FullName, node.GetSize());
             } else
             {
                 // postpone printing to later

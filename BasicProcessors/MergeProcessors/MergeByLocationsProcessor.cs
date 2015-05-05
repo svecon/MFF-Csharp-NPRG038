@@ -24,22 +24,22 @@ namespace BasicProcessors.MergeProcessors
             if (diffNode == null)
                 return;
 
-            if (diffNode.Action != PreferedActionThreeWayEnum.Default)
-                diffNode.Status = NodeStatusEnum.WasMerged;
-
             switch (diffNode.Action)
             {
                 case PreferedActionThreeWayEnum.ApplyLocal:
                     ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
                 case PreferedActionThreeWayEnum.ApplyRemote:
                     ((FileInfo)node.InfoRemote).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
                 case PreferedActionThreeWayEnum.RevertToBase:
                     ((FileInfo)node.InfoBase).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
             }
 
@@ -48,17 +48,20 @@ namespace BasicProcessors.MergeProcessors
                 case LocationCombinationsEnum.OnBase:
                     File.Delete(CreatePath(node));
                     node.RemoveInfoFromLocation(LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     return; // delete
 
                 case LocationCombinationsEnum.OnLocal:
                     // one new file
                     ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     break;
                 case LocationCombinationsEnum.OnRemote:
                     // one new file
                     ((FileInfo)node.InfoRemote).CopyTo(CreatePath(node), true);
                     node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    diffNode.Status = NodeStatusEnum.WasMerged;
                     break;
                 case LocationCombinationsEnum.OnBaseLocal:
 
@@ -66,6 +69,7 @@ namespace BasicProcessors.MergeProcessors
                     {
                         File.Delete(CreatePath(node));
                         node.RemoveInfoFromLocation(LocationEnum.OnBase);
+                        diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // delete
                     }
 
@@ -76,6 +80,7 @@ namespace BasicProcessors.MergeProcessors
                     {
                         File.Delete(CreatePath(node));
                         node.RemoveInfoFromLocation(LocationEnum.OnBase);
+                        diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // delete
                     }
 
@@ -86,6 +91,7 @@ namespace BasicProcessors.MergeProcessors
                     {
                         ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
                         node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                        diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // copy
                     }
                     break;
@@ -96,6 +102,7 @@ namespace BasicProcessors.MergeProcessors
                     {
                         ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
                         node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                        diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // copy
                     }
                     break;

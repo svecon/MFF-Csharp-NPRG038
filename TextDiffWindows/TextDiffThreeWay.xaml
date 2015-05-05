@@ -15,11 +15,11 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="70" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="70" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition MaxWidth="70" MinWidth="35" Width="1*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition MaxWidth="70" MinWidth="35" Width="1*" />
+            <ColumnDefinition Width="10*" />
             <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
 

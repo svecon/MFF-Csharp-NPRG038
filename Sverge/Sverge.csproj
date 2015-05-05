@@ -57,10 +57,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DiffWindows\DefaultDiffWindow.xaml.cs">
-      <DependentUpon>DefaultDiffWindow.xaml</DependentUpon>
+    <Compile Include="DiffWindows\DefaultTwoWayDiffWindow.xaml.cs">
+      <DependentUpon>DefaultTwoWayDiffWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="DiffWindows\DefaultDiffWindow.xaml">
+    <Compile Include="DiffWindows\DefaultThreeWayDiffWindow.xaml.cs">
+      <DependentUpon>DefaultThreeWayDiffWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DiffWindows\DefaultTwoWayDiffWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DiffWindows\DefaultThreeWayDiffWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

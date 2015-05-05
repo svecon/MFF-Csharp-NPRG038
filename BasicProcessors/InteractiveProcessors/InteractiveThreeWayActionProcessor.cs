@@ -12,8 +12,8 @@ namespace BasicProcessors.InteractiveProcessors
     public class InteractiveThreeWayActionProcessor : ProcessorAbstract
     {
 
-        [Settings("Hide help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = true;
+        [Settings("Show help during the interactive process.", "interactive-help")]
+        public bool ShowHelp = false;
 
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultAction = PreferedActionThreeWayEnum.Default;
@@ -37,28 +37,34 @@ namespace BasicProcessors.InteractiveProcessors
             if (diffNode == null)
                 return;
 
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-
             if (node.IsInLocation(LocationCombinationsEnum.OnLocal))
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 var infoLocal = (FileInfo)node.InfoLocal;
                 Console.WriteLine("Local file:");
-                Console.WriteLine("{0} ({1}, {2}kB)", infoLocal.FullName, infoLocal.LastWriteTime, infoLocal.Length / 1024.0);
+                Console.ResetColor();
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoLocal.FullName, infoLocal.LastWriteTime, infoLocal.Length / 1024.0);
             }
 
             if (node.IsInLocation(LocationCombinationsEnum.OnBase))
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 var infoBase = (FileInfo)node.InfoBase;
                 Console.WriteLine("Base file:");
-                Console.WriteLine("{0} ({1}, {2}kB)", infoBase.FullName, infoBase.LastWriteTime, infoBase.Length / 1024.0);
+                Console.ResetColor();
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoBase.FullName, infoBase.LastWriteTime, infoBase.Length / 1024.0);
             }
 
             if (node.IsInLocation(LocationCombinationsEnum.OnRemote))
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 var infoRemote = (FileInfo)node.InfoRemote;
                 Console.WriteLine("Remote file:");
-                Console.WriteLine("{0} ({1}, {2}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);
+                Console.ResetColor();
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);
             }
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
 
             if (ShowHelp)
             {

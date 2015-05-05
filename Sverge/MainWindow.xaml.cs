@@ -241,6 +241,9 @@ namespace Sverge
 
         private void TabCloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
+            RemoveCustomWindowMenuBindings();
+            CloseCustomWindowMenus();
+
             RemoveWindow(FindParent<TabItem>(sender as DependencyObject));
         }
 

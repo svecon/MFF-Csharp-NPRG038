@@ -23,7 +23,7 @@ namespace TextDiffProcessors.DiffProcessors
             {
                 case LocationCombinationsEnum.OnBaseLocal:
 
-                    if (node.Differences != DifferencesStatusEnum.BaseRemoteSame && node.Differences != DifferencesStatusEnum.AllSame)
+                    if (node.Differences != DifferencesStatusEnum.BaseLocalSame && node.Differences != DifferencesStatusEnum.AllSame)
                         node.Status = NodeStatusEnum.IsConflicting;
 
                     break;

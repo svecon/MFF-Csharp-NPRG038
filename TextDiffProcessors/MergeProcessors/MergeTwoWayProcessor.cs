@@ -63,19 +63,51 @@ namespace TextDiffProcessors.MergeProcessors
             if (dnode == null)
                 return;
 
+            // one file is missing
+            if (node.Location < (int)LocationCombinationsEnum.OnLocalRemote)
+            {
+                FileInfo from;
+
+                if (node.IsInLocation(LocationEnum.OnLocal))
+                {
+                    from = (FileInfo)node.InfoLocal;
+                } else if (node.IsInLocation(LocationEnum.OnRemote))
+                {
+                    from = (FileInfo)node.InfoRemote;
+                } else
+                {
+                    throw new InvalidDataException();
+                }
+
+                CheckAndCreateDirectory(Path.GetDirectoryName(CreatePath(node)));
+                from.CopyTo(CreatePath(node), true);
+                node.Status = NodeStatusEnum.WasMerged;
+                return;
+            }
+
+            // both files are present and are same
+            if (dnode.Differences == DifferencesStatusEnum.AllSame)
+            {
+                File.Copy(dnode.InfoLocal.FullName, CreatePath(node), true);
+            }
+
+            // both files are present and action is set
+            if (dnode.Action != PreferedActionThreeWayEnum.Default)
+            {
+                File.Copy(
+                    dnode.Action == PreferedActionThreeWayEnum.ApplyLocal
+                        ? dnode.InfoLocal.FullName
+                        : dnode.InfoRemote.FullName, CreatePath(node), true);
+                node.Status = NodeStatusEnum.WasMerged;
+                return;
+            }
+
             var diff = dnode.Diff as Diff;
 
             if (diff == null)
                 return;
 
             node.Status = NodeStatusEnum.WasMerged;
-
-            if ((LocationCombinationsEnum)node.Location != LocationCombinationsEnum.OnLocalRemote
-                || dnode.Diff == null)
-            {
-                ((FileInfo)node.Info).CopyTo(CreatePath(node), true);
-                return;
-            }
 
             // create temporary file if the target file exists
             string temporaryPath;
@@ -179,9 +211,9 @@ namespace TextDiffProcessors.MergeProcessors
 
         private string CreatePath(IFilesystemTreeFileNode node)
         {
-            string output = OutputFolder == null
-                ? node.GetAbsolutePath(LocationEnum.OnBase)
-                : Path.Combine(OutputFolder, node.Info.Name);
+            string output = node.ParentNode == null
+                    ? Path.Combine(OutputFolder, node.Info.Name)
+                    : Path.Combine(OutputFolder, node.ParentNode.RelativePath, node.Info.Name);
 
             CheckAndCreateDirectory(Path.GetDirectoryName(output));
 

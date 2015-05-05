@@ -12,8 +12,8 @@ namespace BasicProcessors.InteractiveProcessors
     public class InteractiveTwoWayActionProcessor : ProcessorAbstract
     {
 
-        [Settings("Hide help during the interactive process.", "interactive-help")]
-        public bool ShowHelp = true;
+        [Settings("Show help during the interactive process.", "interactive-help")]
+        public bool ShowHelp = false;
 
         [Settings("Default action for interactive diff.", "2interactive-default")]
         public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
@@ -37,25 +37,29 @@ namespace BasicProcessors.InteractiveProcessors
             if (diffNode == null)
                 return;
 
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-
             if (node.IsInLocation(LocationCombinationsEnum.OnLocal))
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 var infoLocal = (FileInfo)node.InfoLocal;
                 Console.WriteLine("Local file:");
-                Console.WriteLine("{0} ({1}, {2}kB)", infoLocal.FullName, infoLocal.LastWriteTime, infoLocal.Length / 1024.0);
+                Console.ResetColor();
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoLocal.FullName, infoLocal.LastWriteTime, infoLocal.Length / 1024.0);
             }
 
             if (node.IsInLocation(LocationCombinationsEnum.OnRemote))
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 var infoRemote = (FileInfo)node.InfoRemote;
                 Console.WriteLine("Remote file:");
-                Console.WriteLine("{0} ({1}, {2}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);    
+                Console.ResetColor();
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);    
             }
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
 
             if (ShowHelp)
             {
-                Console.WriteLine("[R] to select remote file and [L] to select local file. Enter nothing to keep default action.");
+                Console.WriteLine("[R] to select remote file and [L] to select local file. Default is [R].");
             }
 
             string input = Console.ReadLine();
@@ -63,6 +67,7 @@ namespace BasicProcessors.InteractiveProcessors
 
             if (string.IsNullOrEmpty(input))
             {
+                diffNode.Action = (PreferedActionThreeWayEnum)((int)DefaultAction);
                 return;
             }
 
