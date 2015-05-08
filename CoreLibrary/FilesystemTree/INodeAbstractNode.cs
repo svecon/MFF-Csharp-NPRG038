@@ -5,7 +5,7 @@ using CoreLibrary.FilesystemTree.Enums;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Abstract node in Node.
+    /// Abstract FilesystemTree in FilesystemTree.
     /// </summary>
     public interface INodeAbstractNode : INodeVisitable
     {
@@ -30,12 +30,12 @@ namespace CoreLibrary.FilesystemTree
         FileSystemInfo InfoRemote { get; }
 
         /// <summary>
-        /// What has already been done with this node.
+        /// What has already been done with this FilesystemTree.
         /// </summary>
         NodeStatusEnum Status { get; set; }
 
         /// <summary>
-        /// What to do with the node.
+        /// What to do with the FilesystemTree.
         /// </summary>
         PreferedActionThreeWayEnum Action { get; set; }
 

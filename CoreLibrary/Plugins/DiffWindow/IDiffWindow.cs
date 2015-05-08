@@ -10,7 +10,7 @@ namespace CoreLibrary.Plugins.DiffWindow
     public interface IDiffWindow<out TNode> where TNode : INodeVisitable
     {
         /// <summary>
-        /// Node for holding the differences.
+        /// FilesystemTree for holding the differences.
         /// </summary>
         TNode DiffNode { get; }
 

@@ -5,23 +5,23 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Node that contains information about all processed directories.
+    /// FilesystemTree that contains information about all processed directories.
     /// 
     /// The tree is represented with Nodes that are joined as a one way linked list.
     /// 
     /// The nodes contain all information about the files location, status and more.
     /// </summary>
-    public class Node : INode
+    public class FilesystemTree : IFilesystemTree
     {
         public DiffModeEnum DiffMode { get; protected set; }
 
         public INodeDirNode Root { get; protected set; }
 
         /// <summary>
-        /// Initializes new instance of the <see cref="Node"/>
+        /// Initializes new instance of the <see cref="FilesystemTree"/>
         /// </summary>
         /// <param name="mode">Mode for the comparison</param>
-        public Node(DiffModeEnum mode)
+        public FilesystemTree(DiffModeEnum mode)
         {
             DiffMode = mode;
         }

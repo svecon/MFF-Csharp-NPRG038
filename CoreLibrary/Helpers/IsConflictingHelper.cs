@@ -4,15 +4,15 @@ using CoreLibrary.FilesystemTree.Enums;
 namespace CoreLibrary.Helpers
 {
     /// <summary>
-    /// Helper for determining if the node is conflicting.
+    /// Helper for determining if the FilesystemTree is conflicting.
     /// </summary>
     public static class IsConflictingHelper
     {
         /// <summary>
-        /// Checks the node based on mode, locations and diff status for coflicts.
+        /// Checks the FilesystemTree based on mode, locations and diff status for coflicts.
         /// </summary>
-        /// <param name="node">Node that is checked for conflicts.</param>
-        /// <returns>Whether the node has conflicting changes.</returns>
+        /// <param name="node">FilesystemTree that is checked for conflicts.</param>
+        /// <returns>Whether the FilesystemTree has conflicting changes.</returns>
         public static bool IsConflicting(INodeAbstractNode node)
         {
             if (node.Differences != DifferencesStatusEnum.AllDifferent) return false;

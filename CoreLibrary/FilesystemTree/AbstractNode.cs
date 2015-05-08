@@ -7,7 +7,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// An abstract node for the <see cref="INode"/>
+    /// An abstract FilesystemTree for the <see cref="IFilesystemTree"/>
     /// </summary>
     public abstract class AbstractNode : INodeAbstractNode, INotifyPropertyChanged
     {
@@ -134,8 +134,8 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Constructor for AbstractNode.
         /// </summary>
-        /// <param name="info">FileSystemInfo for the node.</param>
-        /// <param name="location">Where the node came from.</param>
+        /// <param name="info">FileSystemInfo for the FilesystemTree.</param>
+        /// <param name="location">Where the FilesystemTree came from.</param>
         /// <param name="mode">Default mode.</param>
         protected AbstractNode(FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
         {
@@ -155,9 +155,9 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// Marks that the node has been found in another location.
+        /// Marks that the FilesystemTree has been found in another location.
         /// </summary>
-        /// <param name="loc">New location where node has been found.</param>
+        /// <param name="loc">New location where FilesystemTree has been found.</param>
         protected void MarkFound(LocationEnum loc)
         {
             Location = Location | (int)loc;

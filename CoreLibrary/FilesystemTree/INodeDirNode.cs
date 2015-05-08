@@ -5,7 +5,7 @@ using CoreLibrary.FilesystemTree.Enums;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Dir node of Node.
+    /// Dir FilesystemTree of FilesystemTree.
     /// </summary>
     public interface INodeDirNode : INodeAbstractNode
     {
@@ -20,14 +20,14 @@ namespace CoreLibrary.FilesystemTree
         List<INodeFileNode> Files { get; }
 
         /// <summary>
-        /// Reference to the RootNode of the entire Node
+        /// Reference to the RootNode of the entire FilesystemTree
         /// 
         /// Root directory references itself.
         /// </summary>
         INodeDirNode RootNode { get; }
 
         /// <summary>
-        /// Relative path to the root of the Node root.
+        /// Relative path to the root of the FilesystemTree root.
         /// 
         /// This combined with root path gives absolute path.
         /// </summary>
@@ -38,7 +38,7 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         /// <param name="info">DirectoryInfo for subdirectory.</param>
         /// <param name="location">Where the subdirectory was found.</param>
-        /// <returns>Node for new subdirectory.</returns>
+        /// <returns>FilesystemTree for new subdirectory.</returns>
         INodeDirNode AddDir(DirectoryInfo info, LocationEnum location);
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         /// <param name="info">FileInfo for new file.</param>
         /// <param name="location">Where the file was found.</param>
-        /// <returns>Node for new file.</returns>
+        /// <returns>FilesystemTree for new file.</returns>
         INodeFileNode AddFile(FileInfo info, LocationEnum location);
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace CoreLibrary.FilesystemTree
         double GetSize();
 
         /// <summary>
-        /// Enumerator for all files and directories in the current node.
+        /// Enumerator for all files and directories in the current FilesystemTree.
         /// 
         /// First iterates over directories.
         /// </summary>

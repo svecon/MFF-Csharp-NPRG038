@@ -6,11 +6,11 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace SvergeConsole.Printers
 {
     /// <summary>
-    /// Prints Node on the console. 
+    /// Prints FilesystemTree on the console. 
     /// 
-    /// Also prints all available information about the node (status, differences, locations).
+    /// Also prints all available information about the FilesystemTree (status, differences, locations).
     /// 
-    /// Uses colors for different Node states.
+    /// Uses colors for different FilesystemTree states.
     /// </summary>
     public class PrinterVisitor : IFilesystemTreeVisitor
     {

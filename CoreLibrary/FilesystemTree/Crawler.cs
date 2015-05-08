@@ -9,7 +9,7 @@ namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
     /// Crawler traverses given directories (2 or 3) 
-    /// and builds a INode with files and directories as Nodes.
+    /// and builds a IFilesystemTree with files and directories as Nodes.
     /// 
     /// @TODO try to parallelize the crawling to read the related directories from different revisions at the same time
     /// This might not be faster as the structure still needs to do only one related directory at a time
@@ -19,7 +19,7 @@ namespace CoreLibrary.FilesystemTree
     {
         /// <summary>
         /// Struct that holds all needed information for filesystem traversal:
-        /// DirectoryInfo, Pointer to a tree node, Path Location.
+        /// DirectoryInfo, Pointer to a tree FilesystemTree, Path Location.
         /// </summary>
         private struct DirectoryForIteration
         {
@@ -36,9 +36,9 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// Node represents all found files in a tree structure.
+        /// FilesystemTree represents all found files in a tree structure.
         /// </summary>
-        protected INode Node;
+        protected IFilesystemTree FilesystemTree;
 
         /// <summary>
         /// Data structure to hold Info of subfolders to be examined for Files.
@@ -57,7 +57,7 @@ namespace CoreLibrary.FilesystemTree
         {
             dirsToBeSearched.Clear();
 
-            Node = CreateFilesystemTree(DiffModeEnum.TwoWay);
+            FilesystemTree = CreateFilesystemTree(DiffModeEnum.TwoWay);
 
             AddDirToRoot(localDirPath, LocationEnum.OnLocal);
             AddDirToRoot(remoteDirPath, LocationEnum.OnRemote);
@@ -69,7 +69,7 @@ namespace CoreLibrary.FilesystemTree
         {
             dirsToBeSearched.Clear();
 
-            Node = CreateFilesystemTree(DiffModeEnum.ThreeWay);
+            FilesystemTree = CreateFilesystemTree(DiffModeEnum.ThreeWay);
 
             AddDirToRoot(localDirPath, LocationEnum.OnLocal);
             AddDirToRoot(baseDirPath, LocationEnum.OnBase);
@@ -79,13 +79,13 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// Virtual creating of Node to allow instantiation of different type of trees.
+        /// Virtual creating of FilesystemTree to allow instantiation of different type of trees.
         /// </summary>
         /// <param name="mode">Mode to instantiate the tree with</param>
-        /// <returns>Empty Node container</returns>
-        protected virtual INode CreateFilesystemTree(DiffModeEnum mode)
+        /// <returns>Empty FilesystemTree container</returns>
+        protected virtual IFilesystemTree CreateFilesystemTree(DiffModeEnum mode)
         {
-            return new Node(mode);
+            return new FilesystemTree(mode);
         }
 
         /// <summary>
@@ -108,11 +108,11 @@ namespace CoreLibrary.FilesystemTree
                         throw new RemoteDirectoryNotFoundException(dir);
                 }
 
-            Node.AddDirToRoot(dir, location);
-            dirsToBeSearched.Push(new DirectoryForIteration(dir, Node.Root, location));
+            FilesystemTree.AddDirToRoot(dir, location);
+            dirsToBeSearched.Push(new DirectoryForIteration(dir, FilesystemTree.Root, location));
         }
 
-        public INode TraverseTree()
+        public IFilesystemTree TraverseTree()
         {
             while (dirsToBeSearched.Count > 0)
             {
@@ -142,7 +142,7 @@ namespace CoreLibrary.FilesystemTree
                 {
                     INodeDirNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
                     if (diffNode == null)
-                    { // no related directory found, create a new node
+                    { // no related directory found, create a new FilesystemTree
                         diffNode = currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
                     } else
                     { // related directory found, add this location
@@ -173,7 +173,7 @@ namespace CoreLibrary.FilesystemTree
                     {
                         INodeFileNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
                         if (diffNode == null)
-                        { // no related file found, create a new node
+                        { // no related file found, create a new FilesystemTree
                             currentDir.ParentDiffNode.AddFile(info, currentDir.Location);
                         } else
                         { // related file found, add this location
@@ -190,7 +190,7 @@ namespace CoreLibrary.FilesystemTree
                 }
             }
 
-            return Node;
+            return FilesystemTree;
         }
     }
 }

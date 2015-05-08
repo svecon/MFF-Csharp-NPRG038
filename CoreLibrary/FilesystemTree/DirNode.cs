@@ -8,7 +8,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Directory node representing a directory in multiple locations.
+    /// Directory FilesystemTree representing a directory in multiple locations.
     /// </summary>
     public class DirNode : AbstractNode, INodeDirNode
     {
@@ -23,10 +23,10 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Initializes new instance of the <see cref="DirNode"/>
         /// </summary>
-        /// <param name="rootNode">Root directory for this node.</param>
+        /// <param name="rootNode">Root directory for this FilesystemTree.</param>
         /// <param name="relativePath">Relative path from top root directory.</param>
-        /// <param name="info">Directory info for this node.</param>
-        /// <param name="location">Location where this node has been found from.</param>
+        /// <param name="info">Directory info for this FilesystemTree.</param>
+        /// <param name="location">Location where this FilesystemTree has been found from.</param>
         /// <param name="mode">Default diff mode.</param>
         public DirNode(INodeDirNode rootNode, string relativePath, FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
             : base(info, location, mode)
@@ -47,7 +47,7 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Helper method for constructing new DirNode, which allows more flexibility (for children classes).
         /// </summary>
-        /// <param name="info">Directory info for the new directory node.</param>
+        /// <param name="info">Directory info for the new directory FilesystemTree.</param>
         /// <param name="location">Location from where the dir has been found from.</param>
         /// <returns>Instance of <see cref="INodeDirNode" /></returns>
         protected virtual INodeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
@@ -58,7 +58,7 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Helper method for constructing new FileNode, which allows more flexibility (for children classes).
         /// </summary>
-        /// <param name="info">Directory info for the new directory node.</param>
+        /// <param name="info">Directory info for the new directory FilesystemTree.</param>
         /// <param name="location">Location from where the dir has been found from.</param>
         /// <returns>Instance of <see cref="INodeFileNode"/></returns>
         protected virtual INodeFileNode CreateFileNode(FileInfo info, LocationEnum location)

@@ -8,7 +8,7 @@ namespace CoreLibrary.FilesystemDiffTree
     /// </summary>
     public class DiffCrawler : Crawler
     {
-        protected override INode CreateFilesystemTree(DiffModeEnum mode)
+        protected override IFilesystemTree CreateFilesystemTree(DiffModeEnum mode)
         {
             return new FilesystemDiffTree(mode);
         }

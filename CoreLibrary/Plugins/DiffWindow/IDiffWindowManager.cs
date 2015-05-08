@@ -15,9 +15,9 @@ namespace CoreLibrary.Plugins.DiffWindow
         IDiffWindow<INodeVisitable> OpenNewTab(params string[] args);
 
         /// <summary>
-        /// Open new visualisation using node.
+        /// Open new visualisation using FilesystemTree.
         /// </summary>
-        /// <param name="diffNode">Node that holds the differences.</param>
+        /// <param name="diffNode">FilesystemTree that holds the differences.</param>
         /// <param name="treeNode">Parent <see cref="IDiffWindow{TNode}"/> that requested opening new diff.</param>
         /// <returns><see cref="IDiffWindow{TNode}"/> that visualizes differences.</returns>
         IDiffWindow<INodeVisitable> OpenNewTab(INodeVisitable diffNode, IDiffWindow<INodeVisitable> treeNode = null);

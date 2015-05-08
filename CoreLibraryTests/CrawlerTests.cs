@@ -71,14 +71,14 @@ namespace CoreLibraryTests
         {
             var crawler = new Crawler().InitializeCrawler(GetTempPath() + "2way/l", GetTempPath() + "2way/r");
 
-            INode node = crawler.TraverseTree();
+            IFilesystemTree filesystemTree = crawler.TraverseTree();
 
-            Assert.AreEqual(DiffModeEnum.TwoWay, node.DiffMode);
+            Assert.AreEqual(DiffModeEnum.TwoWay, filesystemTree.DiffMode);
 
-            Assert.AreEqual((int)LocationCombinationsEnum.OnLocalRemote, node.Root.Location);
+            Assert.AreEqual((int)LocationCombinationsEnum.OnLocalRemote, filesystemTree.Root.Location);
 
-            Assert.AreEqual(3, node.Root.Directories.Count);
-            Assert.AreEqual(4, node.Root.Files.Count);
+            Assert.AreEqual(3, filesystemTree.Root.Directories.Count);
+            Assert.AreEqual(4, filesystemTree.Root.Files.Count);
         }
     }
 }

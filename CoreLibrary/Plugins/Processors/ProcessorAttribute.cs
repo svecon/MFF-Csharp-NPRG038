@@ -1,5 +1,5 @@
 ﻿using System;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace CoreLibrary.Plugins.Processors
 {

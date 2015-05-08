@@ -9,37 +9,37 @@ namespace CoreLibrary.FilesystemTree.Enums
     public enum NodeStatusEnum
     {
         /// <summary>
-        /// Initial status. The node was not processed.
+        /// Initial status. The FilesystemTree was not processed.
         /// </summary>
         Initial,
 
         /// <summary>
-        /// There was an error during processing the node.
+        /// There was an error during processing the FilesystemTree.
         /// </summary>
         HasError,
 
         /// <summary>
-        /// The node is ignored.
+        /// The FilesystemTree is ignored.
         /// </summary>
         IsIgnored,
 
         /// <summary>
-        /// The node has calculated diff.
+        /// The FilesystemTree has calculated diff.
         /// </summary>
         WasDiffed,
 
         /// <summary>
-        /// The node was merged.
+        /// The FilesystemTree was merged.
         /// </summary>
         WasMerged,
 
         /// <summary>
-        /// The diff in node has conflicts.
+        /// The diff in FilesystemTree has conflicts.
         /// </summary>
         HasConflicts,
 
         /// <summary>
-        /// The files in the node are conflicting.
+        /// The files in the FilesystemTree are conflicting.
         /// </summary>
         IsConflicting,
     }

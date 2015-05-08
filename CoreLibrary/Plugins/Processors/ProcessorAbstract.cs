@@ -28,7 +28,7 @@ namespace CoreLibrary.Plugins.Processors
         /// <summary>
         /// Virtual method for checking whether the processor should run.
         /// </summary>
-        /// <param name="node">Node that should be processed.</param>
+        /// <param name="node">FilesystemTree that should be processed.</param>
         /// <returns>True if the processor should run.</returns>
         protected virtual bool CheckStatus(INodeDirNode node)
         {
@@ -38,7 +38,7 @@ namespace CoreLibrary.Plugins.Processors
         /// <summary>
         /// Virtual method for checking whether the processor should run.
         /// </summary>
-        /// <param name="node">Node that should be processed.</param>
+        /// <param name="node">FilesystemTree that should be processed.</param>
         /// <returns>True if the processor should run.</returns>
         protected virtual bool CheckStatus(INodeFileNode node)
         {
@@ -73,15 +73,15 @@ namespace CoreLibrary.Plugins.Processors
         }
 
         /// <summary>
-        /// Logic for processing the node.
+        /// Logic for processing the FilesystemTree.
         /// </summary>
-        /// <param name="node">Node that will be processed.</param>
+        /// <param name="node">FilesystemTree that will be processed.</param>
         protected abstract void ProcessChecked(INodeDirNode node);
 
         /// <summary>
-        /// Logic for processing the node.
+        /// Logic for processing the FilesystemTree.
         /// </summary>
-        /// <param name="node">Node that will be processed.</param>
+        /// <param name="node">FilesystemTree that will be processed.</param>
         protected abstract void ProcessChecked(INodeFileNode node);
     }
 }

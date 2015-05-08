@@ -10,7 +10,7 @@ using CoreLibrary.Plugins.Processors;
 namespace CoreLibrary.FilesystemTree.Visitors
 {
     /// <summary>
-    /// This visitor executes all processors in a given order on a Node.
+    /// This visitor executes all processors in a given order on a FilesystemTree.
     /// 
     /// All files and folders are processed in parallel. 
     /// But one particular file is processed sequentially with all the processors one by one.
@@ -38,7 +38,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            // run all the processors sequentially one after another on this node
+            // run all the processors sequentially one after another on this FilesystemTree
             task = processors.Aggregate(task, (current, processor) => current.ContinueWith(_ =>
             {
                 try
@@ -67,7 +67,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             // create a completed task
             Task task = Task.FromResult(false);
 
-            // run all the processors sequentially one after another on this node
+            // run all the processors sequentially one after another on this FilesystemTree
             task = processors.Aggregate(task, (current, processor) => current.ContinueWith(_ =>
             {
                 try

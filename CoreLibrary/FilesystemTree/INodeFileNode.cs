@@ -2,12 +2,12 @@
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// File node of Node
+    /// File FilesystemTree of FilesystemTree
     /// </summary>
     public interface INodeFileNode : INodeAbstractNode
     {
         /// <summary>
-        /// Reference to the parent directory node.
+        /// Reference to the parent directory FilesystemTree.
         /// </summary>
         INodeDirNode ParentNode { get; }
     }

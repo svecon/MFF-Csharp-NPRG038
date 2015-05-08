@@ -7,7 +7,7 @@ namespace CoreLibrary.FilesystemDiffTree
     /// <summary>
     /// FilesystemDiffTree is enhanced for some features needed in diffing between files.
     /// </summary>
-    public class FilesystemDiffTree : FilesystemTree.Node
+    public class FilesystemDiffTree : FilesystemTree.FilesystemTree
     {
         /// <summary>
         /// Initializes new instance of the <see cref="FilesystemDiffTree"/>

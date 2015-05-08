@@ -2,7 +2,7 @@
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Interface for Crawlers who traverse directories and create Node
+    /// Interface for Crawlers who traverse directories and create FilesystemTree
     /// </summary>
     public interface ICrawler
     {
@@ -27,7 +27,7 @@ namespace CoreLibrary.FilesystemTree
         /// Traverses filesystem directories specified in constructor.
         /// Creates a filesystem tree with all files from all paths.
         /// </summary>
-        /// <returns>Node with populated nodes.</returns>
-        INode TraverseTree();
+        /// <returns>FilesystemTree with populated nodes.</returns>
+        IFilesystemTree TraverseTree();
     }
 }

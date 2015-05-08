@@ -4,7 +4,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Interface for a Node structure that can accept a Visitor
+    /// Interface for a FilesystemTree structure that can accept a Visitor
     /// </summary>
     public interface INodeVisitable
     {

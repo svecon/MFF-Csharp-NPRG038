@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
+using CoreLibrary.FilesystemTree.Enums;
 using TextDiffAlgorithm.ThreeWay;
 
 namespace TextDiffWindows.Controls.LineMarkers

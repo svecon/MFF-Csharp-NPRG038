@@ -3,7 +3,7 @@
 namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
-    /// Modes for Node structure.
+    /// Modes for FilesystemTree structure.
     /// 
     /// Some features are exclusive for different mode.
     /// </summary>

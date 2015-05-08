@@ -205,7 +205,7 @@ namespace Sverge
                 header = node.Info.Name;
             } else
             {
-                var tree = diffNode as INode;
+                var tree = diffNode as IFilesystemTree;
                 header = tree != null ? tree.Root.Info.Name : "Unknown";
             }
 
