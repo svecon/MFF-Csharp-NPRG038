@@ -30,6 +30,9 @@ namespace CoreLibrary.Plugins.Processors
 
         private readonly Type[] settingsConstructorSignature = { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="ProcessorLoader"/>
+        /// </summary>
         public ProcessorLoader()
         {
             ProcessorsDictionary = new Dictionary<ProcessorTypeEnum, SortedList<int, IProcessor>>();
@@ -71,6 +74,7 @@ namespace CoreLibrary.Plugins.Processors
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -106,6 +110,7 @@ namespace CoreLibrary.Plugins.Processors
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -149,6 +154,7 @@ namespace CoreLibrary.Plugins.Processors
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -165,6 +171,7 @@ namespace CoreLibrary.Plugins.Processors
             if (attr == null)
             {
 #if DEBUG
+                // rethrow in Debug mode; ignore in Production if faulty 
                 throw new ConstraintException("Every processor must implement ProcessorAttribute.");
 #endif
 #pragma warning disable 162
@@ -187,10 +194,12 @@ namespace CoreLibrary.Plugins.Processors
             {
 #if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
+                // @TODO: load processors anyway in undefined order, print out warning for the user?
 #endif
             } catch (Exception)
             {
 #if DEBUG
+                // rethrow in Debug mode; ignore in Production if faulty 
                 throw;
 #endif
             }
@@ -210,10 +219,9 @@ namespace CoreLibrary.Plugins.Processors
 
         public IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType)
         {
-            if (!ProcessorsDictionary.ContainsKey(processorType))
-                return Enumerable.Empty<IProcessor>();
-
-            return ProcessorsDictionary[processorType].Select(valuePair => valuePair.Value);
+            return !ProcessorsDictionary.ContainsKey(processorType) 
+                ? Enumerable.Empty<IProcessor>() 
+                : ProcessorsDictionary[processorType].Select(valuePair => valuePair.Value);
         }
 
         public IEnumerable<ISettings> GetSettings()

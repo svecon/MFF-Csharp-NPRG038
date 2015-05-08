@@ -4,16 +4,16 @@ using CoreLibrary.Enums;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Interface for a FilesystemTree structure.
+    /// Interface for a Node structure.
     /// 
     /// Hold information about filesystem trees from all locations.
     /// </summary>
-    public interface IFilesystemTree : IFilesystemTreeVisitable
+    public interface INode : INodeVisitable
     {
         /// <summary>
         /// Root of the filesystem tree.
         /// </summary>
-        IFilesystemTreeDirNode Root { get; }
+        INodeDirNode Root { get; }
 
         /// <summary>
         /// Diff mode for constructed tree.

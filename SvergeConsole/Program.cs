@@ -26,7 +26,7 @@ namespace SvergeConsole
 
         private static IProcessorLoader _loader;
         private static ProcessorRunner _runner;
-        private static IFilesystemTreeVisitable _diffTree;
+        private static INodeVisitable _diffTree;
 
         static void Main(string[] args)
         {

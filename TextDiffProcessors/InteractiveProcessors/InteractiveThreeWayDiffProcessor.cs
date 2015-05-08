@@ -32,16 +32,16 @@ namespace TextDiffProcessors.InteractiveProcessors
 
         private bool applyToAll;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             return base.CheckStatus(node) && node.Differences != DifferencesStatusEnum.AllSame;
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
 

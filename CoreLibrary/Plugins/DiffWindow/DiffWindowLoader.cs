@@ -6,14 +6,21 @@ using CoreLibrary.FilesystemTree;
 
 namespace CoreLibrary.Plugins.DiffWindow
 {
-    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+    using DW = IDiffWindow<INodeVisitable>;
 
+    /// <summary>
+    /// A loader for the <see cref="IDiffWindow{TNode}"/> plugins and their menus <see cref="IDiffWindowMenu"/>.
+    /// </summary>
     public class DiffWindowLoader
     {
         private readonly SortedList<int, Type> availableWindows;
         private readonly SortedList<int, Type> availableWindowMenus;
         private readonly IDiffWindowManager manager;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="DiffWindowLoader"/>
+        /// </summary>
+        /// <param name="diffManager">Reference to the <see cref="IDiffWindowManager"/></param>
         public DiffWindowLoader(IDiffWindowManager diffManager)
         {
             manager = diffManager;
@@ -21,6 +28,9 @@ namespace CoreLibrary.Plugins.DiffWindow
             availableWindowMenus = new SortedList<int, Type>();
         }
 
+        /// <summary>
+        /// Finds all <see cref="IDiffWindow{TNode}"/> in the current assemblies.
+        /// </summary>
         public void LoadWindows()
         {
             Type type = typeof(DW);
@@ -39,11 +49,15 @@ namespace CoreLibrary.Plugins.DiffWindow
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
         }
 
+        /// <summary>
+        /// Finds all <see cref="IDiffWindowMenu"/> in the current assemblies.
+        /// </summary>
         public void LoadWindowMenus()
         {
             Type type = typeof(IDiffWindowMenu);
@@ -62,11 +76,17 @@ namespace CoreLibrary.Plugins.DiffWindow
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
         }
 
+        /// <summary>
+        /// Enumerates the menus that are available for the given <see cref="IDiffWindow{TNode}"/>
+        /// </summary>
+        /// <param name="diffWindow"><see cref="IDiffWindow{TNode}"/></param>
+        /// <returns>An enumeration of <see cref="IDiffWindowMenu"/> that are implemented by the given <see cref="IDiffWindow{TNode}"/></returns>
         public IEnumerable<IDiffWindowMenu> CreateDiffWindowMenus(object diffWindow)
         {
             foreach (KeyValuePair<int, Type> availableWindowMenu in availableWindowMenus)
@@ -79,6 +99,7 @@ namespace CoreLibrary.Plugins.DiffWindow
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -95,6 +116,12 @@ namespace CoreLibrary.Plugins.DiffWindow
             }
         }
 
+        /// <summary>
+        /// Creates <see cref="IDiffWindow{TNode}"/> for the given structure.
+        /// All <see cref="IDiffWindow{TNode}"/> must have CanBeApplied static method.
+        /// </summary>
+        /// <param name="structure">Structure that holds some diff.</param>
+        /// <returns><see cref="IDiffWindow{TNode}"/> that can handle the given structure.</returns>
         public DW CreateWindowFor(object structure)
         {
             foreach (KeyValuePair<int, Type> valuePair in availableWindows)
@@ -106,7 +133,7 @@ namespace CoreLibrary.Plugins.DiffWindow
                     if (!canBeApplied)
                         continue;
 
-                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(IFilesystemTreeVisitable), typeof(IDiffWindowManager) });
+                    ConstructorInfo constructorInfo = valuePair.Value.GetConstructor(new Type[] { typeof(INodeVisitable), typeof(IDiffWindowManager) });
 
                     if (constructorInfo == null)
                         throw new InvalidOperationException(string.Format("DiffWindow of type {0} does not have correct constructor.", valuePair.Value));
@@ -116,6 +143,7 @@ namespace CoreLibrary.Plugins.DiffWindow
                 } catch (Exception)
                 {
 #if DEBUG
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }

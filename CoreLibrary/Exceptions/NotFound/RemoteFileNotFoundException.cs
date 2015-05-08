@@ -7,6 +7,10 @@ namespace CoreLibrary.Exceptions.NotFound
     /// </summary>
     public class RemoteFileNotFoundException : LocationFileNotFoundException
     {
+        /// <summary>
+        /// Initializes new instance of the <see cref="RemoteFileNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the file.</param>
         public RemoteFileNotFoundException(FileSystemInfo info)
             : base(info)
         {

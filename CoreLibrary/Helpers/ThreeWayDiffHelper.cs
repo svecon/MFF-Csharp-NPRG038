@@ -32,6 +32,10 @@ namespace CoreLibrary.Helpers
 
         #region Getters
 
+        /// <summary>
+        /// Recalculate possible files and return.
+        /// </summary>
+        /// <returns>Possible files</returns>
         public int GetSameFiles()
         {
             RecalculatePossibleFiles();
@@ -39,6 +43,10 @@ namespace CoreLibrary.Helpers
             return possibleFiles;
         }
 
+        /// <summary>
+        /// Getter for the possible combinations.
+        /// </summary>
+        /// <returns>Possible combinations</returns>
         public int GetPossibleCombinations()
         {
             return possibleCombinations;
@@ -48,21 +56,34 @@ namespace CoreLibrary.Helpers
 
         #region Adding files as possibilities
 
+        /// <summary>
+        /// Add given file mask as a possibility.
+        /// </summary>
+        /// <param name="file">Possible file mask.</param>
         protected void AddGivenFileAsPossibility(int file)
         {
             possibleFiles |= file;
         }
 
+        /// <summary>
+        /// Add base file as a possibility.
+        /// </summary>
         public void AddBaseFilePossibility()
         {
             AddGivenFileAsPossibility(BASE);
         }
 
+        /// <summary>
+        /// Add local file as a possibility.
+        /// </summary>
         public void AddLocalFilePossibility()
         {
             AddGivenFileAsPossibility(LOCAL);
         }
 
+        /// <summary>
+        /// Add remote file as a possibility.
+        /// </summary>
         public void AddRemoteFilePossibility()
         {
             AddGivenFileAsPossibility(REMOTE);
@@ -72,23 +93,40 @@ namespace CoreLibrary.Helpers
 
         #region Checking combinations
 
+        /// <summary>
+        /// Checks the given combination against the possible combinations.
+        /// </summary>
+        /// <param name="combination">Combination to be checked.</param>
+        /// <param name="isDifferent">Whether the input is different.</param>
         protected void CheckGivenCombination(int combination, bool isDifferent)
         {
             if ((possibleCombinations & combination) > 0 && isDifferent)
                 possibleCombinations &= ~combination;
         }
 
-        public void CheckCombinationBaseLeft(bool isDifferent)
+        /// <summary>
+        /// Check combination of base and local.
+        /// </summary>
+        /// <param name="isDifferent">Whether base and local are different.</param>
+        public void CheckCombinationBaseLocal(bool isDifferent)
         {
             CheckGivenCombination(BASE_LOCAL, isDifferent);
         }
 
-        public void CheckCombinationBaseRight(bool isDifferent)
+        /// <summary>
+        /// Check combination of base and remote.
+        /// </summary>
+        /// <param name="isDifferent">Whether base and remote are different.</param>
+        public void CheckCombinationBaseRemote(bool isDifferent)
         {
             CheckGivenCombination(BASE_REMOTE, isDifferent);
         }
 
-        public void CheckCombinationLeftRight(bool isDifferent)
+        /// <summary>
+        /// Checks combination of local and remote.
+        /// </summary>
+        /// <param name="isDifferent">Whether local and remote are different.</param>
+        public void CheckCombinationLocalRemote(bool isDifferent)
         {
             CheckGivenCombination(LOCAL_REMOTE, isDifferent);
         }
@@ -97,6 +135,12 @@ namespace CoreLibrary.Helpers
 
         #region Files possibility checks
 
+        /// <summary>
+        /// Can give file be the same?
+        /// </summary>
+        /// <param name="file">Mask of the file to be checked.</param>
+        /// <param name="forceRecheck">Force recheck of the possible files.</param>
+        /// <returns>True when the file can be same.</returns>
         protected bool CanGivenFileBeSame(int file, bool forceRecheck = false)
         {
             if (forceRecheck)
@@ -105,17 +149,32 @@ namespace CoreLibrary.Helpers
             return (possibleFiles & file) > 0;
         }
 
+        /// <summary>
+        /// Can base file be same?
+        /// </summary>
+        /// <param name="forceRecheck">Force recheck of the possible files.</param>
+        /// <returns>True when the file can be same.</returns>
         public bool CanBaseFileBeSame(bool forceRecheck = false)
         {
             return CanGivenFileBeSame(BASE, forceRecheck);
         }
 
-        public bool CanLeftFileBeSame(bool forceRecheck = false)
+        /// <summary>
+        /// Can local file be same?
+        /// </summary>
+        /// <param name="forceRecheck">Force recheck of the possible files.</param>
+        /// <returns>True when the file can be same.</returns>
+        public bool CanLocalFileBeSame(bool forceRecheck = false)
         {
             return CanGivenFileBeSame(LOCAL, forceRecheck);
         }
 
-        public bool CanRightFileBeSame(bool forceRecheck = false)
+        /// <summary>
+        /// Can remote file be same?
+        /// </summary>
+        /// <param name="forceRecheck">Force recheck of the possible files.</param>
+        /// <returns>True when the file can be same.</returns>
+        public bool CanRemoteFileBeSame(bool forceRecheck = false)
         {
             return CanGivenFileBeSame(REMOTE, forceRecheck);
         }
@@ -124,22 +183,38 @@ namespace CoreLibrary.Helpers
 
         #region Combinations possibility checks
 
+        /// <summary>
+        /// Helper method for checking possible combinations.
+        /// </summary>
+        /// <returns>True if the combination is still possible.</returns>
         protected bool CanGivenCombinationBeSame(int combination)
         {
             return (possibleCombinations & combination) > 0;
         }
 
-        public bool CanCombinationBaseLeftBeSame()
+        /// <summary>
+        /// Helper method for checking possible combinations.
+        /// </summary>
+        /// <returns>True if base and local can be same.</returns>
+        public bool CanBaseLocalBeSame()
         {
             return CanGivenCombinationBeSame(BASE_LOCAL);
         }
 
-        public bool CanCombinationBaseRightBeSame()
+        /// <summary>
+        /// Helper method for checking possible combinations.
+        /// </summary>
+        /// <returns>True if base and remote can be same.</returns>
+        public bool CanBaseRemoteBeSame()
         {
             return CanGivenCombinationBeSame(BASE_REMOTE);
         }
 
-        public bool CanCombinationLeftRightBeSame()
+        /// <summary>
+        /// Helper method for checking possible combinations.
+        /// </summary>
+        /// <returns>True if local and remote can be same.</returns>
+        public bool CanLocalRemoteBeSame()
         {
             return CanGivenCombinationBeSame(LOCAL_REMOTE);
         }
@@ -148,6 +223,9 @@ namespace CoreLibrary.Helpers
 
         #region Recalculating possibilities
 
+        /// <summary>
+        /// Recalculates the possible combinations based on the possible files.
+        /// </summary>
         public void RecalculatePossibleCombinations()
         {
             if ((possibleFiles & (BASE | LOCAL)) == (BASE | LOCAL))
@@ -160,6 +238,9 @@ namespace CoreLibrary.Helpers
                 possibleCombinations |= LOCAL_REMOTE;
         }
 
+        /// <summary>
+        /// Recalculates the possible files based on the possible combinations.
+        /// </summary>
         public void RecalculatePossibleFiles()
         {
             if ((possibleCombinations & (BASE_LOCAL | BASE_REMOTE)) == 0)

@@ -16,16 +16,16 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Filter for only C# source files.", "csharp-source-code", "C#")]
         public bool IsEnabled = false;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             return IsEnabled && base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             if (node.Info.Extension.ToLowerInvariant() != ".cs")
                 node.Status = NodeStatusEnum.IsIgnored;

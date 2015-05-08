@@ -8,11 +8,11 @@ namespace TextDiffProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CheckConflictsProcessor : ProcessorAbstract
     {
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;
 

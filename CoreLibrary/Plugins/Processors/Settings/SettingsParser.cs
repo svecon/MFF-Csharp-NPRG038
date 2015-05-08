@@ -19,6 +19,10 @@ namespace CoreLibrary.Plugins.Processors.Settings
 
         readonly Dictionary<string, List<ISettings>> shortSettings;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="SettingsParser"/>
+        /// </summary>
+        /// <param name="settings">Enumerable of the settings to be parsed.</param>
         public SettingsParser(IEnumerable<ISettings> settings)
         {
             longSettings = new Dictionary<string, List<ISettings>>();
@@ -104,6 +108,12 @@ namespace CoreLibrary.Plugins.Processors.Settings
             return leftOvers.ToArray();
         }
 
+        /// <summary>
+        /// Applies the setting on an associated field.
+        /// </summary>
+        /// <param name="settingsList">An enumerable of setting.</param>
+        /// <param name="arguments">Arguments that will be applied to the setting.</param>
+        /// <param name="i">Position of the correct arguments for the setting.</param>
         private void ApplySettings(IEnumerable<ISettings> settingsList, ref string[] arguments, ref int i)
         {
             int numberOfParams = 0;

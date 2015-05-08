@@ -6,7 +6,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace SvergeConsole.Printers
 {
     /// <summary>
-    /// Prints FilesystemTree on the console. 
+    /// Prints Node on the console. 
     /// 
     /// Also prints all available information about the node (status, differences, locations).
     /// 
@@ -17,13 +17,13 @@ namespace SvergeConsole.Printers
 
         int currentLevel = 0;
 
-        private IFilesystemTreeDirNode directoryCache;
+        private INodeDirNode directoryCache;
 
         private bool firstDirectoryVisit;
 
         private bool isOnlyFileNode = true;
 
-        public void Visit(IFilesystemTreeDirNode node)
+        public void Visit(INodeDirNode node)
         {
             isOnlyFileNode = false;
 
@@ -38,12 +38,12 @@ namespace SvergeConsole.Printers
                 firstDirectoryVisit = true;
             }
 
-            foreach (IFilesystemTreeFileNode file in node.Files)
+            foreach (INodeFileNode file in node.Files)
             {
                 file.Accept(this);
             }
 
-            foreach (IFilesystemTreeDirNode dir in node.Directories)
+            foreach (INodeDirNode dir in node.Directories)
             {
                 currentLevel++;
                 dir.Accept(this);
@@ -63,7 +63,7 @@ namespace SvergeConsole.Printers
             Console.WriteLine(@"+- \{0} ({1:0.00}kB)", directoryCache.RelativePath, directoryCache.GetSize());
         }
 
-        public void Visit(IFilesystemTreeFileNode node)
+        public void Visit(INodeFileNode node)
         {
             if (node.Status == NodeStatusEnum.IsIgnored)
                 return;

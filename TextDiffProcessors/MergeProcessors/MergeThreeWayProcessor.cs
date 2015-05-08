@@ -25,11 +25,11 @@ namespace TextDiffProcessors.MergeProcessors
         [Settings("Default action for merging files.", "3merge-default", "3d")]
         public DefaultActionEnum DefaultAction;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status == NodeStatusEnum.WasMerged)
                 return false;
@@ -40,7 +40,7 @@ namespace TextDiffProcessors.MergeProcessors
             return base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
 
@@ -238,7 +238,7 @@ namespace TextDiffProcessors.MergeProcessors
                 Directory.CreateDirectory(path);
         }
 
-        private string CreatePath(IFilesystemTreeFileNode node)
+        private string CreatePath(INodeFileNode node)
         {
             string output = OutputFolder == null
                 ? node.GetAbsolutePath(LocationEnum.OnBase)

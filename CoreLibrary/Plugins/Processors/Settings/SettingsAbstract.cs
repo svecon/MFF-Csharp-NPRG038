@@ -30,14 +30,20 @@ namespace CoreLibrary.Plugins.Processors.Settings
 
         public FieldInfo Field { get; protected set; }
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="SettingsAbstract"/>
+        /// </summary>
+        /// <param name="instance">Instance of the class that has the setting.</param>
+        /// <param name="field">Field that is associated with the setting.</param>
+        /// <param name="attribute">Setting attribute.</param>
         protected SettingsAbstract(object instance, FieldInfo field, SettingsAttribute attribute)
         {
             Instance = instance;
             Field = field;
 
             Info = attribute.Info;
-            Argument = attribute.Argument;
-            ArgumentShortcut = attribute.Shortcut;
+            Argument = attribute.Switch;
+            ArgumentShortcut = attribute.ShortSwitch;
 
             WasSet = false;
         }

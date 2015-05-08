@@ -7,7 +7,7 @@ using CoreLibrary.Plugins.Processors;
 namespace CoreLibrary.FilesystemTree.Visitors
 {
     /// <summary>
-    /// This visitor executes all processors in a given order on a FilesystemTree.
+    /// This visitor executes all processors in a given order on a Node.
     /// 
     /// All files and folders are processed in series. 
     /// But one particular file is processed sequentially with all the processors one by one.
@@ -19,15 +19,15 @@ namespace CoreLibrary.FilesystemTree.Visitors
         private bool isCancelled = false;
 
         /// <summary>
-        /// Constructor for ExecutionVisitorInSerial.
+        /// Initializes new instance of the <see cref="ExecutionVisitor"/>
         /// </summary>
-        /// <param name="processors">Processors to be run.</param>
+        /// <param name="processors">Enumerator for processors that will be run.</param>
         public ExecutionVisitor(IEnumerable<IProcessor> processors)
         {
             this.processors = processors;
         }
 
-        public void Visit(IFilesystemTreeDirNode node)
+        public void Visit(INodeDirNode node)
         {
             try
             {
@@ -40,17 +40,20 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 HandleError(node, e);
             }
 
-            foreach (IFilesystemTreeFileNode file in node.Files.Where(processor => !isCancelled))
+            // process files
+            foreach (INodeFileNode file in node.Files.Where(processor => !isCancelled))
                 file.Accept(this);
 
-            foreach (IFilesystemTreeDirNode dir in node.Directories.Where(processor => !isCancelled))
+            // process subdirectories
+            foreach (INodeDirNode dir in node.Directories.Where(processor => !isCancelled))
                 dir.Accept(this);
         }
 
-        public void Visit(IFilesystemTreeFileNode node)
+        public void Visit(INodeFileNode node)
         {
             try
             {
+                // run processors unless this Visitor isCancelled
                 foreach (IProcessor processor in processors.Where(processor => !isCancelled))
                     processor.Process(node);
 
@@ -60,7 +63,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             }
         }
 
-        private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
+        private static void HandleError(INodeAbstractNode node, Exception e)
         {
             node.Status = NodeStatusEnum.HasError;
             node.Exception = e;

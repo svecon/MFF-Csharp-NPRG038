@@ -85,7 +85,7 @@ namespace SvergeConsole.Processors
 
         /// <summary>
         /// Compares the two settings by their ArgumentShortcuts alphabetically if available.
-        /// Otherwise use Argument.
+        /// Otherwise use Switch.
         /// </summary>
         private class SettingsComparer : IComparer<ISettings>
         {

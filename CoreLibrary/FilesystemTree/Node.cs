@@ -5,19 +5,23 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// FilesystemTree that contains information about all processed directories.
+    /// Node that contains information about all processed directories.
     /// 
     /// The tree is represented with Nodes that are joined as a one way linked list.
     /// 
     /// The nodes contain all information about the files location, status and more.
     /// </summary>
-    public class FilesystemTree : IFilesystemTree
+    public class Node : INode
     {
         public DiffModeEnum DiffMode { get; protected set; }
 
-        public IFilesystemTreeDirNode Root { get; protected set; }
+        public INodeDirNode Root { get; protected set; }
 
-        public FilesystemTree(DiffModeEnum mode)
+        /// <summary>
+        /// Initializes new instance of the <see cref="Node"/>
+        /// </summary>
+        /// <param name="mode">Mode for the comparison</param>
+        public Node(DiffModeEnum mode)
         {
             DiffMode = mode;
         }
@@ -38,9 +42,15 @@ namespace CoreLibrary.FilesystemTree
             visitor.Visit(Root);
         }
 
-        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo root, LocationEnum location)
+        /// <summary>
+        /// A virtual method for creating <see cref="INodeDirNode"/>
+        /// </summary>
+        /// <param name="info">Info of the directory</param>
+        /// <param name="location">Location of the directory</param>
+        /// <returns>An instance of <see cref="INodeDirNode"/></returns>
+        protected virtual INodeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
         {
-            return new DirNode(null, null, root, location, DiffMode);
+            return new DirNode(null, null, info, location, DiffMode);
         }
     }
 }

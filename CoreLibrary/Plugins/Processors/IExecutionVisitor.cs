@@ -4,7 +4,7 @@ using CoreLibrary.FilesystemTree.Visitors;
 namespace CoreLibrary.Plugins.Processors
 {
     /// <summary>
-    /// Interface for a FilesystemTree Execution visitor.
+    /// Interface for a Node Execution visitor.
     /// 
     /// Containes method for task manipulations.
     /// </summary>

@@ -8,8 +8,19 @@ namespace CoreLibrary.Enums
     [Flags]
     public enum LocationEnum
     {
-        OnBase      = 1 << 0,
+        /// <summary>
+        /// File is on base.
+        /// </summary>
+        OnBase       = 1 << 0,
+
+        /// <summary>
+        /// File is on local.
+        /// </summary>
         OnLocal      = 1 << 1,
+
+        /// <summary>
+        /// File is on remote.
+        /// </summary>
         OnRemote     = 1 << 2,
     };
 }

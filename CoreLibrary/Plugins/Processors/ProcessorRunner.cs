@@ -4,15 +4,19 @@ using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.Plugins.Processors
 {
+    /// <summary>
+    /// Processor runner is a helper class that runs processors.
+    /// </summary>
     public class ProcessorRunner
     {
         private readonly IExecutionVisitor diffVisitor;
         private readonly IExecutionVisitor mergeVisitor;
         private readonly IExecutionVisitor interactiveVisitor;
 
-        public delegate void OnDiffCompleteDelegate();
-        public delegate void OnMergeCompleteDelegate();
-
+        /// <summary>
+        /// Initializes new instance of the <see cref="ProcessorRunner"/>
+        /// </summary>
+        /// <param name="processorLoader">Processor loader with loaded processors.</param>
         public ProcessorRunner(IProcessorLoader processorLoader)
         {
             diffVisitor = new ParallelExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Diff));
@@ -20,27 +24,41 @@ namespace CoreLibrary.Plugins.Processors
             interactiveVisitor = new ExecutionVisitor(processorLoader.GetProcessors(ProcessorTypeEnum.Interactive));
         }
 
-        public async Task RunDiff(IFilesystemTreeVisitable diffTree)
+        /// <summary>
+        /// Runs a diff processors for a given structure
+        /// </summary>
+        /// <param name="structure">Structure on which the processors will run.</param>
+        /// <returns>Task for the async process.</returns>
+        public async Task RunDiff(INodeVisitable structure)
         {
             await Task.Factory.StartNew(() =>
             {
-                diffTree.Accept(diffVisitor);
+                structure.Accept(diffVisitor);
                 diffVisitor.Wait();
             }, TaskCreationOptions.LongRunning);
         }
 
-        public async Task RunMerge(IFilesystemTreeVisitable diffTree)
+        /// <summary>
+        /// Runs a merge processors for a given structure
+        /// </summary>
+        /// <param name="structure">Structure on which the processors will run.</param>
+        /// <returns>Task for the async process.</returns>
+        public async Task RunMerge(INodeVisitable structure)
         {
             await Task.Factory.StartNew(() =>
             {
-                diffTree.Accept(mergeVisitor);
+                structure.Accept(mergeVisitor);
                 mergeVisitor.Wait();
             }, TaskCreationOptions.LongRunning);
         }
 
-        public void RunInteractiveResolving(IFilesystemTreeVisitable diffTree)
+        /// <summary>
+        /// Runs interactive processors for a given structure
+        /// </summary>
+        /// <param name="structure">Structure on which the processors will run.</param>
+        public void RunInteractiveResolving(INodeVisitable structure)
         {
-            diffTree.Accept(interactiveVisitor);
+            structure.Accept(interactiveVisitor);
         }
     }
 }

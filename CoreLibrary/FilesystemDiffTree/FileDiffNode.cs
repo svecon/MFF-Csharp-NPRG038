@@ -21,26 +21,23 @@ namespace CoreLibrary.FilesystemDiffTree
             set { diff = value; OnPropertyChanged("Diff"); }
         }
 
-        private PreferedActionThreeWayEnum action;
-        public PreferedActionThreeWayEnum Action
-        {
-            get { return action; }
-            set { action = value; OnPropertyChanged("PreferedAction"); }
-        }
-
         /// <summary>
-        /// Default construtor for FileDiffNode (used in the FilesystemTree).
+        /// Initializes new instance of the <see cref="FileDiffNode"/>
+        /// 
+        /// Default construtor for FileDiffNode (used in the Node).
         /// </summary>
         /// <param name="parentNode">Parent DirNode for this node.</param>
         /// <param name="info">File info for this node.</param>
         /// <param name="location">Location where this node has been found from.</param>
         /// <param name="mode">Default diff mode.</param>
-        public FileDiffNode(IFilesystemTreeDirNode parentNode, FileInfo info, LocationEnum location, DiffModeEnum mode)
+        public FileDiffNode(INodeDirNode parentNode, FileInfo info, LocationEnum location, DiffModeEnum mode)
             : base(parentNode, info, location, mode)
         {
         }
 
         /// <summary>
+        /// Initializes new instance of the <see cref="FileDiffNode"/>
+        /// 
         /// Construtor for creating diff between two files (used separately).
         /// </summary>
         /// <param name="fileLocal">Path to the local file.</param>
@@ -58,6 +55,8 @@ namespace CoreLibrary.FilesystemDiffTree
         }
 
         /// <summary>
+        /// Initializes new instance of the <see cref="FileDiffNode"/>
+        /// 
         /// Construtor for creating diff between three files (used separately).
         /// </summary>
         /// <param name="fileLocal">Path to the local file.</param>

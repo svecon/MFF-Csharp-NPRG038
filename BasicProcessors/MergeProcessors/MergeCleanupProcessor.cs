@@ -8,11 +8,11 @@ namespace BasicProcessors.MergeProcessors
     [Processor(ProcessorTypeEnum.Merge, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class MergeCleanupProcessor : ProcessorAbstract
     {
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;
 

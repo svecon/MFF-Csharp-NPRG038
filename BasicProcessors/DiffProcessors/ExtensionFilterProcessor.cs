@@ -38,11 +38,11 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Include files by file extension.", "include-extension", "ie")]
         public string[] IncludeFilter = null;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             // default settings -- all pass
             if (FileType == FileTypesEnum.All && (ExcludeFilter == null || ExcludeFilter.Length == 0)

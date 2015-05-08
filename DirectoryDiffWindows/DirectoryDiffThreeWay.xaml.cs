@@ -14,8 +14,6 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace DirectoryDiffWindows
 {
-    using AN = IFilesystemTreeAbstractNode;
-
     /// <summary>
     /// Interaction logic for DirectoryDiffThreeWay.xaml
     /// </summary>
@@ -52,11 +50,11 @@ namespace DirectoryDiffWindows
             set { SetValue(BaseFolderLocationProperty, value); }
         }
 
-        private AN selectedNode;
+        private INodeAbstractNode selectedNode;
 
         private bool isBusy = false;
 
-        public DirectoryDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public DirectoryDiffThreeWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
             this.manager = manager;
@@ -75,7 +73,7 @@ namespace DirectoryDiffWindows
                     ((TreeViewItem)t.ItemContainerGenerator.ContainerFromIndex(0)).IsSelected = true;
                 }
 
-                selectedNode = (AN)t.SelectedItem;
+                selectedNode = (INodeAbstractNode)t.SelectedItem;
             };
         }
 
@@ -106,9 +104,9 @@ namespace DirectoryDiffWindows
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var t = sender as TreeView;
-            if (t != null && t.SelectedItem is IFilesystemTreeFileNode)
+            if (t != null && t.SelectedItem is INodeFileNode)
             {
-                manager.OpenNewTab((AN)t.SelectedItem, this);
+                manager.OpenNewTab((INodeAbstractNode)t.SelectedItem, this);
             }
         }
 
@@ -352,7 +350,7 @@ namespace DirectoryDiffWindows
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            selectedNode = e.NewValue as AN;
+            selectedNode = e.NewValue as INodeAbstractNode;
         }
     }
 

@@ -9,9 +9,11 @@ namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
     /// Crawler traverses given directories (2 or 3) 
-    /// and builds a IFilesystemTree with files and directories as Nodes.
+    /// and builds a INode with files and directories as Nodes.
     /// 
-    /// //TODO maybe try to parallelize the crawling?
+    /// @TODO try to parallelize the crawling to read the related directories from different revisions at the same time
+    /// This might not be faster as the structure still needs to do only one related directory at a time
+    /// Paralallizing without waiting for related directories to finish scanning would make finding related files and directories much slower.
     /// </summary>
     public class Crawler : ICrawler
     {
@@ -22,10 +24,10 @@ namespace CoreLibrary.FilesystemTree
         private struct DirectoryForIteration
         {
             public readonly DirectoryInfo Info;
-            public readonly IFilesystemTreeDirNode ParentDiffNode;
+            public readonly INodeDirNode ParentDiffNode;
             public readonly LocationEnum Location;
 
-            public DirectoryForIteration(DirectoryInfo info, IFilesystemTreeDirNode parent, LocationEnum location)
+            public DirectoryForIteration(DirectoryInfo info, INodeDirNode parent, LocationEnum location)
             {
                 Info = info;
                 ParentDiffNode = parent;
@@ -34,9 +36,9 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// FilesystemTree represents all found files in a tree structure.
+        /// Node represents all found files in a tree structure.
         /// </summary>
-        protected IFilesystemTree FilesystemTree;
+        protected INode Node;
 
         /// <summary>
         /// Data structure to hold Info of subfolders to be examined for Files.
@@ -44,7 +46,7 @@ namespace CoreLibrary.FilesystemTree
         readonly Stack<DirectoryForIteration> dirsToBeSearched;
 
         /// <summary>
-        /// Create crawler that can traverse directories.
+        /// Initializes new instance of the <see cref="Crawler"/>
         /// </summary>
         public Crawler()
         {
@@ -55,7 +57,7 @@ namespace CoreLibrary.FilesystemTree
         {
             dirsToBeSearched.Clear();
 
-            FilesystemTree = CreateFilesystemTree(DiffModeEnum.TwoWay);
+            Node = CreateFilesystemTree(DiffModeEnum.TwoWay);
 
             AddDirToRoot(localDirPath, LocationEnum.OnLocal);
             AddDirToRoot(remoteDirPath, LocationEnum.OnRemote);
@@ -67,7 +69,7 @@ namespace CoreLibrary.FilesystemTree
         {
             dirsToBeSearched.Clear();
 
-            FilesystemTree = CreateFilesystemTree(DiffModeEnum.ThreeWay);
+            Node = CreateFilesystemTree(DiffModeEnum.ThreeWay);
 
             AddDirToRoot(localDirPath, LocationEnum.OnLocal);
             AddDirToRoot(baseDirPath, LocationEnum.OnBase);
@@ -77,13 +79,13 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <summary>
-        /// Virtual creating of FilesystemTree to allow instantiation of different type of trees.
+        /// Virtual creating of Node to allow instantiation of different type of trees.
         /// </summary>
         /// <param name="mode">Mode to instantiate the tree with</param>
-        /// <returns>Empty FilesystemTree container</returns>
-        protected virtual IFilesystemTree CreateFilesystemTree(DiffModeEnum mode)
+        /// <returns>Empty Node container</returns>
+        protected virtual INode CreateFilesystemTree(DiffModeEnum mode)
         {
-            return new FilesystemTree(mode);
+            return new Node(mode);
         }
 
         /// <summary>
@@ -106,11 +108,11 @@ namespace CoreLibrary.FilesystemTree
                         throw new RemoteDirectoryNotFoundException(dir);
                 }
 
-            FilesystemTree.AddDirToRoot(dir, location);
-            dirsToBeSearched.Push(new DirectoryForIteration(dir, FilesystemTree.Root, location));
+            Node.AddDirToRoot(dir, location);
+            dirsToBeSearched.Push(new DirectoryForIteration(dir, Node.Root, location));
         }
 
-        public IFilesystemTree TraverseTree()
+        public INode TraverseTree()
         {
             while (dirsToBeSearched.Count > 0)
             {
@@ -138,12 +140,12 @@ namespace CoreLibrary.FilesystemTree
                 // Push the subdirectories onto the stack for traversal. 
                 foreach (DirectoryInfo info in subDirs)
                 {
-                    IFilesystemTreeDirNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
+                    INodeDirNode diffNode = currentDir.ParentDiffNode.SearchForDir(info);
                     if (diffNode == null)
-                    {
+                    { // no related directory found, create a new node
                         diffNode = currentDir.ParentDiffNode.AddDir(info, currentDir.Location);
                     } else
-                    {
+                    { // related directory found, add this location
                         diffNode.AddInfoFromLocation(info, currentDir.Location);
                     }
 
@@ -169,12 +171,12 @@ namespace CoreLibrary.FilesystemTree
                 {
                     try
                     {
-                        IFilesystemTreeFileNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
+                        INodeFileNode diffNode = currentDir.ParentDiffNode.SearchForFile(info);
                         if (diffNode == null)
-                        {
+                        { // no related file found, create a new node
                             currentDir.ParentDiffNode.AddFile(info, currentDir.Location);
                         } else
-                        {
+                        { // related file found, add this location
                             diffNode.AddInfoFromLocation(info, currentDir.Location);
                         }
                     } catch (FileNotFoundException e)
@@ -183,11 +185,12 @@ namespace CoreLibrary.FilesystemTree
                         //  or thread since the call to TraverseTree() 
                         // then just continue.
                         Debug.WriteLine(e.Message);
+                        continue;
                     }
                 }
             }
 
-            return FilesystemTree;
+            return Node;
         }
     }
 }

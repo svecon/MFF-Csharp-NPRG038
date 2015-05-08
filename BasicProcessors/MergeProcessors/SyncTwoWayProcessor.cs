@@ -26,12 +26,12 @@ namespace BasicProcessors.MergeProcessors
         [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
-        protected override bool CheckStatus(IFilesystemTreeDirNode node)
+        protected override bool CheckStatus(INodeDirNode node)
         {
             return base.CheckStatus(node) && IsEnabled && CreateEmptyFolders;
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             return base.CheckStatus(node)
                 && IsEnabled
@@ -39,7 +39,7 @@ namespace BasicProcessors.MergeProcessors
                 && node.Status != NodeStatusEnum.WasMerged;
         }
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
             // create directory only when file is created
             // this means that empty folders need to be created here
@@ -56,7 +56,7 @@ namespace BasicProcessors.MergeProcessors
                 CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLocal));
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             FileInfo from = null;
             string to = null;

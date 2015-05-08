@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreLibrary.Enums;
@@ -9,7 +10,7 @@ using CoreLibrary.Plugins.Processors;
 namespace CoreLibrary.FilesystemTree.Visitors
 {
     /// <summary>
-    /// This visitor executes all processors in a given order on a FilesystemTree.
+    /// This visitor executes all processors in a given order on a Node.
     /// 
     /// All files and folders are processed in parallel. 
     /// But one particular file is processed sequentially with all the processors one by one.
@@ -23,64 +24,66 @@ namespace CoreLibrary.FilesystemTree.Visitors
         readonly CancellationTokenSource tokenSource;
 
         /// <summary>
-        /// Constructor for ParallelExecutionVisitor.
+        /// Initializes new instance of the <see cref="ParallelExecutionVisitor"/>
         /// </summary>
-        /// <param name="loader">Loader for all Processors.</param>
+        /// <param name="processors">Enumerator for processors that will be run.</param>
         public ParallelExecutionVisitor(IEnumerable<IProcessor> processors)
         {
             this.processors = processors;
             tokenSource = new CancellationTokenSource();
         }
 
-        public void Visit(IFilesystemTreeDirNode node)
+        public void Visit(INodeDirNode node)
         {
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (IProcessor processor in processors)
-                task = task.ContinueWith(_ =>
+            // run all the processors sequentially one after another on this node
+            task = processors.Aggregate(task, (current, processor) => current.ContinueWith(_ =>
+            {
+                try
                 {
-                    try
-                    {
-                        processor.Process(node);
-                    } catch (Exception e)
-                    {
-                        HandleError(node, e);
-                    }
-                }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
+                    processor.Process(node);
+                } catch (Exception e)
+                {
+                    HandleError(node, e);
+                }
+            }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current));
 
             // add task with processors
             tasks.Add(task);
 
-            foreach (IFilesystemTreeFileNode file in node.Files)
+            // process files
+            foreach (INodeFileNode file in node.Files)
                 file.Accept(this);
 
-            foreach (IFilesystemTreeDirNode dir in node.Directories)
+            // process directories
+            foreach (INodeDirNode dir in node.Directories)
                 dir.Accept(this);
         }
 
-        public void Visit(IFilesystemTreeFileNode node)
+        public void Visit(INodeFileNode node)
         {
             // create a completed task
             Task task = Task.FromResult(false);
 
-            foreach (IProcessor processor in processors)
-                task = task.ContinueWith(_ =>
+            // run all the processors sequentially one after another on this node
+            task = processors.Aggregate(task, (current, processor) => current.ContinueWith(_ =>
+            {
+                try
                 {
-                    try
-                    {
-                        processor.Process(node);
-                    } catch (Exception e)
-                    {
-                        HandleError(node, e);
-                    }
-                }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
+                    processor.Process(node);
+                } catch (Exception e)
+                {
+                    HandleError(node, e);
+                }
+            }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current));
 
             // add task with processors
             tasks.Add(task);
         }
 
-        private static void HandleError(IFilesystemTreeAbstractNode node, Exception e)
+        private static void HandleError(INodeAbstractNode node, Exception e)
         {
             node.Status = NodeStatusEnum.HasError;
             node.Exception = e;
@@ -96,6 +99,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
 
             try
             {
+                // wait for all nodes to finish processing
                 Task.WaitAll(tasks.ToArray());
             } catch (AggregateException ae)
             {
@@ -104,7 +108,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     if (x is TaskCanceledException)
                         return true;
 
-                    Debug.WriteLine(x);
+                    // @TODO: log exceptions
                     return false;
                 });
             }

@@ -13,11 +13,11 @@ namespace BasicProcessors.MergeProcessors
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;
 
@@ -115,7 +115,7 @@ namespace BasicProcessors.MergeProcessors
                 Directory.CreateDirectory(path);
         }
 
-        private string CreatePath(IFilesystemTreeFileNode node)
+        private string CreatePath(INodeFileNode node)
         {
             string output = OutputFolder == null
                 ? node.GetAbsolutePath(LocationEnum.OnBase)

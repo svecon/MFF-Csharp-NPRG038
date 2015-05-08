@@ -30,12 +30,12 @@ namespace TextDiffProcessors.MergeProcessors
         [Settings("Default action for merging files.", "2merge-default", "2d")]
         public DefaultActionEnum DefaultAction;
 
-        protected override bool CheckStatus(IFilesystemTreeDirNode node)
+        protected override bool CheckStatus(INodeDirNode node)
         {
             return base.CheckStatus(node) && OutputFolder != null && CreateEmptyFolders;
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status == NodeStatusEnum.WasMerged)
                 return false;
@@ -43,7 +43,7 @@ namespace TextDiffProcessors.MergeProcessors
             return base.CheckStatus(node) && OutputFolder != null;
         }
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
             // create directory when file is created
             // this means that empty folders need to be created here
@@ -56,7 +56,7 @@ namespace TextDiffProcessors.MergeProcessors
             CheckAndCreateDirectory(string.Join("/", OutputFolder, node.RelativePath));
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
 
@@ -209,7 +209,7 @@ namespace TextDiffProcessors.MergeProcessors
                 Directory.CreateDirectory(path);
         }
 
-        private string CreatePath(IFilesystemTreeFileNode node)
+        private string CreatePath(INodeFileNode node)
         {
             string output = node.ParentNode == null
                     ? Path.Combine(OutputFolder, node.Info.Name)

@@ -79,7 +79,7 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Number of arguments must be 2 or 3..
+        ///   Looks up a localized string similar to Number of Switchs must be 2 or 3..
         /// </summary>
         public static string App_NewTab_ErrorArgumentsNumberText {
             get {
@@ -97,7 +97,7 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can not mix folders and files together as arguments..
+        ///   Looks up a localized string similar to You can not mix folders and files together as Switchs..
         /// </summary>
         public static string App_NewTab_MixingFilesAndFolders {
             get {
@@ -124,7 +124,7 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This argument option has not been found &apos;{0}&apos;.
+        ///   Looks up a localized string similar to This Switch option has not been found &apos;{0}&apos;.
         /// </summary>
         public static string App_OnStartup_InvalidSettingsValue {
             get {

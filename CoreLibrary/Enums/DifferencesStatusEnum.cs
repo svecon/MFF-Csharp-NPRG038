@@ -6,6 +6,34 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum DifferencesStatusEnum
     {
-        Initial = -1, AllDifferent = 0, BaseLocalSame = 3, BaseRemoteSame = 5, LocalRemoteSame = 6, AllSame = 7
+        /// <summary>
+        /// Initial difference status. Unknown differences.
+        /// </summary>
+        Initial = -1,
+        
+        /// <summary>
+        /// All files are different.
+        /// </summary>
+        AllDifferent = 0,
+        
+        /// <summary>
+        /// Base and local files are same.
+        /// </summary>
+        BaseLocalSame = 3,
+        
+        /// <summary>
+        /// Base and remote files are same.
+        /// </summary>
+        BaseRemoteSame = 5,
+        
+        /// <summary>
+        /// Local and remote files are same.
+        /// </summary>
+        LocalRemoteSame = 6,
+        
+        /// <summary>
+        /// All files are same.
+        /// </summary>
+        AllSame = 7
     }
 }

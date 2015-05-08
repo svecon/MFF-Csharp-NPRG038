@@ -8,18 +8,18 @@ namespace CoreLibrary.FilesystemTree
     /// <summary>
     /// File node representing a file in multiple locations.
     /// </summary>
-    public class FileNode : AbstractNode, IFilesystemTreeFileNode
+    public class FileNode : AbstractNode, INodeFileNode
     {
-        public IFilesystemTreeDirNode ParentNode { get; set; }
+        public INodeDirNode ParentNode { get; set; }
 
         /// <summary>
-        /// Construtor for FileNode.
+        /// Initializes new instance of the <see cref="FileNode"/>
         /// </summary>
         /// <param name="parentNode">Parent DirNode for this node.</param>
         /// <param name="info">File info for this node.</param>
         /// <param name="location">Location where this node has been found from.</param>
         /// <param name="mode">Default diff mode.</param>
-        public FileNode(IFilesystemTreeDirNode parentNode, FileInfo info, LocationEnum location, DiffModeEnum mode)
+        public FileNode(INodeDirNode parentNode, FileInfo info, LocationEnum location, DiffModeEnum mode)
             : base(info, location, mode)
         {
             ParentNode = parentNode;

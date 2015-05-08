@@ -22,16 +22,16 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Force binary diff check.", "binary-check", "BC")]
         public bool IsEnabled = false;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             return IsEnabled && base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var threeWay = new ThreeWayDiffHelper();
             var readers = new BinaryReader[3];
@@ -73,19 +73,19 @@ namespace BasicProcessors.DiffProcessors
                     if (threeWay.CanBaseFileBeSame(true))
                         bufferLengths[0] = readers[0].Read(buffers[0], 0, buffers[0].Length);
 
-                    if (threeWay.CanLeftFileBeSame())
+                    if (threeWay.CanLocalFileBeSame())
                         bufferLengths[1] = readers[1].Read(buffers[1], 0, buffers[1].Length);
 
-                    if (threeWay.CanRightFileBeSame())
+                    if (threeWay.CanRemoteFileBeSame())
                         bufferLengths[2] = readers[2].Read(buffers[2], 0, buffers[2].Length);
 
                     // check buffered lengths
-                    if (threeWay.CanCombinationBaseLeftBeSame())
-                        threeWay.CheckCombinationBaseLeft(bufferLengths[0] != bufferLengths[1]);
-                    if (threeWay.CanCombinationBaseRightBeSame())
-                        threeWay.CheckCombinationBaseRight(bufferLengths[0] != bufferLengths[2]);
-                    if (threeWay.CanCombinationLeftRightBeSame())
-                        threeWay.CheckCombinationLeftRight(bufferLengths[1] != bufferLengths[2]);
+                    if (threeWay.CanBaseLocalBeSame())
+                        threeWay.CheckCombinationBaseLocal(bufferLengths[0] != bufferLengths[1]);
+                    if (threeWay.CanBaseRemoteBeSame())
+                        threeWay.CheckCombinationBaseRemote(bufferLengths[0] != bufferLengths[2]);
+                    if (threeWay.CanLocalRemoteBeSame())
+                        threeWay.CheckCombinationLocalRemote(bufferLengths[1] != bufferLengths[2]);
 
                     int maxLength = bufferLengths.Max();
 
@@ -96,12 +96,12 @@ namespace BasicProcessors.DiffProcessors
                     // check bytes
                     for (int i = 0; i < maxLength; i++)
                     {
-                        if (threeWay.CanCombinationBaseLeftBeSame())
-                            threeWay.CheckCombinationBaseLeft(buffers[0][i] != buffers[1][i]);
-                        if (threeWay.CanCombinationBaseRightBeSame())
-                            threeWay.CheckCombinationBaseRight(buffers[0][i] != buffers[2][i]);
-                        if (threeWay.CanCombinationLeftRightBeSame())
-                            threeWay.CheckCombinationLeftRight(buffers[1][i] != buffers[2][i]);
+                        if (threeWay.CanBaseLocalBeSame())
+                            threeWay.CheckCombinationBaseLocal(buffers[0][i] != buffers[1][i]);
+                        if (threeWay.CanBaseRemoteBeSame())
+                            threeWay.CheckCombinationBaseRemote(buffers[0][i] != buffers[2][i]);
+                        if (threeWay.CanLocalRemoteBeSame())
+                            threeWay.CheckCombinationLocalRemote(buffers[1][i] != buffers[2][i]);
 
                         // all files are different
                         if (threeWay.GetPossibleCombinations() == 0)

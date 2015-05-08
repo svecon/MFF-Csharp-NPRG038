@@ -18,6 +18,11 @@ namespace CoreLibrary.Plugins.Processors
         /// </summary>
         void LoadAll();
 
+        /// <summary>
+        /// Enumerates processors of given type.
+        /// </summary>
+        /// <param name="processorType">Processor type that will be enumerated.</param>
+        /// <returns>An enumeration of all processors of given type.</returns>
         IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType);
 
         /// <summary>
@@ -46,8 +51,18 @@ namespace CoreLibrary.Plugins.Processors
         /// <returns>IEnumerable</returns>
         IEnumerable<ISettings> GetSettingsByProcessor(IProcessor processor);
 
+        /// <summary>
+        /// Enumerates settings of one processor.
+        /// </summary>
+        /// <param name="processor">String name of processor as in .GetType().ToString()</param>
+        /// <returns>An enumarator of all settings for given processor.</returns>
         IEnumerable<ISettings> GetSettingsByProcessor(string processor);
 
+        /// <summary>
+        /// Splits the loader by a processor type.
+        /// </summary>
+        /// <param name="processorType">Processors of this type will be copied to new loader.</param>
+        /// <returns>New processor loader with copied processors of given type.</returns>
         IProcessorLoader SplitLoaderByType(ProcessorTypeEnum processorType);
     }
 }

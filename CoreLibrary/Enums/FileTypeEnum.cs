@@ -5,6 +5,19 @@
     /// </summary>
     public enum FileTypeEnum
     {
-        Unknown, Binary, Text
+        /// <summary>
+        /// Unknown file type.
+        /// </summary>
+        Unknown, 
+        
+        /// <summary>
+        /// Binary file.
+        /// </summary>
+        Binary,
+        
+        /// <summary>
+        /// Text file
+        /// </summary>
+        Text
     }
 }

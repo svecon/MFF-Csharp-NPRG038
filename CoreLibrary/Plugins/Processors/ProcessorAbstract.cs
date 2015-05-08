@@ -14,6 +14,9 @@ namespace CoreLibrary.Plugins.Processors
     {
         ProcessorAttribute Attribute { get; set; }
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="ProcessorAbstract"/>
+        /// </summary>
         protected ProcessorAbstract()
         {
             Attribute = (ProcessorAttribute)GetType().GetCustomAttribute(typeof(ProcessorAttribute));
@@ -22,12 +25,22 @@ namespace CoreLibrary.Plugins.Processors
                 throw new ConstraintException("Every processor must implement ProcessorAttribute.");
         }
 
-        protected virtual bool CheckStatus(IFilesystemTreeDirNode node)
+        /// <summary>
+        /// Virtual method for checking whether the processor should run.
+        /// </summary>
+        /// <param name="node">Node that should be processed.</param>
+        /// <returns>True if the processor should run.</returns>
+        protected virtual bool CheckStatus(INodeDirNode node)
         {
             return (node.Mode & Attribute.Mode) != 0;
         }
 
-        protected virtual bool CheckStatus(IFilesystemTreeFileNode node)
+        /// <summary>
+        /// Virtual method for checking whether the processor should run.
+        /// </summary>
+        /// <param name="node">Node that should be processed.</param>
+        /// <returns>True if the processor should run.</returns>
+        protected virtual bool CheckStatus(INodeFileNode node)
         {
             if ((node.Mode & Attribute.Mode) == 0)
                 return false;
@@ -43,7 +56,7 @@ namespace CoreLibrary.Plugins.Processors
             return true;
         }
 
-        public virtual void Process(IFilesystemTreeDirNode node)
+        public virtual void Process(INodeDirNode node)
         {
             if (!CheckStatus(node))
                 return;
@@ -51,7 +64,7 @@ namespace CoreLibrary.Plugins.Processors
             ProcessChecked(node);
         }
 
-        public virtual void Process(IFilesystemTreeFileNode node)
+        public virtual void Process(INodeFileNode node)
         {
             if (!CheckStatus(node))
                 return;
@@ -59,7 +72,16 @@ namespace CoreLibrary.Plugins.Processors
             ProcessChecked(node);
         }
 
-        protected abstract void ProcessChecked(IFilesystemTreeDirNode node);
-        protected abstract void ProcessChecked(IFilesystemTreeFileNode node);
+        /// <summary>
+        /// Logic for processing the node.
+        /// </summary>
+        /// <param name="node">Node that will be processed.</param>
+        protected abstract void ProcessChecked(INodeDirNode node);
+
+        /// <summary>
+        /// Logic for processing the node.
+        /// </summary>
+        /// <param name="node">Node that will be processed.</param>
+        protected abstract void ProcessChecked(INodeFileNode node);
     }
 }

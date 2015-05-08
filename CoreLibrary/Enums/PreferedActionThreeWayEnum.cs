@@ -5,6 +5,24 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum PreferedActionThreeWayEnum
     {
-        Default, ApplyLocal, ApplyRemote, RevertToBase
+        /// <summary>
+        /// Default action.
+        /// </summary>
+        Default, 
+        
+        /// <summary>
+        /// Apply and keep local content.
+        /// </summary>
+        ApplyLocal,
+        
+        /// <summary>
+        /// Apply and keep remote content.
+        /// </summary>
+        ApplyRemote, 
+        
+        /// <summary>
+        /// Apply and keep base content.
+        /// </summary>
+        RevertToBase
     }
 }

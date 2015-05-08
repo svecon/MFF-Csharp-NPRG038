@@ -3,9 +3,17 @@ using CoreLibrary.FilesystemTree;
 
 namespace CoreLibrary.Helpers
 {
+    /// <summary>
+    /// Helper for determining if the node is conflicting.
+    /// </summary>
     public static class IsConflictingHelper
     {
-        public static bool IsConflicting(IFilesystemTreeAbstractNode node)
+        /// <summary>
+        /// Checks the node based on mode, locations and diff status for coflicts.
+        /// </summary>
+        /// <param name="node">Node that is checked for conflicts.</param>
+        /// <returns>Whether the node has conflicting changes.</returns>
+        public static bool IsConflicting(INodeAbstractNode node)
         {
             if (node.Differences != DifferencesStatusEnum.AllDifferent) return false;
 

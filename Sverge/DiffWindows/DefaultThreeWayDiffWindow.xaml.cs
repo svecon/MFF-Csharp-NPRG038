@@ -9,16 +9,16 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace Sverge.DiffWindows
 {
-    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+    using DW = IDiffWindow<INodeVisitable>;
 
     /// <summary>
     /// Interaction logic for DefaultThreeWayDiffWindow.xaml
     /// </summary>
     [DiffWindow(int.MaxValue)]
-    public partial class DefaultThreeWayDiffWindow : UserControl, IDiffWindow<IFilesystemTreeAbstractNode>
+    public partial class DefaultThreeWayDiffWindow : UserControl, IDiffWindow<INodeAbstractNode>
     {
         private readonly IDiffWindowManager manager;
-        public IFilesystemTreeAbstractNode DiffNode { get; private set; }
+        public INodeAbstractNode DiffNode { get; private set; }
 
         #region Dependency properties
 
@@ -51,15 +51,15 @@ namespace Sverge.DiffWindows
 
         #endregion
 
-        public DefaultThreeWayDiffWindow(IFilesystemTreeVisitable instance, IDiffWindowManager manager)
+        public DefaultThreeWayDiffWindow(INodeVisitable instance, IDiffWindowManager manager)
         {
             this.manager = manager;
-            DiffNode = (IFilesystemTreeAbstractNode)instance;
+            DiffNode = (INodeAbstractNode)instance;
 
             InitializeComponent();
 
             // only for files
-            if (!(DiffNode is IFilesystemTreeFileNode))
+            if (!(DiffNode is INodeFileNode))
                 return;
 
             if (DiffNode.IsInLocation(LocationCombinationsEnum.OnLocal))

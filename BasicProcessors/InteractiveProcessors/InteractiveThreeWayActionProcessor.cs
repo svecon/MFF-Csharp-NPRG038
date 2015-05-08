@@ -18,11 +18,11 @@ namespace BasicProcessors.InteractiveProcessors
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultAction = PreferedActionThreeWayEnum.Default;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status != NodeStatusEnum.IsConflicting)
                 return false;
@@ -30,7 +30,7 @@ namespace BasicProcessors.InteractiveProcessors
             return base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;
 

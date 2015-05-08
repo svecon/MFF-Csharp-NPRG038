@@ -46,7 +46,7 @@ namespace TextDiffWindows
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
-        public TextDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public TextDiffTwoWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             this.manager = manager;
             DiffNode = (FileDiffNode)diffNode;

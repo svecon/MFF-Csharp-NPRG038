@@ -64,7 +64,7 @@ namespace TextDiffWindows
 
         #endregion
 
-        public TextDiffThreeWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public TextDiffThreeWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             InitializeComponent();
             this.manager = manager;

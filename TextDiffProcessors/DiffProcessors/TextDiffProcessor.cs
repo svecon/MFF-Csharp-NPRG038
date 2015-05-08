@@ -26,11 +26,11 @@ namespace TextDiffProcessors.DiffProcessors
         [Settings("Diff algorithm will ignore case senstivity", "ignore-case", "ic")]
         public bool IgnoreCase = false;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.FileType != FileTypeEnum.Text)
                 return false;
@@ -41,7 +41,7 @@ namespace TextDiffProcessors.DiffProcessors
             return base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
 

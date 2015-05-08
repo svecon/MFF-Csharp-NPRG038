@@ -12,9 +12,6 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace DirectoryDiffWindows
 {
-    using FN = IFilesystemTreeFileNode;
-    using AN = IFilesystemTreeAbstractNode;
-
     /// <summary>
     /// Interaction logic for DirectoryDiffTwoWay.xaml
     /// </summary>
@@ -23,7 +20,7 @@ namespace DirectoryDiffWindows
     {
         public FilesystemDiffTree DiffNode { get; private set; }
         private readonly IDiffWindowManager manager;
-        private AN selectedNode;
+        private INodeAbstractNode selectedNode;
         private bool isBusy = true;
 
         public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
@@ -45,7 +42,7 @@ namespace DirectoryDiffWindows
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
-        public DirectoryDiffTwoWay(IFilesystemTreeVisitable diffNode, IDiffWindowManager manager)
+        public DirectoryDiffTwoWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
             this.manager = manager;
@@ -64,7 +61,7 @@ namespace DirectoryDiffWindows
                     ((TreeViewItem)t.ItemContainerGenerator.ContainerFromIndex(0)).IsSelected = true;
                 }
 
-                selectedNode = (AN)t.SelectedItem;
+                selectedNode = (INodeAbstractNode)t.SelectedItem;
             };
         }
 
@@ -99,15 +96,15 @@ namespace DirectoryDiffWindows
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var t = sender as TreeView;
-            if (t != null && t.SelectedItem is IFilesystemTreeFileNode)
+            if (t != null && t.SelectedItem is INodeFileNode)
             {
-                manager.OpenNewTab((AN)t.SelectedItem, this);
+                manager.OpenNewTab((INodeAbstractNode)t.SelectedItem, this);
             }
         }
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            selectedNode = e.NewValue as AN;
+            selectedNode = e.NewValue as INodeAbstractNode;
         }
 
         private void FolderDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -137,7 +134,7 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<FN, bool> f, ref TreeViewItem previous)
+        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref TreeViewItem previous)
         {
             foreach (object item in container.Items)
             {
@@ -148,7 +145,7 @@ namespace DirectoryDiffWindows
                     return previous;
                 }
 
-                var diffFileNode = item as FN;
+                var diffFileNode = item as INodeFileNode;
                 if (diffFileNode != null && f(diffFileNode))
                 {
                     previous = itemContainer;
@@ -165,13 +162,13 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<FN, bool> f, ref bool wasFound)
+        public TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref bool wasFound)
         {
             foreach (object item in container.Items)
             {
                 var itemContainer = (TreeViewItem)container.ItemContainerGenerator.ContainerFromItem(item);
 
-                if (wasFound && item is FN && f((FN)item))
+                if (wasFound && item is INodeFileNode && f((INodeFileNode)item))
                     return itemContainer;
 
                 if (item == itemToSelect) wasFound = true;
@@ -190,7 +187,7 @@ namespace DirectoryDiffWindows
 
         #region Custom ChangesMenu commands
 
-        private static readonly Func<FN, bool> NextDiffFunc =
+        private static readonly Func<INodeFileNode, bool> NextDiffFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame;
 
         public CommandBinding PreviousCommandBinding(ICommand command)

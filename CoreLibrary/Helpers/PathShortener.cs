@@ -8,8 +8,18 @@ using System.Windows.Media;
 
 namespace CoreLibrary.Helpers
 {
+    /// <summary>
+    /// Smartly shortens the path to fit the given width.
+    /// </summary>
     public static class PathShortener
     {
+        /// <summary>
+        /// Trims the path to fit the given with.
+        /// </summary>
+        /// <param name="path">Path to be shortened</param>
+        /// <param name="filePathLabel">Label where the path will be displayed</param>
+        /// <param name="ellipsis">Symbol to shorten the path with</param>
+        /// <returns>Shortned path</returns>
         public static string TrimPath(string path, Label filePathLabel, string ellipsis = "...")
         {
             double width = filePathLabel.ActualWidth - 30;

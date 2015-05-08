@@ -28,16 +28,16 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
         public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
 
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             return base.CheckStatus(node) && IsEnabled;
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var threeWay = new ThreeWayDiffHelper();
 
@@ -59,20 +59,20 @@ namespace BasicProcessors.DiffProcessors
             var infoRight = (FileInfo)node.InfoRemote;
 
             // check for sizes
-            if (threeWay.CanCombinationBaseLeftBeSame())
-                threeWay.CheckCombinationBaseLeft(infoBase.Length != infoLeft.Length);
-            if (threeWay.CanCombinationBaseRightBeSame())
-                threeWay.CheckCombinationBaseRight(infoBase.Length != infoRight.Length);
-            if (threeWay.CanCombinationLeftRightBeSame())
-                threeWay.CheckCombinationLeftRight(infoLeft.Length != infoRight.Length);
+            if (threeWay.CanBaseLocalBeSame())
+                threeWay.CheckCombinationBaseLocal(infoBase.Length != infoLeft.Length);
+            if (threeWay.CanBaseRemoteBeSame())
+                threeWay.CheckCombinationBaseRemote(infoBase.Length != infoRight.Length);
+            if (threeWay.CanLocalRemoteBeSame())
+                threeWay.CheckCombinationLocalRemote(infoLeft.Length != infoRight.Length);
 
             // check for modifications
-            if (threeWay.CanCombinationBaseLeftBeSame())
-                threeWay.CheckCombinationBaseLeft(infoBase.LastWriteTime != infoLeft.LastWriteTime);
-            if (threeWay.CanCombinationBaseRightBeSame())
-                threeWay.CheckCombinationBaseRight(infoBase.LastWriteTime != infoRight.LastWriteTime);
-            if (threeWay.CanCombinationLeftRightBeSame())
-                threeWay.CheckCombinationLeftRight(infoLeft.LastWriteTime != infoRight.LastWriteTime);
+            if (threeWay.CanBaseLocalBeSame())
+                threeWay.CheckCombinationBaseLocal(infoBase.LastWriteTime != infoLeft.LastWriteTime);
+            if (threeWay.CanBaseRemoteBeSame())
+                threeWay.CheckCombinationBaseRemote(infoBase.LastWriteTime != infoRight.LastWriteTime);
+            if (threeWay.CanLocalRemoteBeSame())
+                threeWay.CheckCombinationLocalRemote(infoLeft.LastWriteTime != infoRight.LastWriteTime);
 
             node.Differences = (DifferencesStatusEnum)threeWay.GetSameFiles();
             node.Status = IsConflictingHelper.IsConflicting(node)

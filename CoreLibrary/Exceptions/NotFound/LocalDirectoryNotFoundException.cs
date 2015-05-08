@@ -7,6 +7,10 @@ namespace CoreLibrary.Exceptions.NotFound
     /// </summary>
     public class LocalDirectoryNotFoundException : LocationDirectoryNotFoundException
     {
+        /// <summary>
+        /// Initializes new instance of the <see cref="LocalDirectoryNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the directory.</param>
         public LocalDirectoryNotFoundException(FileSystemInfo info)
             : base(info)
         {

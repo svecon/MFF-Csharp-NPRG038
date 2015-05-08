@@ -5,29 +5,29 @@ using CoreLibrary.Enums;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Dir node of FilesystemTree.
+    /// Dir node of Node.
     /// </summary>
-    public interface IFilesystemTreeDirNode : IFilesystemTreeAbstractNode
+    public interface INodeDirNode : INodeAbstractNode
     {
         /// <summary>
         /// All subdirectories for current directory.
         /// </summary>
-        List<IFilesystemTreeDirNode> Directories { get; }
+        List<INodeDirNode> Directories { get; }
 
         /// <summary>
         /// All files located in current directory.
         /// </summary>
-        List<IFilesystemTreeFileNode> Files { get; }
+        List<INodeFileNode> Files { get; }
 
         /// <summary>
-        /// Reference to the RootNode of the entire FilesystemTree
+        /// Reference to the RootNode of the entire Node
         /// 
         /// Root directory references itself.
         /// </summary>
-        IFilesystemTreeDirNode RootNode { get; }
+        INodeDirNode RootNode { get; }
 
         /// <summary>
-        /// Relative path to the root of the FilesystemTree root.
+        /// Relative path to the root of the Node root.
         /// 
         /// This combined with root path gives absolute path.
         /// </summary>
@@ -39,7 +39,7 @@ namespace CoreLibrary.FilesystemTree
         /// <param name="info">DirectoryInfo for subdirectory.</param>
         /// <param name="location">Where the subdirectory was found.</param>
         /// <returns>Node for new subdirectory.</returns>
-        IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location);
+        INodeDirNode AddDir(DirectoryInfo info, LocationEnum location);
 
         /// <summary>
         /// Add new file in current directory.
@@ -47,21 +47,21 @@ namespace CoreLibrary.FilesystemTree
         /// <param name="info">FileInfo for new file.</param>
         /// <param name="location">Where the file was found.</param>
         /// <returns>Node for new file.</returns>
-        IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location);
+        INodeFileNode AddFile(FileInfo info, LocationEnum location);
 
         /// <summary>
         /// Search for existing subdirectory.
         /// </summary>
         /// <param name="info">Needle: DirectoryInfo</param>
         /// <returns>Null or existing DirNode.</returns>
-        IFilesystemTreeDirNode SearchForDir(DirectoryInfo info);
+        INodeDirNode SearchForDir(DirectoryInfo info);
 
         /// <summary>
         /// Search for existing file.
         /// </summary>
         /// <param name="info">Needle: FileInfo</param>
         /// <returns>Null or existing FileNode.</returns>
-        IFilesystemTreeFileNode SearchForFile(FileInfo info);
+        INodeFileNode SearchForFile(FileInfo info);
 
         /// <summary>
         /// Returns a size of directory and all subdirectories in kB.
@@ -69,6 +69,11 @@ namespace CoreLibrary.FilesystemTree
         /// <returns>Size in kB</returns>
         double GetSize();
 
-        IEnumerable<IFilesystemTreeAbstractNode> FilesAndDirectories { get; }
+        /// <summary>
+        /// Enumerator for all files and directories in the current node.
+        /// 
+        /// First iterates over directories.
+        /// </summary>
+        IEnumerable<INodeAbstractNode> FilesAndDirectories { get; }
     }
 }

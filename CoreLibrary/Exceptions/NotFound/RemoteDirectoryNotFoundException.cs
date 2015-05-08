@@ -7,6 +7,10 @@ namespace CoreLibrary.Exceptions.NotFound
     /// </summary>
     public class RemoteDirectoryNotFoundException : LocationDirectoryNotFoundException
     {
+        /// <summary>
+        /// Initializes new instance of the <see cref="RemoteDirectoryNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the directory.</param>
         public RemoteDirectoryNotFoundException(FileSystemInfo info)
             : base(info)
         {

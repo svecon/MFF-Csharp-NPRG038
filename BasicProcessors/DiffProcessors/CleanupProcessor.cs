@@ -8,11 +8,11 @@ namespace BasicProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 0, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CleanupProcessor : ProcessorAbstract
     {
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;
 

@@ -2,15 +2,36 @@
 
 namespace CoreLibrary.Plugins.DiffWindow
 {
-    using TV = IFilesystemTreeVisitable;
-
+    /// <summary>
+    /// Interface for DiffWindows manager that shows the individual windows.
+    /// </summary>
     public interface IDiffWindowManager
     {
-        IDiffWindow<TV> OpenNewTab(params string[] args);
-        IDiffWindow<TV> OpenNewTab(TV diffNode, IDiffWindow<TV> treeNode = null);
+        /// <summary>
+        /// Open new visualisation using paths as string arguments.
+        /// </summary>
+        /// <param name="args">Paths to the files/folders that will be diffed.</param>
+        /// <returns><see cref="IDiffWindow{TNode}"/> that visualizes differences.</returns>
+        IDiffWindow<INodeVisitable> OpenNewTab(params string[] args);
 
-        void RequestDiff(IDiffWindow<TV> window);
+        /// <summary>
+        /// Open new visualisation using node.
+        /// </summary>
+        /// <param name="diffNode">Node that holds the differences.</param>
+        /// <param name="treeNode">Parent <see cref="IDiffWindow{TNode}"/> that requested opening new diff.</param>
+        /// <returns><see cref="IDiffWindow{TNode}"/> that visualizes differences.</returns>
+        IDiffWindow<INodeVisitable> OpenNewTab(INodeVisitable diffNode, IDiffWindow<INodeVisitable> treeNode = null);
 
-        void RequestMerge(IDiffWindow<TV> window);
+        /// <summary>
+        /// Requests recalculation of the diff for given <see cref="IDiffWindow{TNode}"/>
+        /// </summary>
+        /// <param name="window"><see cref="IDiffWindow{TNode}"/> that requests the diff calculation.</param>
+        void RequestDiff(IDiffWindow<INodeVisitable> window);
+
+        /// <summary>
+        /// Requests merge for given <see cref="IDiffWindow{TNode}"/>
+        /// </summary>
+        /// <param name="window"><see cref="IDiffWindow{TNode}"/> that requests the merging.</param>
+        void RequestMerge(IDiffWindow<INodeVisitable> window);
     }
 }

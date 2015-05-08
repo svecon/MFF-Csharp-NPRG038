@@ -13,11 +13,11 @@ namespace BasicProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 300, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class FileTypeProcessor : ProcessorAbstract
     {
-        protected override void ProcessChecked(IFilesystemTreeDirNode node)
+        protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
-        protected override bool CheckStatus(IFilesystemTreeFileNode node)
+        protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.FileType != FileTypeEnum.Unknown)
                 return false;
@@ -25,7 +25,7 @@ namespace BasicProcessors.DiffProcessors
             return base.CheckStatus(node);
         }
 
-        protected override void ProcessChecked(IFilesystemTreeFileNode node)
+        protected override void ProcessChecked(INodeFileNode node)
         {
             node.FileType = node.Info.FullName.IsTextFile()
                 ? FileTypeEnum.Text

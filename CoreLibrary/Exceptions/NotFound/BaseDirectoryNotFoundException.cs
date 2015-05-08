@@ -7,6 +7,10 @@ namespace CoreLibrary.Exceptions.NotFound
     /// </summary>
     public class BaseDirectoryNotFoundException : LocationDirectoryNotFoundException
     {
+        /// <summary>
+        /// Initializes new instance of the <see cref="BaseDirectoryNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the directory.</param>
         public BaseDirectoryNotFoundException(FileSystemInfo info)
             : base(info)
         {

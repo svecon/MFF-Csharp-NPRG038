@@ -5,6 +5,19 @@ namespace CoreLibrary.Enums
     /// </summary>
     public enum PreferedActionTwoWayEnum
     {
-        Default, ApplyLocal, ApplyRemote
+        /// <summary>
+        /// Use default action.
+        /// </summary>
+        Default,
+        
+        /// <summary>
+        /// Apply and keep local content.
+        /// </summary>
+        ApplyLocal,
+        
+        /// <summary>
+        /// Apply and keep remote content.
+        /// </summary>
+        ApplyRemote
     }
 }

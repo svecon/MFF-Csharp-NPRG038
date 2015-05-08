@@ -6,7 +6,10 @@ using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree
 {
-    public abstract class AbstractNode : IFilesystemTreeAbstractNode, INotifyPropertyChanged
+    /// <summary>
+    /// An abstract node for the <see cref="INode"/>
+    /// </summary>
+    public abstract class AbstractNode : INodeAbstractNode, INotifyPropertyChanged
     {
         private FileSystemInfo infoBase;
         public FileSystemInfo InfoBase
@@ -35,6 +38,14 @@ namespace CoreLibrary.FilesystemTree
         {
             get { return status; }
             set { status = value; OnPropertyChanged("Status"); }
+        }
+
+        private PreferedActionThreeWayEnum action;
+
+        public PreferedActionThreeWayEnum Action
+        {
+            get { return action; }
+            set { action = value; OnPropertyChanged("PreferedAction"); }
         }
 
         public FileTypeEnum FileType { get; set; }
@@ -96,8 +107,17 @@ namespace CoreLibrary.FilesystemTree
 
         public DiffModeEnum Mode { get; protected set; }
 
+        #region INotifyPropertyChanged interface implementation
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// An event handler helper method for the changed properties.
+        /// </summary>
+        /// <param name="name">Name of the changed property</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -106,6 +126,8 @@ namespace CoreLibrary.FilesystemTree
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
+
+        #endregion
 
         public abstract string GetAbsolutePath(LocationEnum location);
 
@@ -122,23 +144,23 @@ namespace CoreLibrary.FilesystemTree
             AddInfoFromLocation(info, location);
         }
 
-        public bool IsInLocation(LocationEnum location)
+        public bool IsInLocation(LocationEnum loc)
         {
-            return ((int)location & Location) == (int)location;
+            return ((int)loc & Location) == (int)loc;
         }
 
-        public bool IsInLocation(LocationCombinationsEnum location)
+        public bool IsInLocation(LocationCombinationsEnum loc)
         {
-            return ((int)location & Location) == (int)location;
+            return ((int)loc & Location) == (int)loc;
         }
 
         /// <summary>
         /// Marks that the node has been found in another location.
         /// </summary>
-        /// <param name="location">New location where node has been found.</param>
-        protected void MarkFound(LocationEnum location)
+        /// <param name="loc">New location where node has been found.</param>
+        protected void MarkFound(LocationEnum loc)
         {
-            Location = Location | (int)location;
+            Location = Location | (int)loc;
         }
 
         public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
@@ -168,11 +190,11 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
-        public void RemoveInfoFromLocation(LocationEnum location)
+        public void RemoveInfoFromLocation(LocationEnum loc)
         {
-            Location &= ~(int)location;
+            Location &= ~(int)loc;
 
-            switch (location)
+            switch (loc)
             {
                 case LocationEnum.OnBase:
                     InfoBase = null;

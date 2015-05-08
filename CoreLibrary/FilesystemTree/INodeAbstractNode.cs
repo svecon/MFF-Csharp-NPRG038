@@ -5,9 +5,9 @@ using CoreLibrary.Enums;
 namespace CoreLibrary.FilesystemTree
 {
     /// <summary>
-    /// Abstract node in FilesystemTree.
+    /// Abstract node in Node.
     /// </summary>
-    public interface IFilesystemTreeAbstractNode : IFilesystemTreeVisitable
+    public interface INodeAbstractNode : INodeVisitable
     {
         /// <summary>
         /// Info from any of matched files that is not null.
@@ -33,6 +33,11 @@ namespace CoreLibrary.FilesystemTree
         /// What has already been done with this node.
         /// </summary>
         NodeStatusEnum Status { get; set; }
+
+        /// <summary>
+        /// What to do with the node.
+        /// </summary>
+        PreferedActionThreeWayEnum Action { get; set; }
 
         /// <summary>
         /// Raised exceptions during the processing 
@@ -82,6 +87,10 @@ namespace CoreLibrary.FilesystemTree
         /// <param name="location">Location of the file.</param>
         void AddInfoFromLocation(FileSystemInfo info, LocationEnum location);
 
+        /// <summary>
+        /// Removes Info from a given location.
+        /// </summary>
+        /// <param name="location">A location from which to remove the info.</param>
         void RemoveInfoFromLocation(LocationEnum location);
 
         /// <summary>

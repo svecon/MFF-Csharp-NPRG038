@@ -15,8 +15,7 @@ using CoreLibrary.Plugins.Processors;
 
 namespace Sverge
 {
-    using TV = IFilesystemTreeVisitable;
-    using DW = IDiffWindow<IFilesystemTreeVisitable>;
+    using DW = IDiffWindow<INodeVisitable>;
 
     /// <summary>
     /// Interaction logic for diffManager.xaml
@@ -26,7 +25,7 @@ namespace Sverge
         private readonly ProcessorRunner runner;
         private readonly IProcessorLoader loader;
         private readonly DiffWindowLoader windowLoader;
-        private readonly Dictionary<TV, int> tabsPositions;
+        private readonly Dictionary<INodeVisitable, int> tabsPositions;
         private readonly Dictionary<DW, DW> parentWindows;
         private int windowMenusAdded;
         private int windowMenusBindingsAdded;
@@ -40,7 +39,7 @@ namespace Sverge
             windowLoader.LoadWindows();
             windowLoader.LoadWindowMenus();
 
-            tabsPositions = new Dictionary<TV, int>();
+            tabsPositions = new Dictionary<INodeVisitable, int>();
             parentWindows = new Dictionary<DW, DW>();
 
             InitializeComponent();
@@ -92,7 +91,7 @@ namespace Sverge
             #endregion
 
             #region Creating main structure
-            IFilesystemTreeVisitable diffTree;
+            INodeVisitable diffTree;
 
             try
             {
@@ -185,7 +184,7 @@ namespace Sverge
         }
 #pragma warning restore 4014
 
-        public DW OpenNewTab(TV diffNode, DW parentWindow = null)
+        public DW OpenNewTab(INodeVisitable diffNode, DW parentWindow = null)
         {
             int tabPosition;
             if (tabsPositions.TryGetValue(diffNode, out tabPosition))
@@ -200,13 +199,13 @@ namespace Sverge
                 parentWindows.Add(newWindow, parentWindow);
 
             string header;
-            var node = diffNode as IFilesystemTreeFileNode;
+            var node = diffNode as INodeFileNode;
             if (node != null)
             {
                 header = node.Info.Name;
             } else
             {
-                var tree = diffNode as IFilesystemTree;
+                var tree = diffNode as INode;
                 header = tree != null ? tree.Root.Info.Name : "Unknown";
             }
 

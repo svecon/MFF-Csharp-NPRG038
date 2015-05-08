@@ -7,14 +7,20 @@ namespace CoreLibrary.Exceptions.NotFound
     /// 
     /// Has more children - one for each Location type.
     /// </summary>
-    public class LocationDirectoryNotFoundException : DirectoryNotFoundException
+    public abstract class LocationDirectoryNotFoundException : DirectoryNotFoundException
     {
-
+        /// <summary>
+        /// Info for the directory.
+        /// </summary>
         public FileSystemInfo Info;
 
-        public LocationDirectoryNotFoundException(FileSystemInfo info)
+        /// <summary>
+        /// Initializes new instance of the <see cref="LocationDirectoryNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the directory.</param>
+        protected LocationDirectoryNotFoundException(FileSystemInfo info)
         {
-            this.Info = info;
+            Info = info;
         }
 
         public override string ToString()

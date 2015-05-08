@@ -9,12 +9,18 @@ namespace CoreLibrary.Exceptions.NotFound
     /// </summary>
     public class LocationFileNotFoundException : FileNotFoundException
     {
-
+        /// <summary>
+        /// Location for the file.
+        /// </summary>
         public FileSystemInfo Info;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="LocationFileNotFoundException"/>
+        /// </summary>
+        /// <param name="info">Info for the file.</param>
         public LocationFileNotFoundException(FileSystemInfo info)
         {
-            this.Info = info;
+            Info = info;
         }
 
         public override string ToString()

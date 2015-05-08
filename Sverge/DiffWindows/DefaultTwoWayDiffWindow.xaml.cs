@@ -13,10 +13,10 @@ namespace Sverge.DiffWindows
     /// Interaction logic for DefaultTwoWayDiffWindow.xaml
     /// </summary>
     [DiffWindow(int.MaxValue - 1)]
-    public partial class DefaultTwoWayDiffWindow : UserControl, IDiffWindow<IFilesystemTreeAbstractNode>
+    public partial class DefaultTwoWayDiffWindow : UserControl, IDiffWindow<INodeAbstractNode>
     {
         private readonly IDiffWindowManager manager;
-        public IFilesystemTreeAbstractNode DiffNode { get; private set; }
+        public INodeAbstractNode DiffNode { get; private set; }
 
         #region Dependency properties
 
@@ -41,15 +41,15 @@ namespace Sverge.DiffWindows
         #endregion
 
 
-        public DefaultTwoWayDiffWindow(IFilesystemTreeVisitable instance, IDiffWindowManager manager)
+        public DefaultTwoWayDiffWindow(INodeVisitable instance, IDiffWindowManager manager)
         {
             this.manager = manager;
-            DiffNode = (IFilesystemTreeAbstractNode)instance;
+            DiffNode = (INodeAbstractNode)instance;
 
             InitializeComponent();
 
             // only for files
-            if (!(DiffNode is IFilesystemTreeFileNode))
+            if (!(DiffNode is INodeFileNode))
                 return;
 
             if (DiffNode.IsInLocation(LocationCombinationsEnum.OnLocal))
@@ -66,8 +66,8 @@ namespace Sverge.DiffWindows
         }
         public static bool CanBeApplied(object instance)
         {
-            return instance is IFilesystemTreeAbstractNode
-                && ((IFilesystemTreeAbstractNode)instance).Mode == DiffModeEnum.TwoWay;
+            return instance is INodeAbstractNode
+                && ((INodeAbstractNode)instance).Mode == DiffModeEnum.TwoWay;
         }
 
         private void DefaultThreeWayDiffWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)

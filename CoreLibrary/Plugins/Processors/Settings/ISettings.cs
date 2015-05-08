@@ -12,16 +12,13 @@ namespace CoreLibrary.Plugins.Processors.Settings
     /// </summary>
     public interface ISettings
     {
-        //Type ForType { get; }
-        //TODO force property somehow on static types?
-
         /// <summary>
         /// Information for given setting. Behaves like a tooltip.
         /// </summary>
         string Info { get; }
 
         /// <summary>
-        /// Argument to trigger this setting.
+        /// Switch to trigger this setting.
         /// </summary>
         string Argument { get; }
 
@@ -48,6 +45,10 @@ namespace CoreLibrary.Plugins.Processors.Settings
         /// <param name="value">String arguments to be parsed.</param>
         void SetValue(params string[] value);
 
+        /// <summary>
+        /// Gets value of the settings.
+        /// </summary>
+        /// <returns>Values of the settings as object.</returns>
         object GetValue();
 
         /// <summary>

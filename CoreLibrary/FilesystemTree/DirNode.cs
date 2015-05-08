@@ -10,39 +10,38 @@ namespace CoreLibrary.FilesystemTree
     /// <summary>
     /// Directory node representing a directory in multiple locations.
     /// </summary>
-    public class DirNode : AbstractNode, IFilesystemTreeDirNode
+    public class DirNode : AbstractNode, INodeDirNode
     {
+        public List<INodeDirNode> Directories { get; protected set; }
 
-        public List<IFilesystemTreeDirNode> Directories { get; protected set; }
+        public List<INodeFileNode> Files { get; protected set; }
 
-        public List<IFilesystemTreeFileNode> Files { get; protected set; }
-
-        public IFilesystemTreeDirNode RootNode { get; set; }
+        public INodeDirNode RootNode { get; set; }
 
         public string RelativePath { get; set; }
 
         /// <summary>
-        /// Constructor for creating DirNode.
+        /// Initializes new instance of the <see cref="DirNode"/>
         /// </summary>
         /// <param name="rootNode">Root directory for this node.</param>
         /// <param name="relativePath">Relative path from top root directory.</param>
         /// <param name="info">Directory info for this node.</param>
         /// <param name="location">Location where this node has been found from.</param>
         /// <param name="mode">Default diff mode.</param>
-        public DirNode(IFilesystemTreeDirNode rootNode, string relativePath, DirectoryInfo info, LocationEnum location, DiffModeEnum mode)
+        public DirNode(INodeDirNode rootNode, string relativePath, FileSystemInfo info, LocationEnum location, DiffModeEnum mode)
             : base(info, location, mode)
         {
-            Directories = new List<IFilesystemTreeDirNode>();
-            Files = new List<IFilesystemTreeFileNode>();
+            Directories = new List<INodeDirNode>();
+            Files = new List<INodeFileNode>();
 
             RootNode = rootNode ?? this;
 
-            if (relativePath == "")
+            if (relativePath == string.Empty)
                 RelativePath = info.Name;
             else if (relativePath == null)
-                RelativePath = "";
+                RelativePath = string.Empty;
             else
-                RelativePath = relativePath + @"\" + info.Name;
+                RelativePath = Path.Combine(relativePath, info.Name);
         }
 
         /// <summary>
@@ -50,8 +49,8 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         /// <param name="info">Directory info for the new directory node.</param>
         /// <param name="location">Location from where the dir has been found from.</param>
-        /// <returns>new IFilesystemTreeDirNode</returns>
-        protected virtual IFilesystemTreeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
+        /// <returns>Instance of <see cref="INodeDirNode" /></returns>
+        protected virtual INodeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
         {
             return new DirNode(RootNode, RelativePath, info, location, Mode);
         }
@@ -61,8 +60,8 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         /// <param name="info">Directory info for the new directory node.</param>
         /// <param name="location">Location from where the dir has been found from.</param>
-        /// <returns>new IFilesystemTreeFileNode</returns>
-        protected virtual IFilesystemTreeFileNode CreateFileNode(FileInfo info, LocationEnum location)
+        /// <returns>Instance of <see cref="INodeFileNode"/></returns>
+        protected virtual INodeFileNode CreateFileNode(FileInfo info, LocationEnum location)
         {
             return new FileNode(this, info, location, Mode);
         }
@@ -72,30 +71,26 @@ namespace CoreLibrary.FilesystemTree
             visitor.Visit(this);
         }
 
-        public IFilesystemTreeDirNode SearchForDir(DirectoryInfo info)
+        public INodeDirNode SearchForDir(DirectoryInfo info)
         {
-            //TODO maybe this could be done faster?
-
             return Directories.FirstOrDefault(dir => dir.Info.Name == info.Name);
         }
 
-        public IFilesystemTreeFileNode SearchForFile(FileInfo info)
+        public INodeFileNode SearchForFile(FileInfo info)
         {
-            //TODO maybe this could be done faster?
-
             return Files.FirstOrDefault(file => file.Info.Name == info.Name);
         }
 
-        public IFilesystemTreeDirNode AddDir(DirectoryInfo info, LocationEnum location)
+        public INodeDirNode AddDir(DirectoryInfo info, LocationEnum location)
         {
-            IFilesystemTreeDirNode dirDiffNode = CreateDirNode(info, location);
+            INodeDirNode dirDiffNode = CreateDirNode(info, location);
             Directories.Add(dirDiffNode);
             return dirDiffNode;
         }
 
-        public IFilesystemTreeFileNode AddFile(FileInfo info, LocationEnum location)
+        public INodeFileNode AddFile(FileInfo info, LocationEnum location)
         {
-            IFilesystemTreeFileNode node = CreateFileNode(info, location);
+            INodeFileNode node = CreateFileNode(info, location);
             Files.Add(node);
             return node;
         }
@@ -131,19 +126,16 @@ namespace CoreLibrary.FilesystemTree
             return RelativePath == "" ? info.FullName : info.FullName + @"\" + RelativePath;
         }
 
-        /// <summary>
-        /// TODO: ADD TO INTERFACE? VYMYSLET
-        /// </summary>
-        public IEnumerable<IFilesystemTreeAbstractNode> FilesAndDirectories
+        public IEnumerable<INodeAbstractNode> FilesAndDirectories
         {
             get
             {
-                foreach (IFilesystemTreeDirNode filesystemTreeDirNode in Directories)
+                foreach (INodeDirNode filesystemTreeDirNode in Directories)
                 {
                     yield return filesystemTreeDirNode;
                 }
 
-                foreach (IFilesystemTreeFileNode filesystemTreeFileNode in Files.Where(f => f.Status != NodeStatusEnum.IsIgnored))
+                foreach (INodeFileNode filesystemTreeFileNode in Files.Where(f => f.Status != NodeStatusEnum.IsIgnored))
                 {
                     yield return filesystemTreeFileNode;
                 }
