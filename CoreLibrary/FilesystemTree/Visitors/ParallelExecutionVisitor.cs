@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Plugins.Processors;
 
 namespace CoreLibrary.FilesystemTree.Visitors

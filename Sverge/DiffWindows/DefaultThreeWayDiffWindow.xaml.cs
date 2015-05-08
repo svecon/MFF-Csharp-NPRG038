@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.DiffWindow;
 

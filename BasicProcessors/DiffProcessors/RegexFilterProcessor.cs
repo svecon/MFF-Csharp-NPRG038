@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 

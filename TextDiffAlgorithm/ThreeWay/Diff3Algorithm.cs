@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 using TextDiffAlgorithm.TwoWay;
 
 namespace TextDiffAlgorithm.ThreeWay

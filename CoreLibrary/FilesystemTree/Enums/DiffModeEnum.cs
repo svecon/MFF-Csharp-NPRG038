@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// Modes for Node structure.

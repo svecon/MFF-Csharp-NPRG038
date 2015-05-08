@@ -1,4 +1,4 @@
-﻿namespace CoreLibrary.Enums
+﻿namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// FileTypeEnum determines the type of the file.

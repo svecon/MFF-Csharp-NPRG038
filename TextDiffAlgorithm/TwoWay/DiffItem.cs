@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace TextDiffAlgorithm.TwoWay
 {

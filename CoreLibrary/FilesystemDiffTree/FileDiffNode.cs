@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using CoreLibrary.Enums;
 using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace CoreLibrary.FilesystemDiffTree
 {

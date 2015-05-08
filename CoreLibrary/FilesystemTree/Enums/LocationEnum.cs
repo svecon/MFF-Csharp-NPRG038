@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// Locations where the files were found from.

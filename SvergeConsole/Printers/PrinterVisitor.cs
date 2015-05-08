@@ -1,6 +1,6 @@
 ﻿using System;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.FilesystemTree.Visitors;
 
 namespace SvergeConsole.Printers

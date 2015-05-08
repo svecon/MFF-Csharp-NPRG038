@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using BasicMenus.ChangesMenu;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.DiffWindow;
 

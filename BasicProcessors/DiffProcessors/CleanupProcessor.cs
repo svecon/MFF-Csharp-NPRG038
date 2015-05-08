@@ -1,6 +1,6 @@
-﻿using CoreLibrary.Enums;
-using CoreLibrary.FilesystemDiffTree;
+﻿using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Plugins.Processors;
 
 namespace BasicProcessors.DiffProcessors

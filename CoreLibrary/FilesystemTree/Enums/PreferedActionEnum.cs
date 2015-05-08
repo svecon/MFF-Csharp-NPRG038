@@ -1,14 +1,14 @@
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// Which version of diff item should be kept and used?
     /// </summary>
-    public enum PreferedActionThreeWayEnum
+    public enum PreferedActionTwoWayEnum
     {
         /// <summary>
-        /// Default action.
+        /// Use default action.
         /// </summary>
-        Default, 
+        Default,
         
         /// <summary>
         /// Apply and keep local content.
@@ -18,11 +18,6 @@ namespace CoreLibrary.Enums
         /// <summary>
         /// Apply and keep remote content.
         /// </summary>
-        ApplyRemote, 
-        
-        /// <summary>
-        /// Apply and keep base content.
-        /// </summary>
-        RevertToBase
+        ApplyRemote
     }
 }

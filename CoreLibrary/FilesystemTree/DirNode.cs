@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree

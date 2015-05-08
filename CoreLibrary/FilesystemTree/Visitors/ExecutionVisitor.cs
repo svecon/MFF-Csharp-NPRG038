@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Plugins.Processors;
 
 namespace CoreLibrary.FilesystemTree.Visitors

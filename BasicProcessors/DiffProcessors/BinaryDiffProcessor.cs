@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;

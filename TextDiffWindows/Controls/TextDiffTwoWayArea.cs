@@ -6,8 +6,8 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
+using CoreLibrary.FilesystemTree.Enums;
 using TextDiffAlgorithm.TwoWay;
 
 namespace TextDiffWindows.Controls

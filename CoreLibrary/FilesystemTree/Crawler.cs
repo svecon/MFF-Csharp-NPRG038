@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using CoreLibrary.Enums;
 using CoreLibrary.Exceptions.NotFound;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace CoreLibrary.FilesystemTree
 {

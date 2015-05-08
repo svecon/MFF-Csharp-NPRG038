@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.FilesystemTree.Visitors;
 
 namespace CoreLibrary.FilesystemTree

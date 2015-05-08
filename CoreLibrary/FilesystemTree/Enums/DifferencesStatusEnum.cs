@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// Enum for having the FilesystemNode know which files are same and which are different.

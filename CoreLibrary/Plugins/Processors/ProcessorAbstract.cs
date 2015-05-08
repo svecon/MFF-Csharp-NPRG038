@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Reflection;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace CoreLibrary.Plugins.Processors
 {

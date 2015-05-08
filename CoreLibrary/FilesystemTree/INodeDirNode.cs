@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using CoreLibrary.Enums;
+using CoreLibrary.FilesystemTree.Enums;
 
 namespace CoreLibrary.FilesystemTree
 {

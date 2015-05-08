@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// Status of a FilesystemNode. 

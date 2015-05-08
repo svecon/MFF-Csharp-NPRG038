@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using CoreLibrary.Enums;
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
+using CoreLibrary.FilesystemTree.Enums;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.TwoWay;

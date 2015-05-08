@@ -1,5 +1,5 @@
 ﻿
-namespace CoreLibrary.Enums
+namespace CoreLibrary.FilesystemTree.Enums
 {
     /// <summary>
     /// All possible file locations and their combinations.
