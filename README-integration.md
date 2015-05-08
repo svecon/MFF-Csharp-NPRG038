@@ -6,13 +6,13 @@
 
 sverge.executable=C:/csharp/Merge/Sverge/bin/Debug/Sverge.exe
 sverge.priority=100
-sverge.args=/3 /a2 /wait /merge /title1:"Parent 1" /title2:"Merge Result: "$output /title3:"Parent 2" $local $base $other $output
+sverge.args=$local $base $other -o $output
 sverge.premerge=False
 sverge.checkconflicts=True
 sverge.binary=False
 sverge.gui=True
-sverge.diffargs=/2 /wait /title1:"$plabel1" /title2:"$clabel" $parent $child
-sverge.diff3args=/3 /a2 /wait /title1:"$plabel1" /title2:"$clabel" /title3:"$plabel2" $parent1 $child $parent2
+sverge.diffargs=$parent $child
+sverge.diff3args=$parent1 $child $parent2
 sverge.dirdiff=True
 sverge.dir3diff=True
 

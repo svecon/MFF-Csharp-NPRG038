@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\DirectoryDiffWindows.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -90,10 +91,6 @@
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.csproj">
       <Project>{9d240f37-62ce-4e9d-9a17-90a1c3bf19d7}</Project>
       <Name>CoreLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TextDiffAlgorithm\TextDiffAlgorithm.csproj">
-      <Project>{03EE01E0-B64C-4AB9-AE6B-354B6A8B5BDB}</Project>
-      <Name>TextDiffAlgorithm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

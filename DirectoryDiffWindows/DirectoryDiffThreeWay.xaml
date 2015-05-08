@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:diffFilesystemTree="clr-namespace:CoreLibrary.FilesystemDiffTree;assembly=CoreLibrary"
+             xmlns:p="clr-namespace:DirectoryDiffWindows"
              xmlns:converters="clr-namespace:DirectoryDiffWindows.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
@@ -18,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="White">
+    <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
@@ -41,193 +42,234 @@
             Grid.Column="1"
             Grid.Row="1"
             Background="LightGray"
-            Content="{Binding ElementName=UserControl, Path=LocalFolderLocation}"></Label>
+            Content="{Binding ElementName=UserControl, Path=LocalFolderLocation}"/>
 
         <Label 
             Grid.Column="3"
             Grid.Row="1"
             Background="LightGray"
-            Content="{Binding ElementName=UserControl, Path=BaseFolderLocation}"></Label>
+            Content="{Binding ElementName=UserControl, Path=BaseFolderLocation}"/>
 
         <Label 
             Grid.Column="5"
             Grid.Row="1"
             Background="LightGray"
-            Content="{Binding ElementName=UserControl, Path=RemoteFolderLocation}"></Label>
+            Content="{Binding ElementName=UserControl, Path=RemoteFolderLocation}"/>
 
-        <TreeView Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5"
-            Grid.IsSharedSizeScope="True"
-            x:Name="TreeView"
-            BorderBrush="{x:Null}"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            SelectedItemChanged="TreeView_OnSelectedItemChanged"
-            MouseDoubleClick="OnItemMouseDoubleClick">
-
-            <TreeView.Resources>
-                <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoLeftStyle">
-                    <Setter Property="FontFamily" Value="Consolas" />
-                    <Setter Property="FontSize" Value="13" />
-                    <Setter Property="Padding" Value="6,2,6,2"/>
+        <Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="GDiffStatus" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeLocal" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeBase" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeRemote" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="Background" Value="LightBlue"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="3,6,3,6"></Setter>
                 </Style>
+            </Grid.Resources>
 
-                <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoStyle" BasedOn="{StaticResource FileInfoLeftStyle}">
-                    <Setter Property="TextAlignment" Value="Right" />
-                </Style>
+            <Label Grid.Column="1" Grid.Row="0" Content="{x:Static p:Resources.Header_Status}"/>
+            <Label Grid.Column="2" Grid.Row="0" Content="{x:Static p:Resources.Header_Local}"/>
+            <Label Grid.Column="3" Grid.Row="0" Content="{x:Static p:Resources.Header_Base}"/>
+            <Label Grid.Column="4" Grid.Row="0" Content="{x:Static p:Resources.Header_Remote}" Margin="3,6,0,6" />
 
-                <HierarchicalDataTemplate DataType="{x:Type diffFilesystemTree:DirDiffNode}" ItemsSource="{Binding Path=FilesAndDirectories}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Height="13" Margin="0,0,4,0">
-                                <Image.Style>
-                                    <Style TargetType="Image">
-                                        <Setter Property="Source" Value="/DirectoryDiffWindows;component/Resources/folder.png" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
-                                                <Setter Property="Source" Value="/DirectoryDiffWindows;component/Resources/folder_open.png" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                            <TextBlock Text="{Binding Path=Info}" FontWeight="Bold" Foreground="Black" FontFamily="Consolas" FontSize="13" ></TextBlock>
-                        </StackPanel>
-                    </Grid>
-                </HierarchicalDataTemplate>
+            <TreeView 
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="5"
+                x:Name="TreeView"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                BorderThickness="0"
+                SelectedItemChanged="TreeView_OnSelectedItemChanged"
+                MouseDoubleClick="OnItemMouseDoubleClick">
 
-                <DataTemplate DataType="{x:Type diffFilesystemTree:FileDiffNode}">
-                    <Border HorizontalAlignment="Stretch">
-                        <Grid HorizontalAlignment="Stretch">
+                <TreeView.Resources>
+                    <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoLeftStyle">
+                        <Setter Property="FontFamily" Value="Consolas" />
+                        <Setter Property="FontSize" Value="13" />
+                        <Setter Property="Padding" Value="6,2,6,2"/>
+                    </Style>
+
+                    <Style TargetType="{x:Type TextBlock}" x:Key="FileInfoStyle" BasedOn="{StaticResource FileInfoLeftStyle}">
+                        <Setter Property="TextAlignment" Value="Right" />
+                    </Style>
+
+                    <HierarchicalDataTemplate DataType="{x:Type diffFilesystemTree:DirDiffNode}" ItemsSource="{Binding Path=FilesAndDirectories}">
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FDiffStatus" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FSizeLocal" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FTimeLocal" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FSizeBase" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FTimeBase" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FSizeRemote" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="FTimeRemote" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="/DirectoryDiffWindows;component/Resources/list.png" Height="13" Margin="0,0,4,0" />
-                                <TextBlock Text="{Binding Path=Info.Name}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch" Padding="0,2,0,2"></TextBlock>
+                                <Image Height="13" Margin="0,0,4,0">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="/DirectoryDiffWindows;component/Resources/folder.png" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
+                                                    <Setter Property="Source" Value="/DirectoryDiffWindows;component/Resources/folder_open.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <TextBlock Text="{Binding Path=Info}" FontWeight="Bold" Foreground="Black" FontFamily="Consolas" FontSize="13" ></TextBlock>
                             </StackPanel>
-
-                            <Border Grid.Column="1" Grid.ColumnSpan="7">
-                                <Border.Background>
-                                    <MultiBinding Converter="{converters:Diff3ToBackgroundConverter}" Mode="TwoWay">
-                                        <Binding Path="Location" />
-                                        <Binding Path="Differences" />
-                                    </MultiBinding>
-                                </Border.Background>
-
-                            </Border>
-
-                            <TextBlock Grid.Column="1" Style="{StaticResource FileInfoLeftStyle}" Padding="30,2,6,2">
-                                <TextBlock.Text>
-                                    <MultiBinding Converter="{converters:Differences3TextConverter}" Mode="TwoWay">
-                                        <Binding Path="Location" />
-                                        <Binding Path="Differences" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                            <TextBlock Grid.Column="2" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>1</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                            <TextBlock Grid.Column="3" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoLocal, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>1</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-
-                            <TextBlock Grid.Column="4" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoBase, Converter={converters:SizeConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>2</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                            <TextBlock Grid.Column="5" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoBase, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>2</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-
-                            <TextBlock Grid.Column="6" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>3</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                            <TextBlock Grid.Column="7" Style="{StaticResource FileInfoStyle}"
-                                       Text="{Binding Path=InfoRemote, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
-                                        <Binding Path="Status" />
-                                        <Binding Path="Action" />
-                                        <Binding>
-                                            <Binding.Source>
-                                                <system:Int32>3</system:Int32>
-                                            </Binding.Source>
-                                        </Binding>
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
                         </Grid>
-                    </Border>
-                </DataTemplate>
-            </TreeView.Resources>
+                    </HierarchicalDataTemplate>
 
-        </TreeView>
+                    <DataTemplate DataType="{x:Type diffFilesystemTree:FileDiffNode}">
+                        <Border HorizontalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="GDiffStatus" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeLocal" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeBase" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="GSizeRemote" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/DirectoryDiffWindows;component/Resources/list.png" Height="13" Margin="0,0,4,0" />
+                                    <TextBlock Text="{Binding Path=Info.Name}" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Stretch" Padding="0,2,0,2"></TextBlock>
+                                </StackPanel>
+
+                                <Border Grid.Column="1" Grid.ColumnSpan="4">
+                                    <Border.Background>
+                                        <MultiBinding Converter="{converters:Diff3ToBackgroundConverter}" Mode="TwoWay">
+                                            <Binding Path="Location" />
+                                            <Binding Path="Differences" />
+                                        </MultiBinding>
+                                    </Border.Background>
+
+                                </Border>
+
+                                <TextBlock Grid.Column="1" Style="{StaticResource FileInfoLeftStyle}" Padding="30,2,6,2">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{converters:Differences3TextConverter}" Mode="TwoWay">
+                                            <Binding Path="Location" />
+                                            <Binding Path="Differences" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoLocal, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>1</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoLocal, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>1</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoBase, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>2</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoBase, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>2</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+
+                                </StackPanel>
+
+
+                                <StackPanel Grid.Column="4" Orientation="Horizontal">
+
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoRemote, Converter={converters:SizeConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>3</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource FileInfoStyle}"
+                                       Text="{Binding Path=InfoRemote, Converter={converters:TimestampConverter}, Mode=TwoWay}" >
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{converters:StatusConflictToColorConverter}" Mode="TwoWay">
+                                                <Binding Path="Status" />
+                                                <Binding Path="Action" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>3</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </TreeView.Resources>
+
+            </TreeView>
+
+        </Grid>
+
 
     </Grid>
 </UserControl>

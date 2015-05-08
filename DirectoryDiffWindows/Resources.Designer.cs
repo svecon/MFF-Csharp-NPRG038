@@ -169,6 +169,42 @@ namespace DirectoryDiffWindows {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Base.
+        /// </summary>
+        public static string Header_Base {
+            get {
+                return ResourceManager.GetString("Header_Base", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local.
+        /// </summary>
+        public static string Header_Local {
+            get {
+                return ResourceManager.GetString("Header_Local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote.
+        /// </summary>
+        public static string Header_Remote {
+            get {
+                return ResourceManager.GetString("Header_Remote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Header_Status {
+            get {
+                return ResourceManager.GetString("Header_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unresolved conflicts.
         /// </summary>
         public static string Popup_Conflicts {

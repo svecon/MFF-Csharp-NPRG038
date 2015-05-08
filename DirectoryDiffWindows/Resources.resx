@@ -153,6 +153,18 @@
   <data name="Differences_RemoteOnly" xml:space="preserve">
     <value>Only on remote</value>
   </data>
+  <data name="Header_Base" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="Header_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Header_Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
   <data name="Popup_Conflicts" xml:space="preserve">
     <value>Unresolved conflicts</value>
   </data>
