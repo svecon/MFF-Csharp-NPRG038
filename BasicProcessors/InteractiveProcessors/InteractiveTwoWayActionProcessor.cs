@@ -8,10 +8,15 @@ using CoreLibrary.Plugins.Processors.Settings;
 
 namespace BasicProcessors.InteractiveProcessors
 {
+    /// <summary>
+    /// Interactive processor used to resolve and print differences between 2 files.
+    /// </summary>
     [Processor(ProcessorTypeEnum.Interactive, 9901, DiffModeEnum.TwoWay)]
     public class InteractiveTwoWayActionProcessor : ProcessorAbstract
     {
-
+        /// <summary>
+        /// Show help for resolving conflicts.
+        /// </summary>
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
@@ -52,7 +57,7 @@ namespace BasicProcessors.InteractiveProcessors
                 var infoRemote = (FileInfo)node.InfoRemote;
                 Console.WriteLine("Remote file:");
                 Console.ResetColor();
-                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);    
+                Console.WriteLine("{0} ({1}, {2:0.#}kB)", infoRemote.FullName, infoRemote.LastWriteTime, infoRemote.Length / 1024.0);
             }
 
             Console.ForegroundColor = ConsoleColor.DarkCyan;

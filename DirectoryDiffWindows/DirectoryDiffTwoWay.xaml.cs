@@ -13,7 +13,7 @@ using CoreLibrary.Plugins.DiffWindow;
 namespace DirectoryDiffWindows
 {
     /// <summary>
-    /// Interaction logic for DirectoryDiffTwoWay.xaml
+    /// Plugin for visualising differences between two directories.
     /// </summary>
     [DiffWindow(1000)]
     public partial class DirectoryDiffTwoWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu
@@ -23,25 +23,46 @@ namespace DirectoryDiffWindows
         private INodeAbstractNode selectedNode;
         private bool isBusy = true;
 
-        public static readonly DependencyProperty LocalFolderLocationProperty = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
+        #region Dependency properties
 
+        /// <summary>
+        /// Dependency property for <see cref="LocalFolderLocation"/>
+        /// </summary>
+        public static readonly DependencyProperty LocalFolderLocationProperty
+            = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
+
+        /// <summary>
+        /// String path to the local folder.
+        /// </summary>
         public string LocalFolderLocation
         {
-            get
-            {
-                return (string)GetValue(LocalFolderLocationProperty);
-            }
+            get { return (string)GetValue(LocalFolderLocationProperty); }
             set { SetValue(LocalFolderLocationProperty, value); }
         }
 
-        public static readonly DependencyProperty RemoteFolderLocationProperty = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFolderLocation"/>
+        /// </summary>
+        public static readonly DependencyProperty RemoteFolderLocationProperty
+            = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(DirectoryDiffTwoWay));
 
+
+        /// <summary>
+        /// String path to the remote folder.
+        /// </summary>
         public string RemoteFolderLocation
         {
             get { return (string)GetValue(RemoteFolderLocationProperty); }
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Initializes new instance of the <see cref="DirectoryDiffTwoWay"/>
+        /// </summary>
+        /// <param name="diffNode">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
         public DirectoryDiffTwoWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
@@ -65,6 +86,11 @@ namespace DirectoryDiffWindows
             };
         }
 
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             var filesystemTree = instance as FilesystemDiffTree;
@@ -115,7 +141,7 @@ namespace DirectoryDiffWindows
 
         #region Iterating over TreeView
 
-        public TreeViewItem GetItem(ItemsControl container, object itemToSelect)
+        private TreeViewItem GetItem(ItemsControl container, object itemToSelect)
         {
             foreach (object item in container.Items)
             {
@@ -134,7 +160,7 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref TreeViewItem previous)
+        private TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref TreeViewItem previous)
         {
             foreach (object item in container.Items)
             {
@@ -162,7 +188,7 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref bool wasFound)
+        private TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref bool wasFound)
         {
             foreach (object item in container.Items)
             {

@@ -15,35 +15,55 @@ using CoreLibrary.Plugins.DiffWindow;
 namespace DirectoryDiffWindows
 {
     /// <summary>
-    /// Interaction logic for DirectoryDiffThreeWay.xaml
+    /// Plugin for visualising differences between three directories.
     /// </summary>
     [DiffWindow(1100)]
     public partial class DirectoryDiffThreeWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu, IMergeMenu
     {
         public FilesystemDiffTree DiffNode { get; private set; }
+
         private readonly IDiffWindowManager manager;
 
+        /// <summary>
+        /// Dependency property for <see cref="LocalFolderLocation"/>
+        /// </summary>
         public static readonly DependencyProperty LocalFolderLocationProperty
             = DependencyProperty.Register("LocalFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
+        /// <summary>
+        /// String path to the local folder.
+        /// </summary>
         public string LocalFolderLocation
         {
             get { return (string)GetValue(LocalFolderLocationProperty); }
             set { SetValue(LocalFolderLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFolderLocation"/>
+        /// </summary>
         public static readonly DependencyProperty RemoteFolderLocationProperty
             = DependencyProperty.Register("RemoteFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
+
+        /// <summary>
+        /// String path to the remote folder.
+        /// </summary>
         public string RemoteFolderLocation
         {
             get { return (string)GetValue(RemoteFolderLocationProperty); }
             set { SetValue(RemoteFolderLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="BaseFolderLocation"/>
+        /// </summary>
         public static readonly DependencyProperty BaseFolderLocationProperty
             = DependencyProperty.Register("BaseFolderLocation", typeof(string), typeof(DirectoryDiffThreeWay));
 
+        /// <summary>
+        /// String path to the base folder.
+        /// </summary>
         public string BaseFolderLocation
         {
             get { return (string)GetValue(BaseFolderLocationProperty); }
@@ -54,6 +74,11 @@ namespace DirectoryDiffWindows
 
         private bool isBusy = false;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="DirectoryDiffThreeWay"/>
+        /// </summary>
+        /// <param name="diffNode">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
         public DirectoryDiffThreeWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             DiffNode = (FilesystemDiffTree)diffNode;
@@ -77,6 +102,11 @@ namespace DirectoryDiffWindows
             };
         }
 
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             var filesystemTree = instance as FilesystemDiffTree;
@@ -119,7 +149,7 @@ namespace DirectoryDiffWindows
 
         #region Iterating over TreeView
 
-        public TreeViewItem GetItem(ItemsControl container, object itemToSelect)
+        private TreeViewItem GetItem(ItemsControl container, object itemToSelect)
         {
             foreach (object item in container.Items)
             {
@@ -138,7 +168,7 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref TreeViewItem previous)
+        private TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref TreeViewItem previous)
         {
             foreach (object item in container.Items)
             {
@@ -166,7 +196,7 @@ namespace DirectoryDiffWindows
             return null;
         }
 
-        public TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref bool wasFound)
+        private TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref bool wasFound)
         {
             foreach (object item in container.Items)
             {

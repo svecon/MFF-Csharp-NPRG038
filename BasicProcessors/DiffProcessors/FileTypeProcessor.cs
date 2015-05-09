@@ -6,9 +6,7 @@ using CoreLibrary.Plugins.Processors;
 namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
-    /// Filter for C# source codes (manually typed ones).
-    /// 
-    /// Leaves out everything else.
+    /// Processor for checking whether the file is a text file.
     /// </summary>
     [Processor(ProcessorTypeEnum.Diff, 300, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class FileTypeProcessor : ProcessorAbstract

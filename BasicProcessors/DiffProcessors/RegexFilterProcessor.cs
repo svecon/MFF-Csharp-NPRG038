@@ -7,16 +7,20 @@ using CoreLibrary.Plugins.Processors.Settings;
 namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
-    /// Filter for C# source codes (manually typed ones).
-    /// 
-    /// Leaves out everything else.
+    /// Filter processor for filtering based on Regex
     /// </summary>
     [Processor(ProcessorTypeEnum.Diff, 150, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class RegexFilterProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Includes only files matching given Regex.
+        /// </summary>
         [Settings("Include only file names that are matching Regex.", "include-regex", "iR")]
         public Regex IncludeRegex = null;
 
+        /// <summary>
+        /// Excludes all files matching given Regex.
+        /// </summary>
         [Settings("Exclude file name that are matching Regex.", "exclude-regex", "eR")]
         public Regex ExcludeRegex = null;
 

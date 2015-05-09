@@ -12,7 +12,7 @@ namespace Sverge.DiffWindows
     using DW = IDiffWindow<INodeVisitable>;
 
     /// <summary>
-    /// Interaction logic for DefaultThreeWayDiffWindow.xaml
+    /// Default plugin DiffWindow used as a fallback for 3-way when no better visualisation plugin is found.
     /// </summary>
     [DiffWindow(int.MaxValue)]
     public partial class DefaultThreeWayDiffWindow : UserControl, IDiffWindow<INodeAbstractNode>
@@ -22,27 +22,45 @@ namespace Sverge.DiffWindows
 
         #region Dependency properties
 
+        /// <summary>
+        /// Dependency property for <see cref="LocalFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(DefaultThreeWayDiffWindow));
 
+        /// <summary>
+        /// String path to the local file.
+        /// </summary>
         public string LocalFileLocation
         {
             get { return (string)GetValue(LocalFileLocationProperty); }
             set { SetValue(LocalFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty RemoteFileLocationProperty
             = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(DefaultThreeWayDiffWindow));
 
+        /// <summary>
+        /// String path to the remote file.
+        /// </summary>
         public string RemoteFileLocation
         {
             get { return (string)GetValue(RemoteFileLocationProperty); }
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="BaseFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty BaseFileLocationProperty
             = DependencyProperty.Register("BaseFileLocation", typeof(string), typeof(DefaultThreeWayDiffWindow));
 
+        /// <summary>
+        /// String path to the base file.
+        /// </summary>
         public string BaseFileLocation
         {
             get { return (string)GetValue(BaseFileLocationProperty); }
@@ -51,10 +69,15 @@ namespace Sverge.DiffWindows
 
         #endregion
 
-        public DefaultThreeWayDiffWindow(INodeVisitable instance, IDiffWindowManager manager)
+        /// <summary>
+        /// Initializes new node of the <see cref="DefaultThreeWayDiffWindow"/>
+        /// </summary>
+        /// <param name="node">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
+        public DefaultThreeWayDiffWindow(INodeVisitable node, IDiffWindowManager manager)
         {
             this.manager = manager;
-            DiffNode = (INodeAbstractNode)instance;
+            DiffNode = (INodeAbstractNode)node;
 
             InitializeComponent();
 
@@ -82,6 +105,11 @@ namespace Sverge.DiffWindows
 
         }
 
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             return true;

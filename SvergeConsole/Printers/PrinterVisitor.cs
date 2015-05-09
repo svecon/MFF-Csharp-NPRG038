@@ -14,7 +14,6 @@ namespace SvergeConsole.Printers
     /// </summary>
     public class PrinterVisitor : IFilesystemTreeVisitor
     {
-
         int currentLevel = 0;
 
         private INodeDirNode directoryCache;

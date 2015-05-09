@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\DirectoryDiffWindows.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +50,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\Differences3TextConverter.cs" />
+    <Compile Include="Converters\Diff3ToTextConverter.cs" />
     <Compile Include="Converters\Diff3ToBackgroundConverter.cs" />
     <Compile Include="Converters\StatusConflictToColorConverter.cs" />
     <Compile Include="Converters\TimestampConverter.cs" />
@@ -59,8 +60,8 @@
     <Compile Include="DirectoryDiffTwoWay.xaml.cs">
       <DependentUpon>DirectoryDiffTwoWay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\DifferencesTextConverter.cs" />
-    <Compile Include="Converters\DiffToBackgroundConverter.cs" />
+    <Compile Include="Converters\Diff2ToTextConverter.cs" />
+    <Compile Include="Converters\Diff2ToBackgroundConverter.cs" />
     <Compile Include="Converters\SizeConverter.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

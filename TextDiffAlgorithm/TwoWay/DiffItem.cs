@@ -33,6 +33,13 @@ namespace TextDiffAlgorithm.TwoWay
         /// </summary>
         public PreferedActionTwoWayEnum PreferedAction;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="DiffItem"/>
+        /// </summary>
+        /// <param name="localLineStart">A line number where the difference starts in local file.</param>
+        /// <param name="remoteLineStart">A line number where the difference starts in remote file.</param>
+        /// <param name="localAffectedLines">Number of lines affected in local file.</param>
+        /// <param name="remoteAffectedLines">Number of lines affected in remote file.</param>
         public DiffItem(int localLineStart, int remoteLineStart, int localAffectedLines, int remoteAffectedLines)
         {
             LocalLineStart = localLineStart;

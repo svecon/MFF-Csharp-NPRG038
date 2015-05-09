@@ -9,20 +9,13 @@ using CoreLibrary.Plugins;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
-//"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt"
-//"C:\Users\svecon\Downloads\DiffAlgorithm.cs" "C:\Users\svecon\Downloads\DiffAlgorithmB.cs" "C:\Users\svecon\Downloads\DiffAlgorithmR.cs"
-//"C:\Users\svecon\Downloads\WpfApplication1" "C:\Users\svecon\Downloads\WpfApplication1 - Copy" "C:\Users\svecon\Downloads\WpfApplication1 - Copy - Copy"
-//"C:\Users\svecon\Downloads\WpfApplication1" "C:\Users\svecon\Downloads\WpfApplication1 - Copy" -C#
-
 namespace Sverge
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// An entry point for the graphical user interface.
     /// </summary>
     public partial class App : Application
     {
-        public static bool ShowHelp = false;
-
         private IProcessorLoader loader;
 
         private MainWindow diffManager;
@@ -45,6 +38,7 @@ namespace Sverge
         private void App_OnStartup(object sender, StartupEventArgs eventArgs)
         {
             #region DEBUG: Print arguments
+            // TODO: remove this
 #if DEBUG
             //string[] args = Environment.GetCommandLineArgs();
             using (TextWriter tw = File.CreateText("C:/Users/svecon/Downloads/git-arguments.txt"))
@@ -122,12 +116,11 @@ namespace Sverge
 
         private void App_OnActivated(object sender, EventArgs e)
         {
-
+            // TODO: check and possibly recalculate diff
         }
 
         private void App_OnDeactivated(object sender, EventArgs e)
         {
-
         }
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)

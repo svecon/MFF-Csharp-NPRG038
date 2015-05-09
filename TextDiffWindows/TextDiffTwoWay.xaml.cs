@@ -16,7 +16,7 @@ using TextDiffWindows.Controls.LineMarkers;
 namespace TextDiffWindows
 {
     /// <summary>
-    /// Interaction logic for TextDiffTwoWay.xaml
+    /// Plugin for visualising differences between two text files.
     /// </summary>
     [DiffWindow(100)]
     public partial class TextDiffTwoWay : UserControl, IDiffWindow<FileDiffNode>, IChangesMenu
@@ -26,26 +26,51 @@ namespace TextDiffWindows
         private readonly TextDiffTwoWayArea localText;
         private readonly TextDiffTwoWayArea remoteText;
         private readonly LineMarkersTwoWayElement lineMarkers;
+
+        /// <summary>
+        /// A pointer to currently selected diff.
+        /// </summary>
         public int CurrentDiff { get; internal set; }
 
+        #region Dependency properties
+
+        /// <summary>
+        /// Dependency property for <see cref="LocalFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffTwoWay));
 
+        /// <summary>
+        /// String path to the local file.
+        /// </summary>
         public string LocalFileLocation
         {
             get { return (string)GetValue(LocalFileLocationProperty); }
             set { SetValue(LocalFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty RemoteFileLocationProperty
             = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(TextDiffTwoWay));
 
+        /// <summary>
+        /// String path to the remote file.
+        /// </summary>
         public string RemoteFileLocation
         {
             get { return (string)GetValue(RemoteFileLocationProperty); }
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Initializes new instance of the <see cref="TextDiffTwoWay"/>
+        /// </summary>
+        /// <param name="diffNode">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
         public TextDiffTwoWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             this.manager = manager;
@@ -57,6 +82,8 @@ namespace TextDiffWindows
             localText = new TextDiffTwoWayArea(DiffNode, TextDiffTwoWayArea.TargetFileEnum.Local);
             remoteText = new TextDiffTwoWayArea(DiffNode, TextDiffTwoWayArea.TargetFileEnum.Remote);
 
+            LineMarkersPanel.Content = lineMarkers = new LineMarkersTwoWayElement(DiffNode, localText, remoteText);
+
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
 
@@ -66,15 +93,8 @@ namespace TextDiffWindows
             localText.OnDiffChange += InvalidateAllVisual;
             remoteText.OnDiffChange += InvalidateAllVisual;
 
-            localText.OnHorizontalScroll += offset =>
-            {
-                remoteText.SetHorizontalOffset(offset);
-            };
-
-            remoteText.OnHorizontalScroll += offset =>
-            {
-                localText.SetHorizontalOffset(offset);
-            };
+            localText.OnHorizontalScroll += offset => remoteText.SetHorizontalOffset(offset);
+            remoteText.OnHorizontalScroll += offset => localText.SetHorizontalOffset(offset);
 
             localText.OnVerticalScrollSynchronization += offset =>
             {
@@ -93,10 +113,13 @@ namespace TextDiffWindows
 
                 localText.SetVerticalOffsetWithoutSynchornizing(offset, difference);
             };
-
-            LineMarkersPanel.Content = lineMarkers = new LineMarkersTwoWayElement(DiffNode, localText, remoteText);
         }
 
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             var diffNode = instance as FileDiffNode;

@@ -84,12 +84,13 @@ namespace TextDiffAlgorithm.ThreeWay
         #endregion
 
         /// <summary>
-        /// Constructor for Diff3Algorithm.
+        /// Initializes new instance of the <see cref="Diff3Algorithm"/>
         /// </summary>
         /// <param name="diffBaseLocal">Two-way diff between old and new file.</param>
         /// <param name="diffBaseRemote">Two-way diff between old and his file.</param>
-        /// <param name="localFile">Hashed new file.</param>
-        /// <param name="remoteFile">Hashed his file.</param>
+        /// <param name="localFile">Hashed local file.</param>
+        /// <param name="remoteFile">Hashed remote file.</param>
+        /// <param name="baseFile">Hashed base file.</param>
         public Diff3Algorithm(DiffItem[] diffBaseLocal, DiffItem[] diffBaseRemote, int[] localFile, int[] remoteFile, int[] baseFile)
         {
             this.diffBaseLocal = diffBaseLocal;

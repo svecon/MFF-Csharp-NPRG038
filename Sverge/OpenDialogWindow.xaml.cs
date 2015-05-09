@@ -15,33 +15,67 @@ namespace Sverge
     /// </summary>
     public partial class OpenDialogWindow : Window, IDataErrorInfo
     {
+        #region Dependency properties
 
-        public static readonly DependencyProperty LocalLocationProperty = DependencyProperty.Register("LocalLocation", typeof(string), typeof(OpenDialogWindow));
+        /// <summary>
+        /// Dependency property for <see cref="LocalLocation"/>
+        /// </summary>
+        public static readonly DependencyProperty LocalLocationProperty
+            = DependencyProperty.Register("LocalLocation", typeof(string), typeof(OpenDialogWindow));
 
+        /// <summary>
+        /// Path to the local file or directory.
+        /// </summary>
         public string LocalLocation
         {
-            get
-            {
-                return (string)GetValue(LocalLocationProperty);
-            }
+            get { return (string)GetValue(LocalLocationProperty); }
             set { SetValue(LocalLocationProperty, value); }
         }
 
-        public static readonly DependencyProperty BaseLocationProperty = DependencyProperty.Register("BaseLocation", typeof(string), typeof(OpenDialogWindow));
+        /// <summary>
+        /// Dependency property for <see cref="BaseLocation"/>
+        /// </summary>
+        public static readonly DependencyProperty BaseLocationProperty
+            = DependencyProperty.Register("BaseLocation", typeof(string), typeof(OpenDialogWindow));
 
+        /// <summary>
+        /// Path to the base file or directory.
+        /// </summary>
         public string BaseLocation
         {
             get { return (string)GetValue(BaseLocationProperty); }
             set { SetValue(BaseLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteLocation"/>
+        /// </summary>
+        public static readonly DependencyProperty RemoteLocationProperty
+            = DependencyProperty.Register("RemoteLocation", typeof(string), typeof(OpenDialogWindow));
 
-        public static readonly DependencyProperty RemoteLocationProperty = DependencyProperty.Register("RemoteLocation", typeof(string), typeof(OpenDialogWindow));
-
+        /// <summary>
+        /// Path to the remote file or directory.
+        /// </summary>
         public string RemoteLocation
         {
             get { return (string)GetValue(RemoteLocationProperty); }
             set { SetValue(RemoteLocationProperty, value); }
+        }
+
+        #endregion
+
+        private string currentDirectory;
+
+        private readonly IDiffWindowManager manager;
+
+        /// <summary>
+        /// Initializes new node of the <see cref="OpenDialogWindow"/>
+        /// </summary>
+        /// <param name="manager">Window manager</param>
+        public OpenDialogWindow(IDiffWindowManager manager)
+        {
+            this.manager = manager;
+            InitializeComponent();
         }
 
         public string Error
@@ -89,17 +123,6 @@ namespace Sverge
         }
 
         private int errors;
-
-
-        private string currentDirectory;
-
-        private readonly IDiffWindowManager manager;
-
-        public OpenDialogWindow(IDiffWindowManager manager)
-        {
-            this.manager = manager;
-            InitializeComponent();
-        }
 
         private TextBox GetTextBox(object tag)
         {
@@ -151,6 +174,9 @@ namespace Sverge
             currentDirectory = dialog.SelectedPath;
         }
 
+        /// <summary>
+        /// Command for opening new visualisation window.
+        /// </summary>
         public static readonly RoutedUICommand OpenNewWindow = new RoutedUICommand(
             "OpenNewWindow", "OpenNewWindow",
             typeof(OpenDialogWindow),

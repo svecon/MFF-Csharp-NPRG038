@@ -18,7 +18,7 @@ namespace Sverge
     using DW = IDiffWindow<INodeVisitable>;
 
     /// <summary>
-    /// Interaction logic for diffManager.xaml
+    /// Main window of the application that shows different visualisations.
     /// </summary>
     public partial class MainWindow : Window, IDiffWindowManager
     {
@@ -30,6 +30,10 @@ namespace Sverge
         private int windowMenusAdded;
         private int windowMenusBindingsAdded;
 
+        /// <summary>
+        /// Initializes new node of the <see cref="MainWindow"/>
+        /// </summary>
+        /// <param name="processorLoader">Processor loader containing all loaded processors.</param>
         public MainWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
@@ -232,6 +236,9 @@ namespace Sverge
             Tabs.Items.Remove(item);
         }
 
+        /// <summary>
+        /// Opens the <see cref="OpenDialogWindow"/>
+        /// </summary>
         public void OpenWindowDialog()
         {
             var open = new OpenDialogWindow(this);
@@ -246,7 +253,7 @@ namespace Sverge
             RemoveWindow(FindParent<TabItem>(sender as DependencyObject));
         }
 
-        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             //get parent item
             DependencyObject parentObject = VisualTreeHelper.GetParent(child);
@@ -270,6 +277,9 @@ namespace Sverge
             OpenWindowDialog();
         }
 
+        /// <summary>
+        /// Command for closing a visualisation window.
+        /// </summary>
         public static readonly RoutedUICommand CloseWindow = new RoutedUICommand(
             "CloseWindow", "CloseWindow",
             typeof(MainWindow),
@@ -291,6 +301,9 @@ namespace Sverge
             RemoveWindow(Tabs.SelectedIndex);
         }
 
+        /// <summary>
+        /// Command for exiting the application.
+        /// </summary>
         public static readonly RoutedUICommand Exit = new RoutedUICommand(
             "Exit", "Exit",
             typeof(MainWindow),
@@ -306,7 +319,7 @@ namespace Sverge
 
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Application.Current.Shutdown(); // @TODO Exit code
+            Application.Current.Shutdown(); // TODO Exit code
         }
 
         private void CloseCustomWindowMenus()
@@ -358,12 +371,13 @@ namespace Sverge
             }
         }
 
+        /// <summary>
+        /// Command for showin the processor window.
+        /// </summary>
         public static readonly RoutedUICommand ProcessorSettings = new RoutedUICommand(
             "ProcessorSettings", "ProcessorSettings",
             typeof(MainWindow),
-            new InputGestureCollection() {
-            }
-        );
+            new InputGestureCollection());
 
         private void ProcessorSettings_Executed(object sender, ExecutedRoutedEventArgs e)
         {

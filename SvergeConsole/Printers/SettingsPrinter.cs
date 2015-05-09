@@ -4,7 +4,7 @@ using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using CoreLibrary.Plugins.Processors.Settings.Types;
 
-namespace SvergeConsole.Processors
+namespace SvergeConsole.Printers
 {
     /// <summary>
     /// Prints all available settings on a Console into a well-arranged column layout.
@@ -78,7 +78,7 @@ namespace SvergeConsole.Processors
             }
         }
 
-        protected void SortByOptionParameters()
+        private void SortByOptionParameters()
         {
             settings.Sort(new SettingsComparer());
         }

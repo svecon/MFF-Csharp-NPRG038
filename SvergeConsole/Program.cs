@@ -6,19 +6,16 @@ using CoreLibrary.Exceptions;
 using CoreLibrary.Exceptions.NotFound;
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
-using CoreLibrary.FilesystemTree.Visitors;
 using CoreLibrary.Plugins;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using SvergeConsole.Printers;
-using SvergeConsole.Processors;
 
 namespace SvergeConsole
 {
-
-    //"C:\Program Files\KDiff3\bin\d0.txt" "C:\Program Files\KDiff3\bin\d1.txt" "C:\Program Files\KDiff3\bin\d2.txt" -m -o "C:\Users\svecon\Downloads\temp2" -i
-    //"C:\Users\svecon\Downloads\temp" "C:\csharp\Merge" -m -o "C:\Users\svecon\Downloads\temp2" -C# -2d ApplyRemote
-    //"C:\Users\svecon\Downloads\temp" "C:\csharp\Merge" -o "C:\Users\svecon\Downloads\temp2" -C# -2d ApplyRemote
+    /// <summary>
+    /// Console user interface for Sverge
+    /// </summary>
     class Program
     {
         [Settings("Show help about using the console.", "help", "h")]

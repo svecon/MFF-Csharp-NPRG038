@@ -48,6 +48,16 @@ namespace TextDiffAlgorithm.ThreeWay
         /// </summary>
         public PreferedActionThreeWayEnum PreferedAction;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="Diff3Item"/>
+        /// </summary>
+        /// <param name="baseLineStart">A line number where the difference starts in base file.</param>
+        /// <param name="localLineStart">A line number where the difference starts in local file.</param>
+        /// <param name="remoteLineStart">A line number where the difference starts in remote file.</param>
+        /// <param name="baseAffectedLines">Number of lines affected in base file.</param>
+        /// <param name="localAffectedLines">Number of lines affected in local file.</param>
+        /// <param name="remoteAffectedLines">Number of lines affected in remote file.</param>
+        /// <param name="diff">Which differences are same.</param>
         public Diff3Item(int baseLineStart, int localLineStart, int remoteLineStart, int baseAffectedLines,
             int localAffectedLines, int remoteAffectedLines, DifferencesStatusEnum diff)
         {

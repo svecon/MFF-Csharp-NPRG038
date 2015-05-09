@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -11,13 +10,19 @@ using CoreLibrary.Plugins.Processors.Settings;
 namespace Sverge
 {
     /// <summary>
-    /// Interaction logic for ProcessorSettingsWindow.xaml
+    /// A window for showing all processors and their settings.
+    /// 
+    /// Also allows to change the settings.
     /// </summary>
     public partial class ProcessorSettingsWindow : Window
     {
         private readonly IProcessorLoader loader;
         private readonly Dictionary<ISettings, Control> controls;
 
+        /// <summary>
+        /// Initializes new node of the <see cref="ProcessorSettingsWindow"/>
+        /// </summary>
+        /// <param name="processorLoader">Processor loader containing all loaded processors.</param>
         public ProcessorSettingsWindow(IProcessorLoader processorLoader)
         {
             loader = processorLoader;
@@ -27,7 +32,12 @@ namespace Sverge
             CreateForm();
         }
 
-        protected void CreateForm()
+        /// <summary>
+        /// Creates form for the available settings.
+        /// 
+        /// Different inputs for different types of settings.
+        /// </summary>
+        private void CreateForm()
         {
             foreach (IProcessor processor in loader.GetProcessors(ProcessorTypeEnum.Diff)
                                      .Concat(loader.GetProcessors(ProcessorTypeEnum.Merge)))
@@ -99,7 +109,7 @@ namespace Sverge
             Container.Children.Add(saveButton);
         }
 
-        protected Control CreateInput(ISettings settings)
+        private Control CreateInput(ISettings settings)
         {
             object value = settings.GetValue();
 
@@ -138,7 +148,7 @@ namespace Sverge
             return string.Join(",", o);
         }
 
-        protected string ControlToValue(Control c)
+        private string ControlToValue(Control c)
         {
             var checkBox = c as CheckBox;
             var comboBox = c as ComboBox;
@@ -158,7 +168,10 @@ namespace Sverge
             }
         }
 
-        protected void SaveValues()
+        /// <summary>
+        /// Save the current values of the settings.
+        /// </summary>
+        private void SaveValues()
         {
             foreach (KeyValuePair<ISettings, Control> keyValuePair in controls)
             {

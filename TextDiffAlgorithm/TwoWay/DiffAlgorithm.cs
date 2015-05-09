@@ -129,6 +129,11 @@ namespace TextDiffAlgorithm.TwoWay
             }
         }
 
+        /// <summary>
+        /// Initializes new instance of <see cref="DiffAlgorithm"/>
+        /// </summary>
+        /// <param name="dataA"></param>
+        /// <param name="dataB"></param>
         public DiffAlgorithm(DiffData dataA, DiffData dataB)
         {
             this.dataA = dataA;

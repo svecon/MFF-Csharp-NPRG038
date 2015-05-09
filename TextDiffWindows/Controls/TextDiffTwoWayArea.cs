@@ -12,17 +12,25 @@ using TextDiffAlgorithm.TwoWay;
 
 namespace TextDiffWindows.Controls
 {
+    /// <summary>
+    /// An element for showing a text file and highlighting different lines using a 2-way diff.
+    /// </summary>
     class TextDiffTwoWayArea : TextAreaAbstract, IScrollInfo
     {
-        public delegate void OnDiffChangeDelegate(); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnDiffChangeDelegate();
         public OnDiffChangeDelegate OnDiffChange;
 
-        public delegate void OnDiffSelectedDelegate(int selected); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnDiffSelectedDelegate(int selected);
         public OnDiffSelectedDelegate OnDiffSelected;
 
         public enum TargetFileEnum { Local, Remote }
         private readonly TargetFileEnum target;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="TextDiffTwoWayArea"/>
+        /// </summary>
+        /// <param name="node">Node containing files and diffs.</param>
+        /// <param name="targetFile">Which file will be diplayed.</param>
         public TextDiffTwoWayArea(FileDiffNode node, TargetFileEnum targetFile)
             : base(node)
         {

@@ -11,12 +11,19 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
     /// </summary>
     public class UnifiedDiffOutput : DiffOutputAbstract<Diff, DiffItem>
     {
-        public int ContextLinesCount;
+        private readonly int contextLinesCount;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="EditScript"/>
+        /// </summary>
+        /// <param name="infoLocal">Info for the local file.</param>
+        /// <param name="infoRemote">Info for the remote file.</param>
+        /// <param name="diff">Calculated 2-way text diff.</param>
+        /// <param name="contextLinesCount">Number of lines to show as a context.</param>
         public UnifiedDiffOutput(FileInfo infoLocal, FileInfo infoRemote, Diff diff, int contextLinesCount = 3)
             : base(infoLocal, infoRemote, diff)
         {
-            ContextLinesCount = contextLinesCount;
+            this.contextLinesCount = contextLinesCount;
         }
 
         public override IEnumerable<string> Print()
@@ -29,7 +36,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
 
             // create and merge ovelapping diffs into chunks
             var chunks = new List<DiffChunk>(Diff.Items.Length);
-            foreach (DiffChunk newChunk in Diff.Items.Select(diffItem => new DiffChunk(diffItem, Diff.FilesLineCount, ContextLinesCount)))
+            foreach (DiffChunk newChunk in Diff.Items.Select(diffItem => new DiffChunk(diffItem, Diff.FilesLineCount, contextLinesCount)))
             {
                 if (chunks.Any() && chunks.Last().ChuckOverflows(newChunk))
                     chunks.Last().JoinChunk(newChunk);

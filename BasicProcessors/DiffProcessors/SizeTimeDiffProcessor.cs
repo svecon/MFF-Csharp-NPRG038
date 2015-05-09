@@ -14,17 +14,37 @@ namespace BasicProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 1050, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class SizeTimeDiffProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Enables <see cref="SizeTimeDiffProcessor"/>
+        /// </summary>
         [Settings("Disable fast diff check.", "slow-diff", "D")]
         public bool IsEnabled = true;
 
+        /// <summary>
+        /// Enum for different types of comparisons.
+        /// </summary>
         [Flags]
         public enum CompareModeEnum
         {
+            /// <summary>
+            /// Compare the files based on their file size.
+            /// </summary>
             Size = 1 << 0,
+
+            /// <summary>
+            /// Compare the files based on their last modification time.
+            /// </summary>
             Modification = 1 << 1,
+
+            /// <summary>
+            /// Compare on both size and last modification time.
+            /// </summary>
             SizeModification = Size | Modification,
         }
 
+        /// <summary>
+        /// Compare mode setting.
+        /// </summary>
         [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
         public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
 

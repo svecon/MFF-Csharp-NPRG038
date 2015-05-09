@@ -6,6 +6,9 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace BasicMenus.ChangesMenu
 {
+    /// <summary>
+    /// A menu for iterating thourgh differences
+    /// </summary>
     [DiffWindowMenu(100)]
     public class ChangesMenu : IDiffWindowMenu
     {
@@ -17,6 +20,10 @@ namespace BasicMenus.ChangesMenu
 
         private readonly ICommand recalculate;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="ChangesMenu"/>
+        /// </summary>
+        /// <param name="instance">Instance of the <see cref="IDiffWindow{TNode}"/> that handles the menu actions.</param>
         public ChangesMenu(object instance)
         {
             window = instance as IChangesMenu;
@@ -37,6 +44,11 @@ namespace BasicMenus.ChangesMenu
             );
         }
 
+        /// <summary>
+        /// Checks whether instance implements correct interface.
+        /// </summary>
+        /// <param name="instance">Instance that should implement interface.</param>
+        /// <returns>True when the instance implements the interface.</returns>
         public static bool CanBeApplied(object instance)
         {
             return instance is IChangesMenu;

@@ -13,7 +13,14 @@ namespace TextDiffAlgorithm.TwoWay
         /// </summary>
         public struct FilesLineCountStruct
         {
+            /// <summary>
+            /// Number of lines in local file.
+            /// </summary>
             public int Local;
+
+            /// <summary>
+            /// Number of lines in remote file.
+            /// </summary>
             public int Remote;
         }
 
@@ -23,7 +30,14 @@ namespace TextDiffAlgorithm.TwoWay
         /// </summary>
         public struct FilesEndsWithNewLineStruct
         {
+            /// <summary>
+            /// Does local file end with new line?
+            /// </summary>
             public bool Local;
+
+            /// <summary>
+            /// Does remote file end with new line?
+            /// </summary>
             public bool Remote;
         }
 
@@ -37,11 +51,18 @@ namespace TextDiffAlgorithm.TwoWay
         private FileInfo oldFile;
         private FileInfo newFile;
 
+        /// <summary>
+        /// Structure for storing number of lines in each file.
+        /// </summary>
         public FilesLineCountStruct FilesLineCount;
+
+        /// <summary>
+        /// Structure for storing whether files end with new line.
+        /// </summary>
         public FilesEndsWithNewLineStruct FilesEndsWithNewLine;
 
         /// <summary>
-        /// Constructor for Diff.
+        /// Initializes new instance of the <see cref="Diff"/>
         /// </summary>
         /// <param name="oldFile">Local file diffed.</param>
         /// <param name="newFile">Remote file diffed.</param>

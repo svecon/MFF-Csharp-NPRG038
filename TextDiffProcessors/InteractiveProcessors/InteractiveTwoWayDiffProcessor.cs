@@ -17,12 +17,15 @@ namespace TextDiffProcessors.InteractiveProcessors
     [Processor(ProcessorTypeEnum.Interactive, 100, DiffModeEnum.TwoWay)]
     public class InteractiveTwoWayDiffProcessor : ProcessorAbstract
     {
-        //[Settings("Interactive console differ.", "interactive", "i")]
-        //public bool IsEnabled = false;
-
+        /// <summary>
+        /// Settings for showing help during resolving of the conflicts.
+        /// </summary>
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
+        /// <summary>
+        /// Setting for default action used to resolve conflicts.
+        /// </summary>
         [Settings("Default action for interactive diff.", "2interactive-default")]
         public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
 

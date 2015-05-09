@@ -7,9 +7,12 @@ using CoreLibrary.FilesystemTree.Enums;
 
 namespace DirectoryDiffWindows.Converters
 {
-    class DifferencesTextConverter : MarkupExtension, IMultiValueConverter
+    /// <summary>
+    /// Converter that takes differences and location of two files and and creates a text info.
+    /// </summary>
+    class Diff2ToTextConverter : MarkupExtension, IMultiValueConverter
     {
-        public DifferencesTextConverter() { }
+        public Diff2ToTextConverter() { }
 
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {

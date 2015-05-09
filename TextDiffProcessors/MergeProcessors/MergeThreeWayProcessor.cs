@@ -14,14 +14,41 @@ namespace TextDiffProcessors.MergeProcessors
     [Processor(ProcessorTypeEnum.Merge, 301, DiffModeEnum.ThreeWay)]
     public class MergeThreeWayProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Setting for ouput folder of the merge.
+        /// </summary>
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
+        /// <summary>
+        /// Default action used when the differences conflict.
+        /// </summary>
         public enum DefaultActionEnum
         {
-            WriteConflicts, RevertToBase, ApplyLocal, ApplyRemote
+            /// <summary>
+            /// Writes conflict, keeping all versions of the differences.
+            /// </summary>
+            WriteConflicts, 
+            
+            /// <summary>
+            /// Revert to base version of the diff.
+            /// </summary>
+            RevertToBase, 
+            
+            /// <summary>
+            /// Apply and keep only local version of the difference.
+            /// </summary>
+            ApplyLocal, 
+            
+            /// <summary>
+            /// Apply and keep only remote version of the difference.
+            /// </summary>
+            ApplyRemote
         }
 
+        /// <summary>
+        /// Settings for the default action for the conflicts.
+        /// </summary>
         [Settings("Default action for merging files.", "3merge-default", "3d")]
         public DefaultActionEnum DefaultAction;
 

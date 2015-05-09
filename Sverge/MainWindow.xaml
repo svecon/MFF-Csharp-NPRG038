@@ -124,9 +124,11 @@
             </MenuItem>
         </Menu>
 
+        
+        <!--TODO: add statusbar to GUI-->
         <!--<StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="I am statusbar @TODO" />
+                <TextBlock Text="" />
             </StatusBarItem>
         </StatusBar>-->
 

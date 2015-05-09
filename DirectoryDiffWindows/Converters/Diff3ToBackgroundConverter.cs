@@ -8,6 +8,9 @@ using CoreLibrary.FilesystemTree.Enums;
 
 namespace DirectoryDiffWindows.Converters
 {
+    /// <summary>
+    /// Converter that takes differences and location of three files and creates a gradient.
+    /// </summary>
     class Diff3ToBackgroundConverter : MarkupExtension, IMultiValueConverter
     {
         public Diff3ToBackgroundConverter() { }

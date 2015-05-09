@@ -17,12 +17,15 @@ namespace TextDiffProcessors.InteractiveProcessors
     [Processor(ProcessorTypeEnum.Interactive, 200, DiffModeEnum.ThreeWay)]
     public class InteractiveThreeWayDiffProcessor : ProcessorAbstract
     {
-        //[Settings("Interactive console differ.", "interactive", "i")]
-        //public bool IsEnabled = false;
-
+        /// <summary>
+        /// Settings for showing help during resolving of the conflicts.
+        /// </summary>
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
+        /// <summary>
+        /// Setting for default action used to resolve conflicts.
+        /// </summary>
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;
 

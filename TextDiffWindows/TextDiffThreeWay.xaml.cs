@@ -17,7 +17,7 @@ using TextDiffWindows.Controls.LineMarkers;
 namespace TextDiffWindows
 {
     /// <summary>
-    /// Interaction logic for TextDiffThreeWay.xaml
+    /// Plugin for visualising differences between three text files.
     /// </summary>
     [DiffWindow(200)]
     public partial class TextDiffThreeWay : UserControl, IDiffWindow<FileDiffNode>, IChangesMenu, IMergeMenu
@@ -25,7 +25,10 @@ namespace TextDiffWindows
         private readonly IDiffWindowManager manager;
         public FileDiffNode DiffNode { get; private set; }
 
-        public int CurrentDiff { get; internal set; }
+        /// <summary>
+        /// A pointer to currently selected diff.
+        /// </summary>
+        private int CurrentDiff { get; set; }
 
         private readonly TextDiffThreeWayArea localText;
         private readonly TextDiffThreeWayArea baseText;
@@ -35,27 +38,45 @@ namespace TextDiffWindows
 
         #region Dependency properties
 
+        /// <summary>
+        /// Dependency property for <see cref="LocalFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(TextDiffThreeWay));
 
+        /// <summary>
+        /// String path to the local file.
+        /// </summary>
         public string LocalFileLocation
         {
             get { return (string)GetValue(LocalFileLocationProperty); }
             set { SetValue(LocalFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty RemoteFileLocationProperty
             = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(TextDiffThreeWay));
 
+        /// <summary>
+        /// String path to the remote file.
+        /// </summary>
         public string RemoteFileLocation
         {
             get { return (string)GetValue(RemoteFileLocationProperty); }
             set { SetValue(RemoteFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="BaseFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty BaseFileLocationProperty
             = DependencyProperty.Register("BaseFileLocation", typeof(string), typeof(TextDiffThreeWay));
 
+        /// <summary>
+        /// String path to the base file.
+        /// </summary>
         public string BaseFileLocation
         {
             get { return (string)GetValue(BaseFileLocationProperty); }
@@ -64,6 +85,11 @@ namespace TextDiffWindows
 
         #endregion
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="TextDiffThreeWay"/>
+        /// </summary>
+        /// <param name="diffNode">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
         public TextDiffThreeWay(INodeVisitable diffNode, IDiffWindowManager manager)
         {
             InitializeComponent();
@@ -76,6 +102,12 @@ namespace TextDiffWindows
             localText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Local);
             remoteText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Remote);
             baseText = new TextDiffThreeWayArea(DiffNode, TextDiffThreeWayArea.TargetFileEnum.Base);
+
+            LineMarkersPanelLocal.Content = lineMarkersLeft
+                = new LineMarkersThreeWayElement(DiffNode, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
+
+            LineMarkersPanelRemote.Content = lineMarkersRight
+                = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
 
             ScrollViewerLocal.Content = localText;
             ScrollViewerRemote.Content = remoteText;
@@ -151,14 +183,13 @@ namespace TextDiffWindows
                 remoteText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToRemote);
                 localText.SetVerticalOffsetWithoutSynchornizing(offset, differenceToLocal);
             };
-
-            LineMarkersPanelLocal.Content = lineMarkersLeft
-                = new LineMarkersThreeWayElement(DiffNode, localText, baseText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseLeft);
-
-            LineMarkersPanelRemote.Content = lineMarkersRight
-                = new LineMarkersThreeWayElement(DiffNode, baseText, remoteText, LineMarkersThreeWayElement.MarkerTypeEnum.BaseRight);
         }
 
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             var diffNode = instance as FileDiffNode;

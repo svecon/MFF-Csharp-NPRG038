@@ -4,9 +4,17 @@ using TextDiffAlgorithm.TwoWay;
 
 namespace TextDiffWindows.Controls.LineMarkers
 {
+    /// <summary>
+    /// An element for connecting related differences for two way.
+    /// </summary>
     class LineMarkersTwoWayElement : LineMarkersElementAbstract<DiffItem>
     {
-
+        /// <summary>
+        /// Initializes new instance of the <see cref="LineMarkersTwoWayElement"/>
+        /// </summary>
+        /// <param name="node">A node that contains the files and differences.</param>
+        /// <param name="leftText">A pointer to the text element on the left.</param>
+        /// <param name="rightText">A pointer to the text element on the right.</param>
         public LineMarkersTwoWayElement(FileDiffNode node, TextAreaAbstract leftText, TextAreaAbstract rightText)
             : base(node, leftText, rightText)
         {

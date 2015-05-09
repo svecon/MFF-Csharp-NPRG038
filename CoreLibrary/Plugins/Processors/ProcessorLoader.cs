@@ -194,7 +194,7 @@ namespace CoreLibrary.Plugins.Processors
             {
 #if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
-                // @TODO: load processors anyway in undefined order, print out warning for the user?
+                // TODO: load processors anyway in undefined order, print out warning for the user?
 #endif
             } catch (Exception)
             {

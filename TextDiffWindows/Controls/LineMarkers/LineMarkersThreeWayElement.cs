@@ -5,6 +5,9 @@ using TextDiffAlgorithm.ThreeWay;
 
 namespace TextDiffWindows.Controls.LineMarkers
 {
+    /// <summary>
+    /// An element for connecting related differences for 3-way.
+    /// </summary>
     class LineMarkersThreeWayElement : LineMarkersElementAbstract<Diff3Item>
     {
 
@@ -12,6 +15,13 @@ namespace TextDiffWindows.Controls.LineMarkers
 
         private readonly MarkerTypeEnum type;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="LineMarkersThreeWayElement"/>
+        /// </summary>
+        /// <param name="node">A node that contains the files and differences.</param>
+        /// <param name="leftText">A pointer to the text element on the left.</param>
+        /// <param name="rightText">A pointer to the text element on the right.</param>
+        /// <param name="markerType">A type of the liner marker.</param>
         public LineMarkersThreeWayElement(FileDiffNode node, TextAreaAbstract leftText, TextAreaAbstract rightText, MarkerTypeEnum markerType)
             : base(node, leftText, rightText)
         {

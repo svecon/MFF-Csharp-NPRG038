@@ -16,17 +16,42 @@ namespace TextDiffProcessors.MergeProcessors
     [Processor(ProcessorTypeEnum.Merge, 300, DiffModeEnum.TwoWay)]
     public class MergeTwoWayProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Setting for ouput folder of the merge.
+        /// </summary>
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
+        /// <summary>
+        /// Setting for creating empty folders in the output.
+        /// </summary>
         [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
+        /// <summary>
+        /// Default action for the merge conflicts.
+        /// </summary>
         public enum DefaultActionEnum
         {
-            WriteConflicts, RevertToLocal, ApplyRemote
+            /// <summary>
+            /// Write conflicts to the file, keeping both versions of the differences.
+            /// </summary>
+            WriteConflicts, 
+            
+            /// <summary>
+            /// Revert changes and use local version.
+            /// </summary>
+            RevertToLocal, 
+            
+            /// <summary>
+            /// Apply remote version of the difference.
+            /// </summary>
+            ApplyRemote
         }
 
+        /// <summary>
+        /// Settings for the default action for the conflicts.
+        /// </summary>
         [Settings("Default action for merging files.", "2merge-default", "2d")]
         public DefaultActionEnum DefaultAction;
 

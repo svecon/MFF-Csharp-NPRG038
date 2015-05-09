@@ -13,8 +13,19 @@ namespace TextDiffAlgorithm.ThreeWay
         /// </summary>
         public struct FilesLineCountStruct
         {
+            /// <summary>
+            /// Number of lines in base file.
+            /// </summary>
             public int Base;
+
+            /// <summary>
+            /// Number of lines in local file.
+            /// </summary>
             public int Local;
+
+            /// <summary>
+            /// Number of lines in remote file.
+            /// </summary>
             public int Remote;
         }
 
@@ -24,8 +35,19 @@ namespace TextDiffAlgorithm.ThreeWay
         /// </summary>
         public struct FilesEndsWithNewLineStruct
         {
+            /// <summary>
+            /// Does base file end with new line?
+            /// </summary>
             public bool Base;
+
+            /// <summary>
+            /// Does local file end with new line?
+            /// </summary>
             public bool Local;
+
+            /// <summary>
+            /// Does remote file end with new line?
+            /// </summary>
             public bool Remote;
         }
 
@@ -40,11 +62,18 @@ namespace TextDiffAlgorithm.ThreeWay
         private FileInfo newFile;
         private FileInfo hisFile;
 
+        /// <summary>
+        /// Structure for storing number of lines in each file.
+        /// </summary>
         public FilesLineCountStruct FilesLineCount;
+
+        /// <summary>
+        /// Structure for storing whether files end with new line.
+        /// </summary>
         public FilesEndsWithNewLineStruct FilesEndsWithNewLine;
 
         /// <summary>
-        /// Constructor for Diff3.
+        /// Initializes new instance of the <see cref="Diff3"/>
         /// </summary>
         /// <param name="oldFile">Local file diffed.</param>
         /// <param name="newFile">Remote file diffed.</param>

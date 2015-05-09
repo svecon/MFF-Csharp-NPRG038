@@ -29,6 +29,12 @@ namespace TextDiffProcessors.DiffOutput
 
         public TV CurrentDiffItem { get; protected set; }
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="DiffOutputAbstract{TU,TV}"/>
+        /// </summary>
+        /// <param name="infoLocal">Info for the local file.</param>
+        /// <param name="infoRemote">Info for the remote file.</param>
+        /// <param name="diff">Calculated diff.</param>
         protected DiffOutputAbstract(FileInfo infoLocal, FileInfo infoRemote, TU diff)
         {
             InfoLocal = infoLocal;

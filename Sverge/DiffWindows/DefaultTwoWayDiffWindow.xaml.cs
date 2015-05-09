@@ -20,18 +20,30 @@ namespace Sverge.DiffWindows
 
         #region Dependency properties
 
+        /// <summary>
+        /// Dependency property for <see cref="LocalFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty LocalFileLocationProperty
             = DependencyProperty.Register("LocalFileLocation", typeof(string), typeof(DefaultTwoWayDiffWindow));
 
+        /// <summary>
+        /// String path to the local file.
+        /// </summary>
         public string LocalFileLocation
         {
             get { return (string)GetValue(LocalFileLocationProperty); }
             set { SetValue(LocalFileLocationProperty, value); }
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="RemoteFileLocation"/> 
+        /// </summary>
         public static readonly DependencyProperty RemoteFileLocationProperty
             = DependencyProperty.Register("RemoteFileLocation", typeof(string), typeof(DefaultTwoWayDiffWindow));
 
+        /// <summary>
+        /// String path to the remote file.
+        /// </summary>
         public string RemoteFileLocation
         {
             get { return (string)GetValue(RemoteFileLocationProperty); }
@@ -40,11 +52,15 @@ namespace Sverge.DiffWindows
 
         #endregion
 
-
-        public DefaultTwoWayDiffWindow(INodeVisitable instance, IDiffWindowManager manager)
+        /// <summary>
+        /// Initializes new node of the <see cref="DefaultTwoWayDiffWindow"/>
+        /// </summary>
+        /// <param name="node">Diff node holding the calculated diff.</param>
+        /// <param name="manager">Manager for this window.</param>
+        public DefaultTwoWayDiffWindow(INodeVisitable node, IDiffWindowManager manager)
         {
             this.manager = manager;
-            DiffNode = (INodeAbstractNode)instance;
+            DiffNode = (INodeAbstractNode)node;
 
             InitializeComponent();
 
@@ -64,6 +80,12 @@ namespace Sverge.DiffWindows
                 RemoteFileDate.Content = ((FileInfo)DiffNode.InfoRemote).LastWriteTime;
             }
         }
+
+        /// <summary>
+        /// Can this <see cref="IDiffWindow{TNode}"/> be applied to given instance?
+        /// </summary>
+        /// <param name="instance">Instance holding the calculated diff.</param>
+        /// <returns>True if this plugin can be applied.</returns>
         public static bool CanBeApplied(object instance)
         {
             return instance is INodeAbstractNode

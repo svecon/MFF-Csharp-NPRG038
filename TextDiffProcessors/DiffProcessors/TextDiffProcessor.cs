@@ -17,12 +17,21 @@ namespace TextDiffProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 1500, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class TextDiffProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// A setting for ignoring any leading and trailing whitespace.
+        /// </summary>
         [Settings("Diff algorithm will ignore leading and trailing whitespace", "trim-space", "ts")]
         public bool TrimSpace = false;
 
+        /// <summary>
+        /// A setting for ingnoring all whitespace.
+        /// </summary>
         [Settings("Diff algorithm will ignore all white space", "ignore-whitespace", "iw")]
         public bool IgnoreWhitespace = false;
 
+        /// <summary>
+        /// A setting for ignoring case sensitivity.
+        /// </summary>
         [Settings("Diff algorithm will ignore case senstivity", "ignore-case", "ic")]
         public bool IgnoreCase = false;
 
@@ -75,6 +84,7 @@ namespace TextDiffProcessors.DiffProcessors
                     break;
             }
 
+            // update the differences status.
             var diff = dnode.Diff as Diff;
             if (diff != null && diff.Items.Length == 0)
                 dnode.Differences = (DifferencesStatusEnum)dnode.Location;
@@ -85,6 +95,7 @@ namespace TextDiffProcessors.DiffProcessors
 
             if (diff3 == null) return;
 
+            // check if there are any conflicting changes
             foreach (Diff3Item diff3Item in ((Diff3)dnode.Diff).Items
                 .Where(diff3Item => diff3Item.Differeces == DifferencesStatusEnum.AllDifferent))
             {

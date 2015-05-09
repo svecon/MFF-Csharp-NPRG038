@@ -6,6 +6,10 @@ using CoreLibrary.FilesystemDiffTree;
 
 namespace TextDiffWindows.Controls.LineMarkers
 {
+    /// <summary>
+    /// An element for connecting related differences.
+    /// </summary>
+    /// <typeparam name="TU">Type of a diff items that will be connected.</typeparam>
     abstract class LineMarkersElementAbstract<TU> : PositioningAreaAbstract
     {
         protected readonly FileDiffNode Node;
@@ -17,6 +21,12 @@ namespace TextDiffWindows.Controls.LineMarkers
 
         protected const double HORIZONTAL_DIFF_LINE_LENGTH = 7;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="LineMarkersElementAbstract{TU}"/>
+        /// </summary>
+        /// <param name="node">A node that contains the files and differences.</param>
+        /// <param name="leftText">A pointer to the text element on the left.</param>
+        /// <param name="rightText">A pointer to the text element on the right.</param>
         protected LineMarkersElementAbstract(FileDiffNode node, TextAreaAbstract leftText, TextAreaAbstract rightText)
         {
             Node = node;

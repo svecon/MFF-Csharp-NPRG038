@@ -6,6 +6,9 @@ using System.Windows.Markup;
 
 namespace DirectoryDiffWindows.Converters
 {
+    /// <summary>
+    /// Converter printing out time stamp as a readable date.
+    /// </summary>
     [ValueConversion(typeof(object), typeof(string))]
     class TimestampConverter : MarkupExtension, IValueConverter
     {

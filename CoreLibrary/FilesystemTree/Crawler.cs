@@ -11,7 +11,7 @@ namespace CoreLibrary.FilesystemTree
     /// Crawler traverses given directories (2 or 3) 
     /// and builds a IFilesystemTree with files and directories as Nodes.
     /// 
-    /// @TODO try to parallelize the crawling to read the related directories from different revisions at the same time
+    /// TODO try to parallelize the crawling to read the related directories from different revisions at the same time
     /// This might not be faster as the structure still needs to do only one related directory at a time
     /// Paralallizing without waiting for related directories to finish scanning would make finding related files and directories much slower.
     /// </summary>

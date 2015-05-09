@@ -6,6 +6,9 @@ using System.Windows.Markup;
 
 namespace DirectoryDiffWindows.Converters
 {
+    /// <summary>
+    /// Converting file size to size in kB.
+    /// </summary>
     [ValueConversion(typeof(object), typeof(string))]
     class SizeConverter : MarkupExtension, IValueConverter
     {

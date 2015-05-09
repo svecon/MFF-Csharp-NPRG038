@@ -9,6 +9,9 @@ using CoreLibrary.FilesystemDiffTree;
 
 namespace TextDiffWindows.Controls
 {
+    /// <summary>
+    /// A base class for text element which will show the contents of a file.
+    /// </summary>
     abstract class TextAreaAbstract : PositioningAreaAbstract
     {
 
@@ -20,12 +23,12 @@ namespace TextDiffWindows.Controls
         protected Size Extent;
         protected Size Viewport;
 
-        public delegate void OnVerticalScrollDelegate(double yOffset); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnVerticalScrollDelegate(double yOffset);
         public OnVerticalScrollDelegate OnVerticalScroll;
 
         public OnVerticalScrollDelegate OnVerticalScrollSynchronization;
 
-        public delegate void OnHorizontalScrollDelegate(double xOffset); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnHorizontalScrollDelegate(double xOffset);
         public OnHorizontalScrollDelegate OnHorizontalScroll;
 
         protected bool DrawRightBorder;
@@ -37,6 +40,10 @@ namespace TextDiffWindows.Controls
         protected List<string> Lines;
         protected int LongestLine;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="TextAreaAbstract"/>
+        /// </summary>
+        /// <param name="node">Node containing the files and diffs.</param>
         protected TextAreaAbstract(FileDiffNode node)
         {
             Node = node;

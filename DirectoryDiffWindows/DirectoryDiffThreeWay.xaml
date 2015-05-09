@@ -156,7 +156,7 @@
 
                                 <TextBlock Grid.Column="1" Style="{StaticResource FileInfoLeftStyle}" Padding="30,2,6,2">
                                     <TextBlock.Text>
-                                        <MultiBinding Converter="{converters:Differences3TextConverter}" Mode="TwoWay">
+                                        <MultiBinding Converter="{converters:Diff3ToTextConverter}" Mode="TwoWay">
                                             <Binding Path="Location" />
                                             <Binding Path="Differences" />
                                         </MultiBinding>

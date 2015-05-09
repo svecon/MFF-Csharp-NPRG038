@@ -7,9 +7,15 @@ using CoreLibrary.Plugins.Processors.Settings;
 
 namespace BasicProcessors.MergeProcessors
 {
+    /// <summary>
+    /// Processor that merges some trivial cases where not all files are present.
+    /// </summary>
     [Processor(ProcessorTypeEnum.Merge, 10, DiffModeEnum.ThreeWay)]
     public class MergeByLocationsProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Output folder of the merging.
+        /// </summary>
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 

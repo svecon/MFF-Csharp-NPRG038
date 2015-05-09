@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\TextDiffProcessors.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,7 +47,6 @@
     <Compile Include="DiffOutput\ThreeWay\Diff3NormalOutput.cs" />
     <Compile Include="DiffOutput\TwoWay\EditScript.cs" />
     <Compile Include="DiffOutput\TwoWay\UnifiedDiffOutput.cs" />
-    <Compile Include="DiffProcessors\CheckConflictsProcessor.cs" />
     <Compile Include="DiffProcessors\TextDiffProcessor.cs" />
     <Compile Include="InteractiveProcessors\InteractiveThreeWayDiffProcessor.cs" />
     <Compile Include="InteractiveProcessors\InteractiveTwoWayDiffProcessor.cs" />

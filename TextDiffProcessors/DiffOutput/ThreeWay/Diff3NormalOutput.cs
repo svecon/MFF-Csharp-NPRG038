@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using CoreLibrary.FilesystemTree.Enums;
 using TextDiffAlgorithm.ThreeWay;
 
@@ -14,6 +13,13 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
     {
         private readonly FileInfo infoBase;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="Diff3NormalOutput"/>
+        /// </summary>
+        /// <param name="infoLocal">Info for the local file.</param>
+        /// <param name="infoBase">Info for the base file.</param>
+        /// <param name="infoRemote">Info for the remote file.</param>
+        /// <param name="diff">Calculated 3-way text diff.</param>
         public Diff3NormalOutput(FileInfo infoLocal, FileInfo infoBase, FileInfo infoRemote, Diff3 diff)
             : base(infoLocal, infoRemote, diff)
         {

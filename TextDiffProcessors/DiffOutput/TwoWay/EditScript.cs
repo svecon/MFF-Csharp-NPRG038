@@ -9,6 +9,12 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
     /// </summary>
     public class EditScript : DiffOutputAbstract<Diff, DiffItem>
     {
+        /// <summary>
+        /// Initializes new instance of the <see cref="EditScript"/>
+        /// </summary>
+        /// <param name="infoLocal">Info for the local file.</param>
+        /// <param name="infoRemote">Info for the remote file.</param>
+        /// <param name="diff">Calculated 2-way text diff.</param>
         public EditScript(FileInfo infoLocal, FileInfo infoRemote, Diff diff)
             : base(infoLocal, infoRemote, diff)
         {

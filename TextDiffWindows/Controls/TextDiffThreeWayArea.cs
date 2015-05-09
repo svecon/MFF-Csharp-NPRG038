@@ -12,17 +12,25 @@ using TextDiffAlgorithm.ThreeWay;
 
 namespace TextDiffWindows.Controls
 {
+    /// <summary>
+    /// An element for showing a text file and highlighting different lines using 3-way diff.
+    /// </summary>
     class TextDiffThreeWayArea : TextAreaAbstract, IScrollInfo
     {
         public enum TargetFileEnum { Local, Base, Remote }
         private readonly TargetFileEnum target;
 
-        public delegate void OnDiffChangeDelegate(); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnDiffChangeDelegate();
         public OnDiffChangeDelegate OnDiffChange;
 
-        public delegate void OnDiffSelectedDelegate(int selected); // TODO routed event (object sender, XXX (potomek) : RoutedEventArgs)
+        public delegate void OnDiffSelectedDelegate(int selected);
         public OnDiffSelectedDelegate OnDiffSelected;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="TextDiffThreeWayArea"/>
+        /// </summary>
+        /// <param name="node">Node containing files and diffs.</param>
+        /// <param name="targetFile">Which file will be diplayed.</param>
         public TextDiffThreeWayArea(FileDiffNode node, TargetFileEnum targetFile)
             : base(node)
         {

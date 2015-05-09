@@ -6,6 +6,9 @@ using CoreLibrary.Plugins.DiffWindow;
 
 namespace BasicMenus.MergeMenu
 {
+    /// <summary>
+    /// Merge menu handles meging and resolving conflicts.
+    /// </summary>
     [DiffWindowMenu(1000)]
     public class MergeMenu : IDiffWindowMenu
     {
@@ -23,6 +26,10 @@ namespace BasicMenus.MergeMenu
 
         private readonly ICommand useRemote;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="MergeMenu"/>
+        /// </summary>
+        /// <param name="instance">Instance of the <see cref="IDiffWindow{TNode}"/> that handles the menu actions.</param>
         public MergeMenu(object instance)
         {
             window = instance as IMergeMenu;
@@ -55,6 +62,11 @@ namespace BasicMenus.MergeMenu
             );
         }
 
+        /// <summary>
+        /// Checks whether instance implements correct interface.
+        /// </summary>
+        /// <param name="instance">Instance that should implement interface.</param>
+        /// <returns>True when the instance implements the interface.</returns>
         public static bool CanBeApplied(object instance)
         {
             return instance is IMergeMenu;

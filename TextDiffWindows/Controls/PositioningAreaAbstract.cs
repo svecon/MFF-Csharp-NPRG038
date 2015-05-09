@@ -5,12 +5,17 @@ using System.Windows.Media;
 
 namespace TextDiffWindows.Controls
 {
+    /// <summary>
+    /// An element that handles calculating of vertical positioning for text.
+    /// </summary>
     abstract class PositioningAreaAbstract : FrameworkElement
     {
-
         protected readonly FormattedText Sample;
         protected Pen DiffLinePen;
 
+        /// <summary>
+        /// Initializes new instance of the <see cref="PositioningAreaAbstract"/>
+        /// </summary>
         protected PositioningAreaAbstract()
         {
             Sample = CreateFormattedText("M");

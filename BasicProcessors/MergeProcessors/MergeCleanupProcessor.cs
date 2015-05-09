@@ -5,6 +5,9 @@ using CoreLibrary.Plugins.Processors;
 
 namespace BasicProcessors.MergeProcessors
 {
+    /// <summary>
+    /// Merge cleanup processor ensures consistent data between multiple runs.
+    /// </summary>
     [Processor(ProcessorTypeEnum.Merge, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class MergeCleanupProcessor : ProcessorAbstract
     {

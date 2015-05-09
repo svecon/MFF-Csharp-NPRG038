@@ -19,6 +19,9 @@ namespace BasicProcessors.DiffProcessors
         /// </summary>
         const int BUFFER_SIZE = 4096;
 
+        /// <summary>
+        /// Enables <see cref="BinaryDiffProcessor"/>
+        /// </summary>
         [Settings("Force binary diff check.", "binary-check", "BC")]
         public bool IsEnabled = false;
 

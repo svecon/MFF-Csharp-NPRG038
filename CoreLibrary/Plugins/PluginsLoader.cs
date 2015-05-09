@@ -12,7 +12,7 @@ namespace CoreLibrary.Plugins
         /// <summary>
         /// Loads all assemblies from the plugins folder next to the executable.
         /// 
-        /// @TODO load assemblies into another domain to prevent running malicious code
+        /// TODO load assemblies into another domain to prevent running malicious code
         /// </summary>
         public static void LoadAssemblies()
         {

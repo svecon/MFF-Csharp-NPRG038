@@ -5,6 +5,9 @@ using CoreLibrary.Plugins.Processors;
 
 namespace BasicProcessors.DiffProcessors
 {
+    /// <summary>
+    /// Cleanup processor ensured that the data is consistent between multiple diff calculations.
+    /// </summary>
     [Processor(ProcessorTypeEnum.Diff, 0, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CleanupProcessor : ProcessorAbstract
     {

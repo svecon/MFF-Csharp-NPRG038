@@ -6,13 +6,16 @@ using CoreLibrary.Plugins.Processors.Settings;
 namespace BasicProcessors.DiffProcessors
 {
     /// <summary>
-    /// Filter for C# source codes (manually typed ones).
+    /// Filter for C# source codes (ignores auto generated files).
     /// 
     /// Leaves out everything else.
     /// </summary>
     [Processor(ProcessorTypeEnum.Diff, 50, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CsharpSourcesFilterProcessor : ProcessorAbstract
     {
+        /// <summary>
+        /// Enables <see cref="CsharpSourcesFilterProcessor"/>
+        /// </summary>
         [Settings("Filter for only C# source files.", "csharp-source-code", "C#")]
         public bool IsEnabled = false;
 

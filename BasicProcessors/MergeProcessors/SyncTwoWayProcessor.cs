@@ -15,14 +15,37 @@ namespace BasicProcessors.MergeProcessors
     [Processor(ProcessorTypeEnum.Merge, 5000, DiffModeEnum.TwoWay)]
     public class SyncTwoWayProcessor : ProcessorAbstract
     {
-        public enum CompareOnEnum { Size = 1, Modification = 2 }
+        /// <summary>
+        /// Enum for choosing comparison method.
+        /// </summary>
+        public enum CompareOnEnum
+        {
+            /// <summary>
+            /// Compare based on size (choose bigger).
+            /// </summary>
+            Size = 1, 
+            
+            /// <summary>
+            /// Compare based on last modification time.
+            /// </summary>
+            Modification = 2
+        }
 
+        /// <summary>
+        /// Enables <see cref="SyncTwoWayProcessor"/>
+        /// </summary>
         [Settings("Sync 2 folders with the newer version of the files.", "sync", "s")]
         public bool IsEnabled = false;
 
+        /// <summary>
+        /// Comparison method.
+        /// </summary>
         [Settings("Choose syncing based on different criteria.", "sync-criteria", "S")]
         public CompareOnEnum CompareOn = CompareOnEnum.Modification;
 
+        /// <summary>
+        /// Creates empty folders during syncing.
+        /// </summary>
         [Settings("Create empty folders.", "empty-folders", "Ef")]
         public bool CreateEmptyFolders = false;
 
@@ -60,11 +83,11 @@ namespace BasicProcessors.MergeProcessors
         {
             FileInfo from = null;
             string to = null;
-            LocationEnum toLocationEnum;
 
             // one file is missing
             if (node.Location < (int)LocationCombinationsEnum.OnLocalRemote)
             {
+                LocationEnum toLocationEnum;
                 if (node.IsInLocation(LocationEnum.OnLocal))
                 {
                     from = (FileInfo)node.InfoLocal;

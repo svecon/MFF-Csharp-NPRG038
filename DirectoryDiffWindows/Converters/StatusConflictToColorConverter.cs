@@ -7,6 +7,9 @@ using CoreLibrary.FilesystemTree.Enums;
 
 namespace DirectoryDiffWindows.Converters
 {
+    /// <summary>
+    /// Converter for marking resolved and conflicting files using two colors.
+    /// </summary>
     class StatusConflictToColorConverter : MarkupExtension, IMultiValueConverter
     {
         public StatusConflictToColorConverter() { }

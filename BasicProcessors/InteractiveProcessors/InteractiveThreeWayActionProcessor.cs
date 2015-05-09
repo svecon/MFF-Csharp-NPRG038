@@ -8,10 +8,15 @@ using CoreLibrary.Plugins.Processors.Settings;
 
 namespace BasicProcessors.InteractiveProcessors
 {
+    /// <summary>
+    /// Interactive processor used to resolve and print differences between 3 files.
+    /// </summary>
     [Processor(ProcessorTypeEnum.Interactive, 9900, DiffModeEnum.ThreeWay)]
     public class InteractiveThreeWayActionProcessor : ProcessorAbstract
     {
-
+        /// <summary>
+        /// Show help for resolving conflicts.
+        /// </summary>
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
