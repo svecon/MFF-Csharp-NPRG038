@@ -11,7 +11,7 @@ namespace BasicProcessors.InteractiveProcessors
     /// <summary>
     /// Interactive processor used to resolve and print differences between 3 files.
     /// </summary>
-    [Processor(ProcessorTypeEnum.Interactive, 9900, DiffModeEnum.ThreeWay)]
+    [Processor(ProcessorTypeEnum.Interactive, 9901, DiffModeEnum.ThreeWay)]
     public class InteractiveThreeWayActionProcessor : ProcessorAbstract
     {
         /// <summary>

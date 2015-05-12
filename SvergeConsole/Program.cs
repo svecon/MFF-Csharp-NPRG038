@@ -16,8 +16,11 @@ namespace SvergeConsole
     /// <summary>
     /// Console user interface for Sverge
     /// </summary>
-    class Program
+    public class Program
     {
+        /// <summary>
+        /// Setting that shows help about how to user console interface to the user.
+        /// </summary>
         [Settings("Show help about using the console.", "help", "h")]
         public static bool ShowHelp = false;
 

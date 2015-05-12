@@ -11,7 +11,7 @@ namespace BasicProcessors.DiffProcessors
     /// <summary>
     /// BinaryDiffProcessors processes any files and checks for differences byte by byte.
     /// </summary>
-    [Processor(ProcessorTypeEnum.Diff, 1200, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
+    [Processor(ProcessorTypeEnum.Diff, 9000, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class BinaryDiffProcessor : ProcessorAbstract
     {
         /// <summary>
@@ -31,7 +31,7 @@ namespace BasicProcessors.DiffProcessors
 
         protected override bool CheckStatus(INodeFileNode node)
         {
-            return IsEnabled && base.CheckStatus(node);
+            return IsEnabled && base.CheckStatus(node) && node.Status != NodeStatusEnum.WasDiffed;
         }
 
         protected override void ProcessChecked(INodeFileNode node)

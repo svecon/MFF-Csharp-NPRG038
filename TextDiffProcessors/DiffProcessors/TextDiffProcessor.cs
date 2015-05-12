@@ -44,9 +44,6 @@ namespace TextDiffProcessors.DiffProcessors
             if (node.FileType != FileTypeEnum.Text)
                 return false;
 
-            if (node.Differences == DifferencesStatusEnum.AllSame)
-                return false;
-
             return base.CheckStatus(node);
         }
 

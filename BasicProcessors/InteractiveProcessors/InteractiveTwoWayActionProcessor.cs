@@ -11,7 +11,7 @@ namespace BasicProcessors.InteractiveProcessors
     /// <summary>
     /// Interactive processor used to resolve and print differences between 2 files.
     /// </summary>
-    [Processor(ProcessorTypeEnum.Interactive, 9901, DiffModeEnum.TwoWay)]
+    [Processor(ProcessorTypeEnum.Interactive, 9900, DiffModeEnum.TwoWay)]
     public class InteractiveTwoWayActionProcessor : ProcessorAbstract
     {
         /// <summary>

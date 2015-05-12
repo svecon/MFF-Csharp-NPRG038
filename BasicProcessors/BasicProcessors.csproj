@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="DiffProcessors\BinaryDiffProcessor.cs" />
     <Compile Include="DiffProcessors\CheckConflictsProcessor.cs" />
-    <Compile Include="DiffProcessors\CleanupProcessor.cs" />
+    <Compile Include="DiffProcessors\InitializationProcessor.cs" />
     <Compile Include="DiffProcessors\CsharpSourcesFilterProcessor.cs" />
     <Compile Include="DiffProcessors\ExtensionFilterProcessor.cs" />
     <Compile Include="DiffProcessors\FileTypeProcessor.cs" />

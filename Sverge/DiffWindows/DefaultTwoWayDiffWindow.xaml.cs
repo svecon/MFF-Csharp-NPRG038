@@ -13,10 +13,10 @@ namespace Sverge.DiffWindows
     /// Interaction logic for DefaultTwoWayDiffWindow.xaml
     /// </summary>
     [DiffWindow(int.MaxValue - 1)]
-    public partial class DefaultTwoWayDiffWindow : UserControl, IDiffWindow<INodeAbstractNode>
+    public partial class DefaultTwoWayDiffWindow : UserControl, IDiffWindow<INodeVisitable>
     {
         private readonly IDiffWindowManager manager;
-        public INodeAbstractNode DiffNode { get; private set; }
+        public INodeVisitable DiffNode { get; private set; }
 
         #region Dependency properties
 
@@ -60,24 +60,25 @@ namespace Sverge.DiffWindows
         public DefaultTwoWayDiffWindow(INodeVisitable node, IDiffWindowManager manager)
         {
             this.manager = manager;
-            DiffNode = (INodeAbstractNode)node;
+            DiffNode = node;
 
             InitializeComponent();
 
             // only for files
-            if (!(DiffNode is INodeFileNode))
+            var abstractNode = DiffNode as INodeAbstractNode;
+            if (abstractNode == null)
                 return;
 
-            if (DiffNode.IsInLocation(LocationCombinationsEnum.OnLocal))
+            if (abstractNode.IsInLocation(LocationCombinationsEnum.OnLocal))
             {
-                LocalFileSize.Content = string.Format("{0:0.#}kB", ((FileInfo)DiffNode.InfoLocal).Length / 1024.0);
-                LocalFileDate.Content = ((FileInfo)DiffNode.InfoLocal).LastWriteTime;
+                LocalFileSize.Content = string.Format("{0:0.#}kB", ((FileInfo)abstractNode.InfoLocal).Length / 1024.0);
+                LocalFileDate.Content = ((FileInfo)abstractNode.InfoLocal).LastWriteTime;
             }
 
-            if (DiffNode.IsInLocation(LocationCombinationsEnum.OnRemote))
+            if (abstractNode.IsInLocation(LocationCombinationsEnum.OnRemote))
             {
-                RemoteFileSize.Content = string.Format("{0:0.#}kB", ((FileInfo)DiffNode.InfoRemote).Length / 1024.0);
-                RemoteFileDate.Content = ((FileInfo)DiffNode.InfoRemote).LastWriteTime;
+                RemoteFileSize.Content = string.Format("{0:0.#}kB", ((FileInfo)abstractNode.InfoRemote).Length / 1024.0);
+                RemoteFileDate.Content = ((FileInfo)abstractNode.InfoRemote).LastWriteTime;
             }
         }
 
@@ -94,12 +95,27 @@ namespace Sverge.DiffWindows
 
         private void DefaultThreeWayDiffWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
-                ? PathShortener.TrimPath(DiffNode.InfoLocal.FullName, FilePathLabel)
-                : Properties.Resources.Diff_No_File_At_Location;
-            RemoteFileLocation = DiffNode.IsInLocation(LocationEnum.OnRemote)
-                ? PathShortener.TrimPath(DiffNode.InfoRemote.FullName, FilePathLabel)
-                : Properties.Resources.Diff_No_File_At_Location;
+            var abstractNode = DiffNode as INodeAbstractNode;
+            if (abstractNode != null)
+            {
+                LocalFileLocation = abstractNode.IsInLocation(LocationEnum.OnLocal)
+                    ? PathShortener.TrimPath(abstractNode.InfoLocal.FullName, FilePathLabel)
+                    : Properties.Resources.Diff_No_File_At_Location;
+                RemoteFileLocation = abstractNode.IsInLocation(LocationEnum.OnRemote)
+                    ? PathShortener.TrimPath(abstractNode.InfoRemote.FullName, FilePathLabel)
+                    : Properties.Resources.Diff_No_File_At_Location;
+            }
+
+            var abstractTree = DiffNode as IFilesystemTree;
+            if (abstractTree != null)
+            {
+                LocalFileLocation = abstractTree.Root.IsInLocation(LocationEnum.OnLocal)
+                    ? PathShortener.TrimPath(abstractTree.Root.InfoLocal.FullName, FilePathLabel)
+                    : Properties.Resources.Diff_No_File_At_Location;
+                RemoteFileLocation = abstractTree.Root.IsInLocation(LocationEnum.OnRemote)
+                    ? PathShortener.TrimPath(abstractTree.Root.InfoRemote.FullName, FilePathLabel)
+                    : Properties.Resources.Diff_No_File_At_Location;
+            }
         }
 
         public void OnDiffComplete(Task task)

@@ -11,7 +11,7 @@ namespace BasicProcessors.DiffProcessors
     /// <summary>
     /// SizeTimeDiffProcessor checks whether two (or three) files are different based on size and modification time.
     /// </summary>
-    [Processor(ProcessorTypeEnum.Diff, 1050, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
+    [Processor(ProcessorTypeEnum.Diff, 9500, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class SizeTimeDiffProcessor : ProcessorAbstract
     {
         /// <summary>
@@ -54,7 +54,7 @@ namespace BasicProcessors.DiffProcessors
 
         protected override bool CheckStatus(INodeFileNode node)
         {
-            return base.CheckStatus(node) && IsEnabled;
+            return base.CheckStatus(node) && IsEnabled && node.Status != NodeStatusEnum.WasDiffed;
         }
 
         protected override void ProcessChecked(INodeFileNode node)
