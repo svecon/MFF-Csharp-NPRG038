@@ -71,10 +71,12 @@ namespace CoreLibrary.Plugins.Processors
                     AddProcessor(instance);
                     RetrieveSettings(instance);
 
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
-                    // rethrow in Debug mode; ignore in Production if faulty 
+    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -107,10 +109,12 @@ namespace CoreLibrary.Plugins.Processors
 
                     availableSettings.Add((Type)property.GetValue(null), item);
 
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
-                    // rethrow in Debug mode; ignore in Production if faulty 
+    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -151,10 +155,12 @@ namespace CoreLibrary.Plugins.Processors
 
                     settingsByProcessorList.Add(settingsInstance);
 
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
-                    // rethrow in Debug mode; ignore in Production if faulty 
+    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -196,10 +202,12 @@ namespace CoreLibrary.Plugins.Processors
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
                 // TODO: load processors anyway in undefined order, print out warning for the user?
 #endif
-            } catch (Exception)
+            }
+            catch (Exception)
             {
+                // ignores plugin errors in release version
 #if DEBUG
-                // rethrow in Debug mode; ignore in Production if faulty 
+    // rethrow in Debug mode; ignore in Production if faulty 
                 throw;
 #endif
             }

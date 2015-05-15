@@ -46,10 +46,12 @@ namespace CoreLibrary.Plugins.DiffWindow
                 {
                     var attr = (DiffWindowAttribute)item.GetCustomAttributes(typeof(DiffWindowAttribute), false)[0];
                     availableWindows.Add(attr.Priority, item);
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
-                    // rethrow in Debug mode; ignore in Production if faulty 
+    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -75,6 +77,7 @@ namespace CoreLibrary.Plugins.DiffWindow
                     availableWindowMenus.Add(attr.Priority, item);
                 } catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
                     // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
@@ -98,6 +101,7 @@ namespace CoreLibrary.Plugins.DiffWindow
                     canBeApplied = (bool)availableWindowMenu.Value.GetMethod("CanBeApplied").Invoke(null, new[] { diffWindow });
                 } catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
                     // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
@@ -142,6 +146,7 @@ namespace CoreLibrary.Plugins.DiffWindow
 
                 } catch (Exception)
                 {
+                    // ignores plugin errors in release version
 #if DEBUG
                     // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
