@@ -8,7 +8,7 @@
              xmlns:p="clr-namespace:DirectoryDiffWindows"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             SizeChanged="FolderDiff2Way_OnSizeChanged"
+             Loaded="DirectoryDiffTwoWay_OnLoaded"
              x:Name="UserControl">
 
     <UserControl.Resources>
@@ -43,11 +43,11 @@
                 </Style>
             </Grid.Resources>
 
-            <Label x:Name="FilePathLabel" Grid.Column="1" Grid.Row="1" Margin="0,0,3,0"
+            <!--<Label x:Name="FilePathLabel" Grid.Column="1" Grid.Row="1" Margin="0,0,3,0"
                 Content="{Binding ElementName=UserControl, Path=LocalFolderLocation}" />
 
             <Label Grid.Column="2" Grid.Row="1" Margin="3,0,0,0"
-                Content="{Binding ElementName=UserControl, Path=RemoteFolderLocation}" />
+                Content="{Binding ElementName=UserControl, Path=RemoteFolderLocation}" />-->
 
             <Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True">
                 <Grid.RowDefinitions>
@@ -65,13 +65,22 @@
                     <Style TargetType="Label">
                         <Setter Property="Background" Value="LightBlue"/>
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="3,6,3,6"></Setter>
+                        <Setter Property="Margin" Value="3,0,3,6"></Setter>
+                    </Style>
+                    <Style TargetType="Label" x:Key="StatusStyle" BasedOn="{StaticResource {x:Type Label}}">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Setter Property="BorderBrush" Value="LightBlue" />
+                        <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Grid.Resources>
 
-                <Label Grid.Column="1" Grid.Row="0" Content="{x:Static p:Resources.Header_Status}" Margin="0,6,3,6"/>
+                <Label Grid.Column="1" Grid.Row="0" Content="{x:Static p:Resources.Header_Status}" Margin="0,0,3,6" Style="{StaticResource StatusStyle}"/>
+                <Label Grid.Column="2" Grid.Row="0" Content="{Binding ElementName=UserControl, Path=LocalFolderLocation}"  x:Name="FilePathLocal" />
+                <Label Grid.Column="3" Grid.Row="0" Content="{Binding ElementName=UserControl, Path=RemoteFolderLocation}" x:Name="FilePathRemote" Margin="3,0,0,6" />
+
+                <!--<Label Grid.Column="1" Grid.Row="0" Content="{x:Static p:Resources.Header_Status}" Margin="0,6,3,6"/>
                 <Label Grid.Column="2" Grid.Row="0" Content="{x:Static p:Resources.Header_Local}"/>
-                <Label Grid.Column="3" Grid.Row="0" Content="{x:Static p:Resources.Header_Remote}" Margin="3,6,0,6" />
+                <Label Grid.Column="3" Grid.Row="0" Content="{x:Static p:Resources.Header_Remote}" Margin="3,6,0,6" />-->
 
                 <TreeView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                 x:Name="TreeView"

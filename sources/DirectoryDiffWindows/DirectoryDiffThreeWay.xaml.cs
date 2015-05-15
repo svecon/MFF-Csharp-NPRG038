@@ -100,6 +100,10 @@ namespace DirectoryDiffWindows
 
                 selectedNode = (INodeAbstractNode)t.SelectedItem;
             };
+
+            FilePathLocal.ToolTip = DiffNode.Root.InfoLocal.FullName;
+            FilePathBase.ToolTip = DiffNode.Root.InfoBase.FullName;
+            FilePathRemote.ToolTip = DiffNode.Root.InfoRemote.FullName;
         }
 
         /// <summary>
@@ -138,13 +142,6 @@ namespace DirectoryDiffWindows
             {
                 manager.OpenNewTab((INodeAbstractNode)t.SelectedItem, this);
             }
-        }
-
-        private void FolderDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLabel);
-            RemoteFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathLabel);
-            BaseFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoBase.FullName, FilePathLabel);
         }
 
         #region Iterating over TreeView
@@ -381,6 +378,13 @@ namespace DirectoryDiffWindows
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             selectedNode = e.NewValue as INodeAbstractNode;
+        }
+
+        private void DirectoryDiffThreeWay_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLocal);
+            RemoteFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoRemote.FullName, FilePathBase);
+            BaseFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoBase.FullName, FilePathRemote);
         }
     }
 
