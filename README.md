@@ -2,7 +2,7 @@
 
 **Title:** Sverge – A Flexible Tool for Comparing & Merging
 
-**Author:** Ondřej Švec
+**Author:** Ondřej Švec (sverge@svecon.cz)
 
 **Department:** Department of Distributed and Dependable Systems
 
