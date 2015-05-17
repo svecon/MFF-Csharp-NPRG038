@@ -164,7 +164,7 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
         /// </summary>
         /// <param name="startingLine">Starting line in a file.</param>
         /// <param name="numberOfLines">Number of lines affected in a file.</param>
-        /// <returns></returns>
+        /// <returns>String representation of diff range.</returns>
         private static string CreateRange(int startingLine, int numberOfLines)
         {
             if (numberOfLines == 0)

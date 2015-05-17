@@ -24,6 +24,10 @@ namespace SvergeConsole
         [Settings("Show help about using the console.", "help", "h")]
         public static bool ShowHelp = false;
 
+        /// <summary>
+        /// An entry point for the user console interface.
+        /// </summary>
+        /// <param name="args">String array of command line arguments.</param>
         static void Main(string[] args)
         {
             #region Load all available processors and their settings

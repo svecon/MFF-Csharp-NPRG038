@@ -136,14 +136,14 @@ namespace DirectoryDiffWindows
         }
 
         /// <inheritdoc />
-        public void OnDiffComplete(Task t)
+        public void OnDiffComplete(Task task)
         {
             // Items use IPropertyChanged 
             isBusy = false;
         }
 
         /// <inheritdoc />
-        public void OnMergeComplete(Task t)
+        public void OnMergeComplete(Task task)
         {
             // Items use IPropertyChanged 
             //TreeView.Items.Refresh();

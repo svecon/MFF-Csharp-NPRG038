@@ -44,25 +44,21 @@ namespace CoreLibrary.Plugins.DiffWindow
         /// </summary>
         public void LoadWindows()
         {
-            Type type = typeof(DW);
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            foreach (Type item in PluginsLoader.AssemblyTypes()
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
-                .Where(p => type.IsAssignableFrom(p));
-
-            foreach (Type item in types)
+                .Where(p => typeof(DW).IsAssignableFrom(p))
+                )
 
                 try
                 {
                     var attr = (DiffWindowAttribute)item.GetCustomAttributes(typeof(DiffWindowAttribute), false)[0];
                     availableWindows.Add(attr.Priority, item);
-                }
-                catch (Exception)
+                } catch (Exception)
                 {
                     // ignores plugin errors in release version
 #if DEBUG
-    // rethrow in Debug mode; ignore in Production if faulty 
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -73,14 +69,11 @@ namespace CoreLibrary.Plugins.DiffWindow
         /// </summary>
         public void LoadWindowMenus()
         {
-            Type type = typeof(IDiffWindowMenu);
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            foreach (Type item in PluginsLoader.AssemblyTypes()
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
-                .Where(p => type.IsAssignableFrom(p));
-
-            foreach (Type item in types)
+                .Where(p => typeof(IDiffWindowMenu).IsAssignableFrom(p))
+                )
 
                 try
                 {

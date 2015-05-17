@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App_OnStartup_InvalidSettingsValue" xml:space="preserve">
-    <value>This Switch option has not been found '{0}'</value>
+    <value>This argument option has not been found '{0}'</value>
   </data>
   <data name="App_OnStartup_ErrorParsingSettings" xml:space="preserve">
     <value>Error during parsing the settings</value>
@@ -166,7 +166,7 @@
     <value>Open files/directories for diffing</value>
   </data>
   <data name="App_NewTab_MixingFilesAndFolders" xml:space="preserve">
-    <value>You can not mix folders and files together as Switchs.</value>
+    <value>You can not mix folders and files together as arguments.</value>
   </data>
   <data name="App_NewTab_DirectoryNotFound" xml:space="preserve">
     <value>Directory '{0}' not found or not readable.</value>

@@ -37,6 +37,9 @@ namespace CoreLibrary.Plugins.Processors
         /// </summary>
         Dictionary<Type, Type> availableSettings;
 
+        /// <summary>
+        /// Signature (array of types) for settings constructor.
+        /// </summary>
         private readonly Type[] settingsConstructorSignature = { typeof(object), typeof(FieldInfo), typeof(SettingsAttribute) };
 
         /// <summary>
@@ -62,18 +65,16 @@ namespace CoreLibrary.Plugins.Processors
         /// </summary>
         public void LoadAllAvailableProcessors()
         {
-            Type type = typeof(IProcessor);
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            foreach (Type type in PluginsLoader.AssemblyTypes()
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
-                .Where(p => type.IsAssignableFrom(p));
-
-            foreach (Type item in types)
+                .Where(p => typeof(IProcessor).IsAssignableFrom(p))
+                )
             {
+
                 try
                 {
-                    ConstructorInfo constructorInfo = item.GetConstructor(new Type[] { });
+                    ConstructorInfo constructorInfo = type.GetConstructor(new Type[] { });
 
                     if (constructorInfo == null) continue;
 
@@ -81,16 +82,16 @@ namespace CoreLibrary.Plugins.Processors
                     AddProcessor(instance);
                     RetrieveSettings(instance);
 
-                }
-                catch (Exception)
+                } catch (Exception)
                 {
                     // ignores plugin errors in release version
 #if DEBUG
-    // rethrow in Debug mode; ignore in Production if faulty 
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
             }
+
         }
 
         /// <summary>
@@ -101,14 +102,11 @@ namespace CoreLibrary.Plugins.Processors
         {
             availableSettings = new Dictionary<Type, Type>();
 
-            Type type = typeof(ISettings);
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
+            foreach (Type item in PluginsLoader.AssemblyTypes()
                 .Where(p => !p.IsAbstract)
                 .Where(p => !p.IsInterface)
-                .Where(p => type.IsAssignableFrom(p));
-
-            foreach (Type item in types)
+                .Where(p => typeof(ISettings).IsAssignableFrom(p))
+                )
             {
                 try
                 {
@@ -119,12 +117,11 @@ namespace CoreLibrary.Plugins.Processors
 
                     availableSettings.Add((Type)property.GetValue(null), item);
 
-                }
-                catch (Exception)
+                } catch (Exception)
                 {
                     // ignores plugin errors in release version
 #if DEBUG
-    // rethrow in Debug mode; ignore in Production if faulty 
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -143,7 +140,12 @@ namespace CoreLibrary.Plugins.Processors
             {
                 try
                 {
-                    var annotation = (SettingsAttribute)field.GetCustomAttributes(typeof(SettingsAttribute), false)[0];
+                    object[] attributes = field.GetCustomAttributes(typeof(SettingsAttribute), false);
+
+                    if (attributes.Length == 0)
+                        continue;
+
+                    var annotation = (SettingsAttribute)attributes[0];
 
                     Type matchedSettings = null;
 
@@ -166,12 +168,11 @@ namespace CoreLibrary.Plugins.Processors
 
                     settingsByProcessorList.Add(settingsInstance);
 
-                }
-                catch (Exception)
+                } catch (Exception)
                 {
                     // ignores plugin errors in release version
 #if DEBUG
-    // rethrow in Debug mode; ignore in Production if faulty 
+                    // rethrow in Debug mode; ignore in Production if faulty 
                     throw;
 #endif
                 }
@@ -208,18 +209,20 @@ namespace CoreLibrary.Plugins.Processors
             {
                 list.Add(attr.Priority, processor);
                 ProcessorByName.Add(processor.GetType().ToString(), processor);
+
+#pragma warning disable 0168
             } catch (ArgumentException e)
+#pragma warning restore 0168
             {
 #if DEBUG
                 throw new ProcessorPriorityColissionException(processor.ToString(), e);
                 // TODO: load processors anyway in undefined order, print out warning for the user?
 #endif
-            }
-            catch (Exception)
+            } catch (Exception)
             {
                 // ignores plugin errors in release version
 #if DEBUG
-    // rethrow in Debug mode; ignore in Production if faulty 
+                // rethrow in Debug mode; ignore in Production if faulty 
                 throw;
 #endif
             }
@@ -241,8 +244,8 @@ namespace CoreLibrary.Plugins.Processors
         /// <inheritdoc />
         public IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType)
         {
-            return !ProcessorsDictionary.ContainsKey(processorType) 
-                ? Enumerable.Empty<IProcessor>() 
+            return !ProcessorsDictionary.ContainsKey(processorType)
+                ? Enumerable.Empty<IProcessor>()
                 : ProcessorsDictionary[processorType].Select(valuePair => valuePair.Value);
         }
 

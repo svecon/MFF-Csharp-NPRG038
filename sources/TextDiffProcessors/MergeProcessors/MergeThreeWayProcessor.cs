@@ -2,6 +2,7 @@
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.ThreeWay;
@@ -15,10 +16,10 @@ namespace TextDiffProcessors.MergeProcessors
     public class MergeThreeWayProcessor : ProcessorAbstract
     {
         /// <summary>
-        /// Setting for ouput folder of the merge.
+        /// Setting for ouput of the merge.
         /// </summary>
-        [Settings("Output folder for the resulting merge.", "output-folder", "o")]
-        public string OutputFolder;
+        [Settings("Output for the resulting merge.", "output", "o")]
+        public string Output;
 
         /// <summary>
         /// Default action used when the differences conflict.
@@ -28,18 +29,18 @@ namespace TextDiffProcessors.MergeProcessors
             /// <summary>
             /// Writes conflict, keeping all versions of the differences.
             /// </summary>
-            WriteConflicts, 
-            
+            WriteConflicts,
+
             /// <summary>
             /// Revert to base version of the diff.
             /// </summary>
-            RevertToBase, 
-            
+            RevertToBase,
+
             /// <summary>
             /// Apply and keep only local version of the difference.
             /// </summary>
-            ApplyLocal, 
-            
+            ApplyLocal,
+
             /// <summary>
             /// Apply and keep only remote version of the difference.
             /// </summary>
@@ -87,13 +88,13 @@ namespace TextDiffProcessors.MergeProcessors
             // create temporary file if the target file exists
             string temporaryPath;
             bool isTemporary = false;
-            if (File.Exists(CreatePath(node)))
+            if (File.Exists(node.CreatePath(Output)))
             {
-                temporaryPath = CreatePath(node) + ".temp";
+                temporaryPath = node.CreatePath(Output) + ".temp";
                 isTemporary = true;
             } else
             {
-                temporaryPath = CreatePath(node);
+                temporaryPath = node.CreatePath(Output);
             }
 
             using (StreamReader localStream = ((FileInfo)dnode.InfoLocal).OpenText())
@@ -258,25 +259,10 @@ namespace TextDiffProcessors.MergeProcessors
             // copy temporary file to correct location
             if (!isTemporary) return;
 
-            File.Delete(CreatePath(node));
-            File.Move(temporaryPath, CreatePath(node));
+            File.Delete(node.CreatePath(Output));
+            File.Move(temporaryPath, node.CreatePath(Output));
         }
 
-        private static void CheckAndCreateDirectory(string path)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
 
-        private string CreatePath(INodeFileNode node)
-        {
-            string output = OutputFolder == null
-                ? node.GetAbsolutePath(LocationEnum.OnBase)
-                : Path.Combine(OutputFolder, node.Info.Name);
-
-            CheckAndCreateDirectory(Path.GetDirectoryName(output));
-
-            return output;
-        }
     }
 }

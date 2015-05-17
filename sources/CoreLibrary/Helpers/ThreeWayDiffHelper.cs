@@ -215,6 +215,7 @@ namespace CoreLibrary.Helpers
         /// <summary>
         /// Helper method for checking possible combinations.
         /// </summary>
+        /// <param name="combination">Mask for the combination.</param>
         /// <returns>True if the combination is still possible.</returns>
         protected bool CanGivenCombinationBeSame(int combination)
         {

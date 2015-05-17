@@ -56,7 +56,7 @@ namespace TextDiffAlgorithm
             /// <summary>
             /// Did the file end with a new s character?
             /// </summary>
-            /// <returns></returns>
+            /// <returns>True when files ended with new line.</returns>
             public bool DoesFileEndWithNewLine()
             {
                 return endedWithNewline;

@@ -116,12 +116,12 @@ namespace Sverge.DiffWindows
         }
 
         /// <inheritdoc />
-        public void OnDiffComplete(Task t)
+        public void OnDiffComplete(Task task)
         {
         }
 
         /// <inheritdoc />
-        public void OnMergeComplete(Task t)
+        public void OnMergeComplete(Task task)
         {
         }
 

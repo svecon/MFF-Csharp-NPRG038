@@ -2,6 +2,7 @@
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
@@ -76,10 +77,10 @@ namespace BasicProcessors.MergeProcessors
 
             // otherwise create empty folder
             if (node.IsInLocation(LocationEnum.OnLocal))
-                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRemote));
+                OutputPathHelper.CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnRemote));
 
             if (node.IsInLocation(LocationEnum.OnRemote))
-                CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLocal));
+                OutputPathHelper.CheckAndCreateDirectory(node.GetAbsolutePath(LocationEnum.OnLocal));
         }
 
         /// <inheritdoc />
@@ -109,7 +110,7 @@ namespace BasicProcessors.MergeProcessors
                     throw new InvalidDataException();
                 }
 
-                CheckAndCreateDirectoryFromFilename(to);
+                OutputPathHelper.CheckAndCreateDirectory(Path.GetDirectoryName(to));
                 from.CopyTo(to);
                 node.AddInfoFromLocation(new FileInfo(to), toLocationEnum);
                 node.Status = NodeStatusEnum.WasMerged;
@@ -161,20 +162,9 @@ namespace BasicProcessors.MergeProcessors
                     break;
             }
 
-            CheckAndCreateDirectoryFromFilename(to);
+            OutputPathHelper.CheckAndCreateDirectory(Path.GetDirectoryName(to));
             from.CopyTo(to, true);
             node.Status = NodeStatusEnum.WasMerged;
-        }
-
-        private void CheckAndCreateDirectoryFromFilename(string path)
-        {
-            CheckAndCreateDirectory(Path.GetDirectoryName(path));
-        }
-
-        private void CheckAndCreateDirectory(string path)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
         }
     }
 }

@@ -181,15 +181,15 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <inheritdoc />
-        public bool IsInLocation(LocationEnum loc)
+        public bool IsInLocation(LocationEnum location)
         {
-            return ((int)loc & Location) == (int)loc;
+            return ((int)location & Location) == (int)location;
         }
 
         /// <inheritdoc />
-        public bool IsInLocation(LocationCombinationsEnum loc)
+        public bool IsInLocation(LocationCombinationsEnum location)
         {
-            return ((int)loc & Location) == (int)loc;
+            return ((int)location & Location) == (int)location;
         }
 
         /// <summary>
@@ -230,11 +230,11 @@ namespace CoreLibrary.FilesystemTree
         }
 
         /// <inheritdoc />
-        public void RemoveInfoFromLocation(LocationEnum loc)
+        public void RemoveInfoFromLocation(LocationEnum location)
         {
-            Location &= ~(int)loc;
+            Location &= ~(int)location;
 
-            switch (loc)
+            switch (location)
             {
                 case LocationEnum.OnBase:
                     InfoBase = null;

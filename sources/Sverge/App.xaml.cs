@@ -85,6 +85,7 @@ namespace Sverge
                 loader = new ProcessorLoader();
                 // Load available processors and their settings
                 loader.LoadAll();
+                loader.RetrieveSettings(typeof(MainWindow), true);
             } catch (ProcessorPriorityColissionException e)
             {
                 MessageBox.Show(
@@ -136,15 +137,30 @@ namespace Sverge
             }
         }
 
+        /// <summary>
+        /// An event for app activation.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void App_OnActivated(object sender, EventArgs e)
         {
             // TODO: check and possibly recalculate diff
         }
 
+        /// <summary>
+        /// An event for app deactivation.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void App_OnDeactivated(object sender, EventArgs e)
         {
         }
 
+        /// <summary>
+        /// An event for app load complete.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {
         }

@@ -54,6 +54,7 @@
     <Compile Include="FilesystemTree\Enums\PreferedActionEnum.cs" />
     <Compile Include="FilesystemTree\Enums\PreferedActionThreeWayEnum.cs" />
     <Compile Include="Helpers\IsConflictingHelper.cs" />
+    <Compile Include="Helpers\OutputPathHelper.cs" />
     <Compile Include="Helpers\PathShortener.cs" />
     <Compile Include="Helpers\TextFileChecker.cs" />
     <Compile Include="Helpers\ThreeWayDiffHelper.cs" />

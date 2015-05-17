@@ -2,6 +2,7 @@
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 using TextDiffAlgorithm.TwoWay;
@@ -11,7 +12,7 @@ namespace TextDiffProcessors.MergeProcessors
     /// <summary>
     /// Processor for merging 2-way diffed files.
     /// 
-    /// There must be an OutputFolder specified.
+    /// There must be an Output specified.
     /// </summary>
     [Processor(ProcessorTypeEnum.Merge, 300, DiffModeEnum.TwoWay)]
     public class MergeTwoWayProcessor : ProcessorAbstract
@@ -81,7 +82,7 @@ namespace TextDiffProcessors.MergeProcessors
                 return;
 
             // otherwise create empty folder
-            CheckAndCreateDirectory(string.Join("/", OutputFolder, node.RelativePath));
+            OutputPathHelper.CheckAndCreateDirectory(string.Join("/", OutputFolder, node.RelativePath));
         }
 
         /// <inheritdoc />
@@ -108,8 +109,8 @@ namespace TextDiffProcessors.MergeProcessors
                     throw new InvalidDataException();
                 }
 
-                CheckAndCreateDirectory(Path.GetDirectoryName(CreatePath(node)));
-                from.CopyTo(CreatePath(node), true);
+                OutputPathHelper.CheckAndCreateDirectory(Path.GetDirectoryName(node.CreatePath(OutputFolder)));
+                from.CopyTo(node.CreatePath(OutputFolder), true);
                 node.Status = NodeStatusEnum.WasMerged;
                 return;
             }
@@ -117,7 +118,7 @@ namespace TextDiffProcessors.MergeProcessors
             // both files are present and are same
             if (dnode.Differences == DifferencesStatusEnum.AllSame)
             {
-                File.Copy(dnode.InfoLocal.FullName, CreatePath(node), true);
+                File.Copy(dnode.InfoLocal.FullName, node.CreatePath(OutputFolder), true);
             }
 
             // both files are present and action is set
@@ -126,7 +127,7 @@ namespace TextDiffProcessors.MergeProcessors
                 File.Copy(
                     dnode.Action == PreferedActionThreeWayEnum.ApplyLocal
                         ? dnode.InfoLocal.FullName
-                        : dnode.InfoRemote.FullName, CreatePath(node), true);
+                        : dnode.InfoRemote.FullName, node.CreatePath(OutputFolder), true);
                 node.Status = NodeStatusEnum.WasMerged;
                 return;
             }
@@ -141,13 +142,13 @@ namespace TextDiffProcessors.MergeProcessors
             // create temporary file if the target file exists
             string temporaryPath;
             bool isTemporary = false;
-            if (File.Exists(CreatePath(node)))
+            if (File.Exists(node.CreatePath(OutputFolder)))
             {
-                temporaryPath = CreatePath(node) + ".temp";
+                temporaryPath = node.CreatePath(OutputFolder) + ".temp";
                 isTemporary = true;
             } else
             {
-                temporaryPath = CreatePath(node);
+                temporaryPath = node.CreatePath(OutputFolder);
             }
 
             using (StreamReader localStream = ((FileInfo)node.InfoLocal).OpenText())
@@ -228,25 +229,8 @@ namespace TextDiffProcessors.MergeProcessors
             // copy temporary file to correct location
             if (!isTemporary) return;
 
-            File.Delete(CreatePath(node));
-            File.Move(temporaryPath, CreatePath(node));
-        }
-
-        private static void CheckAndCreateDirectory(string path)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
-
-        private string CreatePath(INodeFileNode node)
-        {
-            string output = node.ParentNode == null
-                    ? Path.Combine(OutputFolder, node.Info.Name)
-                    : Path.Combine(OutputFolder, node.ParentNode.RelativePath, node.Info.Name);
-
-            CheckAndCreateDirectory(Path.GetDirectoryName(output));
-
-            return output;
+            File.Delete(node.CreatePath(OutputFolder));
+            File.Move(temporaryPath, node.CreatePath(OutputFolder));
         }
     }
 }

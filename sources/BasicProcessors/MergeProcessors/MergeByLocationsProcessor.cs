@@ -2,6 +2,7 @@
 using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.FilesystemTree.Enums;
+using CoreLibrary.Helpers;
 using CoreLibrary.Plugins.Processors;
 using CoreLibrary.Plugins.Processors.Settings;
 
@@ -16,8 +17,8 @@ namespace BasicProcessors.MergeProcessors
         /// <summary>
         /// Output folder of the merging.
         /// </summary>
-        [Settings("Output folder for the resulting merge.", "output-folder", "o")]
-        public string OutputFolder;
+        [Settings("Output for the resulting merge.", "output", "o")]
+        public string Output;
 
         /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
@@ -35,18 +36,18 @@ namespace BasicProcessors.MergeProcessors
             switch (diffNode.Action)
             {
                 case PreferedActionThreeWayEnum.ApplyLocal:
-                    ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
-                    node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    ((FileInfo)node.InfoLocal).CopyTo(node.CreatePath(Output), true);
+                    node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
                 case PreferedActionThreeWayEnum.ApplyRemote:
-                    ((FileInfo)node.InfoRemote).CopyTo(CreatePath(node), true);
-                    node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    ((FileInfo)node.InfoRemote).CopyTo(node.CreatePath(Output), true);
+                    node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
                 case PreferedActionThreeWayEnum.RevertToBase:
-                    ((FileInfo)node.InfoBase).CopyTo(CreatePath(node), true);
-                    node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    ((FileInfo)node.InfoBase).CopyTo(node.CreatePath(Output), true);
+                    node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     return;
             }
@@ -54,28 +55,28 @@ namespace BasicProcessors.MergeProcessors
             switch ((LocationCombinationsEnum)node.Location)
             {
                 case LocationCombinationsEnum.OnBase:
-                    File.Delete(CreatePath(node));
+                    File.Delete(node.CreatePath(Output));
                     node.RemoveInfoFromLocation(LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     return; // delete
 
                 case LocationCombinationsEnum.OnLocal:
                     // one new file
-                    ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
-                    node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    ((FileInfo)node.InfoLocal).CopyTo(node.CreatePath(Output), true);
+                    node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     break;
                 case LocationCombinationsEnum.OnRemote:
                     // one new file
-                    ((FileInfo)node.InfoRemote).CopyTo(CreatePath(node), true);
-                    node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                    ((FileInfo)node.InfoRemote).CopyTo(node.CreatePath(Output), true);
+                    node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                     diffNode.Status = NodeStatusEnum.WasMerged;
                     break;
                 case LocationCombinationsEnum.OnBaseLocal:
 
                     if (node.Differences == DifferencesStatusEnum.BaseLocalSame)
                     {
-                        File.Delete(CreatePath(node));
+                        File.Delete(((FileInfo)node.InfoBase).FullName);
                         node.RemoveInfoFromLocation(LocationEnum.OnBase);
                         diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // delete
@@ -86,7 +87,7 @@ namespace BasicProcessors.MergeProcessors
 
                     if (node.Differences == DifferencesStatusEnum.BaseRemoteSame)
                     {
-                        File.Delete(CreatePath(node));
+                        File.Delete(((FileInfo)node.InfoBase).FullName);
                         node.RemoveInfoFromLocation(LocationEnum.OnBase);
                         diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // delete
@@ -97,8 +98,8 @@ namespace BasicProcessors.MergeProcessors
 
                     if (node.Differences == DifferencesStatusEnum.LocalRemoteSame)
                     {
-                        ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
-                        node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                        ((FileInfo)node.InfoLocal).CopyTo(node.CreatePath(Output), true);
+                        node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                         diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // copy
                     }
@@ -108,31 +109,13 @@ namespace BasicProcessors.MergeProcessors
 
                     if (node.Differences == DifferencesStatusEnum.LocalRemoteSame)
                     {
-                        ((FileInfo)node.InfoLocal).CopyTo(CreatePath(node), true);
-                        node.AddInfoFromLocation(new FileInfo(CreatePath(node)), LocationEnum.OnBase);
+                        ((FileInfo)node.InfoLocal).CopyTo(node.CreatePath(Output), true);
+                        node.AddInfoFromLocation(new FileInfo(node.CreatePath(Output)), LocationEnum.OnBase);
                         diffNode.Status = NodeStatusEnum.WasMerged;
                         return; // copy
                     }
                     break;
             }
         }
-
-        private void CheckAndCreateDirectory(string path)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
-
-        private string CreatePath(INodeFileNode node)
-        {
-            string output = OutputFolder == null
-                ? node.GetAbsolutePath(LocationEnum.OnBase)
-                : Path.Combine(OutputFolder, node.Info.Name);
-
-            CheckAndCreateDirectory(Path.GetDirectoryName(output));
-
-            return output;
-        }
-
     }
 }

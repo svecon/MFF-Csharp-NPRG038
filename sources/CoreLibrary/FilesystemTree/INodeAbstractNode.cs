@@ -96,6 +96,7 @@ namespace CoreLibrary.FilesystemTree
         /// <summary>
         /// Absolute path of a file (or directory) for given location.
         /// </summary>
+        /// <param name="location">Location for which to get path for.</param>
         /// <returns>Absolute path of the file on the disk.</returns>
         string GetAbsolutePath(LocationEnum location);
     }

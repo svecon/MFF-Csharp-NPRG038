@@ -1,4 +1,4 @@
------------ Integrating with TortoiseHG ------------
+## Integrating with TortoiseHG
 
 
 ### Step-1
@@ -22,7 +22,7 @@ Global settings -> Visual Diff Tool
 
 
 
------------ Integrating with GIT on Windows ------------
+## Integrating with GIT on Windows
 
 ### Step-1
 ### C:\Program Files (x86)\Git\libexec\git-core\mergetools\sverge

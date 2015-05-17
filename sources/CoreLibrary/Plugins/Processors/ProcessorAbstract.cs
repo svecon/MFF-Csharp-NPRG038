@@ -12,7 +12,10 @@ namespace CoreLibrary.Plugins.Processors
     /// </summary>
     public abstract class ProcessorAbstract : IProcessor
     {
-        ProcessorAttribute Attribute { get; set; }
+        /// <summary>
+        /// Attribute of the processor.
+        /// </summary>
+        private ProcessorAttribute Attribute { get; set; }
 
         /// <summary>
         /// Initializes new instance of the <see cref="ProcessorAbstract"/>

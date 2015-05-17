@@ -12,6 +12,7 @@ using CoreLibrary.FilesystemDiffTree;
 using CoreLibrary.FilesystemTree;
 using CoreLibrary.Plugins.DiffWindow;
 using CoreLibrary.Plugins.Processors;
+using CoreLibrary.Plugins.Processors.Settings;
 
 namespace Sverge
 {
@@ -56,6 +57,12 @@ namespace Sverge
         /// Number of plugin menu actions added to the current scope.
         /// </summary>
         private int windowMenusBindingsAdded;
+
+        /// <summary>
+        /// Settings for closing application after merge.
+        /// </summary>
+        [Settings("Close the application after merging is completed.", "close-merge")]
+        public static bool CloseAfterMerge;
 
         /// <summary>
         /// Initializes new node of the <see cref="MainWindow"/>
@@ -220,6 +227,12 @@ namespace Sverge
         {
             runner.RunMerge(window.DiffNode).ContinueWith(t =>
             {
+                if (CloseAfterMerge)
+                {
+                    Close();
+                    return;
+                }
+
                 CallMergeContinuations(t, window);
 
                 runner.RunDiff(window.DiffNode).ContinueWith(tt => CallDiffContinuations(tt, window)

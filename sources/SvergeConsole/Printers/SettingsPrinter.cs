@@ -101,6 +101,12 @@ namespace SvergeConsole.Printers
         /// </summary>
         private class SettingsComparer : IComparer<ISettings>
         {
+            /// <summary>
+            /// Comapres two <see cref="ISettings"/>
+            /// </summary>
+            /// <param name="x">First setting to be compared.</param>
+            /// <param name="y">Second setting to be compared.</param>
+            /// <returns>Comparison integer</returns>
             public int Compare(ISettings x, ISettings y)
             {
                 string left = x.ArgumentShortcut ?? x.Argument;

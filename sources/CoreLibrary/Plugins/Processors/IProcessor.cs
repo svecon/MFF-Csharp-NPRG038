@@ -13,13 +13,13 @@ namespace CoreLibrary.Plugins.Processors
         /// <summary>
         /// Processes a directory FilesystemTree.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">Directory node from the FilesystemTree</param>
         void Process(INodeDirNode node);
 
         /// <summary>
         /// Processes a file FilesystemTree.
         /// </summary>
-        /// <param name="node">File FilesystemTree from the FilesystemTree</param>
+        /// <param name="node">File node from the FilesystemTree</param>
         void Process(INodeFileNode node);
     }
 }

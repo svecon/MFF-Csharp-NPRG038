@@ -10,6 +10,9 @@ namespace CoreLibrary.FilesystemDiffTree
     /// </summary>
     public class FileDiffNode : FileNode
     {
+        /// <summary>
+        /// Field for <see cref="Diff"/>
+        /// </summary>
         private object diff;
 
         /// <summary>

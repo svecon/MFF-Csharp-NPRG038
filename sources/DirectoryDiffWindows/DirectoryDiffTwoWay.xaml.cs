@@ -118,7 +118,7 @@ namespace DirectoryDiffWindows
         }
 
         /// <inheritdoc />
-        public void OnDiffComplete(Task t)
+        public void OnDiffComplete(Task task)
         {
             isBusy = false;
 
@@ -128,7 +128,7 @@ namespace DirectoryDiffWindows
         }
 
         /// <inheritdoc />
-        public void OnMergeComplete(Task t)
+        public void OnMergeComplete(Task task)
         {
             isBusy = false;
 
