@@ -17,11 +17,20 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// </summary>
     public class ParallelExecutionVisitor : IExecutionVisitor
     {
-        readonly IEnumerable<IProcessor> processors;
+        /// <summary>
+        /// Processors that will be executed in this ExecutionVisitor.
+        /// </summary>
+        private readonly IEnumerable<IProcessor> processors;
 
-        readonly List<Task> tasks = new List<Task>();
+        /// <summary>
+        /// A list of currently active tasks used for asynchronous execution.
+        /// </summary>
+        private readonly List<Task> tasks = new List<Task>();
 
-        readonly CancellationTokenSource tokenSource;
+        /// <summary>
+        /// Used for cancelling all asynchronous tasks executed by this visitor.
+        /// </summary>
+        private readonly CancellationTokenSource tokenSource;
 
         /// <summary>
         /// Initializes new instance of the <see cref="ParallelExecutionVisitor"/>
@@ -33,6 +42,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             tokenSource = new CancellationTokenSource();
         }
 
+        /// <inheritdoc />
         public void Visit(INodeDirNode node)
         {
             // create a completed task
@@ -62,6 +72,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 dir.Accept(this);
         }
 
+        /// <inheritdoc />
         public void Visit(INodeFileNode node)
         {
             // create a completed task
@@ -83,15 +94,18 @@ namespace CoreLibrary.FilesystemTree.Visitors
             tasks.Add(task);
         }
 
+        /// <summary>
+        /// Handles an error that occures during the processing.
+        /// </summary>
+        /// <param name="node">Node in which the error occured.</param>
+        /// <param name="e">Error exception.</param>
         private static void HandleError(INodeAbstractNode node, Exception e)
         {
             node.Status = NodeStatusEnum.HasError;
             node.Exception = e;
         }
 
-        /// <summary>
-        /// Wait for all processing to finish.
-        /// </summary>
+        /// <inheritdoc />
         public void Wait()
         {
             if (tokenSource.IsCancellationRequested)
@@ -114,11 +128,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             }
         }
 
-        /// <summary>
-        /// Cancel all processing.
-        /// 
-        /// All nodes end up in error state!
-        /// </summary>
+        /// <inheritdoc />
         public void Cancel()
         {
             tokenSource.Cancel();

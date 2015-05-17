@@ -18,9 +18,22 @@ namespace DirectoryDiffWindows
     [DiffWindow(1000)]
     public partial class DirectoryDiffTwoWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu
     {
+        /// <inheritdoc />
         public FilesystemDiffTree DiffNode { get; private set; }
+
+        /// <summary>
+        /// An instance of <see cref="IDiffWindowManager"/> that manages current window.
+        /// </summary>
         private readonly IDiffWindowManager manager;
+
+        /// <summary>
+        /// Selected node in the treeview.
+        /// </summary>
         private INodeAbstractNode selectedNode;
+
+        /// <summary>
+        /// Is the actual diff being recalculated?
+        /// </summary>
         private bool isBusy = true;
 
         #region Dependency properties
@@ -104,6 +117,7 @@ namespace DirectoryDiffWindows
             return filesystemTree.DiffMode == DiffModeEnum.TwoWay;
         }
 
+        /// <inheritdoc />
         public void OnDiffComplete(Task t)
         {
             isBusy = false;
@@ -113,6 +127,7 @@ namespace DirectoryDiffWindows
             //TreeView.InvalidateVisual();
         }
 
+        /// <inheritdoc />
         public void OnMergeComplete(Task t)
         {
             isBusy = false;
@@ -122,6 +137,11 @@ namespace DirectoryDiffWindows
             //TreeView.InvalidateVisual();
         }
 
+        /// <summary>
+        /// Opens a new window when double-clicking on a TreeView
+        /// </summary>
+        /// <param name="sender">TreeView</param>
+        /// <param name="e">Event arguments</param>
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var t = sender as TreeView;
@@ -131,6 +151,11 @@ namespace DirectoryDiffWindows
             }
         }
 
+        /// <summary>
+        /// Update selected node when a new TreeView item is changed.
+        /// </summary>
+        /// <param name="sender">TreeView</param>
+        /// <param name="e">Changed event args</param>
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             selectedNode = e.NewValue as INodeAbstractNode;
@@ -138,6 +163,12 @@ namespace DirectoryDiffWindows
 
         #region Iterating over TreeView
 
+        /// <summary>
+        /// Finds a TreeViewItem container with an instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <returns>TreeViewItem</returns>
         private TreeViewItem GetItem(ItemsControl container, object itemToSelect)
         {
             foreach (object item in container.Items)
@@ -157,6 +188,14 @@ namespace DirectoryDiffWindows
             return null;
         }
 
+        /// <summary>
+        /// Find a previous TreeViewItem container to a given instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <param name="f">Additional criteria for needle.</param>
+        /// <param name="previous">Container for previous instance.</param>
+        /// <returns>Container for the given instance.</returns>
         private TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref TreeViewItem previous)
         {
             foreach (object item in container.Items)
@@ -185,6 +224,14 @@ namespace DirectoryDiffWindows
             return null;
         }
 
+        /// <summary>
+        /// Find a next TreeViewItem container to a given instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <param name="f">Additional criteria for needle.</param>
+        /// <param name="wasFound">Was next container found?</param>
+        /// <returns>Container for the given instance.</returns>
         private TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<INodeFileNode, bool> f, ref bool wasFound)
         {
             foreach (object item in container.Items)
@@ -210,9 +257,13 @@ namespace DirectoryDiffWindows
 
         #region Custom ChangesMenu commands
 
+        /// <summary>
+        /// Criteria function for finding next node that is different.
+        /// </summary>
         private static readonly Func<INodeFileNode, bool> NextDiffFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame;
 
+        /// <inheritdoc />
         public CommandBinding PreviousCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -230,6 +281,7 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <inheritdoc />
         public CommandBinding NextCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -247,6 +299,7 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <inheritdoc />
         public CommandBinding RecalculateCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -259,6 +312,11 @@ namespace DirectoryDiffWindows
         }
         #endregion
 
+        /// <summary>
+        /// Update text paths when the window is loaded and sizes are calculated.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event args</param>
         private void DirectoryDiffTwoWay_OnLoaded(object sender, RoutedEventArgs e)
         {
             LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLocal);

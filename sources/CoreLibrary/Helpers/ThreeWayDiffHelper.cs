@@ -15,17 +15,46 @@ namespace CoreLibrary.Helpers
     /// </remarks>
     public class ThreeWayDiffHelper
     {
-        int possibleCombinations = 0x0;
-        int possibleFiles = 0x0;
+        /// <summary>
+        /// Binary mask for current possible combinations of the files.
+        /// </summary>
+        private int possibleCombinations = 0x0;
+
+        /// <summary>
+        /// Binary mask for current possibles fiesl.
+        /// </summary>
+        private int possibleFiles = 0x0;
 
         #region Constants
 
+        /// <summary>
+        /// Binary combination of base and local file.
+        /// </summary>
         const int BASE_LOCAL = 0x1;
+
+        /// <summary>
+        /// Binary combination of base and remote file.
+        /// </summary>
         const int BASE_REMOTE = 0x2;
+
+        /// <summary>
+        /// Binary combination of local and remote file.
+        /// </summary>
         const int LOCAL_REMOTE = 0x4;
 
+        /// <summary>
+        /// Binary value for base file.
+        /// </summary>
         const int BASE = 0x1;
+
+        /// <summary>
+        /// Binary value for local file.
+        /// </summary>
         const int LOCAL = 0x2;
+
+        /// <summary>
+        /// Binary value for remote file.
+        /// </summary>
         const int REMOTE = 0x4;
 
         #endregion

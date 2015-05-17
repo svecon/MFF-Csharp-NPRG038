@@ -28,6 +28,7 @@ namespace TextDiffWindows.Controls.LineMarkers
             type = markerType;
         }
 
+        /// <inheritdoc />
         protected override IEnumerable<Diff3Item> VisibleDiffItems()
         {
             if (Node.Diff == null)
@@ -78,6 +79,7 @@ namespace TextDiffWindows.Controls.LineMarkers
             }
         }
 
+        /// <inheritdoc />
         protected override double GetLeftStart(Diff3Item diffItem)
         {
             return type == MarkerTypeEnum.BaseLeft
@@ -85,6 +87,7 @@ namespace TextDiffWindows.Controls.LineMarkers
             : PositionYLeft(diffItem.BaseLineStart);
         }
 
+        /// <inheritdoc />
         protected override double GetLeftEnd(Diff3Item diffItem)
         {
             return type == MarkerTypeEnum.BaseLeft
@@ -92,6 +95,7 @@ namespace TextDiffWindows.Controls.LineMarkers
             : PositionYLeft(diffItem.BaseLineStart + diffItem.BaseAffectedLines);
         }
 
+        /// <inheritdoc />
         protected override double GetRightStart(Diff3Item diffItem)
         {
             return type == MarkerTypeEnum.BaseLeft
@@ -99,6 +103,7 @@ namespace TextDiffWindows.Controls.LineMarkers
             : PositionYRight(diffItem.RemoteLineStart);
         }
 
+        /// <inheritdoc />
         protected override double GetRightEnd(Diff3Item diffItem)
         {
             return type == MarkerTypeEnum.BaseLeft

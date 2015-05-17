@@ -16,18 +16,25 @@ namespace CoreLibrary.Plugins.Processors.Settings
         // MUST HAVE for children
         //public abstract Type ForType { get; }
 
+        /// <inheritdoc />
         public string Info { get; protected set; }
 
+        /// <inheritdoc />
         public string Argument { get; protected set; }
 
+        /// <inheritdoc />
         public string ArgumentShortcut { get; protected set; }
 
+        /// <inheritdoc />
         public bool WasSet { get; protected set; }
 
+        /// <inheritdoc />
         public abstract int NumberOfParams { get; }
 
+        /// <inheritdoc />
         public object Instance { get; protected set; }
 
+        /// <inheritdoc />
         public FieldInfo Field { get; protected set; }
 
         /// <summary>
@@ -48,8 +55,10 @@ namespace CoreLibrary.Plugins.Processors.Settings
             WasSet = false;
         }
 
+        /// <inheritdoc />
         public abstract void SetValue(params string[] value);
 
+        /// <inheritdoc />
         public object GetValue()
         {
             return Field.GetValue(Instance);

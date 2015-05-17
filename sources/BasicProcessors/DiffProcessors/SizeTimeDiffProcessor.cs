@@ -48,15 +48,18 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Attributes that will be checked during diff.", "fast-diff", "F")]
         public CompareModeEnum CompareMode = CompareModeEnum.SizeModification;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             return base.CheckStatus(node) && IsEnabled && node.Status != NodeStatusEnum.WasDiffed;
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var threeWay = new ThreeWayDiffHelper();

@@ -11,6 +11,9 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
     /// </summary>
     public class Diff3NormalOutput : DiffOutputAbstract<Diff3, Diff3Item>
     {
+        /// <summary>
+        /// Info for base file.
+        /// </summary>
         private readonly FileInfo infoBase;
 
         /// <summary>
@@ -26,6 +29,7 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
             this.infoBase = infoBase;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<string> Print()
         {
             using (StreamReader localStream = InfoLocal.OpenText())
@@ -87,7 +91,19 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
             }
         }
 
-        private IEnumerable<string> PrintSection(string fileMark, int lineStart, int affectedLines,
+        /// <summary>
+        /// Prints one section of the diff.
+        /// </summary>
+        /// <param name="fileMark">String mark for the current diff.</param>
+        /// <param name="lineStart">Number of line where diff starts.</param>
+        /// <param name="affectedLines">Number of lines affected by diff.</param>
+        /// <param name="c">Current line read by the reader.</param>
+        /// <param name="stream">Stream reader for the file.</param>
+        /// <param name="fileLinesCount">Total number of lines in the file.</param>
+        /// <param name="endsNewLine">Does the file end with new line?</param>
+        /// <param name="printLines">Print the contents of the file?</param>
+        /// <returns>Enumarable over the difference.</returns>
+        private static IEnumerable<string> PrintSection(string fileMark, int lineStart, int affectedLines,
             int c, TextReader stream, int fileLinesCount, bool endsNewLine, bool printLines = true)
         {
             yield return FileHeader(fileMark, lineStart, affectedLines);
@@ -114,7 +130,7 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
         /// </summary>
         /// <param name="diffStatus">Which files are same.</param>
         /// <returns>String header of the diff chunk.</returns>
-        private string HunkHeader(DifferencesStatusEnum diffStatus)
+        private static string HunkHeader(DifferencesStatusEnum diffStatus)
         {
             switch (diffStatus)
             {
@@ -138,7 +154,7 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
         /// <param name="lineStart">Where does the diff start.</param>
         /// <param name="linesAffected">How many lines does diff affect.</param>
         /// <returns>String header of file diff section.</returns>
-        private string FileHeader(string fileMark, int lineStart, int linesAffected)
+        private static string FileHeader(string fileMark, int lineStart, int linesAffected)
         {
             return fileMark + ":" + CreateRange(lineStart, linesAffected);
         }
@@ -149,7 +165,7 @@ namespace TextDiffProcessors.DiffOutput.ThreeWay
         /// <param name="startingLine">Starting line in a file.</param>
         /// <param name="numberOfLines">Number of lines affected in a file.</param>
         /// <returns></returns>
-        private string CreateRange(int startingLine, int numberOfLines)
+        private static string CreateRange(int startingLine, int numberOfLines)
         {
             if (numberOfLines == 0)
             {

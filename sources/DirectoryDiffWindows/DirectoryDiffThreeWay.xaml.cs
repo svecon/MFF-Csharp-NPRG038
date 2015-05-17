@@ -20,9 +20,15 @@ namespace DirectoryDiffWindows
     [DiffWindow(1100)]
     public partial class DirectoryDiffThreeWay : UserControl, IDiffWindow<FilesystemDiffTree>, IChangesMenu, IMergeMenu
     {
+        /// <inheritdoc />
         public FilesystemDiffTree DiffNode { get; private set; }
 
+        /// <summary>
+        /// An instance of <see cref="IDiffWindowManager"/> that manages current window.
+        /// </summary>
         private readonly IDiffWindowManager manager;
+
+        #region Dependency properties
 
         /// <summary>
         /// Dependency property for <see cref="LocalFolderLocation"/>
@@ -70,9 +76,17 @@ namespace DirectoryDiffWindows
             set { SetValue(BaseFolderLocationProperty, value); }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Selected node in the treeview.
+        /// </summary>
         private INodeAbstractNode selectedNode;
 
-        private bool isBusy = false;
+        /// <summary>
+        /// Is the actual diff being recalculated?
+        /// </summary>
+        private bool isBusy = true;
 
         /// <summary>
         /// Initializes new instance of the <see cref="DirectoryDiffThreeWay"/>
@@ -121,12 +135,14 @@ namespace DirectoryDiffWindows
             return filesystemTree.DiffMode == DiffModeEnum.ThreeWay;
         }
 
+        /// <inheritdoc />
         public void OnDiffComplete(Task t)
         {
             // Items use IPropertyChanged 
             isBusy = false;
         }
 
+        /// <inheritdoc />
         public void OnMergeComplete(Task t)
         {
             // Items use IPropertyChanged 
@@ -135,6 +151,11 @@ namespace DirectoryDiffWindows
             isBusy = false;
         }
 
+        /// <summary>
+        /// Opens a new window when double-clicking on a TreeView
+        /// </summary>
+        /// <param name="sender">TreeView</param>
+        /// <param name="e">Event arguments</param>
         private void OnItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var t = sender as TreeView;
@@ -146,6 +167,12 @@ namespace DirectoryDiffWindows
 
         #region Iterating over TreeView
 
+        /// <summary>
+        /// Finds a TreeViewItem container with an instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <returns>TreeViewItem</returns>
         private TreeViewItem GetItem(ItemsControl container, object itemToSelect)
         {
             foreach (object item in container.Items)
@@ -165,6 +192,14 @@ namespace DirectoryDiffWindows
             return null;
         }
 
+        /// <summary>
+        /// Find a previous TreeViewItem container to a given instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <param name="f">Additional criteria for needle.</param>
+        /// <param name="previous">Container for previous instance.</param>
+        /// <returns>Container for the given instance.</returns>
         private TreeViewItem GetPreviousDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref TreeViewItem previous)
         {
             foreach (object item in container.Items)
@@ -193,6 +228,14 @@ namespace DirectoryDiffWindows
             return null;
         }
 
+        /// <summary>
+        /// Find a next TreeViewItem container to a given instance.
+        /// </summary>
+        /// <param name="container">Container where to search from.</param>
+        /// <param name="itemToSelect">Needle</param>
+        /// <param name="f">Additional criteria for needle.</param>
+        /// <param name="wasFound">Was next container found?</param>
+        /// <returns>Container for the given instance.</returns>
         private TreeViewItem GetNextDiffItem(ItemsControl container, object itemToSelect, Func<FileDiffNode, bool> f, ref bool wasFound)
         {
             foreach (object item in container.Items)
@@ -218,9 +261,13 @@ namespace DirectoryDiffWindows
 
         #region Custom ChangesMenu commands
 
+        /// <summary>
+        /// Criteria function for finding next node that is different.
+        /// </summary>
         private static readonly Func<FileDiffNode, bool> NextDiffFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame;
 
+        /// <inheritdoc />
         public CommandBinding PreviousCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -238,6 +285,7 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <inheritdoc />
         public CommandBinding NextCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -255,6 +303,7 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <inheritdoc />
         public CommandBinding RecalculateCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -269,6 +318,7 @@ namespace DirectoryDiffWindows
 
         #region Custom MergeMenu commands
 
+        /// <inheritdoc />
         public CommandBinding PreviousConflictCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -286,9 +336,13 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <summary>
+        /// Criteria function for finding next node that is conflicting.
+        /// </summary>
         private static readonly Func<FileDiffNode, bool> NextConfFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame && node.Status == NodeStatusEnum.IsConflicting;
 
+        /// <inheritdoc />
         public CommandBinding NextConflictCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -306,11 +360,15 @@ namespace DirectoryDiffWindows
                 });
         }
 
+        /// <summary>
+        /// Criteria function for finding node that has not been resolved yet.
+        /// </summary>
         private static readonly Func<FileDiffNode, bool> NextNonresolvedDiffFunc =
             node => node.Differences != DifferencesStatusEnum.AllSame
                 && node.Status == NodeStatusEnum.IsConflicting
                 && node.Action == PreferedActionThreeWayEnum.Default;
 
+        /// <inheritdoc />
         public CommandBinding MergeCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -337,6 +395,7 @@ namespace DirectoryDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseLocalCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -349,6 +408,7 @@ namespace DirectoryDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseBaseCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -361,6 +421,7 @@ namespace DirectoryDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseRemoteCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -375,11 +436,21 @@ namespace DirectoryDiffWindows
 
         #endregion
 
+        /// <summary>
+        /// Update selected node when a new TreeView item is changed.
+        /// </summary>
+        /// <param name="sender">TreeView</param>
+        /// <param name="e">Changed event args</param>
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             selectedNode = e.NewValue as INodeAbstractNode;
         }
 
+        /// <summary>
+        /// Update text paths when the window is loaded and sizes are calculated.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event args</param>
         private void DirectoryDiffThreeWay_OnLoaded(object sender, RoutedEventArgs e)
         {
             LocalFolderLocation = PathShortener.TrimPath(DiffNode.Root.InfoLocal.FullName, FilePathLocal);

@@ -13,6 +13,7 @@ namespace CoreLibrary.Plugins.Processors.Settings.Types
         /// </summary>
         public static Type ForType { get { return typeof(bool); } }
 
+        /// <inheritdoc />
         public override int NumberOfParams { get { return 0; } }
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace CoreLibrary.Plugins.Processors.Settings.Types
         {
         }
 
+        /// <inheritdoc />
         public override void SetValue(params string[] value)
         {
             if (value.Length == 0)

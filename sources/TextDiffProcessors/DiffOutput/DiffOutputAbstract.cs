@@ -10,12 +10,27 @@ namespace TextDiffProcessors.DiffOutput
     /// <typeparam name="TV">DiffItem type</typeparam>
     public abstract class DiffOutputAbstract<TU, TV> : IDiffOutput<TV>
     {
+        /// <summary>
+        /// Info for local file.
+        /// </summary>
         protected readonly FileInfo InfoLocal;
+
+        /// <summary>
+        /// Info for remote file.
+        /// </summary>
         protected readonly FileInfo InfoRemote;
+
+        /// <summary>
+        /// Calculated diff.
+        /// </summary>
         protected readonly TU Diff;
 
+        /// <summary>
+        /// Field for <see cref="DiffHasEnded"/>
+        /// </summary>
         private bool diffHasEnded;
 
+        /// <inheritdoc />
         public bool DiffHasEnded
         {
             get
@@ -27,6 +42,7 @@ namespace TextDiffProcessors.DiffOutput
             protected set { diffHasEnded = value; }
         }
 
+        /// <inheritdoc />
         public TV CurrentDiffItem { get; protected set; }
 
         /// <summary>
@@ -42,6 +58,7 @@ namespace TextDiffProcessors.DiffOutput
             Diff = diff;
         }
 
+        /// <inheritdoc />
         public abstract IEnumerable<string> Print();
     }
 }

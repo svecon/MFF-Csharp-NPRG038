@@ -13,8 +13,7 @@ namespace DirectoryDiffWindows.Converters
     /// </summary>
     class Diff2ToBackgroundConverter : MarkupExtension, IMultiValueConverter
     {
-        public Diff2ToBackgroundConverter() { }
-
+        /// <inheritdoc />
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.Length != 2)
@@ -60,11 +59,13 @@ namespace DirectoryDiffWindows.Converters
             return "";
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

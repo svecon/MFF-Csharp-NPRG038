@@ -20,6 +20,7 @@ namespace TextDiffWindows.Controls.LineMarkers
         {
         }
 
+        /// <inheritdoc />
         protected override IEnumerable<DiffItem> VisibleDiffItems()
         {
             if (Node.Diff == null)
@@ -43,21 +44,25 @@ namespace TextDiffWindows.Controls.LineMarkers
             }
         }
 
+        /// <inheritdoc />
         protected override double GetLeftStart(DiffItem diffItem)
         {
             return PositionYLeft(diffItem.LocalLineStart);
         }
 
+        /// <inheritdoc />
         protected override double GetLeftEnd(DiffItem diffItem)
         {
             return PositionYLeft(diffItem.LocalLineStart + diffItem.LocalAffectedLines);
         }
 
+        /// <inheritdoc />
         protected override double GetRightStart(DiffItem diffItem)
         {
             return PositionYRight(diffItem.RemoteLineStart);
         }
 
+        /// <inheritdoc />
         protected override double GetRightEnd(DiffItem diffItem)
         {
             return PositionYRight(diffItem.RemoteLineStart + diffItem.RemoteAffectedLines);

@@ -12,12 +12,24 @@ namespace BasicMenus.ChangesMenu
     [DiffWindowMenu(100)]
     public class ChangesMenu : IDiffWindowMenu
     {
+        /// <summary>
+        /// Window that implements this interface.
+        /// </summary>
         private readonly IChangesMenu window;
 
+        /// <summary>
+        /// Command for previous action.
+        /// </summary>
         private readonly ICommand previous;
 
+        /// <summary>
+        /// Command for next action.
+        /// </summary>
         private readonly ICommand next;
 
+        /// <summary>
+        /// Command for recalculate action.
+        /// </summary>
         private readonly ICommand recalculate;
 
         /// <summary>
@@ -54,6 +66,7 @@ namespace BasicMenus.ChangesMenu
             return instance is IChangesMenu;
         }
 
+        /// <inheritdoc />
         public MenuItem CreateMenuItem()
         {
             var menu = new MenuItem { Header = Resources.Menu_Changes };
@@ -74,6 +87,7 @@ namespace BasicMenus.ChangesMenu
             return menu;
         }
 
+        /// <inheritdoc />
         public IEnumerable<CommandBinding> CommandBindings()
         {
             yield return window.PreviousCommandBinding(previous);

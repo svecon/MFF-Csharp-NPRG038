@@ -56,6 +56,7 @@ namespace CoreLibrary.Plugins.Processors
             return true;
         }
 
+        /// <inheritdoc />
         public virtual void Process(INodeDirNode node)
         {
             if (!CheckStatus(node))
@@ -64,6 +65,7 @@ namespace CoreLibrary.Plugins.Processors
             ProcessChecked(node);
         }
 
+        /// <inheritdoc />
         public virtual void Process(INodeFileNode node)
         {
             if (!CheckStatus(node))

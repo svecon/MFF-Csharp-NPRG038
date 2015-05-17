@@ -9,7 +9,14 @@ namespace SvergeConsole.Printers
     /// </summary>
     public class ProcessorPrinter : IPrinter
     {
+        /// <summary>
+        /// Loader that contains all processors to be printed.
+        /// </summary>
         private readonly IProcessorLoader loader;
+
+        /// <summary>
+        /// True for printing out corresponding processors' settings.
+        /// </summary>
         private readonly bool printSettings;
 
         /// <summary>
@@ -23,6 +30,10 @@ namespace SvergeConsole.Printers
             this.printSettings = printSettings;
         }
 
+        /// <summary>
+        /// Prints processor info.
+        /// </summary>
+        /// <param name="processor">Processor to be printed out.</param>
         private void PrintProcessorInfo(IProcessor processor)
         {
             var attr = (ProcessorAttribute)processor.GetType().GetCustomAttribute(typeof(ProcessorAttribute));
@@ -42,9 +53,7 @@ namespace SvergeConsole.Printers
             //    Console.WriteLine("{0,10} {1}", "", procSettings.ToString());
         }
 
-        /// <summary>
-        /// Print all loaded processors.
-        /// </summary>
+        /// <inheritdoc />
         public void Print()
         {
             Console.WriteLine("=== Global settings");

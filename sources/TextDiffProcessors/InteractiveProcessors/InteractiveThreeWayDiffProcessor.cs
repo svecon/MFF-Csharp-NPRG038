@@ -29,21 +29,33 @@ namespace TextDiffProcessors.InteractiveProcessors
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultPreferedAction = PreferedActionThreeWayEnum.Default;
 
+        /// <summary>
+        /// Prefered action for current file. Will reset after the file is processed.
+        /// </summary>
         private PreferedActionThreeWayEnum defaultFilePreferedAction;
 
+        /// <summary>
+        /// Apply default action to whole file?
+        /// </summary>
         private bool applyToFile;
 
+        /// <summary>
+        /// Apply default action to all files?
+        /// </summary>
         private bool applyToAll;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             return base.CheckStatus(node) && node.Differences != DifferencesStatusEnum.AllSame;
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
@@ -84,6 +96,10 @@ namespace TextDiffProcessors.InteractiveProcessors
             node.Status = NodeStatusEnum.WasDiffed;
         }
 
+        /// <summary>
+        /// Parses the user input and assings an action to givend diff.
+        /// </summary>
+        /// <param name="diff">Diff that will have the action set.</param>
         private void ParseUserInput(Diff3Item diff)
         {
             if (applyToFile)

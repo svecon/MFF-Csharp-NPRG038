@@ -21,9 +21,24 @@ namespace TextDiffAlgorithm
         /// </summary>
         private class SmartLineReader
         {
+            /// <summary>
+            /// File to read from.
+            /// </summary>
             private readonly FileInfo file;
+
+            /// <summary>
+            /// Buffer used for reading the file.
+            /// </summary>
             private readonly char[] buffer;
+
+            /// <summary>
+            /// Current buffer length.
+            /// </summary>
             private int bufferCount;
+
+            /// <summary>
+            /// Did the file end with new line?
+            /// </summary>
             private bool endedWithNewline = true;
 
             /// <summary>
@@ -95,8 +110,19 @@ namespace TextDiffAlgorithm
         /// </summary>
         Dictionary<string, int> hashedLines;
 
+        /// <summary>
+        /// Trim white-space?
+        /// </summary>
         private readonly bool trimSpace;
+
+        /// <summary>
+        /// Ignore all white-space?
+        /// </summary>
         private readonly bool ignoreSpace;
+
+        /// <summary>
+        /// Case-sensitive?
+        /// </summary>
         private readonly bool ignoreCase;
 
         /// <summary>

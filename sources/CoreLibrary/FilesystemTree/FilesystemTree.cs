@@ -13,8 +13,10 @@ namespace CoreLibrary.FilesystemTree
     /// </summary>
     public class FilesystemTree : IFilesystemTree
     {
+        /// <inheritdoc />
         public DiffModeEnum DiffMode { get; protected set; }
 
+        /// <inheritdoc />
         public INodeDirNode Root { get; protected set; }
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace CoreLibrary.FilesystemTree
             DiffMode = mode;
         }
 
+        /// <inheritdoc />
         public void AddDirToRoot(DirectoryInfo root, LocationEnum location)
         {
             if (Root == null)
@@ -37,6 +40,7 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        /// <inheritdoc />
         public void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(Root);

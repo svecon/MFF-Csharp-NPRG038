@@ -55,11 +55,13 @@ namespace TextDiffProcessors.MergeProcessors
         [Settings("Default action for merging files.", "2merge-default", "2d")]
         public DefaultActionEnum DefaultAction;
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeDirNode node)
         {
             return base.CheckStatus(node) && OutputFolder != null && CreateEmptyFolders;
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status == NodeStatusEnum.WasMerged)
@@ -68,6 +70,7 @@ namespace TextDiffProcessors.MergeProcessors
             return base.CheckStatus(node) && OutputFolder != null;
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
             // create directory when file is created
@@ -81,6 +84,7 @@ namespace TextDiffProcessors.MergeProcessors
             CheckAndCreateDirectory(string.Join("/", OutputFolder, node.RelativePath));
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var dnode = node as FileDiffNode;
@@ -228,7 +232,7 @@ namespace TextDiffProcessors.MergeProcessors
             File.Move(temporaryPath, CreatePath(node));
         }
 
-        private void CheckAndCreateDirectory(string path)
+        private static void CheckAndCreateDirectory(string path)
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);

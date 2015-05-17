@@ -11,6 +11,9 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
     /// </summary>
     public class UnifiedDiffOutput : DiffOutputAbstract<Diff, DiffItem>
     {
+        /// <summary>
+        /// Number of lines to show around the difference.
+        /// </summary>
         private readonly int contextLinesCount;
 
         /// <summary>
@@ -26,6 +29,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
             this.contextLinesCount = contextLinesCount;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<string> Print()
         {
             // print headers
@@ -114,6 +118,12 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
             }
         }
 
+        /// <summary>
+        /// Creates a header for the output.
+        /// </summary>
+        /// <param name="filename">Filename of the file.</param>
+        /// <param name="date">Last change time of the file.</param>
+        /// <returns>String header.</returns>
         private static string CreateHeader(string filename, DateTime date)
         {
             return filename + "\t" + date.ToString("ddd MMM d H:mm:ss yyyy");

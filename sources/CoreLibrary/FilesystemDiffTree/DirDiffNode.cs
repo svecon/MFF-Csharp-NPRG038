@@ -22,11 +22,13 @@ namespace CoreLibrary.FilesystemDiffTree
         {
         }
 
+        /// <inheritdoc />
         protected override INodeDirNode CreateDirNode(DirectoryInfo info, LocationEnum location)
         {
             return new DirDiffNode(RootNode, RelativePath, info, location, Mode);
         }
 
+        /// <inheritdoc />
         protected override INodeFileNode CreateFileNode(FileInfo info, LocationEnum location)
         {
             return new FileDiffNode(this, info, location, Mode);

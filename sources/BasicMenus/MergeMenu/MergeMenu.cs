@@ -12,18 +12,39 @@ namespace BasicMenus.MergeMenu
     [DiffWindowMenu(1000)]
     public class MergeMenu : IDiffWindowMenu
     {
+        /// <summary>
+        /// Window that implements this interface.
+        /// </summary>
         private readonly IMergeMenu window;
 
+        /// <summary>
+        /// Command for merge action.
+        /// </summary>
         private readonly ICommand merge;
 
+        /// <summary>
+        /// Command for finding previous conflict.
+        /// </summary>
         private readonly ICommand previousConflict;
 
+        /// <summary>
+        /// Command for finding next conflict.
+        /// </summary>
         private readonly ICommand nextConflict;
 
+        /// <summary>
+        /// Command for selecting local version of a diff.
+        /// </summary>
         private readonly ICommand useLocal;
 
+        /// <summary>
+        /// Command for selecting base version of a diff.
+        /// </summary>
         private readonly ICommand useBase;
 
+        /// <summary>
+        /// Command for selecting remote version of a diff.
+        /// </summary>
         private readonly ICommand useRemote;
 
         /// <summary>
@@ -72,6 +93,7 @@ namespace BasicMenus.MergeMenu
             return instance is IMergeMenu;
         }
 
+        /// <inheritdoc />
         public MenuItem CreateMenuItem()
         {
             var menu = new MenuItem { Header = Resources.Menu_Merge };
@@ -97,6 +119,7 @@ namespace BasicMenus.MergeMenu
             return menu;
         }
 
+        /// <inheritdoc />
         public IEnumerable<CommandBinding> CommandBindings()
         {
             yield return window.PreviousConflictCommandBinding(previousConflict);

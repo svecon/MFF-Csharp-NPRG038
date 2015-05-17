@@ -12,8 +12,7 @@ namespace DirectoryDiffWindows.Converters
     /// </summary>
     class Diff2ToTextConverter : MarkupExtension, IMultiValueConverter
     {
-        public Diff2ToTextConverter() { }
-
+        /// <inheritdoc />
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.Length != 2)
@@ -46,11 +45,13 @@ namespace DirectoryDiffWindows.Converters
             return string.Empty;
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

@@ -56,11 +56,20 @@ namespace TextDiffAlgorithm.ThreeWay
         /// </summary>
         public Diff3Item[] Items { get; protected set; }
 
-        private DateTime diffedTime;
+        /// <summary>
+        /// Info for base file;
+        /// </summary>
+        private FileInfo baseFile;
 
-        private FileInfo oldFile;
-        private FileInfo newFile;
-        private FileInfo hisFile;
+        /// <summary>
+        /// Info for local file.
+        /// </summary>
+        private FileInfo localFile;
+
+        /// <summary>
+        /// Info for remote file.
+        /// </summary>
+        private FileInfo remoteFile;
 
         /// <summary>
         /// Structure for storing number of lines in each file.
@@ -75,16 +84,15 @@ namespace TextDiffAlgorithm.ThreeWay
         /// <summary>
         /// Initializes new instance of the <see cref="Diff3"/>
         /// </summary>
-        /// <param name="oldFile">Local file diffed.</param>
-        /// <param name="newFile">Remote file diffed.</param>
-        /// <param name="hisFile">Remote new file diffed.</param>
-        public Diff3(FileInfo oldFile, FileInfo newFile, FileInfo hisFile)
+        /// <param name="baseFile">Local file diffed.</param>
+        /// <param name="localFile">Remote file diffed.</param>
+        /// <param name="remoteFile">Remote new file diffed.</param>
+        public Diff3(FileInfo baseFile, FileInfo localFile, FileInfo remoteFile)
         {
-            this.oldFile = oldFile;
-            this.newFile = newFile;
-            this.hisFile = hisFile;
+            this.baseFile = baseFile;
+            this.localFile = localFile;
+            this.remoteFile = remoteFile;
 
-            diffedTime = DateTime.Now;
             FilesLineCount = new FilesLineCountStruct();
             FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }

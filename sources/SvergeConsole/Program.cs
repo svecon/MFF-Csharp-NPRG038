@@ -24,33 +24,33 @@ namespace SvergeConsole
         [Settings("Show help about using the console.", "help", "h")]
         public static bool ShowHelp = false;
 
-        private static IProcessorLoader _loader;
-        private static ProcessorRunner _runner;
-        private static INodeVisitable _diffTree;
-
         static void Main(string[] args)
         {
             #region Load all available processors and their settings
+
+            IProcessorLoader loader = new ProcessorLoader();
             try
             {
                 PluginsLoader.LoadAssemblies();
-                _loader = new ProcessorLoader();
                 // Load available processors and their settings
-                _loader.LoadAll();
+                loader.LoadAll();
                 // Add special settings from this Program
-                _loader.RetrieveSettings(typeof(Program), true);
-                _runner = new ProcessorRunner(_loader);
+                loader.RetrieveSettings(typeof(Program), true);
+                
             } catch (ProcessorPriorityColissionException e)
             {
                 Console.WriteLine("Processor " + e.Message + "could not be loaded because of a priority collision.");
             }
+
+            var runner = new ProcessorRunner(loader);
+
             #endregion
 
             #region Parse arguments as settings
             try
             {
                 // pass the arguments and parse them
-                var parser = new SettingsParser(_loader.GetSettings());
+                var parser = new SettingsParser(loader.GetSettings());
                 args = parser.ParseSettings(args);
             } catch (SettingsNotFoundException e)
             {
@@ -74,7 +74,7 @@ namespace SvergeConsole
 
                 Console.WriteLine();
                 Console.WriteLine("Listing all found Processors and their parameters:");
-                var processorPrinter = new ProcessorPrinter(_loader, true);
+                var processorPrinter = new ProcessorPrinter(loader, true);
                 processorPrinter.Print();
                 return;
             }
@@ -108,20 +108,23 @@ namespace SvergeConsole
             #endregion
 
             #region Creating main structure
+
+            INodeVisitable diffTree;
+
             try
             {
                 if (args.Length == 2 && areArgsFiles > 0)
                 {
-                    _diffTree = new FileDiffNode(args[0], args[1]);
+                    diffTree = new FileDiffNode(args[0], args[1]);
                 } else if (args.Length == 3 && areArgsFiles > 0)
                 {
-                    _diffTree = new FileDiffNode(args[0], args[1], args[2]);
+                    diffTree = new FileDiffNode(args[0], args[1], args[2]);
                 } else if (args.Length == 2 && areArgsFiles == 0)
                 {
-                    _diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();
+                    diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1]).TraverseTree();
                 } else if (args.Length == 3 && areArgsFiles == 0)
                 {
-                    _diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1], args[2]).TraverseTree();
+                    diffTree = new DiffCrawler().InitializeCrawler(args[0], args[1], args[2]).TraverseTree();
                 } else
                 {
                     Console.WriteLine("You can not mix folders and files together as arguments.");
@@ -160,29 +163,29 @@ namespace SvergeConsole
 
             #region Run Processors
 
-            _runner.RunDiff(_diffTree).Wait();
+            runner.RunDiff(diffTree).Wait();
 
             // print the filesystem tree
-            _diffTree.Accept(new PrinterVisitor());
+            diffTree.Accept(new PrinterVisitor());
 
             Console.WriteLine("\nDo you want to run interactive processors? [Y/n]");
             string input = Console.ReadLine();
             if (input == null || input.Trim().ToUpperInvariant() != "Y") return;
 
             // run interactive diffing
-            _runner.RunInteractiveResolving(_diffTree);
+            runner.RunInteractiveResolving(diffTree);
 
             Console.WriteLine("\nDo you want to run merging processors? [Y/n]");
             input = Console.ReadLine();
             if (input == null || input.Trim().ToUpperInvariant() != "Y") return;
 
             // run merging and syncing in parallel
-            _runner.RunMerge(_diffTree).Wait();
+            runner.RunMerge(diffTree).Wait();
 
-            _runner.RunDiff(_diffTree).Wait();
+            runner.RunDiff(diffTree).Wait();
 
             // print the filesystem tree
-            _diffTree.Accept(new PrinterVisitor());
+            diffTree.Accept(new PrinterVisitor());
 
             #endregion
         }

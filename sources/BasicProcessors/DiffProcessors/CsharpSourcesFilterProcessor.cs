@@ -19,15 +19,18 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Filter for only C# source files.", "csharp-source-code", "C#")]
         public bool IsEnabled = false;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             return IsEnabled && base.CheckStatus(node);
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             if (node.Info.Extension.ToLowerInvariant() != ".cs")

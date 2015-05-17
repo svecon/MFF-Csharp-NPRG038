@@ -46,10 +46,15 @@ namespace TextDiffAlgorithm.TwoWay
         /// </summary>
         public DiffItem[] Items { get; protected set; }
 
-        private DateTime diffedTime;
+        /// <summary>
+        /// Info for local file.
+        /// </summary>
+        private FileInfo localFile;
 
-        private FileInfo oldFile;
-        private FileInfo newFile;
+        /// <summary>
+        /// Info for remote file.
+        /// </summary>
+        private FileInfo remoteFile;
 
         /// <summary>
         /// Structure for storing number of lines in each file.
@@ -64,14 +69,13 @@ namespace TextDiffAlgorithm.TwoWay
         /// <summary>
         /// Initializes new instance of the <see cref="Diff"/>
         /// </summary>
-        /// <param name="oldFile">Local file diffed.</param>
-        /// <param name="newFile">Remote file diffed.</param>
-        public Diff(FileInfo oldFile, FileInfo newFile)
+        /// <param name="localFile">Local file diffed.</param>
+        /// <param name="remoteFile">Remote file diffed.</param>
+        public Diff(FileInfo localFile, FileInfo remoteFile)
         {
-            this.oldFile = oldFile;
-            this.newFile = newFile;
+            this.localFile = localFile;
+            this.remoteFile = remoteFile;
 
-            diffedTime = DateTime.Now;
             FilesLineCount = new FilesLineCountStruct();
             FilesEndsWithNewLine = new FilesEndsWithNewLineStruct();
         }

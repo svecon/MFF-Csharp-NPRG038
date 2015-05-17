@@ -20,6 +20,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
         {
         }
 
+        /// <inheritdoc />
         public override IEnumerable<string> Print()
         {
             using (StreamReader localStream = InfoLocal.OpenText())
@@ -75,7 +76,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
         /// </summary>
         /// <param name="diffItem">Diff Item for given lines change.</param>
         /// <returns>DiffType of the change between two files.</returns>
-        private DiffType FindDiffType(DiffItem diffItem)
+        private static DiffType FindDiffType(DiffItem diffItem)
         {
             if (diffItem.LocalAffectedLines > 0 && diffItem.RemoteAffectedLines > 0)
                 return DiffType.Change;
@@ -91,7 +92,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
         /// </summary>
         /// <param name="diffItem">DiffItem chunk.</param>
         /// <returns>String header for a diffItem chunk.</returns>
-        private string CreateHeader(DiffItem diffItem)
+        private static string CreateHeader(DiffItem diffItem)
         {
             string header = "";
 
@@ -123,7 +124,7 @@ namespace TextDiffProcessors.DiffOutput.TwoWay
         /// <param name="startingLine">Starting line in a file.</param>
         /// <param name="numberOfLines">Number of lines affected in a file.</param>
         /// <returns></returns>
-        private string CreateRange(int startingLine, int numberOfLines)
+        private static string CreateRange(int startingLine, int numberOfLines)
         {
             return numberOfLines > 1
                 ? startingLine + "," + (startingLine + numberOfLines - 1)

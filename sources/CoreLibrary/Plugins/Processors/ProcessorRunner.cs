@@ -9,8 +9,19 @@ namespace CoreLibrary.Plugins.Processors
     /// </summary>
     public class ProcessorRunner
     {
+        /// <summary>
+        /// An execution visitor that executes processors for calculating diffs.
+        /// </summary>
         private readonly IExecutionVisitor diffVisitor;
+
+        /// <summary>
+        /// An execution visitor that executes processors for merging.
+        /// </summary>
         private readonly IExecutionVisitor mergeVisitor;
+
+        /// <summary>
+        /// An execution visitor that executes interative processors.
+        /// </summary>
         private readonly IExecutionVisitor interactiveVisitor;
 
         /// <summary>

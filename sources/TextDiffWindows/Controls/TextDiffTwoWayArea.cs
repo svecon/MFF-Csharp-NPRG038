@@ -38,11 +38,13 @@ namespace TextDiffWindows.Controls
             Info = (FileInfo)(target == TargetFileEnum.Local ? node.InfoLocal : node.InfoRemote);
         }
 
+        /// <inheritdoc />
         protected override bool IsDiffAvailable()
         {
             return Node.Diff is Diff;
         }
 
+        /// <inheritdoc />
         protected override void PreloadFileToMemory()
         {
             if (!IsDiffAvailable())
@@ -75,6 +77,7 @@ namespace TextDiffWindows.Controls
 
         #region Rendering
 
+        /// <inheritdoc />
         protected override void OnRender(DrawingContext dc)
         {
             if (Lines == null && Info != null)
@@ -94,6 +97,7 @@ namespace TextDiffWindows.Controls
             }
         }
 
+        /// <inheritdoc />
         protected override void DrawText(DrawingContext dc)
         {
             for (int i = StartsOnLine; i < EndsOnLine; i++)
@@ -230,6 +234,7 @@ namespace TextDiffWindows.Controls
             return Enumerable.Empty<DiffItem>();
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);

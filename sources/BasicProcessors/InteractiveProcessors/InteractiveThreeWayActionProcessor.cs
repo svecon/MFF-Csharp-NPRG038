@@ -20,13 +20,18 @@ namespace BasicProcessors.InteractiveProcessors
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
+        /// <summary>
+        /// Setting for default action of the processor.
+        /// </summary>
         [Settings("Default action for interactive diff.", "3interactive-default")]
         public PreferedActionThreeWayEnum DefaultAction = PreferedActionThreeWayEnum.Default;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status != NodeStatusEnum.IsConflicting)
@@ -35,6 +40,7 @@ namespace BasicProcessors.InteractiveProcessors
             return base.CheckStatus(node);
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;

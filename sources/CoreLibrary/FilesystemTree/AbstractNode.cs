@@ -11,46 +11,75 @@ namespace CoreLibrary.FilesystemTree
     /// </summary>
     public abstract class AbstractNode : INodeAbstractNode, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Field for <see cref="InfoBase"/>
+        /// </summary>
         private FileSystemInfo infoBase;
+
+        /// <inheritdoc />
         public FileSystemInfo InfoBase
         {
             get { return infoBase; }
             protected set { infoBase = value; OnPropertyChanged("InfoBase"); }
         }
 
+        /// <summary>
+        /// Field for <see cref="InfoLocal"/>
+        /// </summary>
         private FileSystemInfo infoLocal;
+
+        /// <inheritdoc />
         public FileSystemInfo InfoLocal
         {
             get { return infoLocal; }
             protected set { infoLocal = value; OnPropertyChanged("InfoLocal"); }
         }
 
+        /// <summary>
+        /// Field for <see cref="InfoRemote"/>
+        /// </summary>
         private FileSystemInfo infoRemote;
 
+        /// <inheritdoc />
         public FileSystemInfo InfoRemote
         {
             get { return infoRemote; }
             protected set { infoRemote = value; OnPropertyChanged("InfoRemote"); }
         }
 
+        /// <summary>
+        /// Field for <see cref="Status"/>
+        /// </summary>
         private NodeStatusEnum status;
+
+        /// <inheritdoc />
         public NodeStatusEnum Status
         {
             get { return status; }
             set { status = value; OnPropertyChanged("Status"); }
         }
 
+        /// <summary>
+        /// Field for <see cref="Action"/>
+        /// </summary>
         private PreferedActionThreeWayEnum action;
 
+        /// <inheritdoc />
         public PreferedActionThreeWayEnum Action
         {
             get { return action; }
             set { action = value; OnPropertyChanged("PreferedAction"); }
         }
 
+        /// <inheritdoc />
         public FileTypeEnum FileType { get; set; }
 
+        /// <summary>
+        /// Field for <see cref="Differences"/>
+        /// </summary>
         private DifferencesStatusEnum diff;
+
+        /// <inheritdoc />
         public DifferencesStatusEnum Differences
         {
             get
@@ -71,6 +100,7 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        /// <inheritdoc />
         public Exception Exception { get; set; }
 
         /// <summary>
@@ -97,14 +127,19 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        /// <summary>
+        /// Field for <see cref="Location"/>
+        /// </summary>
         private int location;
 
+        /// <inheritdoc />
         public int Location
         {
             get { return location; }
             protected set { location = value; OnPropertyChanged("Location"); }
         }
 
+        /// <inheritdoc />
         public DiffModeEnum Mode { get; protected set; }
 
         #region INotifyPropertyChanged interface implementation
@@ -129,6 +164,7 @@ namespace CoreLibrary.FilesystemTree
 
         #endregion
 
+        /// <inheritdoc />
         public abstract string GetAbsolutePath(LocationEnum location);
 
         /// <summary>
@@ -144,11 +180,13 @@ namespace CoreLibrary.FilesystemTree
             AddInfoFromLocation(info, location);
         }
 
+        /// <inheritdoc />
         public bool IsInLocation(LocationEnum loc)
         {
             return ((int)loc & Location) == (int)loc;
         }
 
+        /// <inheritdoc />
         public bool IsInLocation(LocationCombinationsEnum loc)
         {
             return ((int)loc & Location) == (int)loc;
@@ -163,6 +201,7 @@ namespace CoreLibrary.FilesystemTree
             Location = Location | (int)loc;
         }
 
+        /// <inheritdoc />
         public void AddInfoFromLocation(FileSystemInfo info, LocationEnum location)
         {
             MarkFound(location);
@@ -190,6 +229,7 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        /// <inheritdoc />
         public void RemoveInfoFromLocation(LocationEnum loc)
         {
             Location &= ~(int)loc;
@@ -208,6 +248,7 @@ namespace CoreLibrary.FilesystemTree
             }
         }
 
+        /// <inheritdoc />
         public abstract void Accept(IFilesystemTreeVisitor visitor);
 
         public override string ToString()

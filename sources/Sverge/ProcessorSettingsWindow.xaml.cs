@@ -16,7 +16,14 @@ namespace Sverge
     /// </summary>
     public partial class ProcessorSettingsWindow : Window
     {
+        /// <summary>
+        /// Loader containing all avaialble processors.
+        /// </summary>
         private readonly IProcessorLoader loader;
+
+        /// <summary>
+        /// Dictionary for settings and their inputs.
+        /// </summary>
         private readonly Dictionary<ISettings, Control> controls;
 
         /// <summary>
@@ -109,6 +116,11 @@ namespace Sverge
             Container.Children.Add(saveButton);
         }
 
+        /// <summary>
+        /// Creates an input box depending on Setting's type.
+        /// </summary>
+        /// <param name="settings">Setting for which the input box will be created.</param>
+        /// <returns>Control</returns>
         private Control CreateInput(ISettings settings)
         {
             object value = settings.GetValue();
@@ -135,11 +147,19 @@ namespace Sverge
             return newControl;
         }
 
-        private string ArrayToString(object array)
+        /// <summary>
+        /// Converts an array to string separated by commas
+        /// </summary>
+        /// <param name="array">Object which is an instance to an array.</param>
+        /// <returns>String of values delimited by commas.</returns>
+        private static string ArrayToString(object array)
         {
-            var a = (Array)array;
+            var a = array as Array;
 
-            object[] o = new object[a.Length];
+            if (a == null)
+                return string.Empty;
+
+            var o = new object[a.Length];
             for (int i = 0; i < a.Length; i++)
             {
                 o[i] = a.GetValue(i);
@@ -148,7 +168,12 @@ namespace Sverge
             return string.Join(",", o);
         }
 
-        private string ControlToValue(Control c)
+        /// <summary>
+        /// Gets a value from a control.
+        /// </summary>
+        /// <param name="c">Control</param>
+        /// <returns>String value of a control.</returns>
+        private static string ControlToValue(Control c)
         {
             var checkBox = c as CheckBox;
             var comboBox = c as ComboBox;

@@ -12,8 +12,7 @@ namespace DirectoryDiffWindows.Converters
     /// </summary>
     class StatusConflictToColorConverter : MarkupExtension, IMultiValueConverter
     {
-        public StatusConflictToColorConverter() { }
-
+        /// <inheritdoc />
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value.Length != 3)
@@ -54,11 +53,13 @@ namespace DirectoryDiffWindows.Converters
             return Brushes.Black;
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

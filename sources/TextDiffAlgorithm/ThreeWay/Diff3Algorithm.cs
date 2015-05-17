@@ -65,8 +65,20 @@ namespace TextDiffAlgorithm.ThreeWay
         private int deltaToHis;
 
         #region very simple iterators over the two-way diffs
+
+        /// <summary>
+        /// Counter for the iterator.
+        /// </summary>
         int newIterator = 0;
+
+        /// <summary>
+        /// Counter for the iterator.
+        /// </summary>
         int hisIterator = 0;
+
+        /// <summary>
+        /// Current DiffItem between base and local version
+        /// </summary>
         private DiffItem CurrentNew
         {
             get
@@ -74,6 +86,10 @@ namespace TextDiffAlgorithm.ThreeWay
                 return newIterator < diffBaseLocal.Length ? diffBaseLocal[newIterator] : null;
             }
         }
+
+        /// <summary>
+        /// Current DiffItem between base and remote version
+        /// </summary>
         private DiffItem CurrentHis
         {
             get

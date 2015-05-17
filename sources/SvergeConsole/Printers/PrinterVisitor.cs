@@ -14,14 +14,27 @@ namespace SvergeConsole.Printers
     /// </summary>
     public class PrinterVisitor : IFilesystemTreeVisitor
     {
-        int currentLevel = 0;
+        /// <summary>
+        /// Current depth level. Used for indentation.
+        /// </summary>
+        private int currentLevel = 0;
 
+        /// <summary>
+        /// Current directory being printed.
+        /// </summary>
         private INodeDirNode directoryCache;
 
+        /// <summary>
+        /// Is this first time printing the current directory?
+        /// </summary>
         private bool firstDirectoryVisit;
 
+        /// <summary>
+        /// Used for printing out only one node.
+        /// </summary>
         private bool isOnlyFileNode = true;
 
+        /// <inheritdoc />
         public void Visit(INodeDirNode node)
         {
             isOnlyFileNode = false;
@@ -50,6 +63,9 @@ namespace SvergeConsole.Printers
             }
         }
 
+        /// <summary>
+        /// Prints directory with a corret indentation.
+        /// </summary>
         private void PrintDirectory()
         {
             Console.WriteLine();
@@ -62,6 +78,7 @@ namespace SvergeConsole.Printers
             Console.WriteLine(@"+- \{0} ({1:0.00}kB)", directoryCache.RelativePath, directoryCache.GetSize());
         }
 
+        /// <inheritdoc />
         public void Visit(INodeFileNode node)
         {
             if (node.Status == NodeStatusEnum.IsIgnored)

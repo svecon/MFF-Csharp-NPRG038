@@ -17,10 +17,19 @@ namespace CoreLibrary.Plugins.Processors
     /// </summary>
     public class ProcessorLoader : IProcessorLoader
     {
+        /// <summary>
+        /// A dictionary that contains list of processors by the processor type.
+        /// </summary>
         protected Dictionary<ProcessorTypeEnum, SortedList<int, IProcessor>> ProcessorsDictionary;
 
+        /// <summary>
+        /// Dictionary for searching lists of settings by a processor name.
+        /// </summary>
         protected readonly Dictionary<string, List<ISettings>> SettingsByProcessor;
 
+        /// <summary>
+        /// Dictionary for searching processors by name.
+        /// </summary>
         protected readonly Dictionary<string, IProcessor> ProcessorByName;
 
         /// <summary>
@@ -40,6 +49,7 @@ namespace CoreLibrary.Plugins.Processors
             ProcessorByName = new Dictionary<string, IProcessor>();
         }
 
+        /// <inheritdoc />
         public void LoadAll()
         {
             LoadAllAvailableSettings();
@@ -121,6 +131,7 @@ namespace CoreLibrary.Plugins.Processors
             }
         }
 
+        /// <inheritdoc />
         public void RetrieveSettings(object instance, bool isStatic = false)
         {
             var settingsByProcessorList = new List<ISettings>();
@@ -170,6 +181,7 @@ namespace CoreLibrary.Plugins.Processors
             SettingsByProcessor.Add(instanceType, settingsByProcessorList);
         }
 
+        /// <inheritdoc />
         public void AddProcessor(IProcessor processor)
         {
             var attr = (ProcessorAttribute)processor.GetType().GetCustomAttribute(typeof(ProcessorAttribute));
@@ -213,6 +225,7 @@ namespace CoreLibrary.Plugins.Processors
             }
         }
 
+        /// <inheritdoc />
         public IProcessorLoader SplitLoaderByType(ProcessorTypeEnum processorType)
         {
             var newLoader = new ProcessorLoader();
@@ -225,6 +238,7 @@ namespace CoreLibrary.Plugins.Processors
             return newLoader;
         }
 
+        /// <inheritdoc />
         public IEnumerable<IProcessor> GetProcessors(ProcessorTypeEnum processorType)
         {
             return !ProcessorsDictionary.ContainsKey(processorType) 
@@ -232,16 +246,19 @@ namespace CoreLibrary.Plugins.Processors
                 : ProcessorsDictionary[processorType].Select(valuePair => valuePair.Value);
         }
 
+        /// <inheritdoc />
         public IEnumerable<ISettings> GetSettings()
         {
             return SettingsByProcessor.Values.SelectMany(settings => settings);
         }
 
+        /// <inheritdoc />
         public IEnumerable<ISettings> GetSettingsByProcessor(IProcessor processor)
         {
             return SettingsByProcessor[processor.GetType().ToString()];
         }
 
+        /// <inheritdoc />
         public IEnumerable<ISettings> GetSettingsByProcessor(string processor)
         {
             return SettingsByProcessor[processor];

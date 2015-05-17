@@ -10,6 +10,7 @@ namespace CoreLibrary.FilesystemTree
     /// </summary>
     public class FileNode : AbstractNode, INodeFileNode
     {
+        /// <inheritdoc />
         public INodeDirNode ParentNode { get; set; }
 
         /// <summary>
@@ -25,11 +26,13 @@ namespace CoreLibrary.FilesystemTree
             ParentNode = parentNode;
         }
 
+        /// <inheritdoc />
         public override void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override string GetAbsolutePath(LocationEnum location)
         {
             if (ParentNode != null)

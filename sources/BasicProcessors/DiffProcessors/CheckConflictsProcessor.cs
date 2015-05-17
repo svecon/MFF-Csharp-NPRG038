@@ -10,10 +10,12 @@ namespace BasicProcessors.DiffProcessors
     [Processor(ProcessorTypeEnum.Diff, 9999, DiffModeEnum.TwoWay | DiffModeEnum.ThreeWay)]
     public class CheckConflictsProcessor : ProcessorAbstract
     {
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             switch ((LocationCombinationsEnum)node.Location)

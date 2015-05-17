@@ -236,14 +236,11 @@ namespace TextDiffWindows.Controls
 
         protected string GetLine(int lineNumber)
         {
-            if (0 > lineNumber || lineNumber >= Lines.Count)
-            {
-                InvalidateFileContents();
-                InvalidateVisual();
-                return string.Empty;
-            }
+            if (0 <= lineNumber && lineNumber < Lines.Count) return Lines[lineNumber];
 
-            return Lines[lineNumber];
+            InvalidateFileContents();
+            InvalidateVisual();
+            return string.Empty;
         }
 
         protected abstract void PreloadFileToMemory();

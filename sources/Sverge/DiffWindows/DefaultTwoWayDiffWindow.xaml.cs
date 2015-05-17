@@ -15,7 +15,7 @@ namespace Sverge.DiffWindows
     [DiffWindow(int.MaxValue - 1)]
     public partial class DefaultTwoWayDiffWindow : UserControl, IDiffWindow<INodeVisitable>
     {
-        private readonly IDiffWindowManager manager;
+        /// <inheritdoc />
         public INodeVisitable DiffNode { get; private set; }
 
         #region Dependency properties
@@ -59,7 +59,6 @@ namespace Sverge.DiffWindows
         /// <param name="manager">Manager for this window.</param>
         public DefaultTwoWayDiffWindow(INodeVisitable node, IDiffWindowManager manager)
         {
-            this.manager = manager;
             DiffNode = node;
 
             InitializeComponent();
@@ -93,6 +92,11 @@ namespace Sverge.DiffWindows
                 && ((INodeAbstractNode)instance).Mode == DiffModeEnum.TwoWay;
         }
 
+        /// <summary>
+        /// Event hadler fired upon resizing window. Shortens the file paths.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void DefaultThreeWayDiffWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var abstractNode = DiffNode as INodeAbstractNode;
@@ -118,10 +122,12 @@ namespace Sverge.DiffWindows
             }
         }
 
+        /// <inheritdoc />
         public void OnDiffComplete(Task task)
         {
         }
 
+        /// <inheritdoc />
         public void OnMergeComplete(Task task)
         {
         }

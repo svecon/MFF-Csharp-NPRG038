@@ -22,12 +22,39 @@ namespace Sverge
     /// </summary>
     public partial class MainWindow : Window, IDiffWindowManager
     {
+        /// <summary>
+        /// ProcessorRunner for executing processors asynchronously.
+        /// </summary>
         private readonly ProcessorRunner runner;
+
+        /// <summary>
+        /// Loader containing all available processors.
+        /// </summary>
         private readonly IProcessorLoader loader;
+
+        /// <summary>
+        /// DiffWindow loader for loading all visualisations plugins.
+        /// </summary>
         private readonly DiffWindowLoader windowLoader;
+
+        /// <summary>
+        /// Dictionary for nodes and their tab positions.
+        /// </summary>
         private readonly Dictionary<INodeVisitable, int> tabsPositions;
+
+        /// <summary>
+        /// Dictionary for relations of windows and their parent windows.
+        /// </summary>
         private readonly Dictionary<DW, DW> parentWindows;
+
+        /// <summary>
+        /// Number of plugin menus added for current window.
+        /// </summary>
         private int windowMenusAdded;
+
+        /// <summary>
+        /// Number of plugin menu actions added to the current scope.
+        /// </summary>
         private int windowMenusBindingsAdded;
 
         /// <summary>
@@ -63,6 +90,7 @@ namespace Sverge
             return (attr & FileAttributes.Directory) == FileAttributes.Directory ? 0 : 1;
         }
 
+        /// <inheritdoc />
         public DW OpenNewTab(params string[] args)
         {
             #region Wrong number of arguments
@@ -146,6 +174,11 @@ namespace Sverge
             return newWindow;
         }
 
+        /// <summary>
+        /// Calls OnDiffComplete method on all related windows.
+        /// </summary>
+        /// <param name="t">Task used to calculate the diff.</param>
+        /// <param name="window">Window that requestes the calculation.</param>
         private void CallDiffContinuations(Task t, DW window)
         {
             window.OnDiffComplete(t);
@@ -157,6 +190,11 @@ namespace Sverge
             parentWindows[window].OnDiffComplete(t);
         }
 
+        /// <summary>
+        /// Calls OnMergeComplete method on all related windows.
+        /// </summary>
+        /// <param name="t">Task used to merge.</param>
+        /// <param name="window">Window that requestes the merge.</param>
         private void CallMergeContinuations(Task t, DW window)
         {
             window.OnMergeComplete(t);
@@ -169,12 +207,15 @@ namespace Sverge
         }
 
 #pragma warning disable 4014
+
+        /// <inheritdoc />
         public void RequestDiff(DW window)
         {
             runner.RunDiff(window.DiffNode).ContinueWith(t => CallDiffContinuations(t, window)
                 , TaskContinuationOptions.ExecuteSynchronously);
         }
 
+        /// <inheritdoc />
         public void RequestMerge(DW window)
         {
             runner.RunMerge(window.DiffNode).ContinueWith(t =>
@@ -188,6 +229,7 @@ namespace Sverge
         }
 #pragma warning restore 4014
 
+        /// <inheritdoc />
         public DW OpenNewTab(INodeVisitable diffNode, DW parentWindow = null)
         {
             int tabPosition;
@@ -224,12 +266,20 @@ namespace Sverge
             return newWindow;
         }
 
+        /// <summary>
+        /// Removes a window from tab.
+        /// </summary>
+        /// <param name="position">Position of a window.</param>
         private void RemoveWindow(int position)
         {
             tabsPositions.Remove(((DW)((TabItem)Tabs.Items.GetItemAt(position)).Content).DiffNode);
             Tabs.Items.RemoveAt(position);
         }
 
+        /// <summary>
+        /// Removes a window from tab.
+        /// </summary>
+        /// <param name="item">Instance of tab item.</param>
         private void RemoveWindow(TabItem item)
         {
             tabsPositions.Remove(((DW)item.Content).DiffNode);
@@ -245,6 +295,11 @@ namespace Sverge
             open.ShowDialog();
         }
 
+        /// <summary>
+        /// Event handler for closing button on tab items.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Mouse event args.</param>
         private void TabCloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             RemoveCustomWindowMenuBindings();
@@ -253,6 +308,12 @@ namespace Sverge
             RemoveWindow(FindParent<TabItem>(sender as DependencyObject));
         }
 
+        /// <summary>
+        /// Find parent in the VisualTree.
+        /// </summary>
+        /// <typeparam name="T">Type of the parent.</typeparam>
+        /// <param name="child">Instance from where to start searching from.</param>
+        /// <returns>Instance of a parent.</returns>
         private static T FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             //get parent item
@@ -266,12 +327,11 @@ namespace Sverge
             return parent ?? FindParent<T>(parentObject);
         }
 
-
-        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
+        /// <summary>
+        /// Opens a window for opening new comparison.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
         private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenWindowDialog();
@@ -288,11 +348,21 @@ namespace Sverge
             }
         );
 
+        /// <summary>
+        /// Checks whether any tab window is opened.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
         private void CloseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Tabs.SelectedIndex != -1;
         }
 
+        /// <summary>
+        /// Closes current visualisation window.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             RemoveCustomWindowMenuBindings();
@@ -312,16 +382,19 @@ namespace Sverge
             }
         );
 
-        private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
+        /// <summary>
+        /// Exits the application.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown(); // TODO Exit code
         }
 
+        /// <summary>
+        /// Closes all menus which were implemented by current diffwindow.
+        /// </summary>
         private void CloseCustomWindowMenus()
         {
             for (; windowMenusAdded > 0; windowMenusAdded--)
@@ -330,6 +403,9 @@ namespace Sverge
             }
         }
 
+        /// <summary>
+        /// Removes custom menu actins which were defined by current diffwindow..
+        /// </summary>
         private void RemoveCustomWindowMenuBindings()
         {
             for (; windowMenusBindingsAdded > 0; windowMenusBindingsAdded--)
@@ -338,6 +414,11 @@ namespace Sverge
             }
         }
 
+        /// <summary>
+        /// Changes current visualisation window.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void Tabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.Source is TabControl))
@@ -379,6 +460,11 @@ namespace Sverge
             typeof(MainWindow),
             new InputGestureCollection());
 
+        /// <summary>
+        /// Opens a window for processor settings.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
         private void ProcessorSettings_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var window = new ProcessorSettingsWindow(loader);

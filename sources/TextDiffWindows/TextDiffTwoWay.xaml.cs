@@ -21,10 +21,27 @@ namespace TextDiffWindows
     [DiffWindow(100)]
     public partial class TextDiffTwoWay : UserControl, IDiffWindow<FileDiffNode>, IChangesMenu
     {
+        /// <summary>
+        /// Window manager for current visualisation.
+        /// </summary>
         private readonly IDiffWindowManager manager;
+
+        /// <inheritdoc />
         public FileDiffNode DiffNode { get; private set; }
+
+        /// <summary>
+        /// Control for visualising local text.
+        /// </summary>
         private readonly TextDiffTwoWayArea localText;
+
+        /// <summary>
+        /// Control for visualising remote text.
+        /// </summary>
         private readonly TextDiffTwoWayArea remoteText;
+
+        /// <summary>
+        /// Control for connecting related diffs between local and remote control.
+        /// </summary>
         private readonly LineMarkersTwoWayElement lineMarkers;
 
         /// <summary>
@@ -144,6 +161,9 @@ namespace TextDiffWindows
             return diffNode.Mode == DiffModeEnum.TwoWay;
         }
 
+        /// <summary>
+        /// Invalidates visuals of all controls.
+        /// </summary>
         private void InvalidateAllVisual()
         {
             localText.InvalidateVisual();
@@ -151,16 +171,21 @@ namespace TextDiffWindows
             lineMarkers.InvalidateVisual();
         }
 
+        /// <inheritdoc />
         public void OnDiffComplete(Task t)
         {
             InvalidateAllFileContents();
         }
 
+        /// <inheritdoc />
         public void OnMergeComplete(Task t)
         {
             InvalidateAllFileContents();
         }
 
+        /// <summary>
+        /// Invalidates file contents and forces them to redraw.
+        /// </summary>
         private void InvalidateAllFileContents()
         {
             localText.InvalidateFileContents();
@@ -169,6 +194,11 @@ namespace TextDiffWindows
             InvalidateAllVisual();
         }
 
+        /// <summary>
+        /// Size changed event handler for shortening file paths.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void TextDiff2Way_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
@@ -179,6 +209,10 @@ namespace TextDiffWindows
                 : TextDiffWindows.Resources.Diff_No_File_At_Location;
         }
 
+        /// <summary>
+        /// Scrolls to a given line in all three controls.
+        /// </summary>
+        /// <param name="diffIndex">Index of the diff to scroll to.</param>
         private void ScrollToLine(int diffIndex)
         {
             localText.ScrollToLine(((Diff)DiffNode.Diff).Items[diffIndex].LocalLineStart - 1);
@@ -187,6 +221,7 @@ namespace TextDiffWindows
 
         #region Custom ChangesMenu commands
 
+        /// <inheritdoc />
         public CommandBinding PreviousCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -194,6 +229,7 @@ namespace TextDiffWindows
                 (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff > 0; });
         }
 
+        /// <inheritdoc />
         public CommandBinding NextCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -201,6 +237,7 @@ namespace TextDiffWindows
                 (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff < ((Diff)DiffNode.Diff).Items.Length - 1; });
         }
 
+        /// <inheritdoc />
         public CommandBinding RecalculateCommandBinding(ICommand command)
         {
             return new CommandBinding(command,

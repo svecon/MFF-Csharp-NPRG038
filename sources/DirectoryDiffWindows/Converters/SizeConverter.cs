@@ -12,10 +12,7 @@ namespace DirectoryDiffWindows.Converters
     [ValueConversion(typeof(object), typeof(string))]
     class SizeConverter : MarkupExtension, IValueConverter
     {
-        public SizeConverter()
-        {
-        }
-
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var v = value as FileInfo;
@@ -26,11 +23,13 @@ namespace DirectoryDiffWindows.Converters
             return String.Format("{0}kB", Math.Ceiling(v.Length / 1024.0));
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

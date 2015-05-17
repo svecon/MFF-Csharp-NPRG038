@@ -19,10 +19,12 @@ namespace BasicProcessors.MergeProcessors
         [Settings("Output folder for the resulting merge.", "output-folder", "o")]
         public string OutputFolder;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;

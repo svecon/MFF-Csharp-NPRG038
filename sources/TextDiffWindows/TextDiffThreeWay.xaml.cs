@@ -22,7 +22,12 @@ namespace TextDiffWindows
     [DiffWindow(200)]
     public partial class TextDiffThreeWay : UserControl, IDiffWindow<FileDiffNode>, IChangesMenu, IMergeMenu
     {
+        /// <summary>
+        /// Window manager for current visualisation.
+        /// </summary>
         private readonly IDiffWindowManager manager;
+
+        /// <inheritdoc />
         public FileDiffNode DiffNode { get; private set; }
 
         /// <summary>
@@ -30,10 +35,29 @@ namespace TextDiffWindows
         /// </summary>
         private int CurrentDiff { get; set; }
 
+        /// <summary>
+        /// Control for visualising local text.
+        /// </summary>
         private readonly TextDiffThreeWayArea localText;
+
+        /// <summary>
+        /// Control for visualising base text.
+        /// </summary>
         private readonly TextDiffThreeWayArea baseText;
+
+        /// <summary>
+        /// Control for visualising remote text.
+        /// </summary>
         private readonly TextDiffThreeWayArea remoteText;
+
+        /// <summary>
+        /// Control for connecting related diffs between local and base control.
+        /// </summary>
         private readonly LineMarkersThreeWayElement lineMarkersLeft;
+
+        /// <summary>
+        /// Control for connecting related diffs between local and remote control.
+        /// </summary>
         private readonly LineMarkersThreeWayElement lineMarkersRight;
 
         #region Dependency properties
@@ -214,16 +238,21 @@ namespace TextDiffWindows
             return diffNode.Mode == DiffModeEnum.ThreeWay;
         }
 
+        /// <inheritdoc />
         public void OnDiffComplete(Task t)
         {
             InvalidateAllFileContents();
         }
 
+        /// <inheritdoc />
         public void OnMergeComplete(Task t)
         {
             InvalidateAllFileContents();
         }
 
+        /// <summary>
+        /// Iterates over differences and checks whether there are any conflicts.
+        /// </summary>
         private void CheckConflicts()
         {
             if (DiffNode.Diff == null)
@@ -236,6 +265,9 @@ namespace TextDiffWindows
             DiffNode.Status = anyCoflicting ? NodeStatusEnum.IsConflicting : NodeStatusEnum.WasDiffed;
         }
 
+        /// <summary>
+        /// Invalidates file contents and forces them to redraw.
+        /// </summary>
         private void InvalidateAllFileContents()
         {
             localText.InvalidateFileContents();
@@ -245,6 +277,9 @@ namespace TextDiffWindows
             InvalidateAllVisual();
         }
 
+        /// <summary>
+        /// Invalidates visuals of all controls.
+        /// </summary>
         private void InvalidateAllVisual()
         {
             localText.InvalidateVisual();
@@ -254,6 +289,11 @@ namespace TextDiffWindows
             lineMarkersRight.InvalidateVisual();
         }
 
+        /// <summary>
+        /// Size changed event handler for shortening file paths.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void TextDiffThreeWay_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             LocalFileLocation = DiffNode.IsInLocation(LocationEnum.OnLocal)
@@ -269,6 +309,10 @@ namespace TextDiffWindows
 
         #region Iterating over diffs and conflicts
 
+        /// <summary>
+        /// Scrolls to a given line in all three controls.
+        /// </summary>
+        /// <param name="diffIndex">Index of the diff to scroll to.</param>
         private void ScrollToLine(int diffIndex)
         {
             var diff = ((Diff3)DiffNode.Diff);
@@ -277,6 +321,10 @@ namespace TextDiffWindows
             remoteText.ScrollToLine(diff.Items[diffIndex].RemoteLineStart - 1);
         }
 
+        /// <summary>
+        /// Find a previous conflicting diff.
+        /// </summary>
+        /// <returns>Index of the diff.</returns>
         private int FindPreviousConflict()
         {
             for (int i = CurrentDiff - 1; i >= 0; i--)
@@ -288,6 +336,11 @@ namespace TextDiffWindows
             return -1;
         }
 
+        /// <summary>
+        /// Find a next conflicting diff.
+        /// </summary>
+        /// <param name="start">Where to start from.</param>
+        /// <returns>Index of the diff.</returns>
         private int FindNextConflict(int start)
         {
             for (int i = start; i < ((Diff3)DiffNode.Diff).Items.Length; i++)
@@ -299,6 +352,11 @@ namespace TextDiffWindows
             return -1;
         }
 
+        /// <summary>
+        /// Find next unresolved conflicting diff.
+        /// </summary>
+        /// <param name="start">Where to start searching.</param>
+        /// <returns>Index of the diff.</returns>
         private int FindUnresolvedConflict(int start)
         {
             int next = start - 1;
@@ -314,6 +372,10 @@ namespace TextDiffWindows
             return -1;
         }
 
+        /// <summary>
+        /// Checks availability of current diff.
+        /// </summary>
+        /// <returns>True when a current diff is avaialble.</returns>
         private bool CurrentDiffAvailable()
         {
             return DiffNode.Diff != null && 0 <= CurrentDiff && CurrentDiff < ((Diff3)DiffNode.Diff).Items.Length;
@@ -323,6 +385,7 @@ namespace TextDiffWindows
 
         #region Custom ChangesMenu commands
 
+        /// <inheritdoc />
         public CommandBinding PreviousCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -330,6 +393,7 @@ namespace TextDiffWindows
                 (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff > 0; });
         }
 
+        /// <inheritdoc />
         public CommandBinding NextCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -337,6 +401,7 @@ namespace TextDiffWindows
                 (sender, args) => { args.CanExecute = DiffNode.Diff != null && CurrentDiff < ((Diff3)DiffNode.Diff).Items.Length - 1; });
         }
 
+        /// <inheritdoc />
         public CommandBinding RecalculateCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -348,6 +413,7 @@ namespace TextDiffWindows
 
         #region Custom MergeMenu commands
 
+        /// <inheritdoc />
         public CommandBinding PreviousConflictCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -361,6 +427,7 @@ namespace TextDiffWindows
                 });
         }
 
+        /// <inheritdoc />
         public CommandBinding NextConflictCommandBinding(ICommand command)
         {
             return new CommandBinding(command, (sender, args) =>
@@ -372,6 +439,7 @@ namespace TextDiffWindows
             });
         }
 
+        /// <inheritdoc />
         public CommandBinding MergeCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -391,6 +459,7 @@ namespace TextDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseLocalCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -403,6 +472,7 @@ namespace TextDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseBaseCommandBinding(ICommand command)
         {
             return new CommandBinding(command,
@@ -415,6 +485,7 @@ namespace TextDiffWindows
             );
         }
 
+        /// <inheritdoc />
         public CommandBinding UseRemoteCommandBinding(ICommand command)
         {
             return new CommandBinding(command,

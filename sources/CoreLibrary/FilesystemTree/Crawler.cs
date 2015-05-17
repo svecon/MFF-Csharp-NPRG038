@@ -23,10 +23,27 @@ namespace CoreLibrary.FilesystemTree
         /// </summary>
         private struct DirectoryForIteration
         {
+            /// <summary>
+            /// DirectoryInfo of the directory to be iterated.
+            /// </summary>
             public readonly DirectoryInfo Info;
+
+            /// <summary>
+            /// Parent node of the <see cref="FilesystemTree"/>.
+            /// </summary>
             public readonly INodeDirNode ParentDiffNode;
+
+            /// <summary>
+            /// Location of this directory.
+            /// </summary>
             public readonly LocationEnum Location;
 
+            /// <summary>
+            /// Initializes new instance of <see cref="DirectoryForIteration"/>
+            /// </summary>
+            /// <param name="info">DirectoryInfo of the directory to be iterated.</param>
+            /// <param name="parent">Parent node of the <see cref="FilesystemTree"/>.</param>
+            /// <param name="location">Location of this directory.</param>
             public DirectoryForIteration(DirectoryInfo info, INodeDirNode parent, LocationEnum location)
             {
                 Info = info;
@@ -53,6 +70,7 @@ namespace CoreLibrary.FilesystemTree
             dirsToBeSearched = new Stack<DirectoryForIteration>(15);
         }
 
+        /// <inheritdoc />
         public ICrawler InitializeCrawler(string localDirPath, string remoteDirPath)
         {
             dirsToBeSearched.Clear();
@@ -65,6 +83,7 @@ namespace CoreLibrary.FilesystemTree
             return this;
         }
 
+        /// <inheritdoc />
         public ICrawler InitializeCrawler(string localDirPath, string baseDirPath, string remoteDirPath)
         {
             dirsToBeSearched.Clear();
@@ -112,6 +131,7 @@ namespace CoreLibrary.FilesystemTree
             dirsToBeSearched.Push(new DirectoryForIteration(dir, FilesystemTree.Root, location));
         }
 
+        /// <inheritdoc />
         public IFilesystemTree TraverseTree()
         {
             while (dirsToBeSearched.Count > 0)

@@ -15,9 +15,15 @@ namespace CoreLibrary.Plugins.Processors.Settings
     /// </summary>
     public class SettingsParser
     {
-        readonly Dictionary<string, List<ISettings>> longSettings;
+        /// <summary>
+        /// A dictionary for settings and their long switches.
+        /// </summary>
+        private readonly Dictionary<string, List<ISettings>> longSettings;
 
-        readonly Dictionary<string, List<ISettings>> shortSettings;
+        /// <summary>
+        /// A dictionary for settings and their short switches.
+        /// </summary>
+        private readonly Dictionary<string, List<ISettings>> shortSettings;
 
         /// <summary>
         /// Initializes new instance of the <see cref="SettingsParser"/>

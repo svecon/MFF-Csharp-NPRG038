@@ -15,18 +15,23 @@ namespace BasicProcessors.InteractiveProcessors
     public class InteractiveTwoWayActionProcessor : ProcessorAbstract
     {
         /// <summary>
-        /// Show help for resolving conflicts.
+        /// Setting for showing help for resolving conflicts.
         /// </summary>
         [Settings("Show help during the interactive process.", "interactive-help")]
         public bool ShowHelp = false;
 
+        /// <summary>
+        /// Setting for default action of the processor.
+        /// </summary>
         [Settings("Default action for interactive diff.", "2interactive-default")]
         public PreferedActionTwoWayEnum DefaultAction = PreferedActionTwoWayEnum.ApplyRemote;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             if (node.Status != NodeStatusEnum.IsConflicting)
@@ -35,6 +40,7 @@ namespace BasicProcessors.InteractiveProcessors
             return base.CheckStatus(node);
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var diffNode = node as FileDiffNode;

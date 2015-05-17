@@ -24,10 +24,12 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Exclude file name that are matching Regex.", "exclude-regex", "eR")]
         public Regex ExcludeRegex = null;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             if (ExcludeRegex != null && ExcludeRegex.IsMatch(node.Info.Name))

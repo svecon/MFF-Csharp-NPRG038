@@ -25,15 +25,18 @@ namespace BasicProcessors.DiffProcessors
         [Settings("Force binary diff check.", "binary-check", "BC")]
         public bool IsEnabled = false;
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeDirNode node)
         {
         }
 
+        /// <inheritdoc />
         protected override bool CheckStatus(INodeFileNode node)
         {
             return IsEnabled && base.CheckStatus(node) && node.Status != NodeStatusEnum.WasDiffed;
         }
 
+        /// <inheritdoc />
         protected override void ProcessChecked(INodeFileNode node)
         {
             var threeWay = new ThreeWayDiffHelper();

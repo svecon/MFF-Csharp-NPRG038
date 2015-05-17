@@ -64,8 +64,14 @@ namespace Sverge
 
         #endregion
 
+        /// <summary>
+        /// Directory that the user selected as last.
+        /// </summary>
         private string currentDirectory;
 
+        /// <summary>
+        /// DiffWindowManager for opening new comparisons.
+        /// </summary>
         private readonly IDiffWindowManager manager;
 
         /// <summary>
@@ -78,11 +84,13 @@ namespace Sverge
             InitializeComponent();
         }
 
+        /// <inheritdoc />
         public string Error
         {
             get { return this[null]; }
         }
 
+        /// <inheritdoc />
         public string this[string columnName]
         {
             get
@@ -122,8 +130,16 @@ namespace Sverge
             }
         }
 
+        /// <summary>
+        /// Mask for current errors.
+        /// </summary>
         private int errors;
 
+        /// <summary>
+        /// Returns text box by a tag.
+        /// </summary>
+        /// <param name="tag">Tag on the text box.</param>
+        /// <returns>TextBow</returns>
         private TextBox GetTextBox(object tag)
         {
             switch ((string)tag)
@@ -139,6 +155,11 @@ namespace Sverge
             throw new ArgumentException("No TextBox found for this tag.");
         }
 
+        /// <summary>
+        /// Opens new FileDialog for choosing a file path.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void FileButton_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
@@ -156,6 +177,11 @@ namespace Sverge
             dialog.ShowDialog();
         }
 
+        /// <summary>
+        /// Opens new FolderBrowserDialog for choosing a directory path.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void DirectoryButton_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = new f.FolderBrowserDialog();
@@ -185,11 +211,21 @@ namespace Sverge
             }
         );
 
+        /// <summary>
+        /// Checks whether there are any errors and a new comparison can be opened.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void OpenNewWindowCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = errors == 0;
         }
 
+        /// <summary>
+        /// Openes new 2-way or 3-way comparison.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void OpenNewWindowCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(BaseLocation))
@@ -203,6 +239,11 @@ namespace Sverge
             Close();
         }
 
+        /// <summary>
+        /// Closes this window.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Close();

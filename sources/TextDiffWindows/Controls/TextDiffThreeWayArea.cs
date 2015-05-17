@@ -47,11 +47,13 @@ namespace TextDiffWindows.Controls
             }
         }
 
+        /// <inheritdoc />
         protected override bool IsDiffAvailable()
         {
             return Node.Diff is Diff3;
         }
 
+        /// <inheritdoc />
         protected override void PreloadFileToMemory()
         {
             if (!IsDiffAvailable())
@@ -95,6 +97,7 @@ namespace TextDiffWindows.Controls
 
         #region Rendering
 
+        /// <inheritdoc />
         protected override void OnRender(DrawingContext dc)
         {
             if (Lines == null && Info != null)
@@ -114,6 +117,7 @@ namespace TextDiffWindows.Controls
             }
         }
 
+        /// <inheritdoc />
         protected override void DrawText(DrawingContext dc)
         {
             for (int i = StartsOnLine; i < EndsOnLine; i++)
@@ -268,6 +272,7 @@ namespace TextDiffWindows.Controls
             return Enumerable.Empty<Diff3Item>();
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);

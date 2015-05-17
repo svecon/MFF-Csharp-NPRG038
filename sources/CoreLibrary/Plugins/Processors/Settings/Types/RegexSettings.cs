@@ -14,6 +14,7 @@ namespace CoreLibrary.Plugins.Processors.Settings.Types
         /// </summary>
         public static Type ForType { get { return typeof(Regex); } }
 
+        /// <inheritdoc />
         public override int NumberOfParams { get { return 1; } }
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace CoreLibrary.Plugins.Processors.Settings.Types
         {
         }
 
+        /// <inheritdoc />
         public override void SetValue(params string[] value)
         {
             Field.SetValue(Instance, new Regex(value[0], RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant));

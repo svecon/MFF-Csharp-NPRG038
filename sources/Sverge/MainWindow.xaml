@@ -7,9 +7,9 @@
     Title="{x:Static p:Resources.App_Title}">
 
     <Window.CommandBindings>
-        <CommandBinding Command="New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed" />
+        <CommandBinding Command="New" Executed="NewCommand_Executed" />
         <CommandBinding Command="local:MainWindow.CloseWindow" CanExecute="CloseCommand_CanExecute" Executed="CloseCommand_Executed" />
-        <CommandBinding Command="local:MainWindow.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="local:MainWindow.Exit" Executed="ExitCommand_Executed" />
         <CommandBinding Command="local:MainWindow.ProcessorSettings" Executed="ProcessorSettings_Executed" />
     </Window.CommandBindings>
 

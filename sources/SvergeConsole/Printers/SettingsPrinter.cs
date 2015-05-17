@@ -11,10 +11,19 @@ namespace SvergeConsole.Printers
     /// </summary>
     public class SettingsPrinter : IPrinter
     {
+        /// <summary>
+        /// A list of settings to be printed out.
+        /// </summary>
         readonly List<ISettings> settings;
 
+        /// <summary>
+        /// Length of the longest setting option.
+        /// </summary>
         readonly int longestOption = 0;
 
+        /// <summary>
+        /// Number of spaces to to the left used as an indentation.
+        /// </summary>
         private readonly int paddingLeft = 0;
 
         /// <summary>
@@ -78,6 +87,9 @@ namespace SvergeConsole.Printers
             }
         }
 
+        /// <summary>
+        /// Sorts settings alphabetically.
+        /// </summary>
         private void SortByOptionParameters()
         {
             settings.Sort(new SettingsComparer());

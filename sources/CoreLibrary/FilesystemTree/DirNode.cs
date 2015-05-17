@@ -12,12 +12,16 @@ namespace CoreLibrary.FilesystemTree
     /// </summary>
     public class DirNode : AbstractNode, INodeDirNode
     {
+        /// <inheritdoc />
         public List<INodeDirNode> Directories { get; protected set; }
 
+        /// <inheritdoc />
         public List<INodeFileNode> Files { get; protected set; }
 
+        /// <inheritdoc />
         public INodeDirNode RootNode { get; set; }
 
+        /// <inheritdoc />
         public string RelativePath { get; set; }
 
         /// <summary>
@@ -66,21 +70,25 @@ namespace CoreLibrary.FilesystemTree
             return new FileNode(this, info, location, Mode);
         }
 
+        /// <inheritdoc />
         public override void Accept(IFilesystemTreeVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public INodeDirNode SearchForDir(DirectoryInfo info)
         {
             return Directories.FirstOrDefault(dir => dir.Info.Name == info.Name);
         }
 
+        /// <inheritdoc />
         public INodeFileNode SearchForFile(FileInfo info)
         {
             return Files.FirstOrDefault(file => file.Info.Name == info.Name);
         }
 
+        /// <inheritdoc />
         public INodeDirNode AddDir(DirectoryInfo info, LocationEnum location)
         {
             INodeDirNode dirDiffNode = CreateDirNode(info, location);
@@ -88,6 +96,7 @@ namespace CoreLibrary.FilesystemTree
             return dirDiffNode;
         }
 
+        /// <inheritdoc />
         public INodeFileNode AddFile(FileInfo info, LocationEnum location)
         {
             INodeFileNode node = CreateFileNode(info, location);
@@ -95,6 +104,7 @@ namespace CoreLibrary.FilesystemTree
             return node;
         }
 
+        /// <inheritdoc />
         public double GetSize()
         {
             return (double)Files
@@ -104,9 +114,10 @@ namespace CoreLibrary.FilesystemTree
                 + Directories.Select(f => f.GetSize()).Sum();
         }
 
+        /// <inheritdoc />
         public override string GetAbsolutePath(LocationEnum location)
         {
-            FileSystemInfo info = null;
+            FileSystemInfo info;
 
             switch (location)
             {
@@ -126,6 +137,7 @@ namespace CoreLibrary.FilesystemTree
             return RelativePath == "" ? info.FullName : info.FullName + @"\" + RelativePath;
         }
 
+        /// <inheritdoc />
         public IEnumerable<INodeAbstractNode> FilesAndDirectories
         {
             get

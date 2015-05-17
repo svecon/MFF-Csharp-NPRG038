@@ -16,12 +16,29 @@ namespace Sverge
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Processor loader containing all avaialble processors.
+        /// </summary>
         private IProcessorLoader loader;
 
+        /// <summary>
+        /// Main window of the application.
+        /// </summary>
         private MainWindow diffManager;
 
+        /// <summary>
+        /// An exit code for application exit on processor collision.
+        /// </summary>
         const int ERROR_PROCESSOR_COLLISION = 9;
+
+        /// <summary>
+        /// An exit code for application exit on setting on found.
+        /// </summary>
         const int ERROR_SETTINGS_NOT_FOUND = 10;
+
+        /// <summary>
+        /// An exit code for application exit on unknown setting.
+        /// </summary>
         const int ERROR_SETTINGS_UNKNOWN = 11;
 
         /// <summary>
@@ -35,6 +52,11 @@ namespace Sverge
             return fvi.FileVersion;
         }
 
+        /// <summary>
+        /// Application start-up event.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="eventArgs">Event args.</param>
         private void App_OnStartup(object sender, StartupEventArgs eventArgs)
         {
             #region DEBUG: Print arguments

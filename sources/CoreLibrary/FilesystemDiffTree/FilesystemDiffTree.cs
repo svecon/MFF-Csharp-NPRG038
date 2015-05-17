@@ -18,6 +18,7 @@ namespace CoreLibrary.FilesystemDiffTree
         {
         }
 
+        /// <inheritdoc />
         protected override INodeDirNode CreateDirNode(DirectoryInfo root, LocationEnum location)
         {
             return new DirDiffNode(null, null, root, location, DiffMode);

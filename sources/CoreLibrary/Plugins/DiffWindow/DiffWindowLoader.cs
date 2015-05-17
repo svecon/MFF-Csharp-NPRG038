@@ -13,8 +13,19 @@ namespace CoreLibrary.Plugins.DiffWindow
     /// </summary>
     public class DiffWindowLoader
     {
+        /// <summary>
+        /// A list of all avaialble windows sorted by their priority.
+        /// </summary>
         private readonly SortedList<int, Type> availableWindows;
+
+        /// <summary>
+        /// A list of all avaialble window menus sorted by their priority.
+        /// </summary>
         private readonly SortedList<int, Type> availableWindowMenus;
+
+        /// <summary>
+        /// An instance of <see cref="IDiffWindowManager"/> that is required for windows.
+        /// </summary>
         private readonly IDiffWindowManager manager;
 
         /// <summary>

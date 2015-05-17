@@ -14,8 +14,14 @@ namespace CoreLibrary.FilesystemTree.Visitors
     /// </summary>
     public class ExecutionVisitor : IExecutionVisitor
     {
-        readonly IEnumerable<IProcessor> processors;
+        /// <summary>
+        /// Processors that will be executed in this ExecutionVisitor.
+        /// </summary>
+        private readonly IEnumerable<IProcessor> processors;
 
+        /// <summary>
+        /// Was the execution cancelled?
+        /// </summary>
         private bool isCancelled = false;
 
         /// <summary>
@@ -27,6 +33,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             this.processors = processors;
         }
 
+        /// <inheritdoc />
         public void Visit(INodeDirNode node)
         {
             try
@@ -49,6 +56,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                 dir.Accept(this);
         }
 
+        /// <inheritdoc />
         public void Visit(INodeFileNode node)
         {
             try
@@ -63,17 +71,26 @@ namespace CoreLibrary.FilesystemTree.Visitors
             }
         }
 
+        /// <summary>
+        /// Handles an error that occures during the processing.
+        /// </summary>
+        /// <param name="node">Node in which the error occured.</param>
+        /// <param name="e">Error exception.</param>
         private static void HandleError(INodeAbstractNode node, Exception e)
         {
             node.Status = NodeStatusEnum.HasError;
             node.Exception = e;
+
+            // TODO: log exceptions
         }
 
+        /// <inheritdoc />
         public void Wait()
         {
             // everything is in serial, no need to wait
         }
 
+        /// <inheritdoc />
         public void Cancel()
         {
             isCancelled = true;
