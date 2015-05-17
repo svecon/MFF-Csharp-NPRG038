@@ -133,7 +133,7 @@
     <value>Error during opening new diff</value>
   </data>
   <data name="App_NewTab_ErrorArgumentsNumberText" xml:space="preserve">
-    <value>Number of Switchs must be 2 or 3.</value>
+    <value>Number of arguments must be 2 or 3.</value>
   </data>
   <data name="App_NoWindowDefined" xml:space="preserve">
     <value>Sorry, there is no special manager for viewing this diff.</value>

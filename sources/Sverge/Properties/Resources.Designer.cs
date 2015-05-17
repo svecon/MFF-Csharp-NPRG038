@@ -79,7 +79,7 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Number of Switchs must be 2 or 3..
+        ///   Looks up a localized string similar to Number of arguments must be 2 or 3..
         /// </summary>
         public static string App_NewTab_ErrorArgumentsNumberText {
             get {
