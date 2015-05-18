@@ -1,0 +1,11 @@
+sverge.executable=C:/csharp/Merge/Sverge/bin/Debug/Sverge.exe
+sverge.priority=100
+sverge.args=$local $base $other -o $output --close-merge
+sverge.premerge=False
+sverge.checkconflicts=True
+sverge.binary=False
+sverge.gui=True
+sverge.diffargs=$parent $child
+sverge.diff3args=$parent1 $child $parent2
+sverge.dirdiff=True
+sverge.dir3diff=True

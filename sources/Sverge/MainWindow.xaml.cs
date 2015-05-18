@@ -341,6 +341,16 @@ namespace Sverge
         }
 
         /// <summary>
+        /// Can the new command be executed?
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Can execute event args.</param>
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !CloseAfterMerge;
+        }
+
+        /// <summary>
         /// Opens a window for opening new comparison.
         /// </summary>
         /// <param name="sender">Sender.</param>

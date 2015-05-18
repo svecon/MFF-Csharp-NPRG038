@@ -6,7 +6,7 @@
 
 sverge.executable=C:/csharp/Merge/Sverge/bin/Debug/Sverge.exe
 sverge.priority=100
-sverge.args=$local $base $other -o $output
+sverge.args=$local $base $other -o $output --close-merge
 sverge.premerge=False
 sverge.checkconflicts=True
 sverge.binary=False
@@ -36,10 +36,10 @@ merge_cmd () {
    if $base_present
    then
       "$merge_tool_path" \
-         "$BASE" "$LOCAL" "$REMOTE" "$MERGED" >/dev/null 2>&1
+         "$LOCAL" "$BASE" "$REMOTE" -o "$MERGED" --close-merge >/dev/null 2>&1
    else
       "$merge_tool_path" \
-         "$LOCAL" "$REMOTE" "$MERGED" >/dev/null 2>&1
+         "$LOCAL" "$REMOTE" -o "$MERGED" --close-merge >/dev/null 2>&1
    fi
    check_unchanged
 }
