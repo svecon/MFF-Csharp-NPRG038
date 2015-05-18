@@ -59,25 +59,6 @@ namespace Sverge
         /// <param name="eventArgs">Event args.</param>
         private void App_OnStartup(object sender, StartupEventArgs eventArgs)
         {
-            #region DEBUG: Print arguments
-            // TODO: remove this
-#if DEBUG
-            //string[] args = Environment.GetCommandLineArgs();
-            using (TextWriter tw = File.CreateText("C:/Users/svecon/Downloads/git-arguments.txt"))
-            {
-                foreach (string s in eventArgs.Args)
-                {
-                    tw.WriteLine(s);
-                }
-
-                tw.WriteLine(">>>");
-                tw.WriteLine(Environment.CurrentDirectory);
-                tw.WriteLine(System.Windows.Forms.Application.ExecutablePath);
-                tw.WriteLine(Assembly.GetEntryAssembly().Location);
-            }
-#endif
-            #endregion
-
             #region Load all available processors and their settings
             try
             {
