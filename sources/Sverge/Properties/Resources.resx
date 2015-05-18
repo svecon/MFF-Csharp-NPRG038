@@ -198,4 +198,10 @@
   <data name="ProcessorSettings_Title" xml:space="preserve">
     <value>Processors and their settings</value>
   </data>
+  <data name="About_MoreInfo" xml:space="preserve">
+    <value>The sources and documentation can be found online at:</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>About Sverge</value>
+  </data>
 </root>

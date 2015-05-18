@@ -476,7 +476,7 @@ namespace Sverge
         }
 
         /// <summary>
-        /// Command for showin the processor window.
+        /// Command for showing the processor window.
         /// </summary>
         public static readonly RoutedUICommand ProcessorSettings = new RoutedUICommand(
             "ProcessorSettings", "ProcessorSettings",
@@ -491,6 +491,25 @@ namespace Sverge
         private void ProcessorSettings_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var window = new ProcessorSettingsWindow(loader);
+            window.ShowDialog();
+        }
+
+        /// <summary>
+        /// Command for showing the About window.
+        /// </summary>
+        public static readonly RoutedUICommand About = new RoutedUICommand(
+            "ProcessorSettings", "ProcessorSettings",
+            typeof(MainWindow),
+            new InputGestureCollection());
+
+        /// <summary>
+        /// Opens an "About" window.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Executed event args.</param>
+        private void About_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var window = new AboutWindow();
             window.ShowDialog();
         }
     }

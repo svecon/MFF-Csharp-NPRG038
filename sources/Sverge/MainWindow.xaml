@@ -11,6 +11,7 @@
         <CommandBinding Command="local:MainWindow.CloseWindow" CanExecute="CloseCommand_CanExecute" Executed="CloseCommand_Executed" />
         <CommandBinding Command="local:MainWindow.Exit" Executed="ExitCommand_Executed" />
         <CommandBinding Command="local:MainWindow.ProcessorSettings" Executed="ProcessorSettings_Executed" />
+        <CommandBinding Command="local:MainWindow.About" Executed="About_Executed" />
     </Window.CommandBindings>
 
     <Window.Resources>
@@ -118,7 +119,7 @@
 
                 <Separator />
 
-                <MenuItem Header="{x:Static p:Resources.Menu_About}" />
+                <MenuItem Header="{x:Static p:Resources.Menu_About}" Command="local:MainWindow.About" />
 
                 <MenuItem Header="{x:Static p:Resources.Menu_Exit}" Command="local:MainWindow.Exit" />
             </MenuItem>

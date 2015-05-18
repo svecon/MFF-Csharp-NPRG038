@@ -61,6 +61,24 @@ namespace Sverge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The sources and documentation can be found online at:.
+        /// </summary>
+        public static string About_MoreInfo {
+            get {
+                return ResourceManager.GetString("About_MoreInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About Sverge.
+        /// </summary>
+        public static string About_Title {
+            get {
+                return ResourceManager.GetString("About_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory &apos;{0}&apos; not found or not readable..
         /// </summary>
         public static string App_NewTab_DirectoryNotFound {
