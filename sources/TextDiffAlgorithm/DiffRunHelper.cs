@@ -341,7 +341,7 @@ namespace TextDiffAlgorithm
         /// <returns>String without any white-space.</returns>
         private string RemoveAllBlanks(string s)
         {
-            // TODO optimization: faster blank removal.
+            // TODO optimization: faster blank removal
             return Regex.Replace(s, "\\s+", "");
         }
 

@@ -122,7 +122,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
                     if (x is TaskCanceledException)
                         return true;
 
-                    // TODO: log exceptions
+                    // TODO log exceptions
                     return false;
                 });
             }

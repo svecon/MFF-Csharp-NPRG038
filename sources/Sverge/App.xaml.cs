@@ -125,7 +125,7 @@ namespace Sverge
         /// <param name="e">Event args.</param>
         private void App_OnActivated(object sender, EventArgs e)
         {
-            // TODO: check and possibly recalculate diff
+            // TODO check and possibly recalculate diff
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace CoreLibrary.FilesystemTree.Visitors
             node.Status = NodeStatusEnum.HasError;
             node.Exception = e;
 
-            // TODO: log exceptions
+            // TODO log exceptions
         }
 
         /// <inheritdoc />

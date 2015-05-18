@@ -412,7 +412,7 @@ namespace Sverge
         /// <param name="e">Executed event args.</param>
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Application.Current.Shutdown(); // TODO Exit code
+            Application.Current.Shutdown(); // TODO Some control version systems depend on exit code (Git)
         }
 
         /// <summary>
