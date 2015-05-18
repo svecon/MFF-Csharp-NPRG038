@@ -13,7 +13,7 @@ namespace CoreLibrary.Plugins
         /// <summary>
         /// A list of all available types.
         /// </summary>
-        private static List<Type> _assemblyTypes;
+        private static List<Type> _assemblyTypes = new List<Type>();
 
         /// <summary>
         /// Loads all assemblies from the plugins folder next to the executable.
