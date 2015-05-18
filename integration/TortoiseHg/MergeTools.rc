@@ -1,6 +1,6 @@
 sverge.executable=C:/csharp/Merge/Sverge/bin/Debug/Sverge.exe
 sverge.priority=100
-sverge.args=$local $base $other -o $output
+sverge.args=$local $base $other -o $output --close-merge
 sverge.premerge=False
 sverge.checkconflicts=True
 sverge.binary=False
